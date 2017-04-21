@@ -1,13 +1,16 @@
+import {JobSchedule} from "./JobSchedule";
 export class Job {
 
     public id: number;
     public branch: number;
-    public label: number;
+    public label: string;
+    public task: string;
+    public runExpression: string;
     public active: boolean;
-    // private _testclass: TestClass;
-    //
-    constructor(id: number, branch: number) {
-        this.id = id;
-        this.branch = branch;
+
+    public schedules: Array<JobSchedule>;
+
+    constructor() {
+        //this.schedules = [];
     }
 }
