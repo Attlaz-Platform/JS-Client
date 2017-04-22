@@ -1,5 +1,6 @@
-import {JobSchedule} from "./JobSchedule";
-export class Job {
+import {CommandExecution} from "./CommandExecution";
+
+export class Command {
 
     public id: number;
     public branch: number;
@@ -8,7 +9,7 @@ export class Job {
     public runExpression: string;
     public active: boolean;
 
-    public schedules: Array<JobSchedule>;
+    public schedules: Array<CommandExecution>;
 
     constructor() {
         //this.schedules = [];
