@@ -1,7 +1,11 @@
+import { JobSchedule } from "./JobSchedule";
 export declare class Job {
     id: number;
     branch: number;
-    label: number;
+    label: string;
+    task: string;
+    runExpression: string;
     active: boolean;
-    constructor(id: number, branch: number);
+    schedules: Array<JobSchedule>;
+    constructor();
 }

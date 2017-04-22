@@ -4,3 +4,7 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./Client"));
+__export(require("./Model/Branch"));
+__export(require("./Model/Job"));
+__export(require("./Model/JobSchedule"));
+__export(require("./Model/User"));
