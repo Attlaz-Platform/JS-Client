@@ -1,11 +1,21 @@
-import { Job } from './Model/Job';
 import { Branch } from "./Model/Branch";
-import { JobSchedule } from "./Model/JobSchedule";
+import { Command } from "./Model/Command";
+import { CommandExecution } from "./Model/CommandExecution";
+import { CommandExecutionLog } from "./Model/CommandExecutionLog";
 export declare class Client {
     private apiEndpoint;
     constructor(apiEndpoint: string);
-    getJobsForBranch(branch: string): Promise<Array<Job>>;
+    /**
+     * Get commands for current selected branch
+     * @returns {Promise<Array<>>}
+     */
+    getCommands(): Promise<Array<Command>>;
+    /**
+     * Get branches to which the authenticated user has access to
+     * @returns {Promise<Array<Branch>>}
+     */
     getBranches(): Promise<Array<Branch>>;
-    getJobSchedulesByJobs(jobs: Array<Job>, from: Date, to: Date): Promise<Array<JobSchedule>>;
-    getJobSchedules(job: Job, from: Date, to: Date): Promise<Array<JobSchedule>>;
+    getCommandExecutionsBetweenDates(commands: Array<Command>, from: Date, to: Date): Promise<Array<CommandExecution>>;
+    getCommandExecutionLog(commandExecution: CommandExecution): Promise<Array<CommandExecutionLog>>;
+    getCommandExecution(command: Command, from: Date, to: Date): Promise<Array<CommandExecution>>;
 }
