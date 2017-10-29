@@ -2,20 +2,22 @@ import { Branch } from "./Model/Branch";
 import { Command } from "./Model/Command";
 import { CommandExecution } from "./Model/CommandExecution";
 import { CommandExecutionLog } from "./Model/CommandExecutionLog";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/Rx';
 export declare class Client {
     private apiEndpoint;
     constructor(apiEndpoint: string);
     /**
      * Get commands for current selected branch
-     * @returns {Promise<Array<>>}
+     * @returns {Observable<Command[]>}
      */
-    getCommands(): Promise<Array<Command>>;
+    getCommands(): Observable<Command[]>;
     /**
      * Get branches to which the authenticated user has access to
-     * @returns {Promise<Array<Branch>>}
+     * @returns {Observable<Branch[]>}
      */
-    getBranches(): Promise<Array<Branch>>;
-    getCommandExecutionsBetweenDates(commands: Array<Command>, from: Date, to: Date): Promise<Array<CommandExecution>>;
-    getCommandExecutionLog(commandExecution: CommandExecution): Promise<Array<CommandExecutionLog>>;
-    getCommandExecution(command: Command, from: Date, to: Date): Promise<Array<CommandExecution>>;
+    getBranches(): Observable<Branch[]>;
+    getCommandExecutionsBetweenDates(commands: Command[], from: Date, to: Date): Observable<CommandExecution[]>;
+    getCommandExecutionLog(commandExecution: CommandExecution): Observable<CommandExecutionLog[]>;
+    getCommandExecution(command: Command, from: Date, to: Date): Observable<CommandExecution[]>;
 }
