@@ -4,6 +4,7 @@ import { CommandExecution } from "./Model/CommandExecution";
 import { CommandExecutionLog } from "./Model/CommandExecutionLog";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
+import { Log } from './Model/Log';
 export declare class Client {
     private apiEndpoint;
     constructor(apiEndpoint: string);
@@ -18,6 +19,7 @@ export declare class Client {
      */
     getBranches(): Observable<Branch[]>;
     getCommandExecutionsBetweenDates(commands: Command[], from: Date, to: Date): Observable<CommandExecution[]>;
+    getLogs(): Observable<Log[]>;
     getCommandExecutionLog(commandExecution: CommandExecution): Observable<CommandExecutionLog[]>;
     getCommandExecution(command: Command, from: Date, to: Date): Observable<CommandExecution[]>;
 }

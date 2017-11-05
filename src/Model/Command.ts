@@ -8,6 +8,7 @@ export class Command {
     public task: string;
     public runExpression: string;
     public active: boolean;
+    public params: object;
 
     public schedules: Array<CommandExecution>;
 

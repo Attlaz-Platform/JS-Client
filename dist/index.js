@@ -11,3 +11,4 @@ __export(require("./Model/CommandExecutionLog"));
 __export(require("./Model/CommandExecutionLogLevel"));
 __export(require("./Model/CommandExecutionStatus"));
 __export(require("./Model/User"));
+__export(require("./Model/Log"));

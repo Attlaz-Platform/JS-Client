@@ -6,6 +6,7 @@ export declare class Command {
     task: string;
     runExpression: string;
     active: boolean;
+    params: object;
     schedules: Array<CommandExecution>;
     constructor();
 }
