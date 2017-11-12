@@ -10,5 +10,5 @@ var CommandExecutionLogLevel;
     CommandExecutionLogLevel[CommandExecutionLogLevel["Critical"] = "critical"] = "Critical";
     CommandExecutionLogLevel[CommandExecutionLogLevel["Alert"] = "alert"] = "Alert";
     CommandExecutionLogLevel[CommandExecutionLogLevel["Emergency"] = "emergency"] = "Emergency";
-})(CommandExecutionLogLevel || (CommandExecutionLogLevel = {}));
-exports.default = CommandExecutionLogLevel;
+})(CommandExecutionLogLevel = exports.CommandExecutionLogLevel || (exports.CommandExecutionLogLevel = {}));
+// export default CommandExecutionLogLevel; 

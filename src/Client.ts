@@ -3,7 +3,7 @@ import {Command} from "./Model/Command";
 import {CommandExecution} from "./Model/CommandExecution";
 import CommandExecutionStatus from "./Model/CommandExecutionStatus";
 import {CommandExecutionLog} from "./Model/CommandExecutionLog";
-import CommandExecutionLogLevel from "./Model/CommandExecutionLogLevel";
+import {CommandExecutionLogLevel} from "./Model/CommandExecutionLogLevel";
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/Rx';
 import {Log} from './Model/Log';

@@ -1,4 +1,4 @@
-import CommandExecutionLogLevel from "./CommandExecutionLogLevel";
+import {CommandExecutionLogLevel} from "./CommandExecutionLogLevel";
 import {Command} from './Command';
 import {CommandExecution} from './CommandExecution';
 

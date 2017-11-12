@@ -1,4 +1,4 @@
-import CommandExecutionLogLevel from "./CommandExecutionLogLevel";
+import { CommandExecutionLogLevel } from "./CommandExecutionLogLevel";
 export declare class CommandExecutionLog {
     id: number;
     jobSchedule: number;

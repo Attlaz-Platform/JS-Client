@@ -1,4 +1,4 @@
-import CommandExecutionLogLevel from "./CommandExecutionLogLevel";
+import {CommandExecutionLogLevel} from "./CommandExecutionLogLevel";
 
 export class CommandExecutionLog {
     public id: number;

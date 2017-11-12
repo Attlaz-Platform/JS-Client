@@ -1,4 +1,4 @@
-enum CommandExecutionLogLevel {
+export enum CommandExecutionLogLevel {
     Debug = <any>"debug",
     Info = <any>"info",
     Notice = <any>"notice",
@@ -9,4 +9,4 @@ enum CommandExecutionLogLevel {
     Emergency = <any>"emergency",
 }
 
-export default CommandExecutionLogLevel;
+// export default CommandExecutionLogLevel;

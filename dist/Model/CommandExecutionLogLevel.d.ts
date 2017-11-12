@@ -1,4 +1,4 @@
-declare enum CommandExecutionLogLevel {
+export declare enum CommandExecutionLogLevel {
     Debug,
     Info,
     Notice,
@@ -8,4 +8,3 @@ declare enum CommandExecutionLogLevel {
     Alert,
     Emergency,
 }
-export default CommandExecutionLogLevel;
