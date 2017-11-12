@@ -2,7 +2,7 @@ import CommandExecutionStatus from "./CommandExecutionStatus";
 import {CommandExecutionLog} from "./CommandExecutionLog";
 
 export class CommandExecution {
-    public id: number;
+    public id: string;
     public command: number;
     public status: CommandExecutionStatus;
     public trigger: string;

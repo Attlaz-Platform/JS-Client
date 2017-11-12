@@ -1,7 +1,7 @@
 import CommandExecutionStatus from "./CommandExecutionStatus";
 import { CommandExecutionLog } from "./CommandExecutionLog";
 export declare class CommandExecution {
-    id: number;
+    id: string;
     command: number;
     status: CommandExecutionStatus;
     trigger: string;

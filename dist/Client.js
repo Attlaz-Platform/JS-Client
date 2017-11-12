@@ -132,7 +132,7 @@ class Client {
         command3.runExpression = '* * * * * *';
         command3.active = false;
         let commandExecution1 = new CommandExecution_1.CommandExecution();
-        commandExecution1.id = 0;
+        commandExecution1.id = '0ce3e387-34c9-4484-adf6-6de61fded007';
         commandExecution1.command = command1.id;
         commandExecution1.trigger = 'unknown';
         commandExecution1.status = CommandExecutionStatus_1.default.PENDING;
@@ -140,7 +140,7 @@ class Client {
         commandExecution1.scheduled = new Date((new Date()).getTime() + (1000 * 60));
         //Running jobSchedule
         let jobSchedule2 = new CommandExecution_1.CommandExecution();
-        jobSchedule2.id = 1;
+        jobSchedule2.id = 'd319793f-fdc1-48f0-a5eb-c71ff8274979';
         jobSchedule2.command = command2.id;
         jobSchedule2.trigger = 'cron';
         jobSchedule2.status = CommandExecutionStatus_1.default.RUNNING;
@@ -148,7 +148,7 @@ class Client {
         jobSchedule2.scheduled = new Date((new Date()).getTime() - (1000 * 60));
         //Completed jobSchedule
         let jobSchedule3 = new CommandExecution_1.CommandExecution();
-        jobSchedule3.id = 2;
+        jobSchedule3.id = 'f4905679-0402-4bb0-9c1d-f5718446ef77';
         jobSchedule3.command = command3.id;
         jobSchedule3.trigger = 'cron job';
         jobSchedule3.status = CommandExecutionStatus_1.default.COMPLETE;
@@ -158,7 +158,7 @@ class Client {
         jobSchedule3.finished = new Date((new Date()).getTime());
         //Completed jobSchedule
         let jobSchedule4 = new CommandExecution_1.CommandExecution();
-        jobSchedule4.id = 3;
+        jobSchedule4.id = '698a1330-ae45-44ec-b578-9d07ecff8e09';
         jobSchedule4.command = command1.id;
         jobSchedule4.trigger = 'manual';
         jobSchedule4.status = CommandExecutionStatus_1.default.COMPLETE;
@@ -172,60 +172,61 @@ class Client {
         commandExecutionLog1.date = new Date((new Date()).getTime());
         commandExecutionLog1.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Debug;
         commandExecutionLog1.message = 'Debug message';
-        commandExecutionLog1.context = [];
+        commandExecutionLog1.context = { name: 'test', error: 'no' };
         let commandExecutionLog2 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog2.id = 1;
         commandExecutionLog2.jobSchedule = commandExecution1.id;
         commandExecutionLog2.date = new Date((new Date()).getTime() - 1000 * 5);
         commandExecutionLog2.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Info;
         commandExecutionLog2.message = 'Info message';
-        commandExecutionLog2.context = [];
+        commandExecutionLog2.context = { name: 'test', error: 'no' };
         let commandExecutionLog3 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog3.id = 2;
-        commandExecutionLog3.jobSchedule = commandExecution1.id;
+        commandExecutionLog3.jobSchedule = jobSchedule4.id;
         commandExecutionLog3.date = new Date((new Date()).getTime() - 1000 * 10);
         commandExecutionLog3.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Notice;
         commandExecutionLog3.message = 'Notice message';
-        commandExecutionLog3.context = [];
+        commandExecutionLog3.context = { name: 'test', error: 'no' };
         let commandExecutionLog4 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog4.id = 3;
-        commandExecutionLog4.jobSchedule = commandExecution1.id;
+        commandExecutionLog4.jobSchedule = jobSchedule3.id;
         commandExecutionLog4.date = new Date((new Date()).getTime() - 1000 * 15);
         commandExecutionLog4.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Warning;
         commandExecutionLog4.message = 'Warning message';
-        commandExecutionLog4.context = [];
+        commandExecutionLog4.context = { name: 'test', error: 'no' };
         let commandExecutionLog5 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog5.id = 4;
-        commandExecutionLog5.jobSchedule = commandExecution1.id;
+        commandExecutionLog5.jobSchedule = jobSchedule2.id;
         commandExecutionLog5.date = new Date((new Date()).getTime() - 1000 * 20);
         commandExecutionLog5.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Error;
         commandExecutionLog5.message = 'Error message';
-        commandExecutionLog5.context = [];
+        commandExecutionLog5.context = { name: 'test', error: 'yes' };
         let commandExecutionLog6 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog6.id = 5;
-        commandExecutionLog6.jobSchedule = commandExecution1.id;
+        commandExecutionLog6.jobSchedule = jobSchedule4.id;
         commandExecutionLog6.date = new Date((new Date()).getTime() - 1000 * 25);
         commandExecutionLog6.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Critical;
         commandExecutionLog6.message = 'Critical message';
-        commandExecutionLog6.context = [];
+        commandExecutionLog6.context = { name: 'test', error: 'yes' };
         let commandExecutionLog7 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog7.id = 6;
         commandExecutionLog7.jobSchedule = commandExecution1.id;
         commandExecutionLog7.date = new Date((new Date()).getTime() - 1000 * 30);
         commandExecutionLog7.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Alert;
         commandExecutionLog7.message = 'Alert message';
-        commandExecutionLog7.context = [];
+        commandExecutionLog7.context = { name: 'test', error: 'no' };
         let commandExecutionLog8 = new CommandExecutionLog_1.CommandExecutionLog();
         commandExecutionLog8.id = 7;
         commandExecutionLog8.jobSchedule = commandExecution1.id;
         commandExecutionLog8.date = new Date((new Date()).getTime() - 1000 * 35);
         commandExecutionLog8.level = CommandExecutionLogLevel_1.CommandExecutionLogLevel.Emergency;
         commandExecutionLog8.message = 'Emergency message';
-        commandExecutionLog8.context = [];
+        commandExecutionLog8.context = { name: 'test', error: 'yes' };
+        ;
         let log1 = new Log_1.Log();
         log1.id = 0;
         log1.command = command1;
-        log1.commandExecution = commandExecution1;
+        log1.commandExecution = jobSchedule4;
         log1.date = commandExecutionLog1.date;
         log1.level = commandExecutionLog1.level;
         log1.message = commandExecutionLog1.message;
@@ -233,7 +234,7 @@ class Client {
         let log2 = new Log_1.Log();
         log2.id = 0;
         log2.command = command1;
-        log2.commandExecution = commandExecution1;
+        log2.commandExecution = jobSchedule2;
         log2.date = commandExecutionLog2.date;
         log2.level = commandExecutionLog2.level;
         log2.message = commandExecutionLog2.message;
@@ -241,7 +242,7 @@ class Client {
         let log3 = new Log_1.Log();
         log3.id = 0;
         log3.command = command1;
-        log3.commandExecution = commandExecution1;
+        log3.commandExecution = jobSchedule3;
         log3.date = commandExecutionLog3.date;
         log3.level = commandExecutionLog3.level;
         log3.message = commandExecutionLog3.message;
@@ -257,7 +258,7 @@ class Client {
         let log5 = new Log_1.Log();
         log5.id = 0;
         log5.command = command1;
-        log5.commandExecution = commandExecution1;
+        log5.commandExecution = jobSchedule2;
         log5.date = commandExecutionLog5.date;
         log5.level = commandExecutionLog5.level;
         log5.message = commandExecutionLog5.message;
@@ -265,7 +266,7 @@ class Client {
         let log6 = new Log_1.Log();
         log6.id = 0;
         log6.command = command1;
-        log6.commandExecution = commandExecution1;
+        log6.commandExecution = jobSchedule4;
         log6.date = commandExecutionLog6.date;
         log6.level = commandExecutionLog6.level;
         log6.message = commandExecutionLog6.message;
@@ -362,7 +363,7 @@ class Client {
         let commandExecutions = [];
         //Future jobSchedule
         let commandExecution1 = new CommandExecution_1.CommandExecution();
-        commandExecution1.id = 0;
+        commandExecution1.id = '0';
         commandExecution1.command = command.id;
         commandExecution1.trigger = 'unknown';
         commandExecution1.status = CommandExecutionStatus_1.default.PENDING;
@@ -371,7 +372,7 @@ class Client {
         commandExecutions.push(commandExecution1);
         //Running jobSchedule
         let jobSchedule2 = new CommandExecution_1.CommandExecution();
-        jobSchedule2.id = 1;
+        jobSchedule2.id = '1';
         jobSchedule2.command = command.id;
         jobSchedule2.trigger = 'cron';
         jobSchedule2.status = CommandExecutionStatus_1.default.RUNNING;
@@ -380,7 +381,7 @@ class Client {
         commandExecutions.push(jobSchedule2);
         //Completed jobSchedule
         let jobSchedule3 = new CommandExecution_1.CommandExecution();
-        jobSchedule3.id = 2;
+        jobSchedule3.id = '2';
         jobSchedule3.command = command.id;
         jobSchedule3.trigger = 'cron job';
         jobSchedule3.status = CommandExecutionStatus_1.default.COMPLETE;
@@ -391,7 +392,7 @@ class Client {
         commandExecutions.push(jobSchedule3);
         //Completed jobSchedule
         let jobSchedule4 = new CommandExecution_1.CommandExecution();
-        jobSchedule4.id = 3;
+        jobSchedule4.id = '3';
         jobSchedule4.command = command.id;
         jobSchedule4.trigger = 'manual';
         jobSchedule4.status = CommandExecutionStatus_1.default.COMPLETE;
