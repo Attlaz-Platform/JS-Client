@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "0.0.1",
+  "version": "0.6.0",
   "description": "Javascript Client to access Attlaz API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,20 +8,35 @@
     "type": "git",
     "url": "https://bitbucket.org/echron-team/attlaz-javascript-client"
   },
-  "author": "Stijn Duynslaeger",
+  "author": {
+    "name": "Stijn Duynslaeger",
+    "email": "stijn@echron.be",
+    "url": "https://echron.be"
+  },
   "license": "MIT",
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "tsc",
+    "prepare": "npm run build",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "publishConfig": {
+    "registry": "http://hq.attlaz.com:4873"
+  },
   "devDependencies": {
+    "@types/request": "^2.47.1",
     "@types/rx": "^4.1.1",
-    "typescript": "^2.3.4"
+    "typescript": "^2.9.2"
   },
   "peerDependencies": {},
   "dependencies": {
+    "@types/request-promise-native": "^1.0.15",
+    "@types/socket.io": "^1.4.36",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5",
+    "rimraf": "^2.6.2",
     "rx": "^4.1.0",
-    "rxjs": "^5.5.2"
+    "rxjs": "^6.2.1",
+    "socket.io": "^2.1.1"
   }
 }
