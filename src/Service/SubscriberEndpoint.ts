@@ -14,7 +14,10 @@ export class SubscriberEndpoint extends Endpoint {
                 resolve(subscribers);
 
             }).catch((reason) => {
-                console.log('Failed to load subscribers: ', reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load subscribers: ', reason);
+                }
+
                 reject(reason);
             });
 

@@ -155,4 +155,8 @@ export class HttpClient {
         this.debug = false;
     }
 
+    public isDebugEnabled(): boolean {
+        return this.debug;
+    }
+
 }

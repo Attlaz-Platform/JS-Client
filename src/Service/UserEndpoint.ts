@@ -13,7 +13,10 @@ export class UserEndpoint extends Endpoint {
                 resolve(User.parse(rawUser));
 
             }).catch((reason) => {
-                console.log('Unable to get user: ', reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Unable to get user: ', reason);
+                }
+
                 reject(reason);
             });
 

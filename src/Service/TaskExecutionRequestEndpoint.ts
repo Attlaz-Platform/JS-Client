@@ -11,7 +11,11 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
 
                 resolve(result);
             }).catch((reason) => {
-                console.log('Failed to load config: ', reason);
+                if(this.httpClient.isDebugEnabled())
+                {
+                    console.error('Failed to load config: ', reason);
+                }
+
                 reject(reason);
             });
 

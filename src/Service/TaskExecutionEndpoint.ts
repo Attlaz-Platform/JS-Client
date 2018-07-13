@@ -27,7 +27,11 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(result);
 
             }).catch((reason) => {
-                console.log('Failed to load branches: ', reason);
+                if(this.httpClient.isDebugEnabled())
+                {
+                    console.error('Failed to load branches: ', reason);
+                }
+
                 reject(reason);
             });
 
@@ -74,7 +78,6 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             this.httpClient.request(cmd).then((rawLogLevelCounts: any) => {
 
-
                 let logLevelCount: Map<LogLevel, number> = new Map<LogLevel, number>();
                 for (let rawLogLevel in rawLogLevelCounts) {
 
@@ -89,7 +92,10 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(logLevelCount);
 
             }).catch((reason) => {
-                console.log('Failed to load branches: ', reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load branches: ', reason);
+                }
+
                 reject(reason);
             });
 
@@ -138,7 +144,10 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(taskExecutions);
 
             }).catch((reason) => {
-                console.log('Failed to load tasks executions: ' + reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load tasks executions: ' + reason);
+                }
+
                 reject(reason);
             });
         });
@@ -157,7 +166,10 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(taskExecutions);
 
             }).catch((reason) => {
-                console.log('Failed to load tasks executions: ' + reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load tasks executions: ' + reason);
+                }
+
                 reject(reason);
             });
         });
@@ -170,7 +182,10 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(TaskExecutionSummary.parse(rawTaskExecution));
 
             }).catch((reason) => {
-                console.log('Failed to load tasks executions: ' + reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load tasks executions: ' + reason);
+                }
+
                 reject(reason);
             });
         });
@@ -194,7 +209,10 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(taskExecutionHistories);
 
             }).catch((reason) => {
-                console.log('Failed to load branches: ', reason);
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load branches: ', reason);
+                }
+
                 reject(reason);
             });
 

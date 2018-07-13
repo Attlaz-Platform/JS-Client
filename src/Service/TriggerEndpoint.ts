@@ -14,7 +14,11 @@ export class TriggerEndpoint extends Endpoint {
                 resolve(triggers);
 
             }).catch((reason) => {
-                console.log('Failed to load triggers: ', reason);
+                if(this.httpClient.isDebugEnabled())
+                {
+                    console.error('Failed to load triggers: ', reason);
+                }
+
                 reject(reason);
             });
 

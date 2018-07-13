@@ -14,7 +14,11 @@ export class ConfigEndpoint extends Endpoint {
                 resolve(configs);
 
             }).catch((reason) => {
-                console.error('Unable to load task configuration', reason);
+                if(this.httpClient.isDebugEnabled())
+                {
+                    console.error('Unable to load task configuration', reason);
+                }
+
                 reject(reason);
             });
 
@@ -33,7 +37,9 @@ export class ConfigEndpoint extends Endpoint {
                 resolve(configs);
 
             }).catch((reason) => {
-                console.error('Unable to load branch configuration', reason);
+                if(this.httpClient.isDebugEnabled()) {
+                    console.error('Unable to load branch configuration', reason);
+                }
                 reject(reason);
             });
 
@@ -49,7 +55,9 @@ export class ConfigEndpoint extends Endpoint {
                 resolve(result);
 
             }).catch((reason) => {
-                console.log('Failed to load config: ', reason);
+                if(this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load config: ', reason);
+                }
                 reject(reason);
             });
 

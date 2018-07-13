@@ -20,7 +20,11 @@ export class SystemEndpoint extends Endpoint {
                 resolve(result);
 
             }).catch((reason) => {
-                console.log('Failed to load logs: ', reason);
+                if(this.httpClient.isDebugEnabled())
+                {
+                    console.error('Failed to load logs: ', reason);
+                }
+
                 reject(reason);
             });
 
