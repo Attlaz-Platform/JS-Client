@@ -7,6 +7,14 @@ export class Config {
     public value: string;
 
     public static parse(rawConfig: any): Config {
-        return (rawConfig as Config);
+        let config: Config = new Config();
+        config.id = rawConfig.id;
+        config.branch = rawConfig.branch;
+        config.task = rawConfig.task;
+        config.scope = rawConfig.scope;
+        config.key = rawConfig.key;
+        config.value = rawConfig.value
+
+        return config;
     }
 }

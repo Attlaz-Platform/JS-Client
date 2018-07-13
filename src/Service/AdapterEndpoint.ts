@@ -8,6 +8,7 @@ export class AdapterEndpoint extends Endpoint {
 
                 let adapters: Adapter[] = [];
                 for (let rawAdapter of rawAdapters) {
+
                     adapters.push(Adapter.parse(rawAdapter));
                 }
 

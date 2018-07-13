@@ -3,12 +3,13 @@ export * from './Model/Event/EventType';
 export * from './Model/Log/Log';
 export * from './Model/Log/LogLevel';
 
+export * from './Model/Subscriber/Subscriber';
+export * from './Model/Subscriber/SubscriberData';
+
 export * from './Model/Subscriber/EmailSubscriber';
 export * from './Model/Subscriber/EmailSubscriberData';
 export * from './Model/Subscriber/SlackSubscriber';
 export * from './Model/Subscriber/SlackSubscriberData';
-export * from './Model/Subscriber/Subscriber';
-export * from './Model/Subscriber/SubscriberData';
 
 export * from './Model/Trigger/Trigger';
 export * from './Model/Trigger/TriggerData';
@@ -27,6 +28,7 @@ export * from './Model/TaskSummary';
 export * from './Model/User';
 
 export * from './Service/Endpoint';
+
 export * from './Service/AdapterEndpoint';
 export * from './Service/BranchEndpoint';
 export * from './Service/ConfigEndpoint';

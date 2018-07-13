@@ -1,4 +1,4 @@
-import {User,Endpoint} from "..";
+import {Endpoint, User} from "..";
 
 export class UserEndpoint extends Endpoint {
 
@@ -10,7 +10,7 @@ export class UserEndpoint extends Endpoint {
 
             this.httpClient.request(cmd).then((rawUser: any) => {
 
-                resolve(rawUser);
+                resolve(User.parse(rawUser));
 
             }).catch((reason) => {
                 console.log('Unable to get user: ', reason);

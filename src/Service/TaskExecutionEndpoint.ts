@@ -74,8 +74,9 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             this.httpClient.request(cmd).then((rawLogLevelCounts: any) => {
 
+
                 let logLevelCount: Map<LogLevel, number> = new Map<LogLevel, number>();
-                for (let rawLogLevel of rawLogLevelCounts) {
+                for (let rawLogLevel in rawLogLevelCounts) {
 
                     let count: number = rawLogLevelCounts[rawLogLevel];
 
@@ -130,7 +131,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
                 let taskExecutions: TaskExecution[] = [];
                 for (let rawTaskExecution of rawTaskExecutions) {
-                    taskExecutions.push((rawTaskExecution as TaskExecution));
+                    taskExecutions.push(TaskExecution.parse(rawTaskExecution));
 
                 }
 
@@ -149,7 +150,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
                 let taskExecutions: TaskExecutionSummary[] = [];
                 for (let rawTaskExecution of rawTaskExecutions) {
-                    taskExecutions.push((rawTaskExecution as TaskExecutionSummary));
+                    taskExecutions.push(TaskExecutionSummary.parse(rawTaskExecution));
 
                 }
 
@@ -166,7 +167,7 @@ export class TaskExecutionEndpoint extends Endpoint {
         return new Promise<TaskExecutionSummary>((resolve, reject) => {
             this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/execution/' + taskExecutionId + '/summary').then((rawTaskExecution: any) => {
 
-                resolve((rawTaskExecution as TaskExecutionSummary));
+                resolve(TaskExecutionSummary.parse(rawTaskExecution));
 
             }).catch((reason) => {
                 console.log('Failed to load tasks executions: ' + reason);

@@ -8,7 +8,7 @@ export class TaskEndpoint extends Endpoint {
 
                 let tasks: Task[] = [];
                 for (let rawTask of rawTasks) {
-                    tasks.push((rawTask as Task));
+                    tasks.push(Task.parse(rawTask));
 
                 }
 
@@ -25,7 +25,7 @@ export class TaskEndpoint extends Endpoint {
         return new Promise<Task>((resolve, reject) => {
             this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId).then((rawTask: any) => {
 
-                resolve((rawTask as Task));
+                resolve(Task.parse(rawTask));
 
             }).catch((reason) => {
                 console.log('Failed to load tasks: ' + reason);
@@ -40,7 +40,7 @@ export class TaskEndpoint extends Endpoint {
 
                 let tasks: TaskSummary[] = [];
                 for (let rawTaskSummary of rawTaskSummaries) {
-                    tasks.push((rawTaskSummary as TaskSummary));
+                    tasks.push(TaskSummary.parse(rawTaskSummary));
 
                 }
 
@@ -56,7 +56,7 @@ export class TaskEndpoint extends Endpoint {
     public getTaskSummary(taskId: string): Promise<TaskSummary> {
         return new Promise<TaskSummary>((resolve, reject) => {
             this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/summary').then((rawTaskSummary: any) => {
-                resolve((rawTaskSummary as TaskSummary));
+                resolve(TaskSummary.parse(rawTaskSummary));
 
             }).catch((reason) => {
                 console.log('Failed to load task by id ' + taskId + ': ' + reason);

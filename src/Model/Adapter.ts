@@ -6,8 +6,15 @@ export class Adapter {
     public image: string;
     public type: string;
 
-
     public static parse(rawAdapter: any): Adapter {
-        return rawAdapter;
+        let adapter: Adapter = new Adapter();
+        adapter.id = rawAdapter.id;
+        adapter.name = rawAdapter.name;
+        adapter.description = rawAdapter.description;
+        adapter.vendor = rawAdapter.vendor;
+        adapter.image = rawAdapter.image;
+        adapter.type = rawAdapter.type;
+        return adapter;
+
     }
 }

@@ -1,4 +1,4 @@
-import {Endpoint,Trigger} from "..";
+import {Endpoint, Trigger} from "..";
 
 export class TriggerEndpoint extends Endpoint {
 
@@ -8,7 +8,7 @@ export class TriggerEndpoint extends Endpoint {
 
                 let triggers: Trigger[] = [];
                 for (let rawTrigger of rawTriggers) {
-
+//TODO: add parsing
                     triggers.push(rawTrigger);
                 }
                 resolve(triggers);

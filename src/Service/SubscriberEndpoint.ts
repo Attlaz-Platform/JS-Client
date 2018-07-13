@@ -1,4 +1,4 @@
-import {Endpoint,Subscriber as ReportSubscriber} from "..";
+import {Endpoint, Subscriber as ReportSubscriber} from "..";
 
 export class SubscriberEndpoint extends Endpoint {
 
@@ -8,7 +8,7 @@ export class SubscriberEndpoint extends Endpoint {
 
                 let subscribers: ReportSubscriber[] = [];
                 for (let rawSubscriber of rawSubscribers) {
-
+//TODO: parse to objects
                     subscribers.push(rawSubscriber);
                 }
                 resolve(subscribers);

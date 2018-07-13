@@ -10,6 +10,8 @@ export class HttpClient {
 
     private branchId: string;
 
+    private debug: boolean = false;
+
     // private socketService;
 
     constructor(apiEndpoint: string, clientId: string, clientSecret: string) {
@@ -57,6 +59,9 @@ export class HttpClient {
                 form: body
             };
 
+            if (this.debug) {
+                console.info('Get token');
+            }
             request(options).then((content: any) => {
                 //TODO: check if properties exist in response
                 this.accessToken = content.access_token;
@@ -65,7 +70,11 @@ export class HttpClient {
                 resolve(true);
 
             }).catch((err: Error) => {
-                console.error('Unable to get token:', err.message);
+
+                if (this.debug) {
+                    console.error('Unable to get token:', err.message);
+                }
+
                 reject(err);
             });
 
@@ -96,13 +105,20 @@ export class HttpClient {
                     options.body = parameters;
                 }
 
+                if (this.debug) {
+                    console.info('[Attlaz Client] ' + method + ": " + action);
+                }
+
                 request(options).then((content: any) => {
 
                     resolve(content);
 
                 }).catch((err: Error) => {
 
-                    console.error('Unable to get data: ', err);
+                    if (this.debug) {
+                        console.error('Unable to get data: ', err);
+                    }
+
                     reject(err);
                 });
             }
@@ -129,6 +145,14 @@ export class HttpClient {
 
     public setBranch(branch: string) {
         this.branchId = branch;
+    }
+
+    public enableDebug() {
+        this.debug = true;
+    }
+
+    public disableDebug() {
+        this.debug = false;
     }
 
 }
