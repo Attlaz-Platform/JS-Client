@@ -1,11 +1,11 @@
-import {SubscriberData} from "./SubscriberData";
+import {SubscriberChannelData} from './SubscriberChannelData';
 
-export class SlackSubscriberData extends SubscriberData {
+export class SubscriberSlackChannelData extends SubscriberChannelData {
     public webhook: string;
     public channel: string;
 
     public constructor(webhook: string, channel: string) {
-        super();
+        super("slack");
         this.webhook = webhook;
         this.channel = channel;
     }

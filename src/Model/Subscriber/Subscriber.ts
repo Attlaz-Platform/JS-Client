@@ -1,27 +1,26 @@
-import {EventType, LogLevel, SubscriberData} from "../../";
+import {EventType, LogLevel, SubscriberChannelData} from "../../";
 
 export class Subscriber {
     public id: string;
-    public eventType: EventType;
+    public eventTypes: EventType[];
+
     public branch: string;
     public task: string;
+    public taskExecution: string;
 
-    public data: SubscriberData;
-
-    public channel: string;
+    public channels: SubscriberChannelData[];
     public logLevelThreshold: LogLevel;
-    public logLevelFilter: LogLevel[];
 
-    constructor(id: string, eventType: EventType, branch: string, task: string, data: SubscriberData, channel: string, logLevelThreshold: LogLevel = null, logLevelFilter: LogLevel[] = null) {
+    constructor(id: string, eventTypes: EventType[], branch: string, task: string, taskExecution: string, channels: SubscriberChannelData[], logLevelThreshold: LogLevel = null) {
         this.id = id;
-        this.eventType = eventType;
+        this.eventTypes = eventTypes;
         this.branch = branch;
         this.task = task;
-        this.data = data;
+        this.taskExecution = taskExecution;
 
-        this.channel = channel;
+        this.channels = channels;
         this.logLevelThreshold = logLevelThreshold;
-        this.logLevelFilter = logLevelFilter;
+
     }
 
     public getLogLevelThreshold(): LogLevel {
@@ -32,15 +31,7 @@ export class Subscriber {
         return this.logLevelThreshold !== null;
     }
 
-    public getLogLevelFilter(): LogLevel[] {
-        return this.logLevelFilter;
-    }
-
-    public hasLogLevelFilter(): boolean {
-        return this.logLevelFilter !== null;
-    }
-
-    public getData(): SubscriberData {
-        return this.data;
+    public getChannels(): SubscriberChannelData[] {
+        return this.channels;
     }
 }
