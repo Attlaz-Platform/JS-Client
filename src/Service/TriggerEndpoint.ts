@@ -4,7 +4,7 @@ export class TriggerEndpoint extends Endpoint {
 
     public getTriggersByTask(taskId: string): Promise<Trigger[]> {
         return new Promise<Trigger[]>((resolve, reject) => {
-            this.httpClient.request('/branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/trigger').then((rawTriggers: any) => {
+            this.httpClient.request('/tasks/' + taskId + '/triggers').then((rawTriggers: any) => {
 
                 let triggers: Trigger[] = [];
                 for (let rawTrigger of rawTriggers) {
@@ -14,8 +14,7 @@ export class TriggerEndpoint extends Endpoint {
                 resolve(triggers);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load triggers: ', reason);
                 }
 

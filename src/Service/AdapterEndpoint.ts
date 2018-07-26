@@ -4,7 +4,7 @@ export class AdapterEndpoint extends Endpoint {
 
     public getAdapters(): Promise<Adapter[]> {
         return new Promise<Adapter[]>((resolve, reject) => {
-            this.httpClient.request('adapter').then((rawAdapters: any) => {
+            this.httpClient.request('adapters').then((rawAdapters: any) => {
 
                 let adapters: Adapter[] = [];
                 for (let rawAdapter of rawAdapters) {

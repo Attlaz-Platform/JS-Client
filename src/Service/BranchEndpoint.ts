@@ -4,7 +4,7 @@ export class BranchEndpoint extends Endpoint {
 
     public getBranches(): Promise<Branch[]> {
         return new Promise<Branch[]>((resolve, reject) => {
-            this.httpClient.request('branch').then((rawBranches: any) => {
+            this.httpClient.request('branches').then((rawBranches: any) => {
 
                 let branches: Branch[] = [];
                 for (let rawBranch of rawBranches) {

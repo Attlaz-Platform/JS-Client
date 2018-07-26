@@ -1,9 +1,9 @@
 import {Endpoint} from "..";
 
 export class TaskExecutionRequestEndpoint extends Endpoint {
-    public postTaskExecutionRequest(params: any, wait: boolean = false): Promise<any> {
+    public postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let url: string = '/branch/' + this.httpClient.getBranchId() + '/taskexecutionrequest';
+            let url: string = '/tasks/' + taskId + '/taskexecutionrequests';
             if (wait) {
                 url = url + "?wait=true";
             }
@@ -11,8 +11,7 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
 
                 resolve(result);
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load config: ', reason);
                 }
 

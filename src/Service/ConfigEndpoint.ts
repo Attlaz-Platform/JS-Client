@@ -1,10 +1,10 @@
-import {Endpoint,Config} from "..";
+import {Config, Endpoint} from "..";
 
 export class ConfigEndpoint extends Endpoint {
 
     public getConfigByTask(taskId: string): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
-            this.httpClient.request('/branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/config').then((rawConfigs: any) => {
+            this.httpClient.request('/tasks/' + taskId + '/config').then((rawConfigs: any) => {
 
                 let configs: Config[] = [];
                 for (let rawConfig of rawConfigs) {
@@ -14,8 +14,7 @@ export class ConfigEndpoint extends Endpoint {
                 resolve(configs);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load task configuration', reason);
                 }
 
@@ -25,9 +24,9 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public getConfigByBranch(): Promise<Config[]> {
+    public getConfigByBranch(branchId: string): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
-            this.httpClient.request('/branch/' + this.httpClient.getBranchId() + '/config').then((rawConfigs: any) => {
+            this.httpClient.request('/branches/' + branchId + '/config').then((rawConfigs: any) => {
 
                 let configs: Config[] = [];
                 for (let rawConfig of rawConfigs) {
@@ -37,7 +36,7 @@ export class ConfigEndpoint extends Endpoint {
                 resolve(configs);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled()) {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load branch configuration', reason);
                 }
                 reject(reason);
@@ -46,16 +45,16 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public postConfigsByBranch(configs: Config[]): Promise<any> {
+    public postConfigsByBranch(branchId: string, configs: Config[]): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let url: string = '/branch/' + this.httpClient.getBranchId() + '/config';
+            let url: string = '/branches/' + branchId + '/config';
 
             this.httpClient.request(url, configs, 'POST').then((result: any) => {
 
                 resolve(result);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled()) {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load config: ', reason);
                 }
                 reject(reason);

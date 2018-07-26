@@ -12,7 +12,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             let _logs: TaskExecutionLog[] = [];
 
-            let cmd: string = '/branch/' + this.httpClient.getBranchId() + '/taskexecution/' + taskExecutionId + '/log/?pageSize=' + pageSize + '&pageNum=' + pageNum + '';
+            let cmd: string = '/taskexecutions/' + taskExecutionId + '/log/?pageSize=' + pageSize + '&pageNum=' + pageNum + '';
 
             this.httpClient.request(cmd).then((rawCommandExecutionLogs: any) => {
 
@@ -27,8 +27,7 @@ export class TaskExecutionEndpoint extends Endpoint {
                 resolve(result);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load branches: ', reason);
                 }
 
@@ -74,7 +73,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
         return new Promise<Map<LogLevel, number>>((resolve, reject) => {
 
-            let cmd: string = '/branch/' + this.httpClient.getBranchId() + '/taskexecution/' + taskExecutionId + '/loglevelcount';
+            let cmd: string = '/taskexecutions/' + taskExecutionId + '/loglevelcount';
 
             this.httpClient.request(cmd).then((rawLogLevelCounts: any) => {
 
@@ -133,7 +132,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     public getTaskExecutions(taskId: string): Promise<TaskExecution[]> {
         return new Promise<TaskExecution[]>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/execution').then((rawTaskExecutions: any[]) => {
+            this.httpClient.request('/tasks/' + taskId + '/executions').then((rawTaskExecutions: any[]) => {
 
                 let taskExecutions: TaskExecution[] = [];
                 for (let rawTaskExecution of rawTaskExecutions) {
@@ -155,7 +154,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     public getTaskExecutionSummaries(taskId: string): Promise<TaskExecutionSummary[]> {
         return new Promise<TaskExecutionSummary[]>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/executionsummary').then((rawTaskExecutions: any[]) => {
+            this.httpClient.request('/tasks/' + taskId + '/executionsummaries').then((rawTaskExecutions: any[]) => {
 
                 let taskExecutions: TaskExecutionSummary[] = [];
                 for (let rawTaskExecution of rawTaskExecutions) {
@@ -177,7 +176,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     public getTaskExecutionSummary(taskId: string, taskExecutionId: string): Promise<TaskExecutionSummary> {
         return new Promise<TaskExecutionSummary>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/execution/' + taskExecutionId + '/summary').then((rawTaskExecution: any) => {
+            this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries').then((rawTaskExecution: any) => {
 
                 resolve(TaskExecutionSummary.parse(rawTaskExecution));
 
@@ -191,15 +190,15 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public getTaskExecutionHistory(commandExecutionId: string): Promise<TaskExecutionHistory[]> {
+    public getTaskExecutionHistory(taskExecutionId: string): Promise<TaskExecutionHistory[]> {
 
-        if (commandExecutionId.length === 0) {
-            throw new Error('Command execution id cannot be empty');
+        if (taskExecutionId.length === 0) {
+            throw new Error('Task execution id cannot be empty');
         }
 
         return new Promise<TaskExecutionHistory[]>((resolve, reject) => {
 
-            this.httpClient.request('/branch/' + this.httpClient.getBranchId() + '/taskexecution/' + commandExecutionId + '/history').then((rawTaskExecutionHistories: any) => {
+            this.httpClient.request('/taskexecutions/' + taskExecutionId + '/history').then((rawTaskExecutionHistories: any) => {
 
                 let taskExecutionHistories: TaskExecutionHistory[] = [];
                 for (let rawTaskExecutionHistory of rawTaskExecutionHistories) {

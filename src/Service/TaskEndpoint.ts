@@ -2,9 +2,9 @@ import {Endpoint, Task, TaskSummary} from "..";
 
 export class TaskEndpoint extends Endpoint {
 
-    public getTasks(): Promise<Task[]> {
+    public getTasks(branchId:string): Promise<Task[]> {
         return new Promise<Task[]>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task').then((rawTasks: any[]) => {
+            this.httpClient.request('branches/' + branchId + '/tasks').then((rawTasks: any[]) => {
 
                 let tasks: Task[] = [];
                 for (let rawTask of rawTasks) {
@@ -27,7 +27,7 @@ export class TaskEndpoint extends Endpoint {
 
     public getTask(taskId: string): Promise<Task> {
         return new Promise<Task>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId).then((rawTask: any) => {
+            this.httpClient.request('/tasks/' + taskId).then((rawTask: any) => {
 
                 resolve(Task.parse(rawTask));
 
@@ -42,9 +42,9 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummaries(): Promise<TaskSummary[]> {
+    public getTaskSummaries(branchId:string): Promise<TaskSummary[]> {
         return new Promise<TaskSummary[]>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/tasksummary').then((rawTaskSummaries: any[]) => {
+            this.httpClient.request('branches/' + branchId + '/tasksummaries').then((rawTaskSummaries: any[]) => {
 
                 let tasks: TaskSummary[] = [];
                 for (let rawTaskSummary of rawTaskSummaries) {
@@ -67,7 +67,7 @@ export class TaskEndpoint extends Endpoint {
 
     public getTaskSummary(taskId: string): Promise<TaskSummary> {
         return new Promise<TaskSummary>((resolve, reject) => {
-            this.httpClient.request('branch/' + this.httpClient.getBranchId() + '/task/' + taskId + '/summary').then((rawTaskSummary: any) => {
+            this.httpClient.request('tasks/' + taskId + '/summaries').then((rawTaskSummary: any) => {
                 resolve(TaskSummary.parse(rawTaskSummary));
 
             }).catch((reason) => {
