@@ -8,8 +8,6 @@ export class HttpClient {
     private clientSecret: string;
     private accessToken: string;
 
-    private branchId: string;
-
     private debug: boolean = false;
 
     // private socketService;
@@ -137,14 +135,6 @@ export class HttpClient {
 
     public setAccessToken(accessToken: string) {
         this.accessToken = accessToken;
-    }
-
-    public getBranchId(): string {
-        return this.branchId;
-    }
-
-    public setBranch(branch: string) {
-        this.branchId = branch;
     }
 
     public enableDebug() {
