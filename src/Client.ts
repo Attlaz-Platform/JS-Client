@@ -1,13 +1,14 @@
-import {AdapterEndpoint, BranchEndpoint, ConfigEndpoint, HttpClient, SubscriberEndpoint, SystemEndpoint, TaskEndpoint, TaskExecutionEndpoint, TaskExecutionRequestEndpoint, TriggerEndpoint, UserEndpoint} from ".";
+import {AdapterEndpoint, BranchEndpoint, ConfigEndpoint, HttpClient, NotificationsEndpoint, SubscriberEndpoint, SystemEndpoint, TaskEndpoint, TaskExecutionEndpoint, TaskExecutionRequestEndpoint, TriggerEndpoint, UserEndpoint} from ".";
 
 export class Client {
-    private apiEndpoint: string = 'https://api2.attlaz.com/';
+    private apiEndpoint: string;
     private clientId: string;
     private clientSecret: string;
 
     private adapterEndpoint: AdapterEndpoint;
     private branchEndpoint: BranchEndpoint;
     private configEndpoint: ConfigEndpoint;
+    private notificationsEndpoint: NotificationsEndpoint;
     private subscriberEndpoint: SubscriberEndpoint;
     private systemEndpoint: SystemEndpoint;
     private taskEndpoint: TaskEndpoint;
@@ -55,14 +56,6 @@ export class Client {
         this.httpClient.setAccessToken(accessToken);
     }
 
-    public setBranch(branch: string): void {
-        this.httpClient.setBranch(branch);
-    }
-
-    public getBranchId(): string {
-        return this.httpClient.getBranchId();
-    }
-
     /* Endpoints */
     public getAdapterEndpoint(): AdapterEndpoint {
 
@@ -87,6 +80,13 @@ export class Client {
             this.configEndpoint = new ConfigEndpoint(this.httpClient);
         }
         return this.configEndpoint;
+    }
+
+    public getNotificationsEndpoint(): NotificationsEndpoint {
+        if (this.notificationsEndpoint === null || this.notificationsEndpoint === undefined) {
+            this.notificationsEndpoint = new NotificationsEndpoint(this.httpClient);
+        }
+        return this.notificationsEndpoint;
     }
 
     public getSubscriberEndpoint(): SubscriberEndpoint {
