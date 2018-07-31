@@ -1,4 +1,18 @@
-import {AdapterEndpoint, BranchEndpoint, ConfigEndpoint, HttpClient, NotificationsEndpoint, SubscriberEndpoint, SystemEndpoint, TaskEndpoint, TaskExecutionEndpoint, TaskExecutionRequestEndpoint, TriggerEndpoint, UserEndpoint} from ".";
+import {
+    AdapterEndpoint,
+    BranchEndpoint,
+    ConfigEndpoint,
+    HttpClient,
+    NotificationsEndpoint,
+    SubscriberEndpoint,
+    SystemEndpoint,
+    TaskEndpoint,
+    TaskExecutionEndpoint,
+    TaskExecutionRequestEndpoint,
+    TeamsEndpoint,
+    TriggerEndpoint,
+    UserEndpoint
+} from ".";
 
 export class Client {
     private apiEndpoint: string;
@@ -14,6 +28,7 @@ export class Client {
     private taskEndpoint: TaskEndpoint;
     private taskExecutionEndpoint: TaskExecutionEndpoint;
     private taskExecutionRequestEndpoint: TaskExecutionRequestEndpoint;
+    private teamsEndpoint: TeamsEndpoint;
     private triggerEndpoint: TriggerEndpoint;
     private userEndpoint: UserEndpoint;
 
@@ -122,6 +137,13 @@ export class Client {
             this.taskExecutionRequestEndpoint = new TaskExecutionRequestEndpoint(this.httpClient);
         }
         return this.taskExecutionRequestEndpoint;
+    }
+
+    public getTeamsEndpoint(): TeamsEndpoint {
+        if (this.teamsEndpoint === null || this.teamsEndpoint === undefined) {
+            this.teamsEndpoint = new TeamsEndpoint(this.httpClient);
+        }
+        return this.teamsEndpoint;
     }
 
     public getTriggerEndpoint(): TriggerEndpoint {
