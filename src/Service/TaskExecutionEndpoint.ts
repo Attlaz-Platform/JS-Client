@@ -2,7 +2,7 @@ import {Endpoint, LogLevel, PagedResult, TaskExecution, TaskExecutionHistory, Ta
 
 export class TaskExecutionEndpoint extends Endpoint {
 
-    public getLogs(taskExecutionId: string, pageSize: number = 1000, pageNum: number = 1): Promise<PagedResult<TaskExecutionLog>> {
+    public getLogs(taskExecutionId: string, pageSize: number = 1000, pageNum: number = 0): Promise<PagedResult<TaskExecutionLog>> {
 
         if (taskExecutionId.length === 0) {
             throw new Error('Command execution id cannot be empty');

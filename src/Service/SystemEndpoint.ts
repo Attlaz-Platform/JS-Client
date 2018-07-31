@@ -2,7 +2,7 @@ import {Endpoint,TaskExecutionLog,PagedResult,Log} from "..";
 
 export class SystemEndpoint extends Endpoint {
 
-    public getLogs(pageSize: number = 1000, pageNum: number = 1): Promise<PagedResult<Log>> {
+    public getLogs(pageSize: number = 1000, pageNum: number = 0): Promise<PagedResult<Log>> {
 
         return new Promise<PagedResult<Log>>((resolve, reject) => {
 
