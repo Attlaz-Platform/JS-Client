@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "0.6.0",
+  "version": "0.7.14",
   "description": "Javascript Client to access Attlaz API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,18 +25,14 @@
   },
   "devDependencies": {
     "@types/request": "^2.47.1",
-    "@types/rx": "^4.1.1",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "@types/request-promise-native": "^1.0.15",
+    "rimraf": "^2.6.2"
   },
   "peerDependencies": {},
   "dependencies": {
-    "@types/request-promise-native": "^1.0.15",
-    "@types/socket.io": "^1.4.36",
+    "client-oauth2": "^4.2.1",
     "request": "^2.87.0",
-    "request-promise-native": "^1.0.5",
-    "rimraf": "^2.6.2",
-    "rx": "^4.1.0",
-    "rxjs": "^6.2.1",
-    "socket.io": "^2.1.1"
+    "request-promise-native": "^1.0.5"
   }
 }

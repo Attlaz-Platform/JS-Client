@@ -54,7 +54,10 @@ export class Client {
         return this.httpClient;
     }
 
-    public authenticate(username: string, password: string): Promise<boolean> {
+    public authenticate(): Promise<boolean>;
+    public authenticate(username: string, password: string): Promise<boolean>;
+
+    public authenticate(username?: string, password?: string): Promise<boolean> {
         return this.httpClient.authenticate(username, password);
 
     }

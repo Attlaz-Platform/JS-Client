@@ -1,34 +1,66 @@
-import {OptionsWithUri} from "request-promise-native";
+import * as ClientOAuth2 from 'client-oauth2';
+import {Token} from 'client-oauth2';
+import request = require('request-promise-native');
 
-const request = require('request-promise-native');
+// const Request = require('request-promise-native');
 
 export class HttpClient {
-    private apiEndpoint: string = 'https://api2.attlaz.com/';
+    private apiEndpoint: string;
     private clientId: string;
     private clientSecret: string;
-    private accessToken: string;
 
     private debug: boolean = false;
 
-    // private socketService;
+    private oauthClient: ClientOAuth2;
+
+    private oauthToken: Token;
 
     constructor(apiEndpoint: string, clientId: string, clientSecret: string) {
         this.apiEndpoint = apiEndpoint;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
 
+        this.oauthClient = new ClientOAuth2({
+            clientId: clientId,
+            clientSecret: clientSecret,
+            accessTokenUri: this.getUri('oauth/token'),
+            authorizationUri: this.getUri('oauth/authorize'),
+            redirectUri: 'http://example.com/auth/github/callback',
+            scopes: ['all'],
+            state: 'xyz'
+        });
+
     }
 
-    public authenticate(username: string, password: string): Promise<boolean> {
-        //TODO: should we encrypt the password in the client?
+
+    public authenticate(username: string, password: string): Promise<boolean>;
+    public authenticate(): Promise<boolean>;
+
+    public authenticate(username?: string, password?: string): Promise<boolean>
+    {
+        //TODO: should we encrypt the password in the client (or is https save enough)?
 
         return new Promise<boolean>((resolve, reject) => {
-            this.requestToken(username, password).then((success: boolean) => {
-                resolve(success);
 
-            }).catch((err: Error) => {
-                reject(err);
-            });
+            if (username !== null && username !== undefined && password !== null && password !== undefined) {
+                this.oauthClient.owner.getToken(username, password).then((token: Token) => {
+                    this.oauthToken = token;
+                    resolve(true);
+
+                }).catch((err: Error) => {
+                    reject(err);
+                });
+            }
+            else {
+                this.oauthClient.credentials.getToken().then((token: Token) => {
+                    this.oauthToken = token;
+                    resolve(true);
+
+                }).catch((err: Error) => {
+                    reject(err);
+                });
+            }
+
         });
 
     }
@@ -37,104 +69,64 @@ export class HttpClient {
         return this.apiEndpoint.replace(/\/+$/, "") + '/' + method.replace(/^\/+/g, '');
     }
 
-    private requestToken(username: string, password: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-
-            let body: any = {
-                grant_type: 'password',
-                username: username,
-                password: password
-            };
-            let options: any = {
-                url: this.getUri('oauth/token'),
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Basic ' + Buffer.from(this.clientId + ':' + this.clientSecret).toString('base64'),
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                json: true,
-
-                form: body
-            };
-
-            if (this.debug) {
-                console.info('Get token');
-            }
-            request(options).then((content: any) => {
-                //TODO: check if properties exist in response
-                this.accessToken = content.access_token;
-                //let refresh_token: string = content.refresh_token;
-
-                resolve(true);
-
-            }).catch((err: Error) => {
-
-                if (this.debug) {
-                    console.error('Unable to get token:', err.message);
-                }
-
-                reject(err);
-            });
-
-        });
-    }
-
     public request(action: string, parameters: any = [], method: string = 'GET'): Promise<any> {
 
         return new Promise<any>((resolve, reject) => {
 
-            if (!this.isAuthenticated()) {
-                reject(new Error('Unable to perform request, access token not provided'));
-            }
-            else {
-                // console.log('token loaded');
-                let options: OptionsWithUri = <OptionsWithUri>{
-                    uri: this.getUri(action),
-                    method: method,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.accessToken,
-                        'Content-Type': 'application/json'
-                    },
-                    json: true,
-
-                };
-
-                if (method === 'POST') {
-                    options.body = parameters;
+                if (!this.isAuthenticated()) {
+                    reject(new Error('Unable to perform request, access token not provided'));
                 }
+                else {
 
-                if (this.debug) {
-                    console.info('[Attlaz Client] ' + method + ": " + action);
-                }
+                    const url: string = this.getUri(action);
 
-                request(options).then((content: any) => {
+                    let requestData: any = {
+                        method: method,
+                        url: url,
+                        json: true
+                    };
 
-                    resolve(content);
-
-                }).catch((err: Error) => {
-
-                    if (this.debug) {
-                        console.error('Unable to get data: ', err);
+                    if (method === 'POST') {
+                        requestData.body = parameters;
                     }
 
-                    reject(err);
-                });
-            }
+                    let signedRequestData: any = this.oauthToken.sign(requestData);
 
-        });
+                    if (this.debug) {
+                        console.info('[Attlaz Client] ' + method + ": " + action);
+                    }
+
+                    request(signedRequestData).then((content: any) => {
+
+                        requestData = null;
+                        signedRequestData = null;
+                        resolve(content);
+
+                    }).catch((err: Error) => {
+
+                        if (this.debug) {
+                            console.error('Unable to get data: ', err);
+                        }
+
+                        reject(err);
+                    });
+                }
+
+            }
+        );
     }
 
     public isAuthenticated(): boolean {
         //TODO: other ways to determine if the client is authenticated?
-        return this.accessToken !== undefined && this.accessToken !== '';
+        return this.oauthToken !== null && this.oauthToken !== undefined;
     }
 
     public getAccessToken(): string {
-        return this.accessToken;
+        return this.oauthToken.accessToken;
     }
 
     public setAccessToken(accessToken: string) {
-        this.accessToken = accessToken;
+        this.oauthToken = this.oauthClient.createToken(accessToken, {});
     }
 
     public enableDebug() {
