@@ -24,7 +24,7 @@ export class TaskSummary {
         task.description = rawTask.description;
         task.direct = rawTask.direct;
 
-        task.status = rawTask.status;
+        task.status = TaskExecutionStatus.fromString(rawTask.status);
         task.lastExecution = rawTask.lastExecution;
         task.averageExecutionDuration = rawTask.averageExecutionDuration;
         task.executionCount = rawTask.executionCount;
