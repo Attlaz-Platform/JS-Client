@@ -2,7 +2,7 @@ import {isNullOrUndefined} from "util";
 
 export enum TaskExecutionStatus {
     Unknown = <any>"unknown",
-    Scheduled = <any>"scheduled",
+    Pending = <any>"pending",
     Canceled = <any>"canceled",
     Running = <any>"running",
     Failed = <any>"failed",
@@ -22,8 +22,8 @@ export namespace TaskExecutionStatus {
             case 'unknown':
                 result = TaskExecutionStatus.Unknown;
                 break;
-            case 'scheduled':
-                result = TaskExecutionStatus.Scheduled;
+            case 'pending':
+                result = TaskExecutionStatus.Pending;
                 break;
             case 'canceled':
                 result = TaskExecutionStatus.Canceled;
