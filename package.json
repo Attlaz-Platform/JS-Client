@@ -1,17 +1,17 @@
 {
   "name": "attlaz-client",
-  "version": "0.7.14",
+  "version": "0.7.27",
   "description": "Javascript Client to access Attlaz API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/echron-team/attlaz-javascript-client"
+    "url": "https://bitbucket.org/attlaz/javascript-client"
   },
   "author": {
     "name": "Stijn Duynslaeger",
-    "email": "stijn@echron.be",
-    "url": "https://echron.be"
+    "email": "stijn@attlaz.com",
+    "url": "stijn@attlaz.com"
   },
   "license": "MIT",
   "scripts": {
@@ -21,18 +21,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "publishConfig": {
-    "registry": "http://hq.attlaz.com:4873"
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "client-oauth2": "https://codeload.github.com/Echron/js-client-oauth2/legacy.tar.gz/260a4669113ee460e8fdf402e2a6cab123c294b2",
+    "popsicle": "^11.0.0"
   },
   "devDependencies": {
-    "@types/request": "^2.47.1",
-    "typescript": "^2.9.2",
-    "@types/request-promise-native": "^1.0.15",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "typescript": "^3.1.3",
+    "@types/node": "^10.12.5"
   },
-  "peerDependencies": {},
-  "dependencies": {
-    "client-oauth2": "^4.2.1",
-    "request": "^2.87.0",
-    "request-promise-native": "^1.0.5"
+  "peerDependencies": {
+    "popsicle": "^11.0.0"
   }
 }

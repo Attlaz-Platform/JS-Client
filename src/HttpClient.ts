@@ -1,6 +1,9 @@
 import * as ClientOAuth2 from 'client-oauth2';
 import {Token} from 'client-oauth2';
-import request = require('request-promise-native');
+
+import * as Popsicle from 'popsicle';
+// import {Response} from 'popsicle/dist/response';
+// import request = require('request-promise-native');
 
 // const Request = require('request-promise-native');
 
@@ -32,12 +35,10 @@ export class HttpClient {
 
     }
 
-
     public authenticate(username: string, password: string): Promise<boolean>;
     public authenticate(): Promise<boolean>;
 
-    public authenticate(username?: string, password?: string): Promise<boolean>
-    {
+    public authenticate(username?: string, password?: string): Promise<boolean> {
         //TODO: should we encrypt the password in the client (or is https save enough)?
 
         return new Promise<boolean>((resolve, reject) => {
@@ -95,12 +96,15 @@ export class HttpClient {
                     if (this.debug) {
                         console.info('[Attlaz Client] ' + method + ": " + action);
                     }
+                    const req = Popsicle.request(signedRequestData.url, signedRequestData)
+                    Popsicle.transport({negotiateHttpVersion: 0})(req).then((response: any) => {
 
-                    request(signedRequestData).then((content: any) => {
-
+                        //TODO: validate status
                         requestData = null;
                         signedRequestData = null;
-                        resolve(content);
+                        (response.body.json().then((body: any) => {
+                            resolve(body);
+                        }));
 
                     }).catch((err: Error) => {
 
