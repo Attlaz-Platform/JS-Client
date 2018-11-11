@@ -1,4 +1,5 @@
 import {Log} from "./Log/Log";
+import {LogType} from './Log/LogType';
 
 export class TaskExecutionLog extends Log {
     public taskExecution: string;
@@ -10,6 +11,7 @@ export class TaskExecutionLog extends Log {
         commandExecutionLog.date = rawTaskExecutionLog.date;
         commandExecutionLog.level = rawTaskExecutionLog.level;
         commandExecutionLog.message = rawTaskExecutionLog.message;
+        commandExecutionLog.type = LogType.fromString(rawTaskExecutionLog.type);
         commandExecutionLog.context = rawTaskExecutionLog.context;
         return commandExecutionLog;
     }

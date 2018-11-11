@@ -1,4 +1,5 @@
-import {Endpoint, Subscriber, SubscriberChannelData, SubscriberEmailChannelData, SubscriberSlackChannelData} from "..";
+import {Endpoint, Subscriber} from "..";
+import {SubscriberChannel} from '../Model/Subscriber/SubscriberChannel';
 
 export class SubscriberEndpoint extends Endpoint {
 
@@ -8,32 +9,35 @@ export class SubscriberEndpoint extends Endpoint {
 
                 let subscribers: Subscriber[] = [];
                 for (let rawSubscriber of rawSubscribers) {
-//TODO: parse to objects
-                    // subscribers.push(rawSubscriber);
-
-                    let channels: SubscriberChannelData[] = [];
-
-                    for (let rawChannel of rawSubscriber.channels) {
-                        switch (rawChannel.type) {
-                            case 'email':
-                                const emailChannelData: SubscriberEmailChannelData = new SubscriberEmailChannelData(rawChannel.email);
-                                channels.push(emailChannelData);
-                                break;
-                            case 'slack':
-                                const slackChannelData: SubscriberSlackChannelData = new SubscriberSlackChannelData(rawChannel.webhook, rawChannel.channel);
-                                channels.push(slackChannelData);
-                                break;
-                            default:
-                                throw new Error('Unable to parse subscriber "' + rawSubscriber.id + '" to object: unknown subscriber channel "' + rawChannel.type + '"');
-                        }
-                    }
-
-                    let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.branch, rawSubscriber.task, rawSubscriber.task_execution, channels, rawSubscriber.logLevelThreshold);
-
+                    let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.branch, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
                     subscribers.push(subscriber);
-
                 }
                 resolve(subscribers);
+
+            }).catch((reason) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load subscribers: ', reason);
+                }
+
+                reject(reason);
+            });
+
+        });
+    }
+
+    public getChannels(teamId: string): Promise<SubscriberChannel[]> {
+        return new Promise<SubscriberChannel[]>((resolve, reject) => {
+            this.httpClient.request('/teams/' + teamId + '/channels').then((rawChannels: any) => {
+
+                let subscriberChannels: SubscriberChannel[] = [];
+                for (let rawChannel of rawChannels) {
+
+                    let subscriberChannel: SubscriberChannel = new SubscriberChannel(rawChannel.id, rawChannel.team, rawChannel.label, rawChannel.type, rawChannel.data);
+
+                    subscriberChannels.push(subscriberChannel);
+
+                }
+                resolve(subscriberChannels);
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {

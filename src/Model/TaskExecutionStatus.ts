@@ -32,12 +32,16 @@ export namespace TaskExecutionStatus {
                 result = TaskExecutionStatus.Running;
                 break;
             case 'failed':
+            //Deprecated (error)
+            case 'error':
                 result = TaskExecutionStatus.Failed;
                 break;
             case 'stopped':
                 result = TaskExecutionStatus.Stopped;
                 break;
             case 'complete':
+            //Deprecated (success)
+            case 'success':
                 result = TaskExecutionStatus.Complete;
                 break;
 

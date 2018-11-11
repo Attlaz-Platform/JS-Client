@@ -2,6 +2,8 @@ export class Branch {
     public id: string;
     public code: string;
     public name: string;
+    public default: boolean = false;
+    public active: boolean = true;
 
     constructor(id: string, code: string, name: string) {
         this.id = id;
@@ -10,6 +12,9 @@ export class Branch {
     }
 
     public static parse(rawBranch: any): Branch {
-        return new Branch(rawBranch.id, rawBranch.code, rawBranch.name);
+        let branch: Branch = new Branch(rawBranch.id, rawBranch.code, rawBranch.name);
+        branch.default = (rawBranch.default.toString() === '1');
+        branch.active = (rawBranch.active.toString() === '1');
+        return branch;
     }
 }

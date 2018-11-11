@@ -24,6 +24,7 @@ export * from './Model/TaskExecutionLog';
 export * from './Model/TaskExecutionStatus';
 export * from './Model/TaskExecutionSummary';
 export * from './Model/TaskSummary';
+export * from './Model/Team';
 export * from './Model/User';
 
 export * from './Service/Endpoint';
@@ -37,6 +38,7 @@ export * from './Service/SystemEndpoint';
 export * from './Service/TaskEndpoint';
 export * from './Service/TaskExecutionEndpoint';
 export * from './Service/TaskExecutionRequestEndpoint';
+export * from './Service/TeamsEndpoint';
 export * from './Service/TriggerEndpoint';
 export * from './Service/UserEndpoint';
 
