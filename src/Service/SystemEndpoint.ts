@@ -15,8 +15,7 @@ export class SystemEndpoint extends Endpoint {
             if (logQuery.resolved !== null && logQuery.resolved !== undefined) {
                 if (logQuery.resolved === true) {
                     arrQuery.push('resolved=1');
-                }
-                else {
+                } else {
                     arrQuery.push('resolved=0');
                 }
             }
@@ -75,7 +74,7 @@ export class SystemEndpoint extends Endpoint {
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load logs: ', reason);
+                    console.error('Failed to save log: ', reason);
                 }
 
                 reject(reason);

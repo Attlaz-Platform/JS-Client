@@ -1,5 +1,4 @@
 import {Endpoint, Subscriber} from "..";
-import {SubscriberChannel} from '../Model/Subscriber/SubscriberChannel';
 
 export class SubscriberEndpoint extends Endpoint {
 
@@ -13,31 +12,6 @@ export class SubscriberEndpoint extends Endpoint {
                     subscribers.push(subscriber);
                 }
                 resolve(subscribers);
-
-            }).catch((reason) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load subscribers: ', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
-    }
-
-    public getChannels(teamId: string): Promise<SubscriberChannel[]> {
-        return new Promise<SubscriberChannel[]>((resolve, reject) => {
-            this.httpClient.request('/teams/' + teamId + '/channels').then((rawChannels: any) => {
-
-                let subscriberChannels: SubscriberChannel[] = [];
-                for (let rawChannel of rawChannels) {
-
-                    let subscriberChannel: SubscriberChannel = new SubscriberChannel(rawChannel.id, rawChannel.team, rawChannel.label, rawChannel.type, rawChannel.data);
-
-                    subscriberChannels.push(subscriberChannel);
-
-                }
-                resolve(subscriberChannels);
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {

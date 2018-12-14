@@ -2,7 +2,7 @@ import {LogLevel} from "./LogLevel";
 import {LogType} from './LogType';
 
 export class Log {
-    public id: number;
+    public id: string;
     public date: Date;
     public level: LogLevel;
     public message: string;

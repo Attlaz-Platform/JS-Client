@@ -13,6 +13,7 @@ import {
     TriggerEndpoint,
     UserEndpoint
 } from ".";
+import {ChannelEndpoint} from './Service/ChannelEndpoint';
 
 export class Client {
     private apiEndpoint: string;
@@ -21,6 +22,7 @@ export class Client {
 
     private adapterEndpoint: AdapterEndpoint;
     private branchEndpoint: BranchEndpoint;
+    private channelEndpoint: ChannelEndpoint;
     private configEndpoint: ConfigEndpoint;
     private notificationsEndpoint: NotificationsEndpoint;
     private subscriberEndpoint: SubscriberEndpoint;
@@ -91,6 +93,15 @@ export class Client {
         }
 
         return this.branchEndpoint;
+    }
+
+    public getChannelEndpoint(): ChannelEndpoint {
+
+        if (this.channelEndpoint === null || this.channelEndpoint === undefined) {
+            this.channelEndpoint = new ChannelEndpoint(this.httpClient);
+        }
+
+        return this.channelEndpoint;
     }
 
     public getConfigEndpoint(): ConfigEndpoint {

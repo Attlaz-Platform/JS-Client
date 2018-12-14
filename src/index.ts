@@ -4,6 +4,7 @@ export * from './Model/Log/Log';
 export * from './Model/Log/LogLevel';
 
 export * from './Model/Subscriber/Subscriber';
+export * from './Model/Subscriber/SubscriberChannel';
 export * from './Model/Subscriber/SubscriberChannelData';
 
 export * from './Model/Subscriber/SubscriberEmailChannelData';
