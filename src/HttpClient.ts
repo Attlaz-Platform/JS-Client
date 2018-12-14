@@ -4,6 +4,7 @@ import {Token} from 'client-oauth2';
 import * as Popsicle from 'popsicle';
 // import {Response} from 'popsicle/dist/response';
 // import request = require('request-promise-native');
+import {Request, Response} from 'servie';
 
 // const Request = require('request-promise-native');
 
@@ -51,8 +52,7 @@ export class HttpClient {
                 }).catch((err: Error) => {
                     reject(err);
                 });
-            }
-            else {
+            } else {
                 this.oauthClient.credentials.getToken().then((token: Token) => {
                     this.oauthToken = token;
                     resolve(true);
@@ -76,15 +76,14 @@ export class HttpClient {
 
                 if (!this.isAuthenticated()) {
                     reject(new Error('Unable to perform request, access token not provided'));
-                }
-                else {
+                } else {
 
                     const url: string = this.getUri(action);
 
                     let requestData: any = {
                         method: method,
                         url: url,
-                        json: true
+
                     };
 
                     if (method === 'POST') {
@@ -93,18 +92,47 @@ export class HttpClient {
 
                     let signedRequestData: any = this.oauthToken.sign(requestData);
 
-                    if (this.debug) {
-                        console.info('[Attlaz Client] ' + method + ": " + action);
-                    }
-                    const req = Popsicle.request(signedRequestData.url, signedRequestData)
-                    Popsicle.transport({negotiateHttpVersion: 0})(req).then((response: any) => {
+                    //console.log('Signed', signedRequestData);
 
+                    const request: Request = Popsicle.request(signedRequestData.url, signedRequestData);
+                    request.headers.append("Content-Type", "application/json");
+
+                    if (this.debug) {
+                        console.info('[Attlaz Client request] ', request.toJSON());
+                    }
+
+                    Popsicle.transport({negotiateHttpVersion: 0})(request).then((response: Response) => {
+
+                        switch (response.statusCode) {
+                            case 401:
+                                //Unauthorized
+                                console.error(response.statusMessage);
+                                reject('Unauthorized');
+                                break;
+                        }
+
+                        // (response.body.text().then((body: any) => {
+                        //     console.log('Body: ', body);
+                        // })).catch((err: Error) => {
+                        //     console.error(err);
+                        //     // if (this.debug) {
+                        //     //     console.error('Unable to get data: ', err);
+                        //     // }
+                        //     // reject(err);
+                        // });
                         //TODO: validate status
                         requestData = null;
                         signedRequestData = null;
+
+                        //console.log(response);
                         (response.body.json().then((body: any) => {
                             resolve(body);
-                        }));
+                        })).catch((err: Error) => {
+                            if (this.debug) {
+                                console.error('Unable to get data: ', err);
+                            }
+                            reject(err);
+                        });
 
                     }).catch((err: Error) => {
 
