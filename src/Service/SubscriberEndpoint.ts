@@ -8,7 +8,7 @@ export class SubscriberEndpoint extends Endpoint {
 
                 let subscribers: Subscriber[] = [];
                 for (let rawSubscriber of rawSubscribers) {
-                    let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.branch, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
+                    let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.project, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
                     subscribers.push(subscriber);
                 }
                 resolve(subscribers);

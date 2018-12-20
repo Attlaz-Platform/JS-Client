@@ -5,19 +5,19 @@ export class Subscriber {
     public eventTypes: EventType[];
 
     public team: string;
-    public branch: string;
+    public project: string;
     public task: string;
     public taskExecution: string;
 
     public channels: number[];
     public logLevelThreshold: LogLevel;
 
-    constructor(id: string, eventTypes: EventType[], team: string, branch: string, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
+    constructor(id: string, eventTypes: EventType[], team: string, project: string, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
         this.id = id;
         this.eventTypes = eventTypes;
 
         this.team = team;
-        this.branch = branch;
+        this.project = project;
         this.task = task;
         this.taskExecution = taskExecution;
 

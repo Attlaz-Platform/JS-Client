@@ -2,7 +2,7 @@ import {TaskExecutionStatus} from "./TaskExecutionStatus";
 
 export class TaskSummary {
     public id: string;
-    public branch: string;
+    public project: string;
     public command: string;
     public name: string;
     public description: string;
@@ -18,7 +18,7 @@ export class TaskSummary {
     public static parse(rawTask: any): TaskSummary {
         let task: TaskSummary = new TaskSummary();
         task.id = rawTask.id;
-        task.branch = rawTask.branch;
+        task.project = rawTask.project;
         task.command = rawTask.command;
         task.name = rawTask.name;
         task.description = rawTask.description;

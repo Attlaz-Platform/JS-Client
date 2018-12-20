@@ -24,9 +24,9 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public getConfigByBranch(branchId: string): Promise<Config[]> {
+    public getByProject(projectId: string): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
-            this.httpClient.request('/branches/' + branchId + '/config').then((rawConfigs: any) => {
+            this.httpClient.request('/projects/' + projectId + '/config').then((rawConfigs: any) => {
 
                 let configs: Config[] = [];
                 for (let rawConfig of rawConfigs) {
@@ -37,7 +37,7 @@ export class ConfigEndpoint extends Endpoint {
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {
-                    console.error('Unable to load branch configuration', reason);
+                    console.error('Unable to load project configuration', reason);
                 }
                 reject(reason);
             });
@@ -45,9 +45,9 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public postConfigsByBranch(branchId: string, configs: Config[]): Promise<any> {
+    public saveByProject(projectId: string, configs: Config[]): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            let url: string = '/branches/' + branchId + '/config';
+            let url: string = '/projects/' + projectId + '/config';
 
             this.httpClient.request(url, configs, 'POST').then((result: any) => {
 

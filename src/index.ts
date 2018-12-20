@@ -14,7 +14,7 @@ export * from './Model/Trigger/Trigger';
 export * from './Model/Trigger/TriggerData';
 
 export * from './Model/Adapter';
-export * from './Model/Branch';
+export * from './Model/Project';
 export * from './Model/Config';
 export * from './Model/Notification';
 export * from './Model/PagedResult';
@@ -31,7 +31,7 @@ export * from './Model/User';
 export * from './Service/Endpoint';
 
 export * from './Service/AdapterEndpoint';
-export * from './Service/BranchEndpoint';
+export * from './Service/ProjectEndpoint';
 export * from './Service/ConfigEndpoint';
 export * from './Service/NotificationsEndpoint';
 export * from './Service/SubscriberEndpoint';

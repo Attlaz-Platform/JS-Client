@@ -28,7 +28,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load branches: ', reason);
+                    console.error('Failed to load task execution logs: ', reason);
                 }
 
                 reject(reason);
@@ -92,7 +92,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load branches: ', reason);
+                    console.error('Failed to load log levels: ', reason);
                 }
 
                 reject(reason);
@@ -209,7 +209,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             }).catch((reason) => {
                 if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load branches: ', reason);
+                    console.error('Failed to load task execution history: ', reason);
                 }
 
                 reject(reason);

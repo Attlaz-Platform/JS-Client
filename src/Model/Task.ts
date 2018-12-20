@@ -1,6 +1,6 @@
 export class Task {
     public id: string;
-    public branch: string;
+    public project: string;
     public command: string;
     public name: string;
     public description: string;
@@ -9,7 +9,7 @@ export class Task {
     public static parse(rawTask: any): Task {
         let task: Task = new Task();
         task.id = rawTask.id;
-        task.branch = rawTask.branch;
+        task.project = rawTask.project;
         task.command = rawTask.command;
         task.name = rawTask.name;
         task.description = rawTask.description;

@@ -2,9 +2,9 @@ import {Endpoint, Task, TaskSummary} from "..";
 
 export class TaskEndpoint extends Endpoint {
 
-    public getTasks(branchId:string): Promise<Task[]> {
+    public getTasks(projectId:string): Promise<Task[]> {
         return new Promise<Task[]>((resolve, reject) => {
-            this.httpClient.request('branches/' + branchId + '/tasks').then((rawTasks: any[]) => {
+            this.httpClient.request('projects/' + projectId + '/tasks').then((rawTasks: any[]) => {
 
                 let tasks: Task[] = [];
                 for (let rawTask of rawTasks) {
@@ -42,9 +42,9 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummaries(branchId:string): Promise<TaskSummary[]> {
+    public getTaskSummaries(projectId:string): Promise<TaskSummary[]> {
         return new Promise<TaskSummary[]>((resolve, reject) => {
-            this.httpClient.request('branches/' + branchId + '/tasksummaries').then((rawTaskSummaries: any[]) => {
+            this.httpClient.request('projects/' + projectId + '/tasksummaries').then((rawTaskSummaries: any[]) => {
 
                 let tasks: TaskSummary[] = [];
                 for (let rawTaskSummary of rawTaskSummaries) {

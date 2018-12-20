@@ -1,6 +1,6 @@
 import {
     AdapterEndpoint,
-    BranchEndpoint,
+    ProjectEndpoint,
     ConfigEndpoint,
     HttpClient,
     NotificationsEndpoint,
@@ -21,7 +21,7 @@ export class Client {
     private clientSecret: string;
 
     private adapterEndpoint: AdapterEndpoint;
-    private branchEndpoint: BranchEndpoint;
+    private projectEndpoint: ProjectEndpoint;
     private channelEndpoint: ChannelEndpoint;
     private configEndpoint: ConfigEndpoint;
     private notificationsEndpoint: NotificationsEndpoint;
@@ -86,13 +86,13 @@ export class Client {
         return this.adapterEndpoint;
     }
 
-    public getBranchEndpoint(): BranchEndpoint {
+    public getProjectEndpoint(): ProjectEndpoint {
 
-        if (this.branchEndpoint === null || this.branchEndpoint === undefined) {
-            this.branchEndpoint = new BranchEndpoint(this.httpClient);
+        if (this.projectEndpoint === null || this.projectEndpoint === undefined) {
+            this.projectEndpoint = new ProjectEndpoint(this.httpClient);
         }
 
-        return this.branchEndpoint;
+        return this.projectEndpoint;
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
