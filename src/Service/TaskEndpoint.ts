@@ -2,7 +2,7 @@ import {Endpoint, Task, TaskSummary} from "..";
 
 export class TaskEndpoint extends Endpoint {
 
-    public getTasks(projectId:string): Promise<Task[]> {
+    public getTasks(projectId: string): Promise<Task[]> {
         return new Promise<Task[]>((resolve, reject) => {
             this.httpClient.request('projects/' + projectId + '/tasks').then((rawTasks: any[]) => {
 
@@ -15,8 +15,7 @@ export class TaskEndpoint extends Endpoint {
                 resolve(tasks);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
 
@@ -32,8 +31,7 @@ export class TaskEndpoint extends Endpoint {
                 resolve(Task.parse(rawTask));
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
 
@@ -42,7 +40,7 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummaries(projectId:string): Promise<TaskSummary[]> {
+    public getTaskSummaries(projectId: string): Promise<TaskSummary[]> {
         return new Promise<TaskSummary[]>((resolve, reject) => {
             this.httpClient.request('projects/' + projectId + '/tasksummaries').then((rawTaskSummaries: any[]) => {
 
@@ -55,8 +53,7 @@ export class TaskEndpoint extends Endpoint {
                 resolve(tasks);
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
 
@@ -71,13 +68,30 @@ export class TaskEndpoint extends Endpoint {
                 resolve(TaskSummary.parse(rawTaskSummary));
 
             }).catch((reason) => {
-                if(this.httpClient.isDebugEnabled())
-                {
+                if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load task by id ' + taskId + ': ' + reason);
                 }
 
                 reject(reason);
             });
+        });
+    }
+
+    public save(task: Task): Promise<Task> {
+        return new Promise<any>((resolve, reject) => {
+            let url: string = '/projects/' + task.project + '/tasks';
+
+            this.httpClient.request(url, task, 'POST').then((result: any) => {
+
+                resolve(Task.parse(result));
+
+            }).catch((reason) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to save task: ', reason);
+                }
+                reject(reason);
+            });
+
         });
     }
 }
