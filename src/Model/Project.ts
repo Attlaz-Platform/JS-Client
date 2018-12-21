@@ -1,13 +1,13 @@
 export class Project {
     public id: string;
-    public code: string;
+    public key: string;
     public name: string;
     public default: boolean = false;
     public active: boolean = true;
 
-    constructor(id: string, code: string, name: string) {
+    constructor(id: string, key: string, name: string) {
         this.id = id;
-        this.code = code;
+        this.key = key;
         this.name = name;
     }
 

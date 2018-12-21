@@ -5,7 +5,7 @@ export class TaskExecutionEndpoint extends Endpoint {
     public getLogs(taskExecutionId: string, pageSize: number = 1000, pageNum: number = 0): Promise<PagedResult<TaskExecutionLog>> {
 
         if (taskExecutionId.length === 0) {
-            throw new Error('Command execution id cannot be empty');
+            throw new Error('Task execution id cannot be empty');
         }
 
         return new Promise<PagedResult<TaskExecutionLog>>((resolve, reject) => {
@@ -14,16 +14,16 @@ export class TaskExecutionEndpoint extends Endpoint {
 
             let cmd: string = '/taskexecutions/' + taskExecutionId + '/log/?pageSize=' + pageSize + '&pageNum=' + pageNum + '';
 
-            this.httpClient.request(cmd).then((rawCommandExecutionLogs: any) => {
+            this.httpClient.request(cmd).then((rawTaskExecutionLogs: any) => {
 
-                let commandExecutionLogs: TaskExecutionLog[] = [];
-                for (let rawCommandExecutionLog of rawCommandExecutionLogs.data) {
-                    commandExecutionLogs.push(TaskExecutionLog.parse(rawCommandExecutionLog));
+                let taskExecutionLogs: TaskExecutionLog[] = [];
+                for (let rawTaskExecutionLog of rawTaskExecutionLogs.data) {
+                    taskExecutionLogs.push(TaskExecutionLog.parse(rawTaskExecutionLog));
                 }
 
-                _logs = commandExecutionLogs;
+                _logs = taskExecutionLogs;
 
-                let result: PagedResult<TaskExecutionLog> = new PagedResult<TaskExecutionLog>(_logs, rawCommandExecutionLogs.pageSize, rawCommandExecutionLogs.totalCount);
+                let result: PagedResult<TaskExecutionLog> = new PagedResult<TaskExecutionLog>(_logs, rawTaskExecutionLogs.pageSize, rawTaskExecutionLogs.totalCount);
                 resolve(result);
 
             }).catch((reason) => {
@@ -68,7 +68,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     public getLogLevelCount(taskExecutionId: string): Promise<Map<LogLevel, number>> {
         if (taskExecutionId.length === 0) {
-            throw new Error('Command execution id cannot be empty');
+            throw new Error('Task execution id cannot be empty');
         }
 
         return new Promise<Map<LogLevel, number>>((resolve, reject) => {
