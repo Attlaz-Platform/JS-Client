@@ -3,6 +3,8 @@ export * from './Model/Event/EventType';
 export * from './Model/Log/Log';
 export * from './Model/Log/LogLevel';
 
+export * from './Model/Project/ProjectEnvironment';
+
 export * from './Model/Subscriber/Subscriber';
 export * from './Model/Subscriber/SubscriberChannel';
 export * from './Model/Subscriber/SubscriberChannelData';

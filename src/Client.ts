@@ -14,6 +14,7 @@ import {
     UserEndpoint
 } from ".";
 import {ChannelEndpoint} from './Service/ChannelEndpoint';
+import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 
 export class Client {
     private apiEndpoint: string;
@@ -22,6 +23,7 @@ export class Client {
 
     private adapterEndpoint: AdapterEndpoint;
     private projectEndpoint: ProjectEndpoint;
+    private projectEnvironmentEndpoint:ProjectEnvironmentEndpoint;
     private channelEndpoint: ChannelEndpoint;
     private configEndpoint: ConfigEndpoint;
     private notificationsEndpoint: NotificationsEndpoint;
@@ -93,6 +95,14 @@ export class Client {
         }
 
         return this.projectEndpoint;
+    }
+    public getProjectEnvironmentEndpoint(): ProjectEnvironmentEndpoint {
+
+        if (this.projectEnvironmentEndpoint === null || this.projectEnvironmentEndpoint === undefined) {
+            this.projectEnvironmentEndpoint = new ProjectEnvironmentEndpoint(this.httpClient);
+        }
+
+        return this.projectEnvironmentEndpoint;
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
