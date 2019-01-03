@@ -2,25 +2,41 @@ import {Endpoint, Trigger} from "..";
 
 export class TriggerEndpoint extends Endpoint {
 
-    public getTriggersByTask(taskId: string): Promise<Trigger[]> {
-        return new Promise<Trigger[]>((resolve, reject) => {
-            this.httpClient.request('/tasks/' + taskId + '/triggers').then((rawTriggers: any) => {
+    public async getByTask(taskId: string): Promise<Trigger[]> {
 
-                let triggers: Trigger[] = [];
-                for (let rawTrigger of rawTriggers) {
+        try {
+            const rawTriggers: any = await this.httpClient.request('/tasks/' + taskId + '/triggers');
+
+            let triggers: Trigger[] = [];
+            for (let rawTrigger of rawTriggers) {
 //TODO: add parsing
-                    triggers.push(rawTrigger);
-                }
-                resolve(triggers);
+                triggers.push(rawTrigger);
+            }
+            return triggers;
 
-            }).catch((reason) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load triggers: ', reason);
-                }
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load triggers: ', error);
+            }
+            throw error;
+        }
 
-                reject(reason);
-            });
+    }
 
-        });
+    public async getById(id: string): Promise<Trigger> {
+
+        try {
+            const rawTrigger: any = await this.httpClient.request('/triggers/' + id);
+
+//TODO: add parsing
+            return rawTrigger as Trigger;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load trigger by id: ', error);
+            }
+
+            throw error;
+        }
+
     }
 }
