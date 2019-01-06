@@ -1,5 +1,5 @@
 export class Config {
-    public id: string;
+    public id: number;
     public project: string;
     public task: string;
     public scope: string;
@@ -13,7 +13,7 @@ export class Config {
         config.task = rawConfig.task;
         config.scope = rawConfig.scope;
         config.key = rawConfig.key;
-        config.value = rawConfig.value
+        config.value = rawConfig.value;
 
         return config;
     }
