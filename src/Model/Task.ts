@@ -1,3 +1,5 @@
+import {State} from './State';
+
 export class Task {
     public id: string;
     public key: string;
@@ -5,15 +7,17 @@ export class Task {
     public name: string;
     public description: string;
     public direct: boolean = false;
+    public state: State = State.Active;
 
     public static parse(rawTask: any): Task {
-        let task: Task = new Task();
+        const task: Task = new Task();
         task.id = rawTask.id;
         task.key = rawTask.key;
         task.project = rawTask.project;
         task.name = rawTask.name;
         task.description = rawTask.description;
         task.direct = rawTask.direct;
+        task.state = State.fromString(rawTask);
 
         return task;
     }

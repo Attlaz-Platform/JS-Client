@@ -10,7 +10,9 @@ export class TriggerEndpoint extends Endpoint {
             let triggers: Trigger[] = [];
             for (let rawTrigger of rawTriggers) {
 //TODO: add parsing
-                triggers.push(rawTrigger);
+//                 trigger.state = State.fromString(rawTrigger.state);
+//                 trigger.projectEnvironment = rawTrigger.projectEnvironment;
+                triggers.push(rawTrigger as Trigger);
             }
             return triggers;
 

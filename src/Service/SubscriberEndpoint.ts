@@ -1,4 +1,5 @@
 import {Endpoint, Subscriber} from "..";
+import {State} from '../Model/State';
 
 export class SubscriberEndpoint extends Endpoint {
 
@@ -9,6 +10,8 @@ export class SubscriberEndpoint extends Endpoint {
                 let subscribers: Subscriber[] = [];
                 for (let rawSubscriber of rawSubscribers) {
                     let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.project, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
+                    subscriber.state = State.fromString(rawSubscriber.state);
+                    subscriber.projectEnvironment = rawSubscriber.projectEnvironment;
                     subscribers.push(subscriber);
                 }
                 resolve(subscribers);

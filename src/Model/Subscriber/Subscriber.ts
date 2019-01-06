@@ -1,4 +1,5 @@
 import {EventType, LogLevel} from "../../";
+import {State} from '../State';
 
 export class Subscriber {
     public id: string;
@@ -6,11 +7,13 @@ export class Subscriber {
 
     public team: string;
     public project: string;
+    public projectEnvironment: number;
     public task: string;
     public taskExecution: string;
 
     public channels: number[];
     public logLevelThreshold: LogLevel;
+    public state: State = State.Active;
 
     constructor(id: string, eventTypes: EventType[], team: string, project: string, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
         this.id = id;
