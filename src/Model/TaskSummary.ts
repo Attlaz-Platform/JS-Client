@@ -1,28 +1,15 @@
 import {TaskExecutionStatus} from "./TaskExecutionStatus";
+import {Task} from './Task';
 
-export class TaskSummary {
-    public id: string;
-    public key: string;
-    public project: string;
-    public name: string;
-    public description: string;
-    public direct: boolean = false;
+export class TaskSummary extends Task {
 
     public status: TaskExecutionStatus = TaskExecutionStatus.Unknown;
-
-    //TODO: this doesn't feel right. Separate info/class based on direct or scheduled task?
     public lastExecution: Date;
     public averageExecutionDuration: number;
     public executionCount: number;
 
     public static parse(rawTask: any): TaskSummary {
-        let task: TaskSummary = new TaskSummary();
-        task.id = rawTask.id;
-        task.key = rawTask.key;
-        task.project = rawTask.project;
-        task.name = rawTask.name;
-        task.description = rawTask.description;
-        task.direct = rawTask.direct;
+        let task: TaskSummary = Task.parse(rawTask) as TaskSummary;
 
         task.status = TaskExecutionStatus.fromString(rawTask.status);
         task.lastExecution = rawTask.lastExecution;
