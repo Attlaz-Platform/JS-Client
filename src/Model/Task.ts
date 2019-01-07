@@ -17,7 +17,7 @@ export class Task {
         task.name = rawTask.name;
         task.description = rawTask.description;
         task.direct = rawTask.direct;
-        task.state = State.fromString(rawTask);
+        task.state = State.fromString(rawTask.state);
 
         return task;
     }
