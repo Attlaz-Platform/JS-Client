@@ -19,7 +19,11 @@ export class Project {
 
     public static parse(rawProject: any): Project {
         let project: Project = new Project(rawProject.id, rawProject.code, rawProject.name);
-        project.default = (rawProject.default.toString() === '1');
+
+        if(rawProject.default !== null && rawProject.default !== undefined)
+        {
+            project.default = (rawProject.default.toString() === '1');
+        }
 
         project.source_account = rawProject.source_account;
         project.source_repository = rawProject.source_repository;
