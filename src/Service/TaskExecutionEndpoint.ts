@@ -152,26 +152,42 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public getTaskExecutionSummaries(taskId: string): Promise<TaskExecutionSummary[]> {
-        return new Promise<TaskExecutionSummary[]>((resolve, reject) => {
-            this.httpClient.request('/tasks/' + taskId + '/executionsummaries').then((rawTaskExecutions: any[]) => {
 
-                let taskExecutions: TaskExecutionSummary[] = [];
-                for (let rawTaskExecution of rawTaskExecutions) {
-                    taskExecutions.push(TaskExecutionSummary.parse(rawTaskExecution));
+    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null): Promise<TaskExecutionSummary[]> {
 
+        try {
+            let params: any = null;
+            if (from !== null && from !== undefined) {
+                if (params === null || params === undefined) {
+                    params = {};
                 }
-
-                resolve(taskExecutions);
-
-            }).catch((reason) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load tasks executions: ' + reason);
+                params.from = from.toISOString();
+            }
+            if (to !== null && to !== undefined) {
+                if (params === null || params === undefined) {
+                    params = {};
                 }
+                params.to = to.toISOString();
+            }
 
-                reject(reason);
-            });
-        });
+            const rawTaskExecutions: any[] = await this.httpClient.request('/tasks/' + taskId + '/executionsummaries', params);
+
+            let taskExecutions: TaskExecutionSummary[] = [];
+            for (let rawTaskExecution of rawTaskExecutions) {
+                taskExecutions.push(TaskExecutionSummary.parse(rawTaskExecution));
+
+            }
+
+            return taskExecutions;
+
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load tasks executions: ' + error);
+            }
+
+            throw error;
+        }
+
     }
 
     public getTaskExecutionSummary(taskId: string, taskExecutionId: string): Promise<TaskExecutionSummary> {
