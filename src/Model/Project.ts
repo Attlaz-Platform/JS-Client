@@ -18,10 +18,9 @@ export class Project {
     }
 
     public static parse(rawProject: any): Project {
-        let project: Project = new Project(rawProject.id, rawProject.code, rawProject.name);
+        let project: Project = new Project(rawProject.id, rawProject.key, rawProject.name);
 
-        if(rawProject.default !== null && rawProject.default !== undefined)
-        {
+        if (rawProject.default !== null && rawProject.default !== undefined) {
             project.default = (rawProject.default.toString() === '1');
         }
 

@@ -1,9 +1,13 @@
 import {TriggerData} from "./TriggerData";
 import {State} from '../State';
+import {TriggerType} from './TriggerType';
+
+import {ScheduleTriggerData} from './ScheduleTriggerData';
+import {WebhookTriggerData} from './WebhookTriggerData';
 
 export class Trigger {
     public id: string;
-    public type: string;
+    public type: TriggerType;
     public project: string;
     public projectEnvironment: number;
     public task: string;
@@ -11,7 +15,7 @@ export class Trigger {
     public data: TriggerData;
     public state: State = State.Active;
 
-    constructor(id: string, type: string, project: string, task: string, data: TriggerData) {
+    public constructor(id: string, type: TriggerType, project: string, task: string, data: TriggerData) {
         this.id = id;
         this.type = type;
         this.project = project;
@@ -23,5 +27,34 @@ export class Trigger {
 
     public getData(): TriggerData {
         return this.data;
+    }
+
+    public static parse(rawTrigger: any): Trigger {
+        const type: TriggerType = TriggerType.fromString(rawTrigger.type);
+
+        const data: any = rawTrigger.data;
+
+        const task: string = rawTrigger.task;
+
+        let triggerData: TriggerData;
+        switch (type) {
+            case TriggerType.Webhook:
+                triggerData = new WebhookTriggerData(data.key);
+                break;
+            case  TriggerType.Schedule:
+                triggerData = new ScheduleTriggerData(data.expression);
+                break;
+            default:
+                throw new Error('Unknown trigger type "' + type + '"');
+        }
+
+        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project, task, triggerData);
+
+        trigger.arguments = rawTrigger.arguments;
+
+        trigger.projectEnvironment = rawTrigger.projectEnvironment;
+        trigger.state = State.fromString(rawTrigger.state);
+
+        return trigger
     }
 }
