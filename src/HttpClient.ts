@@ -70,7 +70,14 @@ export class HttpClient {
         return this.apiEndpoint.replace(/\/+$/, "") + '/' + method.replace(/^\/+/g, '');
     }
 
-    public request(action: string, parameters: any = [], method: string = 'GET'): Promise<any> {
+    private encodeQueryString(params: any): string {
+
+        return Object.keys(params)
+            .map(k => `${k}=${encodeURI(params[k])}`)
+            .join('&');
+    }
+
+    public request(action: string, parameters: any = null, method: string = 'GET'): Promise<any> {
 
         return new Promise<any>((resolve, reject) => {
 
@@ -87,7 +94,15 @@ export class HttpClient {
                     };
 
                     if (method === 'POST') {
-                        requestData.body = parameters;
+                        if (parameters !== null && parameters !== undefined) {
+                            requestData.body = parameters;
+                        }
+                    } else if (method === 'GET') {
+
+                        if (parameters !== null && parameters !== undefined) {
+                            requestData.url = url + '?' + this.encodeQueryString(parameters);
+                        }
+
                     }
 
                     let signedRequestData: any = this.oauthToken.sign(requestData);

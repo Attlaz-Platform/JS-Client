@@ -15,11 +15,45 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
             return projectEnvironment;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load trigger by id: ', error);
+                console.error('Failed to load project environments', error);
             }
 
             throw error;
         }
 
     }
+
+    public async getById(id: number): Promise<ProjectEnvironment> {
+
+        try {
+            const rawProjectEnvironments: any = await this.httpClient.request('/projectenvironments/' + id + '');
+
+            const projectEnvironment: ProjectEnvironment = rawProjectEnvironments as ProjectEnvironment;
+            return projectEnvironment;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load project environment by id', error);
+            }
+
+            throw error;
+        }
+
+    }
+
+    public async requestDeploy(projectEnvironmentId: number): Promise<ProjectEnvironment> {
+
+        try {
+            const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploy', {}, 'POST');
+
+            return projectDeploy;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to request project deploy', error);
+            }
+
+            throw error;
+        }
+
+    }
+
 }

@@ -12,8 +12,12 @@ export * from './Model/Subscriber/SubscriberChannelData';
 export * from './Model/Subscriber/SubscriberEmailChannelData';
 export * from './Model/Subscriber/SubscriberSlackChannelData';
 
+export * from './Model/Trigger/ScheduleTrigger';
+export * from './Model/Trigger/ScheduleTriggerData';
 export * from './Model/Trigger/Trigger';
 export * from './Model/Trigger/TriggerData';
+export * from './Model/Trigger/WebhookTrigger';
+export * from './Model/Trigger/WebhookTriggerData';
 
 export * from './Model/Adapter';
 export * from './Model/Project';

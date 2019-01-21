@@ -5,14 +5,12 @@ export class TriggerEndpoint extends Endpoint {
     public async getByTask(taskId: string): Promise<Trigger[]> {
 
         try {
-            const rawTriggers: any = await this.httpClient.request('/tasks/' + taskId + '/triggers');
+            const rawTriggers: any[] = await this.httpClient.request('/tasks/' + taskId + '/triggers');
 
             let triggers: Trigger[] = [];
             for (let rawTrigger of rawTriggers) {
-//TODO: add parsing
-//                 trigger.state = State.fromString(rawTrigger.state);
-//                 trigger.projectEnvironment = rawTrigger.projectEnvironment;
-                triggers.push(rawTrigger as Trigger);
+
+                triggers.push(Trigger.parse(rawTrigger));
             }
             return triggers;
 
@@ -28,13 +26,31 @@ export class TriggerEndpoint extends Endpoint {
     public async getById(id: string): Promise<Trigger> {
 
         try {
-            const rawTrigger: any = await this.httpClient.request('/triggers/' + id);
+            const result: any = await this.httpClient.request('/triggers/' + id);
 
-//TODO: add parsing
-            return rawTrigger as Trigger;
+            return Trigger.parse(result);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);
+            }
+
+            throw error;
+        }
+
+    }
+
+    public async save(trigger: Trigger): Promise<Trigger> {
+
+        try {
+
+            let url: string = '/tasks/' + trigger.task + '/trigger';
+
+            const result: any = this.httpClient.request(url, trigger, 'POST');
+
+            return Trigger.parse(result);
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save trigger: ', error);
             }
 
             throw error;
