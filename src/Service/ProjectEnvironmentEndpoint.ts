@@ -40,20 +40,4 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     }
 
-    public async requestDeploy(projectEnvironmentId: number): Promise<ProjectEnvironment> {
-
-        try {
-            const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploy', {}, 'POST');
-
-            return projectDeploy;
-        } catch (error) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to request project deploy', error);
-            }
-
-            throw error;
-        }
-
-    }
-
 }

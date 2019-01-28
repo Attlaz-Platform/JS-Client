@@ -1,3 +1,5 @@
+import {ParseHelper} from '../../Helper/ParseHelper';
+
 export class ProjectEnvironment {
     public id: number;
     public key: string;
@@ -5,6 +7,7 @@ export class ProjectEnvironment {
     public name: string;
     public sourceBranch: string;
     public parent: number = null;
+    public isLocal: boolean = false;
 
     public static parse(rawProjectEnvironment: any): ProjectEnvironment {
         const projectEnvironment: ProjectEnvironment = new ProjectEnvironment();
@@ -15,6 +18,7 @@ export class ProjectEnvironment {
         projectEnvironment.name = rawProjectEnvironment.name;
         projectEnvironment.sourceBranch = rawProjectEnvironment.source_branch;
         projectEnvironment.parent = rawProjectEnvironment.parent;
+        projectEnvironment.isLocal = ParseHelper.parseBoolean(rawProjectEnvironment.is_local);
 
         return projectEnvironment;
     }
