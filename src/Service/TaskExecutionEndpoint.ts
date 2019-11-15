@@ -1,4 +1,5 @@
 import {Endpoint, LogLevel, PagedResult, TaskExecution, TaskExecutionHistory, TaskExecutionLog, TaskExecutionSummary} from "..";
+import {ParseHelper} from '../Helper/ParseHelper';
 
 export class TaskExecutionEndpoint extends Endpoint {
 
@@ -152,8 +153,7 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-
-    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null): Promise<TaskExecutionSummary[]> {
+    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null, projectEnvironmentId: number = null): Promise<TaskExecutionSummary[]> {
 
         try {
             let params: any = null;
@@ -168,6 +168,13 @@ export class TaskExecutionEndpoint extends Endpoint {
                     params = {};
                 }
                 params.to = to.toISOString();
+            }
+
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                if (params === null || params === undefined) {
+                    params = {};
+                }
+                params.environment = projectEnvironmentId;
             }
 
             const rawTaskExecutions: any[] = await this.httpClient.request('/tasks/' + taskId + '/executionsummaries', params);

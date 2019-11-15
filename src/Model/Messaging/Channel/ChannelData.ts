@@ -1,4 +1,4 @@
-export abstract class SubscriberChannelData {
+export abstract class ChannelData {
 
     public type: string;
 

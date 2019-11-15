@@ -1,4 +1,4 @@
-export class SubscriberChannel {
+export class Channel {
     public id: number;
     public owner: number;
     public label: string;

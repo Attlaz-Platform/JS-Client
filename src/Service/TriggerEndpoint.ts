@@ -1,11 +1,17 @@
 import {Endpoint, Trigger} from "..";
+import {ParseHelper} from '../Helper/ParseHelper';
 
 export class TriggerEndpoint extends Endpoint {
 
-    public async getByTask(taskId: string): Promise<Trigger[]> {
+    public async getByTask(taskId: string, projectEnvironmentId: number = null): Promise<Trigger[]> {
 
         try {
-            const rawTriggers: any[] = await this.httpClient.request('/tasks/' + taskId + '/triggers');
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            const rawTriggers: any[] = await this.httpClient.request('/tasks/' + taskId + '/triggers', parameters);
 
             let triggers: Trigger[] = [];
             for (let rawTrigger of rawTriggers) {
@@ -43,9 +49,9 @@ export class TriggerEndpoint extends Endpoint {
 
         try {
 
-            let url: string = '/tasks/' + trigger.task + '/trigger';
+            let url: string = '/tasks/' + trigger.task + '/triggers';
 
-            const result: any = this.httpClient.request(url, trigger, 'POST');
+            const result: any = await this.httpClient.request(url, trigger, 'POST');
 
             return Trigger.parse(result);
         } catch (error) {

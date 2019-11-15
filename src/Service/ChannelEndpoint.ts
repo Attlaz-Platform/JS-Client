@@ -1,15 +1,15 @@
-import {Endpoint, SubscriberChannel} from "..";
+import {Channel, Endpoint} from "..";
 
 export class ChannelEndpoint extends Endpoint {
 
-    public getByTeam(teamId: string): Promise<SubscriberChannel[]> {
-        return new Promise<SubscriberChannel[]>((resolve, reject) => {
+    public getByTeam(teamId: string): Promise<Channel[]> {
+        return new Promise<Channel[]>((resolve, reject) => {
             this.httpClient.request('/teams/' + teamId + '/channels').then((rawChannels: any) => {
 
-                let subscriberChannels: SubscriberChannel[] = [];
+                let subscriberChannels: Channel[] = [];
                 for (let rawChannel of rawChannels) {
 
-                    let subscriberChannel: SubscriberChannel = new SubscriberChannel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
+                    let subscriberChannel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
 
                     subscriberChannels.push(subscriberChannel);
 
@@ -27,14 +27,14 @@ export class ChannelEndpoint extends Endpoint {
         });
     }
 
-    public getByOwner(): Promise<SubscriberChannel[]> {
-        return new Promise<SubscriberChannel[]>((resolve, reject) => {
+    public getByOwner(): Promise<Channel[]> {
+        return new Promise<Channel[]>((resolve, reject) => {
             this.httpClient.request('/channels').then((rawChannels: any) => {
 
-                let subscriberChannels: SubscriberChannel[] = [];
+                let subscriberChannels: Channel[] = [];
                 for (let rawChannel of rawChannels) {
 
-                    let subscriberChannel: SubscriberChannel = new SubscriberChannel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
+                    let subscriberChannel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
 
                     subscriberChannels.push(subscriberChannel);
 
@@ -52,7 +52,7 @@ export class ChannelEndpoint extends Endpoint {
         });
     }
 
-    public save(subscriberChannel: SubscriberChannel): Promise<any> {
+    public save(subscriberChannel: Channel): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             let url: string = '/channels/';
 

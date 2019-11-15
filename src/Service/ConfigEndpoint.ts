@@ -1,10 +1,17 @@
 import {Config, Endpoint} from "..";
+import {ParseHelper} from '../Helper/ParseHelper';
 
 export class ConfigEndpoint extends Endpoint {
 
-    public getConfigByTask(taskId: string): Promise<Config[]> {
+    public getConfigByTask(taskId: string, projectEnvironmentId: number = null): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
-            this.httpClient.request('/tasks/' + taskId + '/config').then((rawConfigs: any) => {
+
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            this.httpClient.request('/tasks/' + taskId + '/config', parameters).then((rawConfigs: any) => {
 
                 let configs: Config[] = [];
                 for (let rawConfig of rawConfigs) {
@@ -24,9 +31,15 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public getByProject(projectId: string): Promise<Config[]> {
+    public getByProject(projectId: string, projectEnvironmentId: number = null): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
-            this.httpClient.request('/projects/' + projectId + '/config').then((rawConfigs: any) => {
+
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            this.httpClient.request('/projects/' + projectId + '/config', parameters).then((rawConfigs: any) => {
 
                 let configs: Config[] = [];
                 for (let rawConfig of rawConfigs) {

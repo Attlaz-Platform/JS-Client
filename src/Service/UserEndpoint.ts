@@ -2,24 +2,27 @@ import {Endpoint, User} from "..";
 
 export class UserEndpoint extends Endpoint {
 
-    public getUser(): Promise<User> {
+    public async getUser(): Promise<User> {
 
-        return new Promise<User>((resolve, reject) => {
+        let cmd: string = '/user';
 
-            let cmd: string = '/user';
+        const rawUser: any = await this.httpClient.request(cmd);
 
-            this.httpClient.request(cmd).then((rawUser: any) => {
+        return User.parse(rawUser);
 
-                resolve(User.parse(rawUser));
+    }
 
-            }).catch((reason) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Unable to get user: ', reason);
-                }
+    public async getUsersByTeam(teamId: string): Promise<User[]> {
 
-                reject(reason);
-            });
+        let cmd: string = '/teams/' + teamId + '/users';
 
-        });
+        const rawUsers: any[] = await this.httpClient.request(cmd);
+
+        const result: User[] = [];
+        for (let rawUser of rawUsers) {
+            result.push(User.parse(rawUser));
+        }
+        return result;
+
     }
 }

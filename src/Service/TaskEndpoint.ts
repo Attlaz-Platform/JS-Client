@@ -1,4 +1,5 @@
 import {Endpoint, Task, TaskSummary} from "..";
+import {ParseHelper} from '../Helper/ParseHelper';
 
 export class TaskEndpoint extends Endpoint {
 
@@ -40,9 +41,15 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummaries(projectId: string): Promise<TaskSummary[]> {
+    public getTaskSummaries(projectId: string, projectEnvironmentId: number = null): Promise<TaskSummary[]> {
         return new Promise<TaskSummary[]>((resolve, reject) => {
-            this.httpClient.request('projects/' + projectId + '/tasksummaries').then((rawTaskSummaries: any[]) => {
+
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            this.httpClient.request('projects/' + projectId + '/tasksummaries', parameters).then((rawTaskSummaries: any[]) => {
 
                 let tasks: TaskSummary[] = [];
                 for (let rawTaskSummary of rawTaskSummaries) {
@@ -62,9 +69,15 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummary(taskId: string): Promise<TaskSummary> {
+    public getTaskSummary(taskId: string, projectEnvironmentId: number = null): Promise<TaskSummary> {
         return new Promise<TaskSummary>((resolve, reject) => {
-            this.httpClient.request('tasks/' + taskId + '/summaries').then((rawTaskSummary: any) => {
+
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            this.httpClient.request('tasks/' + taskId + '/summaries', parameters).then((rawTaskSummary: any) => {
                 resolve(TaskSummary.parse(rawTaskSummary));
 
             }).catch((reason) => {
