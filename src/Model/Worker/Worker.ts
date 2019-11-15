@@ -1,6 +1,8 @@
+import {WorkerState} from './WorkerState';
+
 export class Worker {
     projectEnvironment: number;
-    active: boolean;
+    state: WorkerState;
     scale: number;
     image: string;
 }

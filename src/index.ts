@@ -19,6 +19,9 @@ export * from './Model/Trigger/TriggerData';
 export * from './Model/Trigger/WebhookTrigger';
 export * from './Model/Trigger/WebhookTriggerData';
 
+export * from './Model/Worker/Worker';
+export * from './Model/Worker/WorkerState';
+
 export * from './Model/Adapter';
 export * from './Model/Project';
 export * from './Model/Config';
