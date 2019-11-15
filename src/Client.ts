@@ -1,6 +1,7 @@
 import {
     AdapterEndpoint,
     ConfigEndpoint,
+    Endpoint,
     HttpClient,
     NotificationsEndpoint,
     ProjectEndpoint,
@@ -16,40 +17,40 @@ import {
 import {ChannelEndpoint} from './Service/ChannelEndpoint';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
-import {ParseHelper} from './Helper/ParseHelper';
+import {WorkerEndpoint} from './Service/WorkerEndpoint';
 
 export class Client {
-    private apiEndpoint: string;
-    private clientId: string;
-    private clientSecret: string;
 
-    private adapterEndpoint: AdapterEndpoint;
-    private projectEndpoint: ProjectEndpoint;
-    private projectEnvironmentEndpoint: ProjectEnvironmentEndpoint;
-    private projectDeployEndpoint: ProjectDeployEndpoint;
-    private channelEndpoint: ChannelEndpoint;
-    private configEndpoint: ConfigEndpoint;
-    private notificationsEndpoint: NotificationsEndpoint;
-    private subscriberEndpoint: SubscriberEndpoint;
-    private systemEndpoint: SystemEndpoint;
-    private taskEndpoint: TaskEndpoint;
-    private taskExecutionEndpoint: TaskExecutionEndpoint;
-    private taskExecutionRequestEndpoint: TaskExecutionRequestEndpoint;
-    private teamsEndpoint: TeamsEndpoint;
-    private triggerEndpoint: TriggerEndpoint;
-    private userEndpoint: UserEndpoint;
+    private endpoints: Map<string, any>;
+
+    private Store: any = {
+        WorkerEndpoint,
+        AdapterEndpoint,
+        ProjectEndpoint,
+        ProjectEnvironmentEndpoint,
+        ProjectDeployEndpoint,
+        ChannelEndpoint,
+        ConfigEndpoint,
+        NotificationsEndpoint,
+        SubscriberEndpoint,
+        SystemEndpoint,
+        TaskEndpoint,
+        TaskExecutionEndpoint,
+        TaskExecutionRequestEndpoint,
+        TeamsEndpoint,
+        TriggerEndpoint,
+        UserEndpoint
+    };
 
     private httpClient: HttpClient;
 
     // private socketService;
 
-    constructor(apiEndpoint: string, clientId: string, clientSecret: string) {
-        this.apiEndpoint = apiEndpoint;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    constructor(private apiEndpoint: string, private  clientId: string, private clientSecret: string) {
 
         this.httpClient = new HttpClient(apiEndpoint, clientId, clientSecret);
 
+        this.endpoints = new Map<string, any>();
         // this.socketService = socketIo(this.apiEndpoint);
         //
         // this.socketService.on('message', (data: any) => {
@@ -83,118 +84,82 @@ export class Client {
 
     /* Endpoints */
     public getAdapterEndpoint(): AdapterEndpoint {
-
-        if (ParseHelper.isNullOrUndefined(this.adapterEndpoint)) {
-            this.adapterEndpoint = new AdapterEndpoint(this.httpClient);
-        }
-
-        return this.adapterEndpoint;
+        return this.getEndpoint(this.Store.AdapterEndpoint);
     }
 
     public getProjectEndpoint(): ProjectEndpoint {
-
-        if (ParseHelper.isNullOrUndefined(this.projectEndpoint)) {
-            this.projectEndpoint = new ProjectEndpoint(this.httpClient);
-        }
-
-        return this.projectEndpoint;
+        return this.getEndpoint(this.Store.ProjectEndpoint);
     }
 
     public getProjectEnvironmentEndpoint(): ProjectEnvironmentEndpoint {
-
-        if (ParseHelper.isNullOrUndefined(this.projectEnvironmentEndpoint)) {
-            this.projectEnvironmentEndpoint = new ProjectEnvironmentEndpoint(this.httpClient);
-        }
-
-        return this.projectEnvironmentEndpoint;
+        return this.getEndpoint(this.Store.ProjectEnvironmentEndpoint);
     }
 
     public getProjectDeployEndpoint(): ProjectDeployEndpoint {
-
-        if (ParseHelper.isNullOrUndefined(this.projectDeployEndpoint)) {
-            this.projectDeployEndpoint = new ProjectDeployEndpoint(this.httpClient);
-        }
-
-        return this.projectDeployEndpoint;
+        return this.getEndpoint(this.Store.ProjectDeployEndpoint);
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
-
-        if (ParseHelper.isNullOrUndefined(this.channelEndpoint)) {
-            this.channelEndpoint = new ChannelEndpoint(this.httpClient);
-        }
-
-        return this.channelEndpoint;
+        return this.getEndpoint(this.Store.ChannelEndpoint);
     }
 
     public getConfigEndpoint(): ConfigEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.configEndpoint)) {
-            this.configEndpoint = new ConfigEndpoint(this.httpClient);
-        }
-        return this.configEndpoint;
+        return this.getEndpoint(this.Store.ConfigEndpoint);
     }
 
     public getNotificationsEndpoint(): NotificationsEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.notificationsEndpoint)) {
-            this.notificationsEndpoint = new NotificationsEndpoint(this.httpClient);
-        }
-        return this.notificationsEndpoint;
+        return this.getEndpoint(this.Store.NotificationsEndpoint);
     }
 
     public getSubscriberEndpoint(): SubscriberEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.subscriberEndpoint)) {
-            this.subscriberEndpoint = new SubscriberEndpoint(this.httpClient);
-        }
-        return this.subscriberEndpoint;
+        return this.getEndpoint(this.Store.SubscriberEndpoint);
     }
 
     public getSystemEndpoint(): SystemEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.systemEndpoint)) {
-            this.systemEndpoint = new SystemEndpoint(this.httpClient);
-        }
-        return this.systemEndpoint;
+        return this.getEndpoint(this.Store.SystemEndpoint);
     }
 
     public getTaskEndpoint(): TaskEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.taskEndpoint)) {
-            this.taskEndpoint = new TaskEndpoint(this.httpClient);
-        }
-        return this.taskEndpoint;
+        return this.getEndpoint(this.Store.TaskEndpoint);
     }
 
     public getTaskExecutionEndpoint(): TaskExecutionEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.taskExecutionEndpoint)) {
-            this.taskExecutionEndpoint = new TaskExecutionEndpoint(this.httpClient);
-        }
-        return this.taskExecutionEndpoint;
+        return this.getEndpoint(this.Store.TaskExecutionEndpoint);
     }
 
     public getTaskExecutionRequestEndpoint(): TaskExecutionRequestEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.taskExecutionRequestEndpoint)) {
-            this.taskExecutionRequestEndpoint = new TaskExecutionRequestEndpoint(this.httpClient);
-        }
-        return this.taskExecutionRequestEndpoint;
+        return this.getEndpoint(this.Store.TaskExecutionRequestEndpoint);
     }
 
     public getTeamsEndpoint(): TeamsEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.teamsEndpoint)) {
-            this.teamsEndpoint = new TeamsEndpoint(this.httpClient);
-        }
-        return this.teamsEndpoint;
+        return this.getEndpoint(this.Store.TeamsEndpoint);
     }
 
     public getTriggerEndpoint(): TriggerEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.triggerEndpoint)) {
-            this.triggerEndpoint = new TriggerEndpoint(this.httpClient);
-        }
-        return this.triggerEndpoint;
+        return this.getEndpoint(this.Store.TriggerEndpoint);
     }
 
     public getUserEndpoint(): UserEndpoint {
-        if (ParseHelper.isNullOrUndefined(this.userEndpoint)) {
-            this.userEndpoint = new UserEndpoint(this.httpClient);
+        return this.getEndpoint(this.Store.UserEndpoint);
+    }
+
+    public getWorkerEndpoint(): WorkerEndpoint {
+        return this.getEndpoint(this.Store.WorkerEndpoint);
+    }
+
+    private getEndpoint<T extends Endpoint>(className: { new(x: HttpClient): T; }): T {
+
+        const classNameString: string = className.name;
+
+        if (!this.endpoints.has(classNameString)) {
+            if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
+                throw new Error(`Class type of \'${classNameString}\' is not in the store`);
+            }
+
+            const endpoint: Endpoint = new className(this.httpClient);
+            this.endpoints.set(classNameString, endpoint);
         }
-        return this.userEndpoint;
+        return this.endpoints.get(classNameString);
     }
 
 }
