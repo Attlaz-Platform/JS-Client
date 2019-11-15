@@ -5,12 +5,12 @@ export * from './Model/Log/LogLevel';
 
 export * from './Model/Project/ProjectEnvironment';
 
-export * from './Model/Subscriber/Subscriber';
-export * from './Model/Subscriber/SubscriberChannel';
-export * from './Model/Subscriber/SubscriberChannelData';
+export * from './Model/Messaging/Subscriber';
+export * from './Model/Messaging/Channel/Channel';
+export * from './Model/Messaging/Channel/ChannelData';
 
-export * from './Model/Subscriber/SubscriberEmailChannelData';
-export * from './Model/Subscriber/SubscriberSlackChannelData';
+export * from './Model/Messaging/Channel/EmailChannelData';
+export * from './Model/Messaging/Channel/SlackChannelData';
 
 export * from './Model/Trigger/ScheduleTrigger';
 export * from './Model/Trigger/ScheduleTriggerData';

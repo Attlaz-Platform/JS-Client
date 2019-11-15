@@ -1,6 +1,6 @@
-import {SubscriberChannelData} from './SubscriberChannelData';
+import {ChannelData} from './ChannelData';
 
-export class SubscriberSlackChannelData extends SubscriberChannelData {
+export class SlackChannelData extends ChannelData {
     public access_token: string;
 
     public webhook: string;

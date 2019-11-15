@@ -1,18 +1,43 @@
 import {Endpoint, Subscriber} from "..";
-import {State} from '../Model/State';
+import {ParseHelper} from '../Helper/ParseHelper';
 
 export class SubscriberEndpoint extends Endpoint {
 
-    public getSubscribersByTask(taskId: string): Promise<Subscriber[]> {
+    public getSubscribersByTask(taskId: string, projectEnvironmentId: number = null): Promise<Subscriber[]> {
         return new Promise<Subscriber[]>((resolve, reject) => {
-            this.httpClient.request('/tasks/' + taskId + '/subscribers').then((rawSubscribers: any) => {
+
+            let parameters: any = null;
+            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+                parameters = {environment: projectEnvironmentId};
+            }
+
+            this.httpClient.request('/tasks/' + taskId + '/subscribers', parameters).then((rawSubscribers: any) => {
 
                 let subscribers: Subscriber[] = [];
                 for (let rawSubscriber of rawSubscribers) {
-                    let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.project, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
-                    subscriber.state = State.fromString(rawSubscriber.state);
-                    subscriber.projectEnvironment = rawSubscriber.projectEnvironment;
-                    subscribers.push(subscriber);
+                    subscribers.push(Subscriber.parseRaw(rawSubscriber));
+                }
+                resolve(subscribers);
+
+            }).catch((reason) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load subscribers: ', reason);
+                }
+
+                reject(reason);
+            });
+
+        });
+    }
+
+    public getSubscribersByChannel(channelId: number): Promise<Subscriber[]> {
+        return new Promise<Subscriber[]>((resolve, reject) => {
+
+            this.httpClient.request('/channels/' + channelId + '/subscribers').then((rawSubscribers: any) => {
+
+                let subscribers: Subscriber[] = [];
+                for (let rawSubscriber of rawSubscribers) {
+                    subscribers.push(Subscriber.parseRaw(rawSubscriber));
                 }
                 resolve(subscribers);
 

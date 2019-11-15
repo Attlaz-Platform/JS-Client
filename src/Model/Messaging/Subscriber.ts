@@ -37,4 +37,11 @@ export class Subscriber {
         return this.logLevelThreshold !== null;
     }
 
+    public static parseRaw(rawSubscriber: any): Subscriber {
+        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.project, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
+        subscriber.state = State.fromString(rawSubscriber.state);
+        subscriber.projectEnvironment = rawSubscriber.projectEnvironment;
+        return subscriber;
+    }
+
 }

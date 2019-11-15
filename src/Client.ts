@@ -1,9 +1,9 @@
 import {
     AdapterEndpoint,
-    ProjectEndpoint,
     ConfigEndpoint,
     HttpClient,
     NotificationsEndpoint,
+    ProjectEndpoint,
     SubscriberEndpoint,
     SystemEndpoint,
     TaskEndpoint,
@@ -15,6 +15,8 @@ import {
 } from ".";
 import {ChannelEndpoint} from './Service/ChannelEndpoint';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
+import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
+import {ParseHelper} from './Helper/ParseHelper';
 
 export class Client {
     private apiEndpoint: string;
@@ -23,7 +25,8 @@ export class Client {
 
     private adapterEndpoint: AdapterEndpoint;
     private projectEndpoint: ProjectEndpoint;
-    private projectEnvironmentEndpoint:ProjectEnvironmentEndpoint;
+    private projectEnvironmentEndpoint: ProjectEnvironmentEndpoint;
+    private projectDeployEndpoint: ProjectDeployEndpoint;
     private channelEndpoint: ChannelEndpoint;
     private configEndpoint: ConfigEndpoint;
     private notificationsEndpoint: NotificationsEndpoint;
@@ -81,7 +84,7 @@ export class Client {
     /* Endpoints */
     public getAdapterEndpoint(): AdapterEndpoint {
 
-        if (this.adapterEndpoint === null || this.adapterEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.adapterEndpoint)) {
             this.adapterEndpoint = new AdapterEndpoint(this.httpClient);
         }
 
@@ -90,24 +93,34 @@ export class Client {
 
     public getProjectEndpoint(): ProjectEndpoint {
 
-        if (this.projectEndpoint === null || this.projectEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.projectEndpoint)) {
             this.projectEndpoint = new ProjectEndpoint(this.httpClient);
         }
 
         return this.projectEndpoint;
     }
+
     public getProjectEnvironmentEndpoint(): ProjectEnvironmentEndpoint {
 
-        if (this.projectEnvironmentEndpoint === null || this.projectEnvironmentEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.projectEnvironmentEndpoint)) {
             this.projectEnvironmentEndpoint = new ProjectEnvironmentEndpoint(this.httpClient);
         }
 
         return this.projectEnvironmentEndpoint;
     }
 
+    public getProjectDeployEndpoint(): ProjectDeployEndpoint {
+
+        if (ParseHelper.isNullOrUndefined(this.projectDeployEndpoint)) {
+            this.projectDeployEndpoint = new ProjectDeployEndpoint(this.httpClient);
+        }
+
+        return this.projectDeployEndpoint;
+    }
+
     public getChannelEndpoint(): ChannelEndpoint {
 
-        if (this.channelEndpoint === null || this.channelEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.channelEndpoint)) {
             this.channelEndpoint = new ChannelEndpoint(this.httpClient);
         }
 
@@ -115,70 +128,70 @@ export class Client {
     }
 
     public getConfigEndpoint(): ConfigEndpoint {
-        if (this.configEndpoint === null || this.configEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.configEndpoint)) {
             this.configEndpoint = new ConfigEndpoint(this.httpClient);
         }
         return this.configEndpoint;
     }
 
     public getNotificationsEndpoint(): NotificationsEndpoint {
-        if (this.notificationsEndpoint === null || this.notificationsEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.notificationsEndpoint)) {
             this.notificationsEndpoint = new NotificationsEndpoint(this.httpClient);
         }
         return this.notificationsEndpoint;
     }
 
     public getSubscriberEndpoint(): SubscriberEndpoint {
-        if (this.subscriberEndpoint === null || this.subscriberEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.subscriberEndpoint)) {
             this.subscriberEndpoint = new SubscriberEndpoint(this.httpClient);
         }
         return this.subscriberEndpoint;
     }
 
     public getSystemEndpoint(): SystemEndpoint {
-        if (this.systemEndpoint === null || this.systemEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.systemEndpoint)) {
             this.systemEndpoint = new SystemEndpoint(this.httpClient);
         }
         return this.systemEndpoint;
     }
 
     public getTaskEndpoint(): TaskEndpoint {
-        if (this.taskEndpoint === null || this.taskEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.taskEndpoint)) {
             this.taskEndpoint = new TaskEndpoint(this.httpClient);
         }
         return this.taskEndpoint;
     }
 
     public getTaskExecutionEndpoint(): TaskExecutionEndpoint {
-        if (this.taskExecutionEndpoint === null || this.taskExecutionEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.taskExecutionEndpoint)) {
             this.taskExecutionEndpoint = new TaskExecutionEndpoint(this.httpClient);
         }
         return this.taskExecutionEndpoint;
     }
 
     public getTaskExecutionRequestEndpoint(): TaskExecutionRequestEndpoint {
-        if (this.taskExecutionRequestEndpoint === null || this.taskExecutionRequestEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.taskExecutionRequestEndpoint)) {
             this.taskExecutionRequestEndpoint = new TaskExecutionRequestEndpoint(this.httpClient);
         }
         return this.taskExecutionRequestEndpoint;
     }
 
     public getTeamsEndpoint(): TeamsEndpoint {
-        if (this.teamsEndpoint === null || this.teamsEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.teamsEndpoint)) {
             this.teamsEndpoint = new TeamsEndpoint(this.httpClient);
         }
         return this.teamsEndpoint;
     }
 
     public getTriggerEndpoint(): TriggerEndpoint {
-        if (this.triggerEndpoint === null || this.triggerEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.triggerEndpoint)) {
             this.triggerEndpoint = new TriggerEndpoint(this.httpClient);
         }
         return this.triggerEndpoint;
     }
 
     public getUserEndpoint(): UserEndpoint {
-        if (this.userEndpoint === null || this.userEndpoint === undefined) {
+        if (ParseHelper.isNullOrUndefined(this.userEndpoint)) {
             this.userEndpoint = new UserEndpoint(this.httpClient);
         }
         return this.userEndpoint;

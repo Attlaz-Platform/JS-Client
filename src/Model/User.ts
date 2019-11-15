@@ -1,8 +1,9 @@
 export class User {
     id: string;
     username: string;
-    email: string;
     firstname: string;
+    lastname: string;
+    email: string;
     picture: string;
     type: number;
 
@@ -10,8 +11,9 @@ export class User {
         let user: User = new User();
         user.id = rawUser.id;
         user.username = rawUser.username;
-        user.email = rawUser.email;
         user.firstname = rawUser.firstname;
+        user.lastname = rawUser.lastname;
+        user.email = rawUser.email;
         user.picture = rawUser.picture;
         user.type = rawUser.type;
 

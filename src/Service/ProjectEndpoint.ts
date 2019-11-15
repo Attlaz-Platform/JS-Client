@@ -43,4 +43,20 @@ export class ProjectEndpoint extends Endpoint {
         });
 
     }
+
+    public getById(projectId: string): Promise<Project> {
+        return new Promise<Project>((resolve, reject) => {
+            this.httpClient.request('projects/' + projectId + '').then((rawProject: any) => {
+
+                resolve(Project.parse(rawProject));
+            }).catch((reason) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to load project by id: ' + reason);
+                }
+
+                reject(reason);
+            });
+        });
+
+    }
 }
