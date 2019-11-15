@@ -1,5 +1,4 @@
-import {Endpoint} from "..";
-import {Worker} from '../Model/Worker';
+import {Endpoint, Worker, WorkerState} from "..";
 
 export class WorkerEndpoint extends Endpoint {
 
@@ -12,7 +11,7 @@ export class WorkerEndpoint extends Endpoint {
 
             const worker: Worker = new Worker();
             worker.projectEnvironment = result.projectEnvironment;
-            worker.active = result.active;
+            worker.state = WorkerState.fromString(result.state);
             worker.scale = result.scale;
             worker.image = result.image;
 
