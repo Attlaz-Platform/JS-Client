@@ -44,6 +44,8 @@ export class Client {
 
     private httpClient: HttpClient;
 
+    // private test: Map<string, any>;
+
     // private socketService;
 
     constructor(private apiEndpoint: string, private  clientId: string, private clientSecret: string) {
@@ -51,6 +53,11 @@ export class Client {
         this.httpClient = new HttpClient(apiEndpoint, clientId, clientSecret);
 
         this.endpoints = new Map<string, any>();
+
+        // this.test = new Map<string, any>();
+        //
+        // this.test.set('WorkerEndpoint', WorkerEndpoint);
+
         // this.socketService = socketIo(this.apiEndpoint);
         //
         // this.socketService.on('message', (data: any) => {
@@ -84,82 +91,82 @@ export class Client {
 
     /* Endpoints */
     public getAdapterEndpoint(): AdapterEndpoint {
-        return this.getEndpoint(this.Store.AdapterEndpoint);
+        return this.getEndpoint('adapter', this.Store.AdapterEndpoint);
     }
 
     public getProjectEndpoint(): ProjectEndpoint {
-        return this.getEndpoint(this.Store.ProjectEndpoint);
+        return this.getEndpoint('project', this.Store.ProjectEndpoint);
     }
 
     public getProjectEnvironmentEndpoint(): ProjectEnvironmentEndpoint {
-        return this.getEndpoint(this.Store.ProjectEnvironmentEndpoint);
+        return this.getEndpoint('projectenvironment', this.Store.ProjectEnvironmentEndpoint);
     }
 
     public getProjectDeployEndpoint(): ProjectDeployEndpoint {
-        return this.getEndpoint(this.Store.ProjectDeployEndpoint);
+        return this.getEndpoint('projectdeploy', this.Store.ProjectDeployEndpoint);
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
-        return this.getEndpoint(this.Store.ChannelEndpoint);
+        return this.getEndpoint('channel', this.Store.ChannelEndpoint);
     }
 
     public getConfigEndpoint(): ConfigEndpoint {
-        return this.getEndpoint(this.Store.ConfigEndpoint);
+        return this.getEndpoint('config', this.Store.ConfigEndpoint);
     }
 
     public getNotificationsEndpoint(): NotificationsEndpoint {
-        return this.getEndpoint(this.Store.NotificationsEndpoint);
+        return this.getEndpoint('notiication', this.Store.NotificationsEndpoint);
     }
 
     public getSubscriberEndpoint(): SubscriberEndpoint {
-        return this.getEndpoint(this.Store.SubscriberEndpoint);
+        return this.getEndpoint('subscriber', this.Store.SubscriberEndpoint);
     }
 
     public getSystemEndpoint(): SystemEndpoint {
-        return this.getEndpoint(this.Store.SystemEndpoint);
+        return this.getEndpoint('system', this.Store.SystemEndpoint);
     }
 
     public getTaskEndpoint(): TaskEndpoint {
-        return this.getEndpoint(this.Store.TaskEndpoint);
+        return this.getEndpoint('task', this.Store.TaskEndpoint);
     }
 
     public getTaskExecutionEndpoint(): TaskExecutionEndpoint {
-        return this.getEndpoint(this.Store.TaskExecutionEndpoint);
+        return this.getEndpoint('taskexecution', this.Store.TaskExecutionEndpoint);
     }
 
     public getTaskExecutionRequestEndpoint(): TaskExecutionRequestEndpoint {
-        return this.getEndpoint(this.Store.TaskExecutionRequestEndpoint);
+        return this.getEndpoint('taskexecutionrequest', this.Store.TaskExecutionRequestEndpoint);
     }
 
     public getTeamsEndpoint(): TeamsEndpoint {
-        return this.getEndpoint(this.Store.TeamsEndpoint);
+        return this.getEndpoint('teams', this.Store.TeamsEndpoint);
     }
 
     public getTriggerEndpoint(): TriggerEndpoint {
-        return this.getEndpoint(this.Store.TriggerEndpoint);
+        return this.getEndpoint('trigger', this.Store.TriggerEndpoint);
     }
 
     public getUserEndpoint(): UserEndpoint {
-        return this.getEndpoint(this.Store.UserEndpoint);
+        return this.getEndpoint('user', this.Store.UserEndpoint);
     }
 
     public getWorkerEndpoint(): WorkerEndpoint {
-        return this.getEndpoint(this.Store.WorkerEndpoint);
+        return this.getEndpoint('worker', this.Store.WorkerEndpoint);
     }
 
-    private getEndpoint<T extends Endpoint>(className: { new(x: HttpClient): T; }): T {
+    private getEndpoint<T extends Endpoint>(key: string, className: { new(x: HttpClient): T; }): T {
 
-        const classNameString: string = className.name;
+        //const classNameString: string = className.name;
 
-        if (!this.endpoints.has(classNameString)) {
-            if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
-                throw new Error(`Class type of \'${classNameString}\' is not in the store`);
-            }
+        if (!this.endpoints.has(key)) {
+            // if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
+            //     throw new Error(`Class type of \'${classNameString}\' is not in the store`);
+            // }
 
             const endpoint: Endpoint = new className(this.httpClient);
-            this.endpoints.set(classNameString, endpoint);
+            this.endpoints.set(key, endpoint);
         }
-        return this.endpoints.get(classNameString);
+        return this.endpoints.get(key);
     }
 
 }
