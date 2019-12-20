@@ -4,6 +4,8 @@ export class User {
     firstname: string;
     lastname: string;
     email: string;
+    phone: string;
+    language: string;
     picture: string;
     type: number;
 
@@ -14,6 +16,8 @@ export class User {
         user.firstname = rawUser.firstname;
         user.lastname = rawUser.lastname;
         user.email = rawUser.email;
+        user.phone = rawUser.phone;
+        user.language = rawUser.language;
         user.picture = rawUser.picture;
         user.type = rawUser.type;
 
