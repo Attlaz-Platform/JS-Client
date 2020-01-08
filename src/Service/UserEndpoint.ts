@@ -25,4 +25,22 @@ export class UserEndpoint extends Endpoint {
         return result;
 
     }
+
+    public save(user: User): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let url: string = '/user';
+
+            this.httpClient.request(url, user, 'POST').then((result: any) => {
+
+                resolve(result);
+
+            }).catch((reason) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to save user: ', reason);
+                }
+                reject(reason);
+            });
+
+        });
+    }
 }
