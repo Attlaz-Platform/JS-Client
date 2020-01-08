@@ -6,7 +6,11 @@ export class User {
     email: string;
     phone: string;
     language: string;
+    time_zone: string;
+    date_format: string;
+    time_format: string;
     picture: string;
+
     type: number;
 
     public static parse(rawUser: any): User {
@@ -18,6 +22,9 @@ export class User {
         user.email = rawUser.email;
         user.phone = rawUser.phone;
         user.language = rawUser.language;
+        user.time_zone = rawUser.time_zone;
+        user.date_format = rawUser.date_format;
+        user.time_format = rawUser.time_format;
         user.picture = rawUser.picture;
         user.type = rawUser.type;
 
