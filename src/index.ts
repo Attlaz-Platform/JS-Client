@@ -53,7 +53,8 @@ export * from './Service/TriggerEndpoint';
 export * from './Service/UserEndpoint';
 
 export * from './Client';
-export * from './HttpClient';
+export * from './OAuth/OAuthClient';
+export * from './OAuth/OAuthClientOptions';
 
 
 
