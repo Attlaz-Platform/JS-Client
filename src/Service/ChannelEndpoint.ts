@@ -16,7 +16,7 @@ export class ChannelEndpoint extends Endpoint {
                 }
                 resolve(subscriberChannels);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load channels for team "' + teamId + '": ', reason);
                 }
@@ -41,7 +41,7 @@ export class ChannelEndpoint extends Endpoint {
                 }
                 resolve(subscriberChannels);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load channels for current user: ', reason);
                 }
@@ -60,7 +60,7 @@ export class ChannelEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save channel: ', reason);
                 }

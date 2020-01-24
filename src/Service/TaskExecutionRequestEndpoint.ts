@@ -10,7 +10,7 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
             this.httpClient.request(url, params, 'POST').then((result: any) => {
 
                 resolve(result);
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load config: ', reason);
                 }

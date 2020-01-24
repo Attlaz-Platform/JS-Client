@@ -20,7 +20,7 @@ export class ConfigEndpoint extends Endpoint {
                 }
                 resolve(configs);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load task configuration', reason);
                 }
@@ -48,7 +48,7 @@ export class ConfigEndpoint extends Endpoint {
                 }
                 resolve(configs);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load project configuration', reason);
                 }
@@ -66,7 +66,7 @@ export class ConfigEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load config: ', reason);
                 }

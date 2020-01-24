@@ -51,7 +51,7 @@ export class SystemEndpoint extends Endpoint {
                 let result: PagedResult<Log> = new PagedResult<Log>(logs, rawLogs.pageSize, rawLogs.totalCount);
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load logs: ', reason);
                 }
@@ -72,7 +72,7 @@ export class SystemEndpoint extends Endpoint {
 
                 resolve(Log.parse(rawSavedLog));
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save log: ', reason);
                 }

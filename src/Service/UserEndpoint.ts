@@ -34,7 +34,7 @@ export class UserEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save user: ', reason);
                 }

@@ -1,9 +1,9 @@
-import {HttpClient} from "..";
+import {OAuthClient} from '..';
 
 export abstract class Endpoint {
-    protected httpClient: HttpClient;
+    protected httpClient: OAuthClient;
 
-    public constructor(httpClient: HttpClient) {
+    public constructor(httpClient: OAuthClient) {
         this.httpClient = httpClient;
     }
 }

@@ -25,7 +25,7 @@ export class NotificationsEndpoint extends Endpoint {
                 }
                 resolve(notifications);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load notifications: ', reason);
                 }
@@ -44,7 +44,7 @@ export class NotificationsEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save notification: ', reason);
                 }

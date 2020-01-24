@@ -15,7 +15,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(tasks);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -31,7 +31,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(Task.parse(rawTask));
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -59,7 +59,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(tasks);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -80,7 +80,7 @@ export class TaskEndpoint extends Endpoint {
             this.httpClient.request('tasks/' + taskId + '/summaries', parameters).then((rawTaskSummary: any) => {
                 resolve(TaskSummary.parse(rawTaskSummary));
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load task by id ' + taskId + ': ' + reason);
                 }
@@ -98,7 +98,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(Task.parse(result));
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save task: ', reason);
                 }
