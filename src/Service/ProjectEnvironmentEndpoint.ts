@@ -40,4 +40,20 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     }
 
+    public save(projectEnvironment: ProjectEnvironment): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+
+            this.httpClient.request('projectenvironments/', projectEnvironment, 'POST').then((result: any) => {
+
+                resolve(result);
+
+            }).catch((reason:any) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to save project environment: ', reason);
+                }
+                reject(reason);
+            });
+
+        });
+    }
 }

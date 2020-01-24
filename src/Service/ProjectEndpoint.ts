@@ -12,7 +12,7 @@ export class ProjectEndpoint extends Endpoint {
                 }
 
                 resolve(projects);
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load projects: ' + reason);
                 }
@@ -33,7 +33,7 @@ export class ProjectEndpoint extends Endpoint {
                 }
 
                 resolve(projects);
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load projects: ' + reason);
                 }
@@ -49,7 +49,7 @@ export class ProjectEndpoint extends Endpoint {
             this.httpClient.request('projects/' + projectId + '').then((rawProject: any) => {
 
                 resolve(Project.parse(rawProject));
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load project by id: ' + reason);
                 }
@@ -58,5 +58,22 @@ export class ProjectEndpoint extends Endpoint {
             });
         });
 
+    }
+
+    public save(project: Project): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+
+            this.httpClient.request('projects/', project, 'POST').then((result: any) => {
+
+                resolve(result);
+
+            }).catch((reason:any) => {
+                if (this.httpClient.isDebugEnabled()) {
+                    console.error('Failed to save project: ', reason);
+                }
+                reject(reason);
+            });
+
+        });
     }
 }

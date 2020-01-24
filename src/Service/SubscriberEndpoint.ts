@@ -19,7 +19,7 @@ export class SubscriberEndpoint extends Endpoint {
                 }
                 resolve(subscribers);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load subscribers: ', reason);
                 }
@@ -41,7 +41,7 @@ export class SubscriberEndpoint extends Endpoint {
                 }
                 resolve(subscribers);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load subscribers: ', reason);
                 }
@@ -60,7 +60,7 @@ export class SubscriberEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save subscriber: ', reason);
                 }

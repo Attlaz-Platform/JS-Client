@@ -15,7 +15,7 @@ export class TeamsEndpoint extends Endpoint {
                 }
                 rawTeams = null;
                 resolve(teams);
-            }).catch((reason) => {
+            }).catch((reason:any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load teams: ' + reason);
                 }
