@@ -2,8 +2,9 @@ import {
     AdapterEndpoint,
     ConfigEndpoint,
     Endpoint,
-    HttpClient,
     NotificationsEndpoint,
+    OAuthClient,
+    OAuthClientOptions,
     ProjectEndpoint,
     SubscriberEndpoint,
     SystemEndpoint,
@@ -18,6 +19,7 @@ import {ChannelEndpoint} from './Service/ChannelEndpoint';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
 import {WorkerEndpoint} from './Service/WorkerEndpoint';
+import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
 
 export class Client {
 
@@ -39,10 +41,11 @@ export class Client {
         TaskExecutionRequestEndpoint,
         TeamsEndpoint,
         TriggerEndpoint,
-        UserEndpoint
+        UserEndpoint,
+        SourcesAccountEndpoint
     };
 
-    private httpClient: HttpClient;
+    private httpClient: OAuthClient;
 
     // private test: Map<string, any>;
 
@@ -50,7 +53,8 @@ export class Client {
 
     constructor(private apiEndpoint: string, private  clientId: string, private clientSecret: string) {
 
-        this.httpClient = new HttpClient(apiEndpoint, clientId, clientSecret);
+        const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret);
+        this.httpClient = new OAuthClient(options);
 
         this.endpoints = new Map<string, any>();
 
@@ -65,7 +69,7 @@ export class Client {
         // });
     }
 
-    public getHttpClient(): HttpClient {
+    public getHttpClient(): OAuthClient {
         return this.httpClient;
     }
 
@@ -154,7 +158,11 @@ export class Client {
         return this.getEndpoint('worker', this.Store.WorkerEndpoint);
     }
 
-    private getEndpoint<T extends Endpoint>(key: string, className: { new(x: HttpClient): T; }): T {
+    public getSourcesAccountEndpoint(): SourcesAccountEndpoint {
+        return this.getEndpoint('sourcesaccount', this.Store.SourcesAccountEndpoint);
+    }
+
+    private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
 
         //const classNameString: string = className.name;
 

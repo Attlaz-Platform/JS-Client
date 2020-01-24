@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "1.0.7",
+  "version": "1.0.19",
   "description": "Javascript Client to access Attlaz API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,15 +24,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "client-oauth2": "https://codeload.github.com/Echron/js-client-oauth2/legacy.tar.gz/260a4669113ee460e8fdf402e2a6cab123c294b2",
-    "popsicle": "^11.0.0"
+    "client-oauth2": "^4.2.5"
   },
   "devDependencies": {
-    "rimraf": "^2.6.2",
-    "typescript": "^3.5.3",
-    "@types/node": "^10.12.5"
-  },
-  "peerDependencies": {
-    "popsicle": "^11.0.0"
+    "@types/node": "^10.17.13",
+    "rimraf": "^2.7.1",
+    "typescript": "^3.5.3"
   }
 }
