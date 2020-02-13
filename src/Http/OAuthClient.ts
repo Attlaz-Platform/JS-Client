@@ -1,8 +1,8 @@
 import {OAuthClientOptions} from './OAuthClientOptions';
 import {ClientError} from '../Model/Error/ClientError';
 import {Token} from 'client-oauth2';
-import {Response} from 'servie';
-import {fetch} from 'popsicle';
+import {HttpClient} from './HttpClient';
+import {HttpClientRequest} from './HttpClientRequest';
 import ClientOAuth2 = require('client-oauth2');
 
 export class OAuthClient {
@@ -67,17 +67,23 @@ export class OAuthClient {
             .join('&');
     }
 
-    private createRequestData(action: string, parameters: any = null, method: string = 'GET'): any {
+    private createRequestData(action: string, parameters: any = null, method: string = 'GET'): HttpClientRequest {
 
         const url: string = this.getUri(action);
 
-        let requestData: any = {
-            url: url,
-            method: method,
-        };
+        let requestData: HttpClientRequest = new HttpClientRequest(url, method);
 
         if (method === 'POST' && parameters !== null && parameters !== undefined) {
+            if (typeof parameters === 'object') {
+                parameters = JSON.stringify(parameters);
+            } else if (typeof parameters === 'string') {
+
+            } else {
+                console.error('Unknown parameter type: ' + typeof parameters);
+            }
+
             requestData.body = parameters;
+            requestData.setJsonHeader();
         }
         if (method === 'GET' && parameters !== null && parameters !== undefined) {
             requestData.url = requestData.url + '?' + this.encodeQueryString(parameters);
@@ -92,7 +98,9 @@ export class OAuthClient {
             throw new ClientError('Unable to perform request, access token not provided');
         } else {
 
-            const requestData: any = this.createRequestData(action, parameters, method);
+            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method);
+
+            // console.log('RD', requestData);
 
             if (this.debug) {
                 console.info('[Client request] ', requestData);
@@ -100,22 +108,7 @@ export class OAuthClient {
 
             try {
 
-                const response: Response = await fetch(requestData.url, requestData);
-
-                //TODO: validate status
-                switch (response.status) {
-                    case 401:
-                        //Unauthorized
-                        console.error(response.statusText);
-                        throw new ClientError('Unauthorized');
-                        break;
-                }
-
-                // requestData = null;
-                // signedRequestData = null;
-
-                const body: any = await response.json();
-                return body;
+                return HttpClient.request(requestData);
 
             } catch (e) {
                 throw ClientError.fromError(e);
