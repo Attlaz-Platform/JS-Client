@@ -1,4 +1,5 @@
-import {Endpoint, Worker, WorkerState} from "..";
+import {Endpoint, Worker} from "..";
+import {WorkerImage} from '../Model/Worker/WorkerImage';
 
 export class WorkerEndpoint extends Endpoint {
 
@@ -9,13 +10,7 @@ export class WorkerEndpoint extends Endpoint {
 
             const result: any = await this.httpClient.request(url);
 
-            const worker: Worker = new Worker();
-            worker.projectEnvironment = result.projectEnvironment;
-            worker.state = WorkerState.fromString(result.state);
-            worker.scale = result.scale;
-            worker.image = result.image;
-
-            return worker;
+            return Worker.parse(result);
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -43,6 +38,20 @@ export class WorkerEndpoint extends Endpoint {
 
             throw error;
         }
+
+    }
+
+    public async getWorkerImages(): Promise<WorkerImage[]> {
+
+        let cmd: string = '/workerimages';
+
+        const rawWorkerImages: any[] = await this.httpClient.request(cmd);
+
+        const result: WorkerImage[] = [];
+        for (let rawWorkerImage of rawWorkerImages) {
+            result.push(WorkerImage.parse(rawWorkerImage));
+        }
+        return result;
 
     }
 }
