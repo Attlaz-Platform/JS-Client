@@ -1,5 +1,5 @@
 import {State} from './State';
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Utils} from '../Utils';
 
 export class Config {
     public id: number;
@@ -22,8 +22,8 @@ export class Config {
         config.scope = rawConfig.scope;
         config.key = rawConfig.key;
         config.value = rawConfig.value;
-        config.inheritable = ParseHelper.parseBoolean(rawConfig.inheritable);
-        config.sensitive = ParseHelper.parseBoolean(rawConfig.sensitive);
+        config.inheritable = Utils.isTrue(rawConfig.inheritable);
+        config.sensitive = Utils.isTrue(rawConfig.sensitive);
         config.state = State.fromString(rawConfig.state);
 
         return config;

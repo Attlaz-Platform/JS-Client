@@ -1,4 +1,4 @@
-import {ParseHelper} from '../../Helper/ParseHelper';
+import {Utils} from '../../Utils';
 
 export enum ProjectDeployStatus {
     Unknown = 'unknown' as any,
@@ -13,8 +13,8 @@ export enum ProjectDeployStatus {
 export namespace ProjectDeployStatus {
 
     export function fromString(input: string): ProjectDeployStatus {
-        const result: ProjectDeployStatus = ParseHelper.parseEnum<ProjectDeployStatus>(input, ProjectDeployStatus);
-        if (ParseHelper.isNullOrUndefined(result)) {
+        const result: ProjectDeployStatus = Utils.parseEnum<ProjectDeployStatus>(input, ProjectDeployStatus);
+        if (Utils.isNullOrUndefined(result)) {
             throw new Error('Unable to parse ProjectDeployStatus from string: Unknown ProjectDeployStatus "' + input + '"');
         }
         return result;

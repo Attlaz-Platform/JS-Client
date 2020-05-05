@@ -2,12 +2,12 @@ import {
     AdapterEndpoint,
     ConfigEndpoint,
     Endpoint,
+    LogEndpoint,
     NotificationsEndpoint,
     OAuthClient,
     OAuthClientOptions,
     ProjectEndpoint,
     SubscriberEndpoint,
-    SystemEndpoint,
     TaskEndpoint,
     TaskExecutionEndpoint,
     TaskExecutionRequestEndpoint,
@@ -35,7 +35,7 @@ export class Client {
         ConfigEndpoint,
         NotificationsEndpoint,
         SubscriberEndpoint,
-        SystemEndpoint,
+        LogEndpoint,
         TaskEndpoint,
         TaskExecutionEndpoint,
         TaskExecutionRequestEndpoint,
@@ -126,8 +126,8 @@ export class Client {
         return this.getEndpoint('subscriber', this.Store.SubscriberEndpoint);
     }
 
-    public getSystemEndpoint(): SystemEndpoint {
-        return this.getEndpoint('system', this.Store.SystemEndpoint);
+    public getLogEndPoint(): LogEndpoint {
+        return this.getEndpoint('log', this.Store.LogEndpoint);
     }
 
     public getTaskEndpoint(): TaskEndpoint {
@@ -170,9 +170,13 @@ export class Client {
             // if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
             //     throw new Error(`Class type of \'${classNameString}\' is not in the store`);
             // }
+            try {
+                const endpoint: Endpoint = new className(this.httpClient);
+                this.endpoints.set(key, endpoint);
+            } catch (e) {
+                throw new Error('Unable to initialize ' + key + ' endpoint (' + e.message + ')');
+            }
 
-            const endpoint: Endpoint = new className(this.httpClient);
-            this.endpoints.set(key, endpoint);
         }
         return this.endpoints.get(key);
     }

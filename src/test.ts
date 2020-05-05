@@ -3,7 +3,9 @@
  */
 
 import {Client} from "./Client";
-import {TaskExecutionSummary} from './Model/TaskExecutionSummary';
+import {ClientError} from './Model/Error/ClientError';
+import {User} from './Model/User';
+import {TaskSummary} from './Model/TaskSummary';
 
 // client.authenticate('admin@attlaz.com', 'admin2').subscribe((success) => {
 //     console.log('Authenticate', success);
@@ -61,10 +63,16 @@ let before: number = process.memoryUsage().heapUsed;
 // test2(100);
 
 let endpoint: string = 'http://localhost:8080/';
-endpoint = 'https://api2.attlaz.com/';
+endpoint = 'https://galantis.echron.com/';
 
 let client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
 client.getHttpClient().enableDebug();
+// client.getUserEndpoint().getUser().then((result: User) => {
+//     console.log(result);
+// }, (error: ClientError) => {
+//     console.error(error);
+// });
+
 client.authenticate().then((success) => {
 
     // console.log('Auth: ' + readableBytes(process.memoryUsage().heapUsed) + ']');
@@ -82,9 +90,18 @@ client.authenticate().then((success) => {
     //
     // logEntry.context = context;
     //
-    // // client.getTaskExecutionRequestEndpoint().postTaskExecutionRequest('kUkx32dk9', {}).then(() => {
-    // //     console.log('qmsdfkj');
-    // // })
+    client.getUserEndpoint().getUser().then((user: User) => {
+        console.log('User', user);
+    });
+
+    /**
+     * We expect an exception!
+     */
+    client.getTaskEndpoint().getTaskSummary('3B4A1772A', 41).then((taskSummary: TaskSummary) => {
+        console.log('Task', taskSummary);
+    }).catch((error) => {
+        console.error(error);
+    })
     // client.getSystemEndpoint().save(logEntry).then((savedLogEntry: Log) => {
     //     console.log(savedLogEntry);
     // });
@@ -96,15 +113,18 @@ client.authenticate().then((success) => {
     //     }
     // })
 
-    client.getTaskExecutionEndpoint().getTaskExecutionSummaries('zwgUjKacG', new Date("2019-01-12T18:29:52.545Z")).then((taskExecutionSummaries: TaskExecutionSummary[]) => {
-        console.log(taskExecutionSummaries.length);
-    })
+    // client.getTaskExecutionEndpoint().getTaskExecutionSummaries('zwgUjKacG', new Date("2019-01-12T18:29:52.545Z")).then((taskExecutionSummaries: TaskExecutionSummary[]) => {
+    //     console.log(taskExecutionSummaries.length);
+    // }, (error: ClientError) => {
+    //     console.error(error);
+    // })
     // client.getSubscriberEndpoint().getSubscribersByTask('BEXG88ATH').then((subscribers: Subscriber[]) => {
     //     console.log(subscribers);
     // })
 
-}).catch((error) => {
-    console.error('Unable to authenticate: ' + error.message);
+}).catch((error: ClientError) => {
+    console.error('Unable to authenticate: ');
+    console.error(error);
 });
 
 // function test() {

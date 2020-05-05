@@ -1,5 +1,4 @@
-import {Config, Endpoint} from "..";
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Config, Endpoint, Utils} from "..";
 
 export class ConfigEndpoint extends Endpoint {
 
@@ -7,7 +6,7 @@ export class ConfigEndpoint extends Endpoint {
         return new Promise<Config[]>((resolve, reject) => {
 
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
@@ -20,7 +19,7 @@ export class ConfigEndpoint extends Endpoint {
                 }
                 resolve(configs);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load task configuration', reason);
                 }
@@ -35,7 +34,7 @@ export class ConfigEndpoint extends Endpoint {
         return new Promise<Config[]>((resolve, reject) => {
 
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
@@ -48,7 +47,7 @@ export class ConfigEndpoint extends Endpoint {
                 }
                 resolve(configs);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Unable to load project configuration', reason);
                 }
@@ -66,7 +65,7 @@ export class ConfigEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load config: ', reason);
                 }

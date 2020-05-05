@@ -1,135 +1,6 @@
-import {Endpoint, LogLevel, PagedResult, TaskExecution, TaskExecutionHistory, TaskExecutionLog, TaskExecutionStatus, TaskExecutionSummary} from "..";
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Endpoint, TaskExecution, TaskExecutionHistory, TaskExecutionStatus, TaskExecutionSummary, Utils} from "..";
 
 export class TaskExecutionEndpoint extends Endpoint {
-
-    public getLogs(taskExecutionId: string, pageSize: number = 1000, pageNum: number = 0): Promise<PagedResult<TaskExecutionLog>> {
-
-        if (taskExecutionId.length === 0) {
-            throw new Error('Task execution id cannot be empty');
-        }
-
-        return new Promise<PagedResult<TaskExecutionLog>>((resolve, reject) => {
-
-            let _logs: TaskExecutionLog[] = [];
-
-            let cmd: string = '/taskexecutions/' + taskExecutionId + '/log/?pageSize=' + pageSize + '&pageNum=' + pageNum + '';
-
-            this.httpClient.request(cmd).then((rawTaskExecutionLogs: any) => {
-
-                let taskExecutionLogs: TaskExecutionLog[] = [];
-                for (let rawTaskExecutionLog of rawTaskExecutionLogs.data) {
-                    taskExecutionLogs.push(TaskExecutionLog.parse(rawTaskExecutionLog));
-                }
-
-                _logs = taskExecutionLogs;
-
-                let result: PagedResult<TaskExecutionLog> = new PagedResult<TaskExecutionLog>(_logs, rawTaskExecutionLogs.pageSize, rawTaskExecutionLogs.totalCount);
-                resolve(result);
-
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load task execution logs: ', reason);
-                }
-
-                reject(reason);
-            });
-
-            /**
-             *
-             */
-
-            // this.socketService.on('log', (rawLog: any) => {
-            //
-            //
-            //     console.log('new log', rawLog);
-            //     console.log(_logs.length);
-            //
-            //     let logs: TaskExecutionLog[] = Object.assign([], _logs);
-            //     logs.push(ParseLog.parse(rawLog));
-            //
-            //
-            //     _logs = logs;
-            //     subscribe.next(_logs);
-            //
-            // });
-
-            return () => {
-                //TODO: stop listening for "log" events
-
-                //console.log('disconnect');
-                // this.socketService.disconnect();
-
-            };
-            /**
-             *
-             */
-        });
-    }
-
-    public getLogLevelCount(taskExecutionId: string): Promise<Map<LogLevel, number>> {
-        if (taskExecutionId.length === 0) {
-            throw new Error('Task execution id cannot be empty');
-        }
-
-        return new Promise<Map<LogLevel, number>>((resolve, reject) => {
-
-            let cmd: string = '/taskexecutions/' + taskExecutionId + '/loglevelcount';
-
-            this.httpClient.request(cmd).then((rawLogLevelCounts: any) => {
-
-                let logLevelCount: Map<LogLevel, number> = new Map<LogLevel, number>();
-                for (let rawLogLevel in rawLogLevelCounts) {
-
-                    let count: number = rawLogLevelCounts[rawLogLevel];
-
-                    let logLevel: LogLevel = LogLevel.fromString(rawLogLevel);
-
-                    logLevelCount.set(logLevel, count);
-
-                }
-
-                resolve(logLevelCount);
-
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load log levels: ', reason);
-                }
-
-                reject(reason);
-            });
-
-            /**
-             *
-             */
-
-            // this.socketService.on('log', (rawLog: any) => {
-            //
-            //
-            //     console.log('new log', rawLog);
-            //     console.log(_logs.length);
-            //
-            //     let logs: TaskExecutionLog[] = Object.assign([], _logs);
-            //     logs.push(ParseLog.parse(rawLog));
-            //
-            //
-            //     _logs = logs;
-            //     subscribe.next(_logs);
-            //
-            // });
-
-            return () => {
-                //TODO: stop listening for "log" events
-
-                //console.log('disconnect');
-                // this.socketService.disconnect();
-
-            };
-            /**
-             *
-             */
-        });
-    }
 
     public getTaskExecutions(taskId: string): Promise<TaskExecution[]> {
         return new Promise<TaskExecution[]>((resolve, reject) => {
@@ -143,7 +14,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
                 resolve(taskExecutions);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks executions: ' + reason);
                 }
@@ -157,21 +28,21 @@ export class TaskExecutionEndpoint extends Endpoint {
 
         try {
             let params: any = null;
-            if (from !== null && from !== undefined) {
-                if (params === null || params === undefined) {
+            if (!Utils.isNullOrUndefined(from)) {
+                if (Utils.isNullOrUndefined(params)) {
                     params = {};
                 }
                 params.from = from.toISOString();
             }
-            if (to !== null && to !== undefined) {
-                if (params === null || params === undefined) {
+            if (!Utils.isNullOrUndefined(to)) {
+                if (Utils.isNullOrUndefined(params)) {
                     params = {};
                 }
                 params.to = to.toISOString();
             }
 
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
-                if (params === null || params === undefined) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
+                if (Utils.isNullOrUndefined(params)) {
                     params = {};
                 }
                 params.environment = projectEnvironmentId;
@@ -203,7 +74,7 @@ export class TaskExecutionEndpoint extends Endpoint {
 
                 resolve(TaskExecutionSummary.parse(rawTaskExecution));
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks executions: ' + reason);
                 }
@@ -230,7 +101,7 @@ export class TaskExecutionEndpoint extends Endpoint {
                 }
                 resolve(taskExecutionHistories);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load task execution history: ', reason);
                 }
@@ -249,10 +120,10 @@ export class TaskExecutionEndpoint extends Endpoint {
 
         let params: any = {};
 
-        if (status !== null && status !== undefined) {
+        if (!Utils.isNullOrUndefined(status)) {
             params.status = status;
         }
-        if (time !== null && time !== undefined) {
+        if (!Utils.isNullOrUndefined(time)) {
             params.time = time;
         }
 

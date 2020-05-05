@@ -8,17 +8,16 @@ import {WebhookTriggerData} from './WebhookTriggerData';
 export class Trigger {
     public id: string;
     public type: TriggerType;
-    public project: string;
     public projectEnvironment: number;
     public task: string;
     public arguments: {};
     public data: TriggerData;
     public state: State = State.Active;
 
-    public constructor(id: string, type: TriggerType, project: string, task: string, data: TriggerData) {
+    public constructor(id: string, type: TriggerType, projectEnvironment: number, task: string, data: TriggerData) {
         this.id = id;
         this.type = type;
-        this.project = project;
+        this.projectEnvironment = projectEnvironment;
         this.task = task;
         this.data = data;
 
@@ -48,11 +47,10 @@ export class Trigger {
                 throw new Error('Unknown trigger type "' + type + '"');
         }
 
-        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project, task, triggerData);
+        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.projectEnvironment, task, triggerData);
 
         trigger.arguments = rawTrigger.arguments;
 
-        trigger.projectEnvironment = rawTrigger.projectEnvironment;
         trigger.state = State.fromString(rawTrigger.state);
 
         return trigger

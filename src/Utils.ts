@@ -1,4 +1,11 @@
-export class ParseHelper {
+export class Utils {
+    public static isNullOrUndefined(variable: any): boolean {
+        return variable === null || variable === undefined;
+    }
+
+    public static isTrue(input: string | number | boolean | null | undefined): boolean {
+        return (input === true || input === 'true' || input === 1 || input === '1');
+    }
     public static parseRawDate(input: Date): Date | null {
         if (input !== null && input !== undefined) {
             return new Date(input);
@@ -13,13 +20,4 @@ export class ParseHelper {
 
         return enumVal as T;
     }
-
-    public static parseBoolean(input: string | number | boolean | null | undefined): boolean {
-        return (input === true || input === 'true' || input === 1 || input === '1');
-    }
-
-    public static isNullOrUndefined(variable: any): boolean {
-        return variable === null || variable === undefined;
-    }
-
 }

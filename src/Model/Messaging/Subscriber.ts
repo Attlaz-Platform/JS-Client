@@ -5,8 +5,6 @@ export class Subscriber {
     public id: string;
     public eventTypes: EventType[];
 
-    public team: string;
-    public project: string;
     public projectEnvironment: number;
     public task: string;
     public taskExecution: string;
@@ -15,12 +13,11 @@ export class Subscriber {
     public logLevelThreshold: LogLevel;
     public state: State = State.Active;
 
-    constructor(id: string, eventTypes: EventType[], team: string, project: string, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
+    constructor(id: string, eventTypes: EventType[], projectEnvironment: number, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
         this.id = id;
         this.eventTypes = eventTypes;
 
-        this.team = team;
-        this.project = project;
+        this.projectEnvironment = projectEnvironment;
         this.task = task;
         this.taskExecution = taskExecution;
 
@@ -38,9 +35,9 @@ export class Subscriber {
     }
 
     public static parseRaw(rawSubscriber: any): Subscriber {
-        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.team, rawSubscriber.project, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
+        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.projectEnvironment, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
         subscriber.state = State.fromString(rawSubscriber.state);
-        subscriber.projectEnvironment = rawSubscriber.projectEnvironment;
+
         return subscriber;
     }
 

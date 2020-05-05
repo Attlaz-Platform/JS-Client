@@ -1,3 +1,5 @@
+import {Utils} from '../Utils';
+
 export class PagedResult<T> {
     public pageSize: number;
     public totalCount: number;
@@ -7,12 +9,12 @@ export class PagedResult<T> {
 
         this.data = data;
 
-        if (pageSize === null || pageSize === undefined) {
+        if (Utils.isNullOrUndefined(pageSize)) {
             pageSize = data.length;
         }
         this.pageSize = pageSize;
 
-        if (totalCount === null || totalCount === undefined) {
+        if (Utils.isNullOrUndefined(totalCount)) {
             totalCount = data.length;
         }
         this.totalCount = totalCount;

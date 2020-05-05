@@ -1,4 +1,5 @@
 import {ChannelData} from './ChannelData';
+import {ChannelType} from './ChannelType';
 
 export class SlackChannelData extends ChannelData {
     public access_token: string;
@@ -12,7 +13,7 @@ export class SlackChannelData extends ChannelData {
     public team_name: string;
 
     public constructor(access_token: string, webhook: string, channel_id: string, channel_name: string, team_id: string, team_name: string) {
-        super('slack');
+        super(ChannelType.Slack);
 
         this.access_token = access_token;
 

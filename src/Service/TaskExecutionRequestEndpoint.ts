@@ -1,23 +1,24 @@
 import {Endpoint} from "..";
 
 export class TaskExecutionRequestEndpoint extends Endpoint {
-    public postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            let url: string = '/tasks/' + taskId + '/taskexecutionrequests';
-            if (wait) {
-                url = url + "?wait=true";
+    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<any> {
+
+        let url: string = '/tasks/' + taskId + '/taskexecutionrequests';
+        if (wait) {
+            url = url + "?wait=true";
+        }
+
+        try {
+            const result: any = this.httpClient.request(url, params, 'POST');
+
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to execute task: ', ex);
             }
-            this.httpClient.request(url, params, 'POST').then((result: any) => {
 
-                resolve(result);
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load config: ', reason);
-                }
+            throw ex;
+        }
 
-                reject(reason);
-            });
-
-        });
     }
 }

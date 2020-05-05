@@ -26,9 +26,9 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
     public async getById(id: number): Promise<ProjectEnvironment> {
 
         try {
-            const rawProjectEnvironments: any = await this.httpClient.request('/projectenvironments/' + id + '');
+            const rawProjectEnvironment: any = await this.httpClient.request('/projectenvironments/' + id + '');
 
-            const projectEnvironment: ProjectEnvironment = rawProjectEnvironments as ProjectEnvironment;
+            const projectEnvironment: ProjectEnvironment = rawProjectEnvironment as ProjectEnvironment;
             return projectEnvironment;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -40,20 +40,21 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     }
 
-    public save(projectEnvironment: ProjectEnvironment): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    public async save(projectEnvironment: ProjectEnvironment): Promise<ProjectEnvironment> {
 
-            this.httpClient.request('projectenvironments/', projectEnvironment, 'POST').then((result: any) => {
+        try {
+            const rawProjectEnvironment: any = await this.httpClient.request('projectenvironments/', projectEnvironment, 'POST');
 
-                resolve(result);
+            // TODO: parse result
+            const savedProjectEnvironment: ProjectEnvironment = rawProjectEnvironment as ProjectEnvironment;
+            return savedProjectEnvironment;
 
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save project environment: ', reason);
-                }
-                reject(reason);
-            });
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save project environment', error, projectEnvironment);
+            }
 
-        });
+            throw error;
+        }
     }
 }

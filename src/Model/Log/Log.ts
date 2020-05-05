@@ -1,13 +1,13 @@
 import {LogLevel} from "./LogLevel";
-import {LogType} from './LogType';
 
 export class Log {
     public id: string;
     public date: Date;
     public level: LogLevel;
     public message: string;
-    public type: LogType;
     public context: object;
+    public resolved: boolean = false;
+    public tags: Array<{ key: string, value: string }> = [];
     public _version: string;
 
     public constructor() {
@@ -20,8 +20,9 @@ export class Log {
         log.date = new Date(rawLog.date);
         log.level = LogLevel.fromString(rawLog.level);
         log.message = rawLog.message;
-        log.type = LogType.fromString(rawLog.type);
         log.context = rawLog.context;
+        log.resolved = rawLog.resolved;
+        log.tags = rawLog.tags;
         log._version = rawLog._version;
         return log;
     }

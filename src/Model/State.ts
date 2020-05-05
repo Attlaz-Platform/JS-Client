@@ -1,3 +1,5 @@
+import {Utils} from '../Utils';
+
 export enum State {
     Active = 'active' as any,
     Inactive = 'inactive' as any,
@@ -9,7 +11,7 @@ export namespace State {
 
     export function fromString(state: string): State {
         let result: State;
-        if (state === null || state === undefined) {
+        if (Utils.isNullOrUndefined(state)) {
             throw new Error('Unable to parse state from string: state not defined');
         }
         switch (state.toLowerCase()) {

@@ -2,6 +2,7 @@ import {Response} from 'servie';
 import {fetch} from 'popsicle';
 import {ClientError} from '../Model/Error/ClientError';
 import {HttpClientRequest} from './HttpClientRequest';
+import {Utils} from '../Utils';
 
 export class HttpClient {
 
@@ -10,7 +11,7 @@ export class HttpClient {
     public static HTTP_UNAVAILABLE: string = '503';
 
     public static async get(url: string, requestData: any = {}): Promise<any> {
-        if (requestData === undefined || requestData === null) {
+        if (Utils.isNullOrUndefined(requestData)) {
             requestData = {};
         }
         const response: Response = await fetch(url, requestData);
@@ -18,7 +19,7 @@ export class HttpClient {
         //TODO: validate status
 
         const error: ClientError = ClientError.byStatus(response.status, response.statusText);
-        if (error !== null && error !== undefined) {
+        if (!Utils.isNullOrUndefined(error)) {
             throw error;
         }
 
