@@ -1,3 +1,5 @@
+import {Utils} from '../../Utils';
+
 export enum LogLevel {
     Debug = <any>"debug",
     Info = <any>"info",
@@ -49,7 +51,7 @@ export namespace LogLevel {
 
     export function fromString(logLevel: string): LogLevel {
         let result: LogLevel;
-        if (logLevel === null || logLevel === undefined) {
+        if (Utils.isNullOrUndefined(logLevel)) {
             throw new Error('Unable to parse logLevel from string: logLevel not defined');
         }
         switch (logLevel.toLowerCase()) {

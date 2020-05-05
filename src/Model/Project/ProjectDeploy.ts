@@ -1,6 +1,6 @@
 import {ProjectDeployStatus} from './ProjectDeployStatus';
-import {ParseHelper} from '../../Helper/ParseHelper';
 import {ProjectDeployCommit} from './ProjectDeployCommit';
+import {Utils} from '../../Utils';
 
 export class ProjectDeploy {
     public id: number;
@@ -27,7 +27,7 @@ export class ProjectDeploy {
         projectDeploy.finished = new Date(rawProjectDeploy.finished);
         projectDeploy.status = ProjectDeployStatus.fromString(rawProjectDeploy.status);
 
-        if (!ParseHelper.isNullOrUndefined(rawProjectDeploy.bytes)) {
+        if (!Utils.isNullOrUndefined(rawProjectDeploy.bytes)) {
             projectDeploy.bytes = parseInt(rawProjectDeploy.bytes);
         }
         projectDeploy.commit_hash = rawProjectDeploy.commit_hash;
@@ -44,7 +44,7 @@ export class ProjectDeploy {
 
             projectDeploy.commits.push(projectDeployCommit);
         }
-        
+
         return projectDeploy;
     }
 }

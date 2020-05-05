@@ -1,8 +1,10 @@
+import {ChannelType} from './ChannelType';
+
 export abstract class ChannelData {
 
-    public type: string;
+    public type: ChannelType;
 
-    public constructor(type: string) {
+    public constructor(type: ChannelType) {
         this.type = type;
     }
 

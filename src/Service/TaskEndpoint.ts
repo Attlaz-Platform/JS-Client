@@ -1,5 +1,4 @@
-import {Endpoint, Task, TaskSummary} from "..";
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Endpoint, Task, TaskSummary, Utils} from "..";
 
 export class TaskEndpoint extends Endpoint {
 
@@ -15,7 +14,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(tasks);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -31,7 +30,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(Task.parse(rawTask));
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -45,7 +44,7 @@ export class TaskEndpoint extends Endpoint {
         return new Promise<TaskSummary[]>((resolve, reject) => {
 
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
@@ -59,7 +58,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(tasks);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load tasks: ' + reason);
                 }
@@ -73,14 +72,14 @@ export class TaskEndpoint extends Endpoint {
         return new Promise<TaskSummary>((resolve, reject) => {
 
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
             this.httpClient.request('tasks/' + taskId + '/summaries', parameters).then((rawTaskSummary: any) => {
                 resolve(TaskSummary.parse(rawTaskSummary));
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load task by id ' + taskId + ': ' + reason);
                 }
@@ -98,7 +97,7 @@ export class TaskEndpoint extends Endpoint {
 
                 resolve(Task.parse(result));
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save task: ', reason);
                 }

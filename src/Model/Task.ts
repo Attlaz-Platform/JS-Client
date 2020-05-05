@@ -3,9 +3,9 @@ import {State} from './State';
 export class Task {
     public id: string;
     public key: string;
-    public project: string;
     public name: string;
     public description: string;
+    public project: string;
     public direct: boolean = false;
     public state: State = State.Active;
 

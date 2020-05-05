@@ -1,4 +1,4 @@
-import {isNullOrUndefined} from 'util';
+import {Utils} from '../Utils';
 
 export enum TaskExecutionStatus {
     Unknown = <any>"unknown",
@@ -15,7 +15,7 @@ export namespace TaskExecutionStatus {
 
     export function fromString(taskExecutionStatus: string): TaskExecutionStatus {
         let result: TaskExecutionStatus;
-        if (isNullOrUndefined(taskExecutionStatus)) {
+        if (Utils.isNullOrUndefined(taskExecutionStatus)) {
             throw new Error('Unable to parse logLevel from string: logLevel not defined');
         }
         switch (taskExecutionStatus.toLowerCase()) {

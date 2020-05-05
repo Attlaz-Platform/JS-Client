@@ -27,6 +27,8 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getRepositoryBranches(sourcesAccountId: number, repositoryKey: string): Promise<string[]> {
+
+        repositoryKey = btoa(repositoryKey);
         const rawBranches: string[] = await this.httpClient.request('sourcesaccounts/' + sourcesAccountId + '/repositories/' + repositoryKey + '/branches');
 
         return rawBranches;

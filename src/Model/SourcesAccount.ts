@@ -1,6 +1,7 @@
 export class SourcesAccount {
-    public id: string;
-    public key:string;
+    public id: number;
+    public key: string;
+    public name: string;
     public user: string;
     public type: string;
     public access_token: string;
@@ -11,6 +12,7 @@ export class SourcesAccount {
         let sourcesAccount: SourcesAccount = new SourcesAccount();
         sourcesAccount.id = rawSourcesAccount.id;
         sourcesAccount.key = rawSourcesAccount.key;
+        sourcesAccount.name = rawSourcesAccount.name;
         sourcesAccount.user = rawSourcesAccount.user;
         sourcesAccount.type = rawSourcesAccount.type;
         sourcesAccount.access_token = rawSourcesAccount.access_token;

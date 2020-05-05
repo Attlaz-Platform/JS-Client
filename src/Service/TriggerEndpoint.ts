@@ -1,5 +1,4 @@
-import {Endpoint, Trigger} from "..";
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Endpoint, Trigger, Utils} from "..";
 
 export class TriggerEndpoint extends Endpoint {
 
@@ -7,7 +6,7 @@ export class TriggerEndpoint extends Endpoint {
 
         try {
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 

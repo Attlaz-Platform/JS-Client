@@ -1,6 +1,6 @@
 import {TaskExecutionStatus} from "./TaskExecutionStatus";
 import {Task} from './Task';
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Utils} from '../Utils';
 
 export class TaskSummary extends Task {
 
@@ -13,7 +13,7 @@ export class TaskSummary extends Task {
         let task: TaskSummary = Task.parse(rawTask) as TaskSummary;
 
         task.status = TaskExecutionStatus.fromString(rawTask.status);
-        task.lastExecution = ParseHelper.parseRawDate(rawTask.lastExecution);
+        task.lastExecution = Utils.parseRawDate(rawTask.lastExecution);
         task.averageExecutionDuration = rawTask.averageExecutionDuration;
         task.executionCount = rawTask.executionCount;
 

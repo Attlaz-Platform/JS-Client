@@ -2,71 +2,75 @@ import {Channel, Endpoint} from "..";
 
 export class ChannelEndpoint extends Endpoint {
 
-    public getByTeam(teamId: string): Promise<Channel[]> {
-        return new Promise<Channel[]>((resolve, reject) => {
-            this.httpClient.request('/teams/' + teamId + '/channels').then((rawChannels: any) => {
+    public async getByTeam(teamId: string): Promise<Channel[]> {
 
-                let subscriberChannels: Channel[] = [];
-                for (let rawChannel of rawChannels) {
+        try {
+            const rawChannels: any = await this.httpClient.request('/teams/' + teamId + '/channels');
 
-                    let subscriberChannel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
+            let subscriberChannels: Channel[] = [];
+            for (let rawChannel of rawChannels) {
+                subscriberChannels.push(Channel.parse(rawChannel));
+            }
+            return subscriberChannels;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load channels for team "' + teamId + '": ', ex);
+            }
 
-                    subscriberChannels.push(subscriberChannel);
+            throw ex;
+        }
 
-                }
-                resolve(subscriberChannels);
-
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load channels for team "' + teamId + '": ', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
     }
 
-    public getByOwner(): Promise<Channel[]> {
-        return new Promise<Channel[]>((resolve, reject) => {
-            this.httpClient.request('/channels').then((rawChannels: any) => {
+    public async getByOwner(): Promise<Channel[]> {
 
-                let subscriberChannels: Channel[] = [];
-                for (let rawChannel of rawChannels) {
+        try {
+            const rawChannels: any = await this.httpClient.request('/channels');
 
-                    let subscriberChannel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, rawChannel.type, rawChannel.data);
+            let subscriberChannels: Channel[] = [];
+            for (let rawChannel of rawChannels) {
+                subscriberChannels.push(Channel.parse(rawChannel));
+            }
+            return subscriberChannels;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load channels for current user: ', ex);
+            }
 
-                    subscriberChannels.push(subscriberChannel);
+            throw ex;
+        }
 
-                }
-                resolve(subscriberChannels);
-
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load channels for current user: ', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
     }
 
-    public save(subscriberChannel: Channel): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    public async save(subscriberChannel: Channel): Promise<any> {
+
+        try {
             let url: string = '/channels/';
 
-            this.httpClient.request(url, subscriberChannel, 'POST').then((result: any) => {
+            const result: any = this.httpClient.request(url, subscriberChannel, 'POST');
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save channel: ', ex);
+            }
+            throw ex;
+        }
 
-                resolve(result);
+    }
 
-            }).catch((reason:any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save channel: ', reason);
-                }
-                reject(reason);
-            });
+    public async test(subscriberChannel: Channel): Promise<any> {
 
-        });
+        try {
+            let url: string = '/channels/' + subscriberChannel.id + '/test';
+
+            const result: any = this.httpClient.request(url, {}, 'POST');
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to test channel: ', ex);
+            }
+            throw ex;
+        }
+
     }
 }

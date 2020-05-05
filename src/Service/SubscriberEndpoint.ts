@@ -1,5 +1,4 @@
-import {Endpoint, Subscriber} from "..";
-import {ParseHelper} from '../Helper/ParseHelper';
+import {Endpoint, Subscriber, Utils} from "..";
 
 export class SubscriberEndpoint extends Endpoint {
 
@@ -7,7 +6,7 @@ export class SubscriberEndpoint extends Endpoint {
         return new Promise<Subscriber[]>((resolve, reject) => {
 
             let parameters: any = null;
-            if (!ParseHelper.isNullOrUndefined(projectEnvironmentId)) {
+            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
@@ -19,7 +18,7 @@ export class SubscriberEndpoint extends Endpoint {
                 }
                 resolve(subscribers);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load subscribers: ', reason);
                 }
@@ -41,7 +40,7 @@ export class SubscriberEndpoint extends Endpoint {
                 }
                 resolve(subscribers);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load subscribers: ', reason);
                 }
@@ -60,7 +59,7 @@ export class SubscriberEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save subscriber: ', reason);
                 }
