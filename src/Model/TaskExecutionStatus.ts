@@ -1,5 +1,4 @@
 import {Utils} from '../Utils';
-import {State} from './State';
 
 export enum TaskExecutionStatus {
     Unknown = <any>"unknown",
@@ -14,7 +13,7 @@ export enum TaskExecutionStatus {
 
 export namespace TaskExecutionStatus {
     export function fromString(input: string): TaskExecutionStatus {
-        const result: TaskExecutionStatus = Utils.parseEnum<TaskExecutionStatus>(input, State);
+        const result: TaskExecutionStatus = Utils.parseEnum<TaskExecutionStatus>(input, TaskExecutionStatus);
         if (Utils.isNullOrUndefined(result)) {
             throw new Error('Unable to parse TaskExecutionStatus from string: Unknown TaskExecutionStatus "' + input + '"');
         }
