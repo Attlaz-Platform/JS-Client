@@ -28,12 +28,15 @@ export class TriggerEndpoint extends Endpoint {
 
     }
 
-    public async getById(id: string): Promise<Trigger> {
+    public async getById(id: string): Promise<Trigger | null> {
 
         try {
             const result: any = await this.httpClient.request('/triggers/' + id);
-
+            if (Utils.isNullOrUndefined(result)) {
+                return null;
+            }
             return Trigger.parse(result);
+            
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);

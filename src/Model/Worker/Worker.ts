@@ -1,4 +1,6 @@
 import {WorkerState} from './WorkerState';
+import {WorkerInstance} from './WorkerInstance';
+import {WorkerInstanceState} from './WorkerInstanceState';
 
 export class Worker {
     projectEnvironment: number;
@@ -7,6 +9,8 @@ export class Worker {
     imageId: number;
 
     scale: number;
+
+    public instances: WorkerInstance[];
     memoryLimit: number;
 
     public static parse(raw: any): Worker {
@@ -17,6 +21,15 @@ export class Worker {
         worker.imageId = raw.imageId;
 
         worker.scale = raw.scale;
+
+        const rawInstances = raw.instances;
+        worker.instances = [];
+        for (let rawInstance of rawInstances) {
+            const instance: WorkerInstance = new WorkerInstance(rawInstance.id);
+            instance.state = WorkerInstanceState.fromString(rawInstance.state);
+            worker.instances.push(instance);
+        }
+
         worker.memoryLimit = raw.memoryLimit;
 
         return worker;

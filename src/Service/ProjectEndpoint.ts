@@ -1,4 +1,4 @@
-import {Endpoint, Project} from "..";
+import {Endpoint, Project, Utils} from "..";
 
 export class ProjectEndpoint extends Endpoint {
 
@@ -44,19 +44,20 @@ export class ProjectEndpoint extends Endpoint {
 
     }
 
-    public getById(projectId: string): Promise<Project> {
-        return new Promise<Project>((resolve, reject) => {
-            this.httpClient.request('projects/' + projectId + '').then((rawProject: any) => {
+    public async getById(projectId: string): Promise<Project> {
 
-                resolve(Project.parse(rawProject));
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load project by id: ' + reason);
-                }
-
-                reject(reason);
-            });
-        });
+        try {
+            const rawProject: any = await this.httpClient.request('projects/' + projectId + '');
+            if (Utils.isNullOrUndefined(rawProject)) {
+                return null;
+            }
+            return Project.parse(rawProject);
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load project by id: ' + e);
+            }
+            throw e;
+        }
 
     }
 

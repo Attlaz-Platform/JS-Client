@@ -24,20 +24,24 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTask(taskId: string): Promise<Task> {
-        return new Promise<Task>((resolve, reject) => {
-            this.httpClient.request('/tasks/' + taskId).then((rawTask: any) => {
+    public async getTask(taskId: string): Promise<Task> {
 
-                resolve(Task.parse(rawTask));
+        try {
+            const rawTask: any = this.httpClient.request('/tasks/' + taskId);
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load tasks: ' + reason);
-                }
+            if (Utils.isNullOrUndefined(rawTask)) {
+                return null;
+            }
+            return Task.parse(rawTask);
 
-                reject(reason);
-            });
-        });
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load tasks: ' + e);
+            }
+
+            throw e;
+        }
+
     }
 
     public getTaskSummaries(projectId: string, projectEnvironmentId: number = null): Promise<TaskSummary[]> {
@@ -68,25 +72,28 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public getTaskSummary(taskId: string, projectEnvironmentId: number = null): Promise<TaskSummary> {
-        return new Promise<TaskSummary>((resolve, reject) => {
+    public async getTaskSummary(taskId: string, projectEnvironmentId: number = null): Promise<TaskSummary> {
 
-            let parameters: any = null;
-            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
-                parameters = {environment: projectEnvironmentId};
+        let parameters: any = null;
+        if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
+            parameters = {environment: projectEnvironmentId};
+        }
+
+        try {
+            const rawTaskSummary: any = await this.httpClient.request('tasks/' + taskId + '/summaries', parameters);
+            if(Utils.isNullOrUndefined(rawTaskSummary))
+            {
+                return null;
+            }
+            return TaskSummary.parse(rawTaskSummary);
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load task by id ' + taskId + ': ' + e);
             }
 
-            this.httpClient.request('tasks/' + taskId + '/summaries', parameters).then((rawTaskSummary: any) => {
-                resolve(TaskSummary.parse(rawTaskSummary));
+            throw e;
+        }
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load task by id ' + taskId + ': ' + reason);
-                }
-
-                reject(reason);
-            });
-        });
     }
 
     public save(task: Task): Promise<Task> {

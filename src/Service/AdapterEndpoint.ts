@@ -14,7 +14,7 @@ export class AdapterEndpoint extends Endpoint {
 
                 resolve(adapters);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
 
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to load adapters: ' + reason);

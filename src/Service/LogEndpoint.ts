@@ -1,5 +1,5 @@
 import {Endpoint, Log, PagedResult} from "..";
-import {LogQuery} from '../Model/Log/LogQuery';
+import {LogQuery} from '..';
 
 export class LogEndpoint extends Endpoint {
 
@@ -81,5 +81,22 @@ export class LogEndpoint extends Endpoint {
             });
 
         });
+    }
+
+    public async delete(log: Log): Promise<boolean> {
+
+        let cmd: string = '/system/logs/' + log.id;
+
+        try {
+            const removed: boolean = await this.httpClient.request(cmd, log, 'DELETE');
+
+            return removed;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save log: ', e);
+            }
+            throw e;
+        }
+
     }
 }

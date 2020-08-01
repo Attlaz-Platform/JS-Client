@@ -54,6 +54,8 @@ export * from './Service/ConfigEndpoint';
 export * from './Service/NotificationsEndpoint';
 export * from './Service/SubscriberEndpoint';
 export * from './Service/LogEndpoint';
+export * from './Service/LanguageEndpoint';
+export * from './Service/MemberEndpoint';
 export * from './Service/TaskEndpoint';
 export * from './Service/TaskExecutionEndpoint';
 export * from './Service/TaskExecutionRequestEndpoint';

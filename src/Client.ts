@@ -2,7 +2,9 @@ import {
     AdapterEndpoint,
     ConfigEndpoint,
     Endpoint,
+    LanguageEndpoint,
     LogEndpoint,
+    MemberEndpoint,
     NotificationsEndpoint,
     OAuthClient,
     OAuthClientOptions,
@@ -42,7 +44,9 @@ export class Client {
         TeamsEndpoint,
         TriggerEndpoint,
         UserEndpoint,
-        SourcesAccountEndpoint
+        MemberEndpoint,
+        SourcesAccountEndpoint,
+        LanguageEndpoint,
     };
 
     private httpClient: OAuthClient;
@@ -154,12 +158,20 @@ export class Client {
         return this.getEndpoint('user', this.Store.UserEndpoint);
     }
 
+    public getMemberEndpoint(): MemberEndpoint {
+        return this.getEndpoint('member', this.Store.MemberEndpoint);
+    }
+
     public getWorkerEndpoint(): WorkerEndpoint {
         return this.getEndpoint('worker', this.Store.WorkerEndpoint);
     }
 
     public getSourcesAccountEndpoint(): SourcesAccountEndpoint {
         return this.getEndpoint('sourcesaccount', this.Store.SourcesAccountEndpoint);
+    }
+
+    public getLanguageEndpoint(): LanguageEndpoint {
+        return this.getEndpoint('language', this.Store.LanguageEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
