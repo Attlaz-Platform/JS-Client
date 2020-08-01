@@ -13,12 +13,22 @@ export class Utils {
         return null;
     }
 
-    public static parseEnum<T>(input: string, Enum: any): T {
+    public static parseEnum<T>(input: string, Enum: any): T|null {
 
-        const Enum2: { [idx: string]: T; } = <any>Enum;
-        const enumVal: T = Enum2[input];
-
-        return enumVal as T;
+        if (this.isNullOrUndefined(input)) {
+            return null;
+        }
+        for (const property in Enum) {
+            const enumMember = Enum[property];
+            if (typeof enumMember === 'string' || typeof enumMember === 'number') {
+                if (enumMember.toString().toUpperCase() === input.toString().toUpperCase()) {
+                    // const key = enumMember as string as keyof typeof Enum;
+                    return Enum[property];
+                }
+            } else if (typeof enumMember === 'string') {
+                console.error('Unable to parse enum type: ' + typeof enumMember + ' for enum ', Enum);
+            }
+        }
     }
     public static base64encode(input: string): string {
         return Buffer.from(input).toString('base64');
