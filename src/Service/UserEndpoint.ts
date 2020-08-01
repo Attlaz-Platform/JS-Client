@@ -1,6 +1,4 @@
-import {Endpoint, User, Utils} from "..";
-import {Member} from '../Model/Member';
-import {State} from '../Model/State';
+import {Endpoint, Member, State, User, Utils} from "..";
 
 export class UserEndpoint extends Endpoint {
 

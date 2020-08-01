@@ -1,5 +1,4 @@
-import {Endpoint} from "..";
-import {Language} from '../Model/Project/Language';
+import {Endpoint, Language} from "..";
 
 export class LanguageEndpoint extends Endpoint {
 

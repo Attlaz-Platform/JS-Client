@@ -1,3 +1,5 @@
+import {Utils} from '../../Utils';
+
 export enum TriggerType {
     Schedule = 'schedule',
     Webhook = 'webhook',
@@ -7,27 +9,11 @@ export enum TriggerType {
 
 export namespace TriggerType {
 
-    export function fromString(triggerType: string): TriggerType {
-
-        let result: TriggerType;
-        if (triggerType === null || triggerType == undefined) {
-            throw new Error('Unable to parse TriggerType from string: TriggerType not defined');
+    export function fromString(input: string): TriggerType {
+        const result: TriggerType = Utils.parseEnum<TriggerType>(input, TriggerType);
+        if (Utils.isNullOrUndefined(result)) {
+            throw new Error('Unable to parse TriggerType from string: Unknown TriggerType "' + input + '"');
         }
-        switch (triggerType.toLowerCase()) {
-            case 'schedule':
-                result = TriggerType.Schedule;
-                break;
-            case 'webhook':
-                result = TriggerType.Webhook;
-                break;
-            case 'api':
-                result = TriggerType.Api;
-                break;
-
-            default:
-                throw new Error('Unknown log TriggerType "' + triggerType + '"');
-        }
-
         return result;
     }
 

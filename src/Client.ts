@@ -1,5 +1,6 @@
 import {
     AdapterEndpoint,
+    ChannelEndpoint,
     ConfigEndpoint,
     Endpoint,
     LanguageEndpoint,
@@ -15,13 +16,14 @@ import {
     TaskExecutionRequestEndpoint,
     TeamsEndpoint,
     TriggerEndpoint,
-    UserEndpoint
+    UserEndpoint,
+    ProjectEnvironmentEndpoint,
+    ProjectDeployEndpoint,
+    WorkerEndpoint,
+    SourcesAccountEndpoint
 } from ".";
-import {ChannelEndpoint} from './Service/ChannelEndpoint';
-import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
-import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
-import {WorkerEndpoint} from './Service/WorkerEndpoint';
-import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
+
+
 
 export class Client {
 

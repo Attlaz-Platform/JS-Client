@@ -1,10 +1,17 @@
+/* Models */
+export * from './Model/Error/ClientError';
+
 export * from './Model/Event/EventType';
 
 export * from './Model/Log/Log';
 export * from './Model/Log/LogLevel';
 export * from './Model/Log/LogQuery';
 
+export * from './Model/Project/Language';
 export * from './Model/Project/Project';
+export * from './Model/Project/ProjectDeploy';
+export * from './Model/Project/ProjectDeployCommit';
+export * from './Model/Project/ProjectDeployStatus';
 export * from './Model/Project/ProjectEnvironment';
 
 export * from './Model/Messaging/Subscriber';
@@ -18,6 +25,8 @@ export * from './Model/Messaging/Channel/SlackChannelData';
 export * from './Model/Messaging/Channel/SmsChannelData';
 export * from './Model/Messaging/Channel/WebhookChannelData';
 
+export * from './Model/Storage/StorageType';
+
 export * from './Model/Trigger/ScheduleTrigger';
 export * from './Model/Trigger/ScheduleTriggerData';
 export * from './Model/Trigger/Trigger';
@@ -26,13 +35,19 @@ export * from './Model/Trigger/WebhookTrigger';
 export * from './Model/Trigger/WebhookTriggerData';
 
 export * from './Model/Worker/Worker';
+export * from './Model/Worker/WorkerImage';
+export * from './Model/Worker/WorkerInstance';
+export * from './Model/Worker/WorkerInstanceState';
 export * from './Model/Worker/WorkerState';
 
 export * from './Model/Adapter';
-
 export * from './Model/Config';
+export * from './Model/Member';
 export * from './Model/Notification';
 export * from './Model/PagedResult';
+export * from './Model/SourcesAccount';
+export * from './Model/SourcesAccountRepository';
+export * from './Model/State';
 export * from './Model/Task';
 export * from './Model/TaskExecution';
 export * from './Model/TaskExecutionHistory';
@@ -44,24 +59,34 @@ export * from './Model/User';
 
 export * from './Model/Worker/Worker';
 export * from './Model/Worker/WorkerImage';
+export * from './Model/Worker/WorkerInstance';
+export * from './Model/Worker/WorkerInstanceState';
 export * from './Model/Worker/WorkerState';
 
 export * from './Service/Endpoint';
 
+/* Endpoints */
 export * from './Service/AdapterEndpoint';
+export * from './Service/ChannelEndpoint';
 export * from './Service/ProjectEndpoint';
 export * from './Service/ConfigEndpoint';
 export * from './Service/NotificationsEndpoint';
-export * from './Service/SubscriberEndpoint';
-export * from './Service/LogEndpoint';
 export * from './Service/LanguageEndpoint';
+export * from './Service/LogEndpoint';
 export * from './Service/MemberEndpoint';
+export * from './Service/NotificationsEndpoint';
+export * from './Service/ProjectDeployEndpoint';
+export * from './Service/ProjectEnvironmentEndpoint';
+export * from './Service/SourcesAccountEndpoint';
+export * from './Service/StorageEndpoint';
+export * from './Service/SubscriberEndpoint';
 export * from './Service/TaskEndpoint';
 export * from './Service/TaskExecutionEndpoint';
 export * from './Service/TaskExecutionRequestEndpoint';
 export * from './Service/TeamsEndpoint';
 export * from './Service/TriggerEndpoint';
 export * from './Service/UserEndpoint';
+export * from './Service/WorkerEndpoint';
 
 export * from './Client';
 export * from './Utils';
