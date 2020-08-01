@@ -10,6 +10,7 @@ import {
     OAuthClient,
     OAuthClientOptions,
     ProjectEndpoint,
+    StorageEndpoint,
     SubscriberEndpoint,
     TaskEndpoint,
     TaskExecutionEndpoint,
@@ -49,6 +50,7 @@ export class Client {
         MemberEndpoint,
         SourcesAccountEndpoint,
         LanguageEndpoint,
+        StorageEndpoint
     };
 
     private httpClient: OAuthClient;
@@ -174,6 +176,10 @@ export class Client {
 
     public getLanguageEndpoint(): LanguageEndpoint {
         return this.getEndpoint('language', this.Store.LanguageEndpoint);
+    }
+
+    public getStorageEndpoint(): StorageEndpoint {
+        return this.getEndpoint('storage', this.Store.StorageEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
