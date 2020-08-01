@@ -4,11 +4,9 @@ export enum TriggerType {
     Schedule = 'schedule',
     Webhook = 'webhook',
     Api = 'api',
-
 }
 
 export namespace TriggerType {
-
     export function fromString(input: string): TriggerType {
         const result: TriggerType = Utils.parseEnum<TriggerType>(input, TriggerType);
         if (Utils.isNullOrUndefined(result)) {
@@ -16,5 +14,4 @@ export namespace TriggerType {
         }
         return result;
     }
-
 }

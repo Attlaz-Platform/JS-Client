@@ -11,7 +11,6 @@ export enum ProjectDeployStatus {
 }
 
 export namespace ProjectDeployStatus {
-
     export function fromString(input: string): ProjectDeployStatus {
         const result: ProjectDeployStatus = Utils.parseEnum<ProjectDeployStatus>(input, ProjectDeployStatus);
         if (Utils.isNullOrUndefined(result)) {
@@ -19,5 +18,4 @@ export namespace ProjectDeployStatus {
         }
         return result;
     }
-
 }

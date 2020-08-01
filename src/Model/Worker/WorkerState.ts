@@ -7,7 +7,6 @@ export enum WorkerState {
 }
 
 export namespace WorkerState {
-
     export function fromString(input: string): WorkerState {
         const result: WorkerState = Utils.parseEnum<WorkerState>(input, WorkerState);
         if (Utils.isNullOrUndefined(result)) {
@@ -15,5 +14,4 @@ export namespace WorkerState {
         }
         return result;
     }
-
 }

@@ -1,4 +1,5 @@
 import {Utils} from '../../Utils';
+import {State} from '../State';
 
 export enum LogLevel {
     Debug = <any>"debug",
@@ -49,42 +50,13 @@ export namespace LogLevel {
         }
     }
 
-    export function fromString(logLevel: string): LogLevel {
-        let result: LogLevel;
-        if (Utils.isNullOrUndefined(logLevel)) {
-            throw new Error('Unable to parse logLevel from string: logLevel not defined');
+    export function fromString(input: string): LogLevel {
+        const result: LogLevel = Utils.parseEnum<LogLevel>(input, State);
+        if (Utils.isNullOrUndefined(result)) {
+            throw new Error('Unable to parse LogLevel from string: Unknown LogLevel "' + input + '"');
         }
-        switch (logLevel.toLowerCase()) {
-            case 'debug':
-                result = LogLevel.Debug;
-                break;
-            case 'info':
-                result = LogLevel.Info;
-                break;
-            case 'notice':
-                result = LogLevel.Notice;
-                break;
-            case 'warning':
-                result = LogLevel.Warning;
-                break;
-            case 'error':
-                result = LogLevel.Error;
-                break;
-            case 'critical':
-                result = LogLevel.Critical;
-                break;
-            case 'alert':
-                result = LogLevel.Alert;
-                break;
-            case 'emergency':
-                result = LogLevel.Emergency;
-                break;
-
-            default:
-                throw new Error('Unknown log level "' + logLevel + '"');
-        }
-
         return result;
+
     }
 
 }

@@ -1,4 +1,5 @@
 import {Utils} from '../../Utils';
+import {State} from '../State';
 
 /**
  * @deprecated
@@ -10,25 +11,11 @@ export enum LogType {
 }
 
 export namespace LogType {
-
-    export function fromString(logType: string): LogType {
-        let result: LogType;
-        if (Utils.isNullOrUndefined(logType)) {
-            throw new Error('Unable to parse logType from string: logType not defined');
+    export function fromString(input: string): LogType {
+        const result: LogType = Utils.parseEnum<LogType>(input, State);
+        if (Utils.isNullOrUndefined(result)) {
+            throw new Error('Unable to parse LogType from string: Unknown LogType "' + input + '"');
         }
-        switch (logType.toLowerCase()) {
-            case 'infrastructure':
-                result = LogType.Infrastructure;
-                break;
-            case 'taskexecution':
-                result = LogType.TaskExecution;
-                break;
-
-            default:
-                throw new Error('Unknown log type "' + logType + '"');
-        }
-
         return result;
     }
-
 }

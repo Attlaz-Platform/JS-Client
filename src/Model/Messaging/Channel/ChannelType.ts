@@ -1,4 +1,5 @@
 import {Utils} from '../../../Utils';
+import {State} from '../../State';
 
 export enum ChannelType {
     Email = 'email' as any,
@@ -9,34 +10,11 @@ export enum ChannelType {
 }
 
 export namespace ChannelType {
-
-    export function fromString(channelType: string): ChannelType {
-        let result: ChannelType;
-        if (Utils.isNullOrUndefined(channelType)) {
-            throw new Error('Unable to parse ChannelType from string: channelType not defined');
+    export function fromString(input: string): ChannelType {
+        const result: ChannelType = Utils.parseEnum<ChannelType>(input, State);
+        if (Utils.isNullOrUndefined(result)) {
+            throw new Error('Unable to parse ChannelType from string: Unknown ChannelType "' + input + '"');
         }
-        switch (channelType.toLowerCase()) {
-            case 'email':
-                result = ChannelType.Email;
-                break;
-            case 'push':
-                result = ChannelType.Push;
-                break;
-            case 'slack':
-                result = ChannelType.Slack;
-                break;
-            case 'sms':
-                result = ChannelType.SMS;
-                break;
-            case 'webhook':
-                result = ChannelType.Webhook;
-                break;
-
-            default:
-                throw new Error('Unknown channelType "' + channelType + '"');
-        }
-
         return result;
     }
-
 }
