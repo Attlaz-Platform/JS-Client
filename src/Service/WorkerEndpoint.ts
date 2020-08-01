@@ -1,5 +1,4 @@
-import {Endpoint, Utils, Worker} from "..";
-import {WorkerImage} from '../Model/Worker/WorkerImage';
+import {Endpoint, Utils, Worker, WorkerImage} from "..";
 
 export class WorkerEndpoint extends Endpoint {
 

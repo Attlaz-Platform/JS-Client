@@ -1,5 +1,4 @@
-import {Endpoint, ProjectEnvironment, Utils} from "..";
-import {ProjectDeploy} from '../Model/Project/ProjectDeploy';
+import {Endpoint, ProjectDeploy, ProjectEnvironment, Utils} from "..";
 
 export class ProjectDeployEndpoint extends Endpoint {
 
@@ -7,8 +6,7 @@ export class ProjectDeployEndpoint extends Endpoint {
 
         try {
             const rawProjectDeploy: any = await this.httpClient.request('/deploys/' + deployId);
-            if(Utils.isNullOrUndefined(rawProjectDeploy))
-            {
+            if (Utils.isNullOrUndefined(rawProjectDeploy)) {
                 return null;
             }
             return ProjectDeploy.parse(rawProjectDeploy);
