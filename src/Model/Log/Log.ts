@@ -8,6 +8,7 @@ export class Log {
     public context: object;
     public resolved: boolean = false;
     public tags: Array<{ key: string, value: string }> = [];
+    public ignored: boolean = false;
     public _version: string;
 
     public constructor() {
@@ -23,6 +24,7 @@ export class Log {
         log.context = rawLog.context;
         log.resolved = rawLog.resolved;
         log.tags = rawLog.tags;
+        log.ignored = rawLog.ignored;
         log._version = rawLog._version;
         return log;
     }

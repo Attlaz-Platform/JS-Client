@@ -1,5 +1,8 @@
 import {Utils} from '../../Utils';
 
+/**
+ * @deprecated
+ */
 export enum LogType {
     Infrastructure = 'infrastructure' as any,
     TaskExecution = 'taskexecution' as any,
