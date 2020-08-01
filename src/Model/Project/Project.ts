@@ -11,6 +11,7 @@ export class Project {
 
     public source_account: number;
     public source_repository: string;
+    public language: number;
 
     public state: State = State.Active;
 
@@ -32,6 +33,7 @@ export class Project {
 
         project.source_account = rawProject.source_account;
         project.source_repository = rawProject.source_repository;
+        project.language = rawProject.language;
 
         project.state = State.fromString(rawProject.state);
         return project;

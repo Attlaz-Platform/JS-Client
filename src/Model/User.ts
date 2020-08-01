@@ -1,3 +1,6 @@
+import {Utils} from '../Utils';
+import {State} from './State';
+
 export class User {
     id: string;
     username: string;
@@ -11,7 +14,9 @@ export class User {
     time_format: string;
     picture: string;
 
-    type: number;
+    public state: State = State.Active;
+
+    last_active: Date;
 
     public static parse(rawUser: any): User {
         let user: User = new User();
@@ -26,8 +31,8 @@ export class User {
         user.date_format = rawUser.date_format;
         user.time_format = rawUser.time_format;
         user.picture = rawUser.picture;
-        user.type = rawUser.type;
-
+        user.state = State.fromString(rawUser.state);
+        user.last_active = Utils.parseRawDate(rawUser.last_active);
         return user;
     }
 }

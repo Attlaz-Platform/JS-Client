@@ -1,4 +1,4 @@
-import {Endpoint, Worker} from "..";
+import {Endpoint, Utils, Worker} from "..";
 import {WorkerImage} from '../Model/Worker/WorkerImage';
 
 export class WorkerEndpoint extends Endpoint {
@@ -9,6 +9,9 @@ export class WorkerEndpoint extends Endpoint {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
             const result: any = await this.httpClient.request(url);
+            if (Utils.isNullOrUndefined(result)) {
+                return null;
+            }
 
             return Worker.parse(result);
 

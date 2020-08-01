@@ -20,4 +20,7 @@ export class Utils {
 
         return enumVal as T;
     }
+    public static base64encode(input: string): string {
+        return Buffer.from(input).toString('base64');
+    }
 }

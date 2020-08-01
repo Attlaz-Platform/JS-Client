@@ -68,20 +68,22 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     }
 
-    public getTaskExecutionSummary(taskId: string, taskExecutionId: string): Promise<TaskExecutionSummary> {
-        return new Promise<TaskExecutionSummary>((resolve, reject) => {
-            this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries').then((rawTaskExecution: any) => {
+    public async getTaskExecutionSummary(taskId: string, taskExecutionId: string): Promise<TaskExecutionSummary> {
 
-                resolve(TaskExecutionSummary.parse(rawTaskExecution));
+        try {
+            const rawTaskExecution: any = await this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries');
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load tasks executions: ' + reason);
-                }
+            if (Utils.isNullOrUndefined(rawTaskExecution)) {
+                return null;
+            }
+            return TaskExecutionSummary.parse(rawTaskExecution);
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load tasks executions: ' + e);
+            }
+            throw e;
+        }
 
-                reject(reason);
-            });
-        });
     }
 
     public getTaskExecutionHistory(taskExecutionId: string): Promise<TaskExecutionHistory[]> {

@@ -1,22 +1,41 @@
-import {Endpoint, ProjectEnvironment} from "..";
+import {Endpoint, ProjectEnvironment, Utils} from "..";
 import {ProjectDeploy} from '../Model/Project/ProjectDeploy';
 
 export class ProjectDeployEndpoint extends Endpoint {
 
+    public async getById(deployId: number): Promise<ProjectDeploy> {
+
+        try {
+            const rawProjectDeploy: any = await this.httpClient.request('/deploys/' + deployId);
+            if(Utils.isNullOrUndefined(rawProjectDeploy))
+            {
+                return null;
+            }
+            return ProjectDeploy.parse(rawProjectDeploy);
+
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load project deploy by id', error);
+            }
+
+            throw error;
+        }
+
+    }
+
     public async getByProjectEnvironment(projectEnvironmentId: number): Promise<ProjectDeploy[]> {
 
         try {
-            const rawProjectDeployments: any[] = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploy');
+            const rawProjectDeploys: any[] = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploys');
 
-            let projectDeployments: ProjectDeploy[] = [];
-            for (let rawProjectDeployment of rawProjectDeployments) {
-//TODO: add parsing
-                projectDeployments.push(ProjectDeploy.parse(rawProjectDeployment));
+            let projectDeploys: ProjectDeploy[] = [];
+            for (let rawProjectDeploy of rawProjectDeploys) {
+                projectDeploys.push(ProjectDeploy.parse(rawProjectDeploy));
             }
-            return projectDeployments;
+            return projectDeploys;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load project deployments', error);
+                console.error('Failed to load project deploys', error);
             }
 
             throw error;
@@ -27,7 +46,7 @@ export class ProjectDeployEndpoint extends Endpoint {
     public async requestDeploy(projectEnvironmentId: number): Promise<ProjectEnvironment> {
 
         try {
-            const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploy', {}, 'POST');
+            const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploys', {}, 'POST');
 
             return projectDeploy;
         } catch (error) {

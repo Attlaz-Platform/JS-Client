@@ -1,4 +1,6 @@
-import {Endpoint, User} from "..";
+import {Endpoint, User, Utils} from "..";
+import {Member} from '../Model/Member';
+import {State} from '../Model/State';
 
 export class UserEndpoint extends Endpoint {
 
@@ -7,20 +9,28 @@ export class UserEndpoint extends Endpoint {
         let cmd: string = '/user';
 
         const rawUser: any = await this.httpClient.request(cmd);
+        if (Utils.isNullOrUndefined(rawUser)) {
+            return null;
+        }
 
         return User.parse(rawUser);
 
     }
 
-    public async getUsersByTeam(teamId: string): Promise<User[]> {
+    public async getUsersByTeam(teamId: string): Promise<Member[]> {
 
         let cmd: string = '/teams/' + teamId + '/users';
 
-        const rawUsers: any[] = await this.httpClient.request(cmd);
+        const rawMembers: any[] = await this.httpClient.request(cmd);
 
-        const result: User[] = [];
-        for (let rawUser of rawUsers) {
-            result.push(User.parse(rawUser));
+        const result: Member[] = [];
+        for (let rawMember of rawMembers) {
+
+            const user: User = User.parse(rawMember);
+            const role = rawMember.role;
+            const member: Member = new Member(user, role);
+            member.state = State.fromString(rawMember.state);
+            result.push(member);
         }
         return result;
 
@@ -34,7 +44,7 @@ export class UserEndpoint extends Endpoint {
 
                 resolve(result);
 
-            }).catch((reason:any) => {
+            }).catch((reason: any) => {
                 if (this.httpClient.isDebugEnabled()) {
                     console.error('Failed to save user: ', reason);
                 }

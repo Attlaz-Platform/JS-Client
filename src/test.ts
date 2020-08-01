@@ -6,6 +6,8 @@ import {Client} from "./Client";
 import {ClientError} from './Model/Error/ClientError';
 import {User} from './Model/User';
 import {TaskSummary} from './Model/TaskSummary';
+import {HttpClientRequest} from './Http/HttpClientRequest';
+import {HttpClient} from './Http/HttpClient';
 
 // client.authenticate('admin@attlaz.com', 'admin2').subscribe((success) => {
 //     console.log('Authenticate', success);
@@ -60,73 +62,90 @@ const readableBytes = (bytes: number, si: boolean = true): string => {
 };
 
 let before: number = process.memoryUsage().heapUsed;
+
 // test2(100);
 
-let endpoint: string = 'http://localhost:8080/';
-endpoint = 'https://galantis.echron.com/';
+function test() {
+    let endpoint: string = 'http://localhost:8080/';
+    endpoint = 'https://galantis.echron.com/';
 
-let client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
-client.getHttpClient().enableDebug();
+    let client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
+    client.getHttpClient().enableDebug();
 // client.getUserEndpoint().getUser().then((result: User) => {
 //     console.log(result);
 // }, (error: ClientError) => {
 //     console.error(error);
 // });
 
-client.authenticate().then((success) => {
+    client.authenticate().then((success) => {
 
-    // console.log('Auth: ' + readableBytes(process.memoryUsage().heapUsed) + ']');
-    // //test();
-    //
-    // const logEntry: Log = new Log();
-    // logEntry.date = new Date();
-    // logEntry.level = LogLevel.Alert;
-    // logEntry.message = 'test';
-    // logEntry.type = LogType.TaskExecution;
-    //
-    // const context: any = {};
-    // context.taskexecution = 'B6D7DE655';
-    // context.worker = 'Yes';
-    //
-    // logEntry.context = context;
-    //
-    client.getUserEndpoint().getUser().then((user: User) => {
-        console.log('User', user);
-    });
+        // console.log('Auth: ' + readableBytes(process.memoryUsage().heapUsed) + ']');
+        // //test();
+        //
+        // const logEntry: Log = new Log();
+        // logEntry.date = new Date();
+        // logEntry.level = LogLevel.Alert;
+        // logEntry.message = 'test';
+        // logEntry.type = LogType.TaskExecution;
+        //
+        // const context: any = {};
+        // context.taskexecution = 'B6D7DE655';
+        // context.worker = 'Yes';
+        //
+        // logEntry.context = context;
+        //
+        client.getUserEndpoint().getUser().then((user: User) => {
+            console.log('User', user);
+        });
 
-    /**
-     * We expect an exception!
-     */
-    client.getTaskEndpoint().getTaskSummary('3B4A1772A', 41).then((taskSummary: TaskSummary) => {
-        console.log('Task', taskSummary);
-    }).catch((error) => {
+        /**
+         * We expect an exception!
+         */
+        client.getTaskEndpoint().getTaskSummary('3B4A1772A', 41).then((taskSummary: TaskSummary) => {
+            console.log('Task', taskSummary);
+        }).catch((error) => {
+            console.error(error);
+        })
+        // client.getSystemEndpoint().save(logEntry).then((savedLogEntry: Log) => {
+        //     console.log(savedLogEntry);
+        // });
+
+        // client.getTriggerEndpoint().getByTask('XG88AUITB').then((triggers: Trigger[]) => {
+        //
+        //     for (let trigger of triggers) {
+        //         console.log(trigger.data);
+        //     }
+        // })
+
+        // client.getTaskExecutionEndpoint().getTaskExecutionSummaries('zwgUjKacG', new Date("2019-01-12T18:29:52.545Z")).then((taskExecutionSummaries: TaskExecutionSummary[]) => {
+        //     console.log(taskExecutionSummaries.length);
+        // }, (error: ClientError) => {
+        //     console.error(error);
+        // })
+        // client.getSubscriberEndpoint().getSubscribersByTask('BEXG88ATH').then((subscribers: Subscriber[]) => {
+        //     console.log(subscribers);
+        // })
+
+    }).catch((error: ClientError) => {
+        console.error('Unable to authenticate: ');
         console.error(error);
-    })
-    // client.getSystemEndpoint().save(logEntry).then((savedLogEntry: Log) => {
-    //     console.log(savedLogEntry);
-    // });
+    });
+}
 
-    // client.getTriggerEndpoint().getByTask('XG88AUITB').then((triggers: Trigger[]) => {
-    //
-    //     for (let trigger of triggers) {
-    //         console.log(trigger.data);
-    //     }
-    // })
+async function testHTTPAuth() {
+    const requestData: HttpClientRequest = new HttpClientRequest('http://hq.attlaz.com:32769/api/queues');
+    requestData.setJsonHeader();
+    requestData.setBasicAuth('attlaz', '4$0x51eIaF9w');
 
-    // client.getTaskExecutionEndpoint().getTaskExecutionSummaries('zwgUjKacG', new Date("2019-01-12T18:29:52.545Z")).then((taskExecutionSummaries: TaskExecutionSummary[]) => {
-    //     console.log(taskExecutionSummaries.length);
-    // }, (error: ClientError) => {
-    //     console.error(error);
-    // })
-    // client.getSubscriberEndpoint().getSubscribersByTask('BEXG88ATH').then((subscribers: Subscriber[]) => {
-    //     console.log(subscribers);
-    // })
+    try {
+        const res: any = await HttpClient.request(requestData);
+        console.log(res);
+    } catch (e) {
+        console.error('Error', e);
+    }
+}
 
-}).catch((error: ClientError) => {
-    console.error('Unable to authenticate: ');
-    console.error(error);
-});
-
+testHTTPAuth();
 // function test() {
 //     console.log('get data');
 //     client.getTeamsEndpoint().getAll().then((data) => {
