@@ -8,6 +8,9 @@ export class User {
     lastname: string;
     email: string;
     phone: string;
+
+    password:string;
+
     language: string;
     time_zone: string;
     date_format: string;
