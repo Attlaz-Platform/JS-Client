@@ -1,4 +1,5 @@
 import {Endpoint, Member, State, User, Utils} from "..";
+import {DataResult} from '../Model/Result/DataResult';
 
 export class UserEndpoint extends Endpoint {
 
@@ -34,21 +35,47 @@ export class UserEndpoint extends Endpoint {
 
     }
 
-    public save(user: User): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            let url: string = '/user';
+    public async socialAuth(provider: string, data: any): Promise<any> {
+        try {
 
-            this.httpClient.request(url, user, 'POST').then((result: any) => {
+            const result: any = this.httpClient.request('/auth/social/' + provider, data, 'POST', false);
+            return result;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to perform social auth: ', e);
+            }
+            throw e;
+        }
+    }
 
-                resolve(result);
+    public async update(user: User): Promise<User> {
+        try {
+            let url: string = '/user/' + user.id;
+            const result: any = this.httpClient.request(url, user, 'POST');
+            return User.parse(result);
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save user: ', e);
+            }
+            throw e;
+        }
+    }
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save user: ', reason);
-                }
-                reject(reason);
-            });
+    public async create(user: User): Promise<DataResult> {
+        try {
+            let url: string = '/user/';
+            const result: DataResult = await this.request(url, user, 'PUT', false);
+            if(!Utils.isNullOrUndefined(result.getData().createdUser))
+            {
+                result.setData({createdUser:User.parse(result.getData().createdUser)})
+            }
 
-        });
+            return result;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to create user: ', e);
+            }
+            throw e;
+        }
     }
 }
