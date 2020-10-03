@@ -4,6 +4,7 @@ import {Token} from 'client-oauth2';
 import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
 import ClientOAuth2 = require('client-oauth2');
+import {Utils} from '../Utils';
 
 export class OAuthClient {
 
@@ -38,7 +39,7 @@ export class OAuthClient {
 
         try {
             let token: Token;
-            if (username !== null && username !== undefined && password !== null && password !== undefined) {
+            if (!Utils.isNullOrUndefined(username) && !Utils.isNullOrUndefined(password)) {
                 token = await this.oauthClient.owner.getToken(username, password);
             } else {
                 token = await this.oauthClient.credentials.getToken();
@@ -67,13 +68,13 @@ export class OAuthClient {
             .join('&');
     }
 
-    private createRequestData(action: string, parameters: any = null, method: string = 'GET'): HttpClientRequest {
+    private createRequestData(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): HttpClientRequest {
 
         const url: string = this.getUri(action);
 
         let requestData: HttpClientRequest = new HttpClientRequest(url, method);
 
-        if (method === 'POST' && parameters !== null && parameters !== undefined) {
+        if ((method === 'POST' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
                 parameters = JSON.stringify(parameters);
             } else if (typeof parameters === 'string') {
@@ -89,18 +90,20 @@ export class OAuthClient {
             requestData.url = requestData.url + '?' + this.encodeQueryString(parameters);
         }
 
-        return this.oauthToken.sign(requestData);
+        if (signWithOauthToken) {
+            return this.oauthToken.sign(requestData);
+        } else {
+            return requestData;
+        }
     }
 
-    public async request(action: string, parameters: any = null, method: string = 'GET'): Promise<any> {
+    public async request(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
 
-        if (!this.isAuthenticated()) {
+        if (signWithOauthToken && !this.isAuthenticated()) {
             throw new ClientError('Unable to perform request, access token not provided');
         } else {
 
-            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method);
-
-            // console.log('RD', requestData);
+            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
 
             if (this.debug) {
                 console.info('[Client request] ', requestData);

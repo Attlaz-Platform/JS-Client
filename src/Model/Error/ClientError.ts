@@ -44,30 +44,34 @@ export class ClientError implements Error {
     public static byStatus(statusCode: number, statusText: string): ClientError | null {
         switch (statusCode) {
             case 200:
+            case 201:
+            case 202:
                 return null;
                 break;
+            case 400:
+                return new ClientError('Bad Request', HttpClient.HTTP_BAD_REQUEST);
+                break;
             case 401:
-                //Unauthorized
-                // console.error('401: ' + statusText);
                 return new ClientError('Unauthorized', HttpClient.HTTP_UNAUTHORIZED);
                 break;
             case 404:
-                //Unauthorized
-                // console.error('404:' + statusText);
                 return new ClientError('Not Found', HttpClient.HTTP_NOTFOUND);
                 break;
+            case 404:
+                return new ClientError('Unprocessable Entity', HttpClient.HTTP_UNPROCESSABLE_ENTITY);
+                break;
+            case 405:
+                return new ClientError('Not allowed', HttpClient.HTTP_NOT_ALLOWED);
+                break;
             case 500:
-                //Unauthorized
-                // console.error('500: ' + statusText);
                 return new ClientError('Internal Server Error', HttpClient.HTTP_NOTFOUND);
                 break;
             case 503:
-                //Unauthorized
-                // console.error('500: ' + statusText);
                 return new ClientError('Service not available', HttpClient.HTTP_UNAVAILABLE);
                 break;
             default:
-                console.error('Unknown status code "' + status + '"');
+                console.error('Unknown status code "' + statusCode + '"', {code: statusCode, text: statusText});
+                return new ClientError('Status code ' + statusCode + ': ' + statusText, HttpClient.HTTP_ERROR);
 
         }
         return null;
