@@ -1,13 +1,17 @@
 import {Response} from 'servie';
 import {fetch} from 'popsicle';
-import {ClientError} from '../Model/Error/ClientError';
+import {ClientError} from '..';
 import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
 
 export class HttpClient {
 
+    public static HTTP_ERROR: string = 'xxx';
+    public static HTTP_BAD_REQUEST: string = '400';
     public static HTTP_UNAUTHORIZED: string = '401';
     public static HTTP_NOTFOUND: string = '404';
+    public static HTTP_NOT_ALLOWED: string = '405';
+    public static HTTP_UNPROCESSABLE_ENTITY: string = '422';
     public static HTTP_UNAVAILABLE: string = '503';
 
     public static async get(url: string, requestData: any = {}): Promise<any> {
