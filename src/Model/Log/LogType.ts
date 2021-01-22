@@ -5,8 +5,8 @@ import {State} from '../State';
  * @deprecated
  */
 export enum LogType {
-    Infrastructure = 'infrastructure' as any,
-    TaskExecution = 'taskexecution' as any,
+    Infrastructure = 'infrastructure',
+    TaskExecution = 'taskexecution',
 
 }
 

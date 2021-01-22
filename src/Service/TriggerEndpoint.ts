@@ -1,4 +1,4 @@
-import {Endpoint, Trigger, Utils} from "..";
+import {Endpoint, Trigger, Utils} from '..';
 
 export class TriggerEndpoint extends Endpoint {
 
@@ -36,7 +36,7 @@ export class TriggerEndpoint extends Endpoint {
                 return null;
             }
             return Trigger.parse(result);
-            
+
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);

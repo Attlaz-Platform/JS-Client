@@ -1,4 +1,4 @@
-import {Endpoint, Task, TaskSummary, Utils} from "..";
+import {Endpoint, Task, TaskSummary, Utils} from '..';
 
 export class TaskEndpoint extends Endpoint {
 
@@ -27,7 +27,7 @@ export class TaskEndpoint extends Endpoint {
     public async getTask(taskId: string): Promise<Task> {
 
         try {
-            const rawTask: any = this.httpClient.request('/tasks/' + taskId);
+            const rawTask: any = await this.httpClient.request('/tasks/' + taskId);
 
             if (Utils.isNullOrUndefined(rawTask)) {
                 return null;

@@ -2,14 +2,18 @@ import {
     AdapterEndpoint,
     ChannelEndpoint,
     ConfigEndpoint,
-    Endpoint,
+    Endpoint, HealthAlertEndpoint,
     LanguageEndpoint,
     LogEndpoint,
     MemberEndpoint,
     NotificationsEndpoint,
     OAuthClient,
     OAuthClientOptions,
+    ProjectDeployEndpoint,
     ProjectEndpoint,
+    ProjectEnvironmentEndpoint,
+    QueueEndpoint,
+    SourcesAccountEndpoint,
     StorageEndpoint,
     SubscriberEndpoint,
     TaskEndpoint,
@@ -18,13 +22,9 @@ import {
     TeamsEndpoint,
     TriggerEndpoint,
     UserEndpoint,
-    ProjectEnvironmentEndpoint,
-    ProjectDeployEndpoint,
-    WorkerEndpoint,
-    SourcesAccountEndpoint
+    WorkerConfigEndpoint,
+    WorkerEndpoint
 } from ".";
-
-
 
 export class Client {
 
@@ -36,6 +36,7 @@ export class Client {
         ProjectEndpoint,
         ProjectEnvironmentEndpoint,
         ProjectDeployEndpoint,
+        QueueEndpoint,
         ChannelEndpoint,
         ConfigEndpoint,
         NotificationsEndpoint,
@@ -50,7 +51,9 @@ export class Client {
         MemberEndpoint,
         SourcesAccountEndpoint,
         LanguageEndpoint,
-        StorageEndpoint
+        StorageEndpoint,
+        WorkerConfigEndpoint,
+        HealthAlertEndpoint
     };
 
     private httpClient: OAuthClient;
@@ -99,6 +102,10 @@ export class Client {
 
     public setAccessToken(accessToken: string): void {
         this.httpClient.setAccessToken(accessToken);
+    }
+
+    public unsetAccessToken(): void {
+        this.httpClient.unsetAccessToken();
     }
 
     /* Endpoints */
@@ -181,6 +188,17 @@ export class Client {
     public getStorageEndpoint(): StorageEndpoint {
         return this.getEndpoint('storage', this.Store.StorageEndpoint);
     }
+
+    public getWorkerConfigEndpoint(): WorkerConfigEndpoint {
+        return this.getEndpoint('workerconfig', this.Store.WorkerConfigEndpoint);
+    }
+    public getQueueEndpoint(): QueueEndpoint {
+        return this.getEndpoint('queue', this.Store.QueueEndpoint);
+    }
+    public getHealthAlertEndpoint(): HealthAlertEndpoint {
+        return this.getEndpoint('healtalert', this.Store.HealthAlertEndpoint);
+    }
+
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
 

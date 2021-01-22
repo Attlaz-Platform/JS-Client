@@ -1,4 +1,4 @@
-import {Endpoint, TaskExecution, TaskExecutionHistory, TaskExecutionStatus, TaskExecutionSummary, Utils} from "..";
+import {Endpoint, TaskExecution, TaskExecutionHistory, TaskExecutionStatus, TaskExecutionSummary, Utils} from '..';
 
 export class TaskExecutionEndpoint extends Endpoint {
 

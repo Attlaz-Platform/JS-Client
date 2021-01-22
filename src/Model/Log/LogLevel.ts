@@ -1,15 +1,14 @@
 import {Utils} from '../../Utils';
-import {State} from '../State';
 
 export enum LogLevel {
-    Debug = <any>"debug",
-    Info = <any>"info",
-    Notice = <any>"notice",
-    Warning = <any>"warning",
-    Error = <any>"error",
-    Critical = <any>"critical",
-    Alert = <any>"alert",
-    Emergency = <any>"emergency",
+    Debug = "debug",
+    Info = "info",
+    Notice = "notice",
+    Warning = "warning",
+    Error = "error",
+    Critical = "critical",
+    Alert = "alert",
+    Emergency = "emergency",
 }
 
 export namespace LogLevel {
@@ -51,7 +50,7 @@ export namespace LogLevel {
     }
 
     export function fromString(input: string): LogLevel {
-        const result: LogLevel = Utils.parseEnum<LogLevel>(input, State);
+        const result: LogLevel = Utils.parseEnum<LogLevel>(input, LogLevel);
         if (Utils.isNullOrUndefined(result)) {
             throw new Error('Unable to parse LogLevel from string: Unknown LogLevel "' + input + '"');
         }

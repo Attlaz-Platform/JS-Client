@@ -1,8 +1,8 @@
-import {Utils} from '../..';
+import {Utils} from '../../Utils';
 
 export enum WorkerInstanceState {
-    Started = 'Started' as any,
-    Stopped = 'Stopped' as any,
+    Started = 'Started',
+    Stopped = 'Stopped',
 }
 
 export namespace WorkerInstanceState {

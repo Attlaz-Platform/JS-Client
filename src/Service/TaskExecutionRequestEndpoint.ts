@@ -1,7 +1,7 @@
-import {Endpoint} from "..";
+import {Endpoint, TaskExecutionResponse} from '..';
 
 export class TaskExecutionRequestEndpoint extends Endpoint {
-    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<any> {
+    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<TaskExecutionResponse> {
 
         let url: string = '/tasks/' + taskId + '/taskexecutionrequests';
         if (wait) {
@@ -9,9 +9,10 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
         }
 
         try {
-            const result: any = this.httpClient.request(url, params, 'POST');
-
-            return result;
+            // TODO: parse
+            const result: any = await this.httpClient.request(url, params, 'POST');
+            console.log('TODO: parse postTaskExecutionRequest result', result);
+            return result as TaskExecutionResponse;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to execute task: ', ex);

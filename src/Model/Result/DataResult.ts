@@ -1,17 +1,16 @@
 import {ResultError} from './ResultError';
 
-export class DataResult {
-    private data: any;
+export class DataResult<T> {
+    private data: T;
     private errors: ResultError[];
 
     public constructor() {
-        this.data = {};
+        this.data = null;
         this.errors = [];
     }
 
-    public static parse(raw: any): DataResult {
-        const result: DataResult = new DataResult();
-        console.log('Parse', raw);
+    public static parse<T>(raw: any): DataResult<T> {
+        const result: DataResult<T> = new DataResult<T>();
         const data: any = raw.data;
         result.setData(data);
 
@@ -23,11 +22,11 @@ export class DataResult {
         return result;
     }
 
-    public setData(data: any): void {
+    public setData(data: T): void {
         this.data = data;
     }
 
-    public getData(): any {
+    public getData(): T {
         return this.data;
     }
 

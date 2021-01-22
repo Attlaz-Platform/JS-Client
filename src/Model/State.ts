@@ -1,9 +1,9 @@
 import {Utils} from '../Utils';
 
 export enum State {
-    Active = 'active' as any,
-    Inactive = 'inactive' as any,
-    Removed = 'removed' as any,
+    Active = 'active',
+    Inactive = 'inactive',
+    Removed = 'removed',
 
 }
 

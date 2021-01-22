@@ -1,4 +1,4 @@
-import {Endpoint, Project, Utils} from "..";
+import {Endpoint, Project, Utils} from '..';
 
 export class ProjectEndpoint extends Endpoint {
 

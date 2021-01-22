@@ -1,4 +1,4 @@
-import {HttpClient} from '../..';
+import {HttpClient} from '../../Http/HttpClient';
 
 export class ClientError implements Error {
     message: string;

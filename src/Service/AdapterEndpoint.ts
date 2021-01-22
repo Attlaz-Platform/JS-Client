@@ -1,4 +1,5 @@
-import {Adapter, Endpoint} from "..";
+import {Endpoint} from './Endpoint';
+import {Adapter} from '../Model/Adapter';
 
 export class AdapterEndpoint extends Endpoint {
 

@@ -1,9 +1,12 @@
 import {Utils} from '../../Utils';
 
 export enum WorkerState {
-    Active = 'Active' as any,
-    Inactive = 'Inactive' as any,
-    NonExisting = 'NonExisting' as any,
+    Active = 'Active',
+    Active_Upgrading = 'Upgrading',
+    Active_Upgraded = 'Upgraded',
+
+    Inactive = 'Inactive',
+    NonExisting = 'NonExisting',
 }
 
 export namespace WorkerState {
