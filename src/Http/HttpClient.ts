@@ -1,8 +1,8 @@
 import {Response} from 'servie';
 import {fetch} from 'popsicle';
-import {ClientError} from '..';
 import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
+import {ClientError} from '..';
 
 export class HttpClient {
 
@@ -24,6 +24,11 @@ export class HttpClient {
 
         const error: ClientError = ClientError.byStatus(response.status, response.statusText);
         if (!Utils.isNullOrUndefined(error)) {
+
+            // const body: string = await response.text();
+            // console.log('Text' + body);
+            //
+            // console.log(response);
             throw error;
         }
 

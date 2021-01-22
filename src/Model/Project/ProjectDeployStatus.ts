@@ -1,13 +1,13 @@
 import {Utils} from '../../Utils';
 
 export enum ProjectDeployStatus {
-    Unknown = 'unknown' as any,
-    Pending = 'pending' as any,
-    Canceled = 'canceled' as any,
-    Running = 'running' as any,
-    Failed = 'failed' as any,
-    Stopped = 'stopped' as any,
-    Complete = 'complete' as any,
+    Unknown = 'unknown',
+    Pending = 'pending',
+    Canceled = 'canceled',
+    Running = 'running',
+    Failed = 'failed',
+    Stopped = 'stopped',
+    Complete = 'complete',
 }
 
 export namespace ProjectDeployStatus {

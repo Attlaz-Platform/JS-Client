@@ -1,4 +1,4 @@
-import {Endpoint, SourcesAccount, SourcesAccountRepository} from "..";
+import {Endpoint, SourcesAccount, SourcesAccountRepository} from '..';
 
 export class SourcesAccountEndpoint extends Endpoint {
 

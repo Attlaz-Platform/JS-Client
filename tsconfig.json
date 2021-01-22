@@ -6,9 +6,11 @@
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "strictNullChecks": false,
-    "noImplicitAny": true,
     "skipLibCheck": true,
+    "strictNullChecks": false,
+    "alwaysStrict": true,
+    "noImplicitReturns": false,
+    "noImplicitAny": true,
     "lib": [
       "es2017",
       "dom"

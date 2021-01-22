@@ -1,99 +1,128 @@
+/**
+ * @module
+ * @description
+ * Entry point for all classes
+ */
+/* HTTP */
+export {HttpClient} from './Http/HttpClient';
+export {HttpClientRequest} from './Http/HttpClientRequest';
+export {OAuthClient} from './Http/OAuthClient';
+export {OAuthClientOptions} from './Http/OAuthClientOptions';
+
 /* Models */
-export * from './Model/Error/ClientError';
+export {ClientError} from './Model/Error/ClientError';
 
-export * from './Model/Event/EventType';
+export {EventType} from './Model/Event/EventType';
 
-export * from './Model/Log/Log';
-export * from './Model/Log/LogLevel';
-export * from './Model/Log/LogQuery';
+export {HealthAlert} from './Model/HealthAlert/HealthAlert';
+export {HealthTestType} from './Model/HealthAlert/HealthTestType';
 
-export * from './Model/Project/Language';
-export * from './Model/Project/Project';
-export * from './Model/Project/ProjectDeploy';
-export * from './Model/Project/ProjectDeployCommit';
-export * from './Model/Project/ProjectDeployStatus';
-export * from './Model/Project/ProjectEnvironment';
+export {Log} from './Model/Log/Log';
+export {LogLevel} from './Model/Log/LogLevel';
+export {LogQuery} from './Model/Log/LogQuery';
+export {LogType} from './Model/Log/LogType';
+/** Messaging **/
 
-export * from './Model/Messaging/Subscriber';
-export * from './Model/Messaging/Channel/Channel';
-export * from './Model/Messaging/Channel/ChannelType';
-export * from './Model/Messaging/Channel/ChannelData';
+export {Channel} from './Model/Messaging/Channel/Channel';
+export {ChannelData} from './Model/Messaging/Channel/ChannelData';
+export {ChannelType} from './Model/Messaging/Channel/ChannelType';
 
-export * from './Model/Messaging/Channel/EmailChannelData';
-export * from './Model/Messaging/Channel/PushChannelData';
-export * from './Model/Messaging/Channel/SlackChannelData';
-export * from './Model/Messaging/Channel/SmsChannelData';
-export * from './Model/Messaging/Channel/WebhookChannelData';
+export {EmailChannelData} from './Model/Messaging/Channel/EmailChannelData';
+export {PushChannelData} from './Model/Messaging/Channel/PushChannelData';
+export {SlackChannelData} from './Model/Messaging/Channel/SlackChannelData';
+export {SmsChannelData} from './Model/Messaging/Channel/SmsChannelData';
+export {WebhookChannelData} from './Model/Messaging/Channel/WebhookChannelData';
 
-export * from './Model/Storage/StorageType';
+export {Subscriber} from './Model/Messaging/Subscriber';
+export {ChannelHistory} from './Model/Messaging/ChannelHistory';
+/** Project **/
 
-export * from './Model/Trigger/ScheduleTrigger';
-export * from './Model/Trigger/ScheduleTriggerData';
-export * from './Model/Trigger/Trigger';
-export * from './Model/Trigger/TriggerData';
-export * from './Model/Trigger/WebhookTrigger';
-export * from './Model/Trigger/WebhookTriggerData';
+export {Language} from './Model/Project/Language';
+export {Project} from './Model/Project/Project';
+export {ProjectDeploy} from './Model/Project/ProjectDeploy';
+export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit';
+export {ProjectDeployStatus} from './Model/Project/ProjectDeployStatus';
+export {ProjectEnvironment} from './Model/Project/ProjectEnvironment';
 
-export * from './Model/Worker/Worker';
-export * from './Model/Worker/WorkerImage';
-export * from './Model/Worker/WorkerInstance';
-export * from './Model/Worker/WorkerInstanceState';
-export * from './Model/Worker/WorkerState';
+/** Queue **/
+export {QueueStatus} from './Model/Queue/QueueStatus';
 
-export * from './Model/Adapter';
-export * from './Model/Config';
-export * from './Model/Member';
-export * from './Model/Notification';
-export * from './Model/PagedResult';
-export * from './Model/SourcesAccount';
-export * from './Model/SourcesAccountRepository';
-export * from './Model/State';
-export * from './Model/Task';
-export * from './Model/TaskExecution';
-export * from './Model/TaskExecutionHistory';
-export * from './Model/TaskExecutionStatus';
-export * from './Model/TaskExecutionSummary';
-export * from './Model/TaskSummary';
-export * from './Model/Team';
-export * from './Model/User';
+/** Result **/
 
-export * from './Model/Worker/Worker';
-export * from './Model/Worker/WorkerImage';
-export * from './Model/Worker/WorkerInstance';
-export * from './Model/Worker/WorkerInstanceState';
-export * from './Model/Worker/WorkerState';
+export {DataResult} from './Model/Result/DataResult';
+export {ResultError} from './Model/Result/ResultError';
 
-export * from './Service/Endpoint';
+export {Storage} from './Model/Storage/Storage';
+export {StorageType} from './Model/Storage/StorageType';
+/** Trigger **/
+export {ApiTrigger} from './Model/Trigger/ApiTrigger';
+export {ApiTriggerData} from './Model/Trigger/ApiTriggerData';
+export {ScheduleTrigger} from './Model/Trigger/ScheduleTrigger';
+export {ScheduleTriggerData} from './Model/Trigger/ScheduleTriggerData';
+export {Trigger} from './Model/Trigger/Trigger';
+export {TriggerData} from './Model/Trigger/TriggerData';
+export {TriggerType} from './Model/Trigger/TriggerType';
+export {WebhookTrigger} from './Model/Trigger/WebhookTrigger';
+export {WebhookTriggerData} from './Model/Trigger/WebhookTriggerData';
+/** Worker**/
+
+export {Worker} from './Model/Worker/Worker';
+export {WorkerConfig} from './Model/Worker/WorkerConfig';
+export {WorkerImage} from './Model/Worker/WorkerImage';
+export {WorkerInstance} from './Model/Worker/WorkerInstance';
+export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
+export {WorkerState} from './Model/Worker/WorkerState';
+
+/** **/
+export {Adapter} from './Model/Adapter';
+export {Config} from './Model/Config';
+export {Member} from './Model/Member';
+export {Notification} from './Model/Notification';
+export {PagedResult} from './Model/PagedResult';
+export {SourcesAccount} from './Model/SourcesAccount';
+export {SourcesAccountRepository} from './Model/SourcesAccountRepository';
+export {State} from './Model/State';
+export {Task} from './Model/Task';
+export {TaskExecution} from './Model/TaskExecution';
+export {TaskExecutionHistory} from './Model/TaskExecutionHistory';
+export {TaskExecutionResponse} from './Model/TaskExecutionResponse';
+export {TaskExecutionStatus} from './Model/TaskExecutionStatus';
+export {TaskExecutionSummary} from './Model/TaskExecutionSummary';
+export {TaskSummary} from './Model/TaskSummary';
+export {Team} from './Model/Team';
+export {User} from './Model/User';
+
+export {Endpoint} from './Service/Endpoint';
 
 /* Endpoints */
-export * from './Service/AdapterEndpoint';
-export * from './Service/ChannelEndpoint';
-export * from './Service/ProjectEndpoint';
-export * from './Service/ConfigEndpoint';
-export * from './Service/NotificationsEndpoint';
-export * from './Service/LanguageEndpoint';
-export * from './Service/LogEndpoint';
-export * from './Service/MemberEndpoint';
-export * from './Service/NotificationsEndpoint';
-export * from './Service/ProjectDeployEndpoint';
-export * from './Service/ProjectEnvironmentEndpoint';
-export * from './Service/SourcesAccountEndpoint';
-export * from './Service/StorageEndpoint';
-export * from './Service/SubscriberEndpoint';
-export * from './Service/TaskEndpoint';
-export * from './Service/TaskExecutionEndpoint';
-export * from './Service/TaskExecutionRequestEndpoint';
-export * from './Service/TeamsEndpoint';
-export * from './Service/TriggerEndpoint';
-export * from './Service/UserEndpoint';
-export * from './Service/WorkerEndpoint';
+export {AdapterEndpoint} from './Service/AdapterEndpoint';
+export {ChannelEndpoint} from './Service/ChannelEndpoint';
+export {ProjectEndpoint} from './Service/ProjectEndpoint';
+export {ConfigEndpoint} from './Service/ConfigEndpoint';
+export {LanguageEndpoint} from './Service/LanguageEndpoint';
+export {LogEndpoint} from './Service/LogEndpoint';
+export {MemberEndpoint} from './Service/MemberEndpoint';
+export {NotificationsEndpoint} from './Service/NotificationsEndpoint';
+export {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
+export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
+export {QueueEndpoint} from './Service/QueueEndpoint';
+export {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
+export {StorageEndpoint} from './Service/StorageEndpoint';
+export {SubscriberEndpoint} from './Service/SubscriberEndpoint';
+export {TaskEndpoint} from './Service/TaskEndpoint';
+export {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
+export {TaskExecutionRequestEndpoint} from './Service/TaskExecutionRequestEndpoint';
+export {TeamsEndpoint} from './Service/TeamsEndpoint';
+export {TriggerEndpoint} from './Service/TriggerEndpoint';
+export {UserEndpoint} from './Service/UserEndpoint';
+export {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint';
+export {WorkerEndpoint} from './Service/WorkerEndpoint';
+export {HealthAlertEndpoint} from './Service/HealthAlertEndpoint';
 
-export * from './Client';
-export * from './Utils';
+export {Client} from './Client';
+export {Utils} from './Utils';
 
-export * from './Http/HttpClient';
-export * from './Http/OAuthClient';
-export * from './Http/OAuthClientOptions';
+
 
 
 

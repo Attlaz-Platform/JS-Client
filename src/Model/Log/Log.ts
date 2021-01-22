@@ -28,4 +28,16 @@ export class Log {
         log._version = rawLog._version;
         return log;
     }
+    public setTag(key: string, value: string): void {
+        this.tags.push({key, value});
+    }
+
+    public getTagValue(key: string): string | null {
+        for (const tag of this.tags) {
+            if (tag.key === key) {
+                return tag.value;
+            }
+        }
+        return null;
+    }
 }

@@ -1,9 +1,9 @@
 import {TriggerData} from "./TriggerData";
 import {State} from '../State';
 import {TriggerType} from './TriggerType';
-
 import {ScheduleTriggerData} from './ScheduleTriggerData';
 import {WebhookTriggerData} from './WebhookTriggerData';
+import {ApiTriggerData} from './ApiTriggerData';
 
 export class Trigger {
     public id: string;
@@ -21,7 +21,7 @@ export class Trigger {
         this.task = task;
         this.data = data;
 
-        this.arguments = [];
+        this.arguments = {};
     }
 
     public getData(): TriggerData {
@@ -42,6 +42,9 @@ export class Trigger {
                 break;
             case  TriggerType.Schedule:
                 triggerData = new ScheduleTriggerData(data.expression);
+                break;
+            case  TriggerType.Api:
+                triggerData = new ApiTriggerData();
                 break;
             default:
                 throw new Error('Unknown trigger type "' + type + '"');

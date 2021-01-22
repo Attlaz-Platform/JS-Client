@@ -1,4 +1,8 @@
-import {Endpoint, Log, LogQuery, PagedResult} from "..";
+import {Endpoint} from './Endpoint';
+import {Utils} from '../Utils';
+import {LogQuery} from '../Model/Log/LogQuery';
+import {PagedResult} from '../Model/PagedResult';
+import {Log} from '../Model/Log/Log';
 
 export class LogEndpoint extends Endpoint {
 

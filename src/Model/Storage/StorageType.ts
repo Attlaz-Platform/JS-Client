@@ -1,9 +1,10 @@
 import {Utils} from '../../Utils';
 
 export enum StorageType {
-    Cache = 'cache' as any,
-    Persistent = 'persistent' as any,
-    Vault = 'vault' as any,
+    Cache = 'cache',
+    Persistent = 'persistent',
+    Vault = 'vault',
+    Workers = 'workers'
 }
 
 export namespace StorageType {

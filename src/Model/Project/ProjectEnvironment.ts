@@ -7,7 +7,7 @@ export class ProjectEnvironment {
     public projectId: string;
     public name: string;
     public sourceBranch: string;
-    public parent: number = null;
+    public parent?: number = null;
     public isLocal: boolean = false;
     public state: State = State.Active;
 

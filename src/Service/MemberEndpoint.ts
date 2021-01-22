@@ -1,4 +1,5 @@
-import {Endpoint, Member, State, User} from "..";
+import {Endpoint} from './Endpoint';
+import {Member, State, User} from '..';
 
 export class MemberEndpoint extends Endpoint {
 

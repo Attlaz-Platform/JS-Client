@@ -1,4 +1,4 @@
-import {Endpoint, ProjectEnvironment} from "..";
+import {Endpoint, ProjectEnvironment} from '..';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
 

@@ -1,5 +1,6 @@
-import {EventType, LogLevel} from "../../";
 import {State} from '../State';
+import {EventType} from '../Event/EventType';
+import {LogLevel} from '../Log/LogLevel';
 
 export class Subscriber {
     public id: string;
@@ -26,19 +27,19 @@ export class Subscriber {
 
     }
 
+    public static parseRaw(rawSubscriber: any): Subscriber {
+        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.projectEnvironment, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
+        subscriber.state = State.fromString(rawSubscriber.state);
+
+        return subscriber;
+    }
+
     public getLogLevelThreshold(): LogLevel {
         return this.logLevelThreshold;
     }
 
     public hasLogLevelThreshold(): boolean {
         return this.logLevelThreshold !== null;
-    }
-
-    public static parseRaw(rawSubscriber: any): Subscriber {
-        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.projectEnvironment, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
-        subscriber.state = State.fromString(rawSubscriber.state);
-
-        return subscriber;
     }
 
 }

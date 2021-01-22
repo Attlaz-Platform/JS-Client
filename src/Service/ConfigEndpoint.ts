@@ -1,4 +1,6 @@
-import {Config, Endpoint, Utils} from "..";
+import {Endpoint} from './Endpoint';
+import {Utils} from '../Utils';
+import {Config} from '../Model/Config';
 
 export class ConfigEndpoint extends Endpoint {
 

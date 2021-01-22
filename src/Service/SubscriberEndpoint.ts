@@ -1,4 +1,4 @@
-import {Endpoint, Subscriber, Utils} from "..";
+import {Endpoint, Subscriber, Utils} from '..';
 
 export class SubscriberEndpoint extends Endpoint {
 

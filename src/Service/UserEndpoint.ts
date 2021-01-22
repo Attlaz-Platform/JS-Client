@@ -1,5 +1,4 @@
-import {Endpoint, Member, State, User, Utils} from "..";
-import {DataResult} from '../Model/Result/DataResult';
+import {DataResult, Endpoint, Member, State, User, Utils} from '..';
 
 export class UserEndpoint extends Endpoint {
 
@@ -38,7 +37,7 @@ export class UserEndpoint extends Endpoint {
     public async socialAuth(provider: string, data: any): Promise<any> {
         try {
 
-            const result: any = this.httpClient.request('/auth/social/' + provider, data, 'POST', false);
+            const result: any = await this.httpClient.request('/auth/social/' + provider, data, 'POST', false);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -51,7 +50,7 @@ export class UserEndpoint extends Endpoint {
     public async update(user: User): Promise<User> {
         try {
             let url: string = '/user/' + user.id;
-            const result: any = this.httpClient.request(url, user, 'POST');
+            const result: any = await this.httpClient.request(url, user, 'POST');
             return User.parse(result);
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -61,13 +60,12 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async create(user: User): Promise<DataResult> {
+    public async create(user: User): Promise<DataResult<{ createdUser: User }>> {
         try {
             let url: string = '/user/';
-            const result: DataResult = await this.request(url, user, 'PUT', false);
-            if(!Utils.isNullOrUndefined(result.getData().createdUser))
-            {
-                result.setData({createdUser:User.parse(result.getData().createdUser)})
+            const result: DataResult<{ createdUser: User }> = await this.request(url, user, 'PUT', false);
+            if (!Utils.isNullOrUndefined(result.getData().createdUser)) {
+                result.setData({createdUser: User.parse(result.getData().createdUser)})
             }
 
             return result;

@@ -1,4 +1,6 @@
-import {Endpoint, Utils, Worker, WorkerImage} from "..";
+import {Endpoint} from './Endpoint';
+import {Utils} from '../Utils';
+import {DataResult, Worker, WorkerImage} from '..';
 
 export class WorkerEndpoint extends Endpoint {
 
@@ -24,18 +26,18 @@ export class WorkerEndpoint extends Endpoint {
 
     }
 
-    public async save(worker: Worker): Promise<boolean> {
+    public async update(projectEnvironmentId: number): Promise<DataResult<boolean>> {
 
         try {
 
-            let url: string = '/projectenvironments/' + worker.projectEnvironment + '/workers';
+            let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
-            const result: any = await this.httpClient.request(url, worker, 'POST');
+            const result: DataResult<boolean> = await this.request(url, null, 'POST');
 
-            return true
+            return result
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to save trigger: ', error);
+                console.error('Failed to update worker: ', error);
             }
 
             throw error;

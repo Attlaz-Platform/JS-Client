@@ -8,6 +8,8 @@ import {User} from './Model/User';
 import {TaskSummary} from './Model/TaskSummary';
 import {HttpClientRequest} from './Http/HttpClientRequest';
 import {HttpClient} from './Http/HttpClient';
+import {DataResult} from './Model/Result/DataResult';
+import {State} from './Model/State';
 
 // client.authenticate('admin@attlaz.com', 'admin2').subscribe((success) => {
 //     console.log('Authenticate', success);
@@ -64,10 +66,11 @@ const readableBytes = (bytes: number, si: boolean = true): string => {
 let before: number = process.memoryUsage().heapUsed;
 
 // test2(100);
+test();
 
 function test() {
-    let endpoint: string = 'http://localhost:8080/';
-    endpoint = 'https://galantis.echron.com/';
+    let endpoint: string = 'http://localhost:5728/';
+    // endpoint = 'https://galantis.echron.com/';
 
     let client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
     client.getHttpClient().enableDebug();
@@ -98,12 +101,21 @@ function test() {
             console.log('User', user);
         });
 
+        const newUser: User = new User();
+        newUser.username = 'Test user';
+        newUser.email = 'email@domain.com';
+        newUser.password = 'BoyWMpu3N7h47IGt5kKT4FYK';
+        newUser.state = State.Active;
+        client.getUserEndpoint().create(newUser).then((result: DataResult<{ createdUser: User }>) => {
+            console.log('Create user result', result);
+        })
+
         /**
          * We expect an exception!
          */
         client.getTaskEndpoint().getTaskSummary('3B4A1772A', 41).then((taskSummary: TaskSummary) => {
             console.log('Task', taskSummary);
-        }).catch((error) => {
+        }).catch((error: Error) => {
             console.error(error);
         })
         // client.getSystemEndpoint().save(logEntry).then((savedLogEntry: Log) => {
@@ -145,7 +157,7 @@ async function testHTTPAuth() {
     }
 }
 
-testHTTPAuth();
+// testHTTPAuth();
 // function test() {
 //     console.log('get data');
 //     client.getTeamsEndpoint().getAll().then((data) => {

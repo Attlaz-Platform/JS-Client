@@ -1,4 +1,4 @@
-import {Endpoint, ProjectDeploy, ProjectEnvironment, Utils} from "..";
+import {Endpoint, ProjectDeploy, Utils} from '..';
 
 export class ProjectDeployEndpoint extends Endpoint {
 
@@ -41,11 +41,12 @@ export class ProjectDeployEndpoint extends Endpoint {
 
     }
 
-    public async requestDeploy(projectEnvironmentId: number): Promise<ProjectEnvironment> {
+    public async requestDeploy(projectEnvironmentId: number): Promise<any> {
 
         try {
             const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploys', {}, 'POST');
-
+            // TODO: parse deploy
+            console.log('Parse deploy', projectDeploy);
             return projectDeploy;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

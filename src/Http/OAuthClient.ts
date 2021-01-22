@@ -3,8 +3,8 @@ import {ClientError} from '../Model/Error/ClientError';
 import {Token} from 'client-oauth2';
 import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
-import ClientOAuth2 = require('client-oauth2');
 import {Utils} from '../Utils';
+import ClientOAuth2 = require('client-oauth2');
 
 export class OAuthClient {
 
@@ -32,6 +32,10 @@ export class OAuthClient {
 
     }
 
+    public getClient(): ClientOAuth2 {
+        return this.oauthClient;
+    }
+
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(): Promise<boolean>;
     public async authenticate(username?: string, password?: string): Promise<boolean> {
@@ -50,6 +54,65 @@ export class OAuthClient {
             throw ClientError.fromError(e);
         }
 
+    }
+
+    public async request(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
+
+        if (signWithOauthToken && !this.isAuthenticated()) {
+            throw new ClientError('Unable to perform request, access token not provided');
+        } else {
+
+            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
+
+            if (this.debug) {
+                console.info('[Client request] ', requestData);
+            }
+
+            try {
+
+                return HttpClient.request(requestData);
+
+            } catch (e) {
+                throw ClientError.fromError(e);
+            }
+        }
+
+    }
+
+    public isAuthenticated(): boolean {
+        //TODO: other ways to determine if the client is authenticated?
+        return this.oauthToken !== null && this.oauthToken !== undefined;
+    }
+
+    public async refreshToken(accessToken: string, refreshToken: string): Promise<Token> {
+        const token: Token = await this.oauthClient.createToken(accessToken, refreshToken, {});
+        const newToken: Token = await token.refresh();
+
+        return newToken;
+    }
+
+    public getAccessToken(): string {
+        return this.oauthToken.accessToken;
+    }
+
+    public setAccessToken(accessToken: string) {
+        this.oauthToken = this.oauthClient.createToken(accessToken, {});
+    }
+
+    public unsetAccessToken(): void {
+        this.oauthToken = null;
+    }
+
+    public enableDebug() {
+        this.debug = true;
+    }
+
+    public disableDebug() {
+        this.debug = false;
+    }
+
+    public isDebugEnabled(): boolean {
+        return this.debug;
     }
 
     private getUri(uri: string): string {
@@ -95,54 +158,6 @@ export class OAuthClient {
         } else {
             return requestData;
         }
-    }
-
-    public async request(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
-
-        if (signWithOauthToken && !this.isAuthenticated()) {
-            throw new ClientError('Unable to perform request, access token not provided');
-        } else {
-
-            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
-
-            if (this.debug) {
-                console.info('[Client request] ', requestData);
-            }
-
-            try {
-
-                return HttpClient.request(requestData);
-
-            } catch (e) {
-                throw ClientError.fromError(e);
-            }
-        }
-
-    }
-
-    public isAuthenticated(): boolean {
-        //TODO: other ways to determine if the client is authenticated?
-        return this.oauthToken !== null && this.oauthToken !== undefined;
-    }
-
-    public getAccessToken(): string {
-        return this.oauthToken.accessToken;
-    }
-
-    public setAccessToken(accessToken: string) {
-        this.oauthToken = this.oauthClient.createToken(accessToken, {});
-    }
-
-    public enableDebug() {
-        this.debug = true;
-    }
-
-    public disableDebug() {
-        this.debug = false;
-    }
-
-    public isDebugEnabled(): boolean {
-        return this.debug;
     }
 
 }
