@@ -73,10 +73,14 @@ export {WorkerInstance} from './Model/Worker/WorkerInstance';
 export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 export {WorkerState} from './Model/Worker/WorkerState';
 
+/** Team **/
+export {Member} from './Model/Team/Member';
+export {Team} from './Model/Team/Team';
+export {TeamInvite} from './Model/Team/TeamInvite';
 /** **/
 export {Adapter} from './Model/Adapter';
 export {Config} from './Model/Config';
-export {Member} from './Model/Member';
+
 export {Notification} from './Model/Notification';
 export {PagedResult} from './Model/PagedResult';
 export {SourcesAccount} from './Model/SourcesAccount';
@@ -89,7 +93,7 @@ export {TaskExecutionResponse} from './Model/TaskExecutionResponse';
 export {TaskExecutionStatus} from './Model/TaskExecutionStatus';
 export {TaskExecutionSummary} from './Model/TaskExecutionSummary';
 export {TaskSummary} from './Model/TaskSummary';
-export {Team} from './Model/Team';
+
 export {User} from './Model/User';
 
 export {Endpoint} from './Service/Endpoint';
