@@ -1,5 +1,5 @@
-import {User} from './User';
-import {State} from './State';
+import {User} from '../User';
+import {State} from '../State';
 
 export class Member {
     public user: User;

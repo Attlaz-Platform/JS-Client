@@ -1,5 +1,5 @@
 import {Endpoint} from './Endpoint';
-import {Member, State, User} from '..';
+import {DataResult, Member, State, TeamInvite, User, Utils} from '..';
 
 export class MemberEndpoint extends Endpoint {
 
@@ -19,6 +19,40 @@ export class MemberEndpoint extends Endpoint {
             result.push(member);
         }
         return result;
+
+    }
+
+    public async invite(teamId: string, invites: TeamInvite[]): Promise<DataResult<void>> {
+
+        let cmd: string = '/teams/' + teamId + '/invite';
+
+        try {
+            const result: DataResult<void> = await this.request(cmd, {invites}, 'POST');
+
+            if (Utils.isNullOrUndefined(result)) {
+                return null;
+            }
+
+            // result.setData(Channel.parse(result.getData()));
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to invite members to team "' + teamId + '": ', ex);
+            }
+
+            throw ex;
+        }
+
+        // this.httpClient.request(cmd, invites, 'POST').then((rawProject: any) => {
+        //
+        //     resolve(Project.parse(rawProject));
+        //
+        // }).catch((reason: any) => {
+        //     if (this.httpClient.isDebugEnabled()) {
+        //         console.error('Failed to save project: ', reason);
+        //     }
+        //     reject(reason);
+        // });
 
     }
 
