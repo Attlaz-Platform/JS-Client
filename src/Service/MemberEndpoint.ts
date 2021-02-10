@@ -1,5 +1,5 @@
 import {Endpoint} from './Endpoint';
-import {DataResult, Member, State, TeamInvite, User, Utils} from '..';
+import {DataResult, Member, State, TeamInvite, TeamMemberInviteState, User, Utils} from '..';
 
 export class MemberEndpoint extends Endpoint {
 
@@ -16,6 +16,10 @@ export class MemberEndpoint extends Endpoint {
             const role = rawMember.role;
             const member: Member = new Member(user, role);
             member.state = State.fromString(rawMember.state);
+            member.inviteCode = rawMember.inviteCode;
+            member.inviteDate = rawMember.inviteDate;
+            member.inviteState = TeamMemberInviteState.fromString(rawMember.inviteState);
+            member.inviteUser = rawMember.inviteUser;
             result.push(member);
         }
         return result;

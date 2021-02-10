@@ -77,6 +77,7 @@ export {WorkerState} from './Model/Worker/WorkerState';
 export {Member} from './Model/Team/Member';
 export {Team} from './Model/Team/Team';
 export {TeamInvite} from './Model/Team/TeamInvite';
+export {TeamMemberInviteState} from './Model/Team/TeamMemberInviteState';
 /** **/
 export {Adapter} from './Model/Adapter';
 export {Config} from './Model/Config';
