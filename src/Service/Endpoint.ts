@@ -13,4 +13,31 @@ export abstract class Endpoint {
 
         return DataResult.parse<T>(result);
     }
+
+    public parseCollection<T>(dataResult: DataResult<any>, parser: (input: any) => T): T[] {
+        const data: T[] = [];
+
+        const rawData: T[] = dataResult.getData();
+        for (const rawDataEntry of rawData) {
+            data.push(parser(rawDataEntry));
+        }
+
+        dataResult.setData(data);
+
+        return data;
+    }
+
+    // public parseCollection<T>(dataResult: DataResult<DataResultCollection<T[]>>, parser: any): DataResult<DataResultCollection<T[]>> {
+    //     const data: T[] = [];
+    //
+    //     const rawData: T[] = dataResult.getData();
+    //
+    //     for (const rawDataEntry of rawData) {
+    //         data.push(parser(rawDataEntry));
+    //     }
+    //
+    //     dataResult.setData(data);
+    //
+    //     return dataResult;
+    // }
 }
