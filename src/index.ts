@@ -79,7 +79,10 @@ export {Team} from './Model/Team/Team';
 export {TeamInvite} from './Model/Team/TeamInvite';
 export {TeamMemberInviteState} from './Model/Team/TeamMemberInviteState';
 /** **/
-export {Adapter} from './Model/Adapter';
+export {Adapter} from './Model/Adapter/Adapter';
+export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
+export {AdapterConnection} from './Model/Adapter/AdapterConnection';
+
 export {Config} from './Model/Config';
 
 export {Notification} from './Model/Notification';
