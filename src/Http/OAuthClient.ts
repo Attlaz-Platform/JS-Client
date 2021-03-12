@@ -4,6 +4,7 @@ import {Token} from 'client-oauth2';
 import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
+import {HttpClientResponse} from './HttpClientResponse';
 import ClientOAuth2 = require('client-oauth2');
 
 export class OAuthClient {
@@ -114,6 +115,37 @@ export class OAuthClient {
     public isDebugEnabled(): boolean {
         return this.debug;
     }
+
+    // public async requestAccessToken(code: string, state: string): Promise<string | null> {
+    //     try {
+    //         /**
+    //          * https://docs.github.com/en/developers/apps/authorizing-oauth-apps
+    //          */
+    //
+    //         const request: HttpClientRequest = new HttpClientRequest(this.getClient().token.getUri(), 'POST');
+    //         // const state: string = IdHelper.generate(32);
+    //         request.setJsonBody({
+    //             client_id: this.options.clientId,
+    //             client_secret: this.options.clientSecret,
+    //             code,
+    //             state
+    //         });
+    //
+    //         console.log(request);
+    //         const response: HttpClientResponse = await HttpClient.request2(request);
+    //         if (response.status === 200) {
+    //             const body: string = response.body;
+    //
+    //             return body;
+    //         }
+    //         console.error(response);
+    //
+    //     } catch (e) {
+    //         console.error('Unable to get access token', {e});
+    //
+    //     }
+    //     return null;
+    // }
 
     private getUri(uri: string): string {
 
