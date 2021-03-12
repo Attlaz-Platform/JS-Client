@@ -2,7 +2,7 @@ import {Endpoint, Trigger, Utils} from '..';
 
 export class TriggerEndpoint extends Endpoint {
 
-    public async getByTask(taskId: string, projectEnvironmentId: number = null): Promise<Trigger[]> {
+    public async getByTask(taskId: string, projectEnvironmentId: string = null): Promise<Trigger[]> {
 
         try {
             let parameters: any = null;

@@ -44,7 +44,7 @@ export class TaskEndpoint extends Endpoint {
 
     }
 
-    public getTaskSummaries(projectId: string, projectEnvironmentId: number = null): Promise<TaskSummary[]> {
+    public getTaskSummaries(projectId: string, projectEnvironmentId: string | null = null): Promise<TaskSummary[]> {
         return new Promise<TaskSummary[]>((resolve, reject) => {
 
             let parameters: any = null;
@@ -72,7 +72,7 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public async getTaskSummary(taskId: string, projectEnvironmentId: number = null): Promise<TaskSummary> {
+    public async getTaskSummary(taskId: string, projectEnvironmentId: string | null = null): Promise<TaskSummary> {
 
         let parameters: any = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
@@ -81,8 +81,7 @@ export class TaskEndpoint extends Endpoint {
 
         try {
             const rawTaskSummary: any = await this.httpClient.request('tasks/' + taskId + '/summaries', parameters);
-            if(Utils.isNullOrUndefined(rawTaskSummary))
-            {
+            if (Utils.isNullOrUndefined(rawTaskSummary)) {
                 return null;
             }
             return TaskSummary.parse(rawTaskSummary);

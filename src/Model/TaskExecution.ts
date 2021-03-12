@@ -6,7 +6,7 @@ export class TaskExecution {
     public name: string;
 
     public arguments: any;
-    public projectEnvironment: number;
+    public projectEnvironment: string;
     public trigger: string;
 
     public deployId: number;

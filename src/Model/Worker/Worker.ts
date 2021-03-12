@@ -3,7 +3,7 @@ import {WorkerInstance} from './WorkerInstance';
 import {WorkerInstanceState} from './WorkerInstanceState';
 
 export class Worker {
-    projectEnvironment: number;
+    projectEnvironment: string;
     state: WorkerState;
 
     imageId: number;

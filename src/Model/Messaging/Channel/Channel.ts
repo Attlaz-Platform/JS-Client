@@ -3,8 +3,8 @@ import {State} from '../../State';
 import {Utils} from '../../../Utils';
 
 export class Channel {
-    public id: number;
-    public owner: number;
+    public id: string;
+    public owner: string;
     public label: string;
     public type: ChannelType;
     public data: any;
@@ -12,7 +12,7 @@ export class Channel {
 
     public private: boolean = false;
 
-    public constructor(id: number, owner: number, label: string, type: ChannelType, data: any) {
+    public constructor(id: string, owner: string, label: string, type: ChannelType, data: any) {
         this.id = id;
         this.owner = owner;
         this.label = label;

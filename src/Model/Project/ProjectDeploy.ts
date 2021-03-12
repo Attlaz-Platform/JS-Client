@@ -3,9 +3,9 @@ import {ProjectDeployCommit} from './ProjectDeployCommit';
 import {Utils} from '../../Utils';
 
 export class ProjectDeploy {
-    public id: number;
-    public projectEnvironmentId: number;
-    public userId: number;
+    public id: string;
+    public projectEnvironmentId: string;
+    public userId: string;
     public requested: Date;
     public started: Date;
     public finished: Date;

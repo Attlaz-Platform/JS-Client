@@ -2,7 +2,7 @@ import {Endpoint, Subscriber, Utils} from '..';
 
 export class SubscriberEndpoint extends Endpoint {
 
-    public getSubscribersByTask(taskId: string, projectEnvironmentId: number = null): Promise<Subscriber[]> {
+    public getSubscribersByTask(taskId: string, projectEnvironmentId: string = null): Promise<Subscriber[]> {
         return new Promise<Subscriber[]>((resolve, reject) => {
 
             let parameters: any = null;
@@ -29,7 +29,7 @@ export class SubscriberEndpoint extends Endpoint {
         });
     }
 
-    public getSubscribersByChannel(channelId: number): Promise<Subscriber[]> {
+    public getSubscribersByChannel(channelId: string): Promise<Subscriber[]> {
         return new Promise<Subscriber[]>((resolve, reject) => {
 
             this.httpClient.request('/channels/' + channelId + '/subscribers').then((rawSubscribers: any) => {

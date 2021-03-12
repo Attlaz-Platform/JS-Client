@@ -3,7 +3,7 @@ import {TriggerType} from './TriggerType';
 import {ApiTriggerData} from './ApiTriggerData';
 
 export class ApiTrigger extends Trigger {
-    constructor(id: string, projectEnvironment: number, task: string, data: ApiTriggerData) {
+    constructor(id: string, projectEnvironment: string, task: string, data: ApiTriggerData) {
         super(id, TriggerType.Api, projectEnvironment, task, data);
     }
 

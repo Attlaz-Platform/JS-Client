@@ -6,19 +6,21 @@ export class UserAuthProvider {
     public userId: string;
     public provider: string;
     public providerUserId: string;
+    public providerUserEmail: string;
     public lastUsed: Date;
     public state: State = State.Active;
 
-    public static parse(rawUser: any): UserAuthProvider {
-        const user: UserAuthProvider = new UserAuthProvider();
+    public static parse(raw: any): UserAuthProvider {
+        const userAuthProvider: UserAuthProvider = new UserAuthProvider();
 
-        user.id = rawUser.id;
-        user.userId = rawUser.user;
-        user.provider = rawUser.provider;
-        user.providerUserId = rawUser.provider_user_id;
-        user.lastUsed = Utils.parseDate(rawUser.last_used);
-        user.state = State.fromString(rawUser.state);
+        userAuthProvider.id = raw.id;
+        userAuthProvider.userId = raw.userId;
+        userAuthProvider.provider = raw.provider;
+        userAuthProvider.providerUserId = raw.providerUserId;
+        userAuthProvider.providerUserEmail = raw.providerUserEmail;
+        userAuthProvider.lastUsed = Utils.parseRawDate(raw.lastUsed);
+        userAuthProvider.state = State.fromString(raw.state);
 
-        return user;
+        return userAuthProvider;
     }
 }

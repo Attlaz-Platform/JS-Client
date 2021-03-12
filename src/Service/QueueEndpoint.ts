@@ -4,7 +4,7 @@ import {DataResult, QueueStatus} from '..';
 
 export class QueueEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: number): Promise<DataResult<QueueStatus>> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<DataResult<QueueStatus>> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/queues';

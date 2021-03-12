@@ -23,7 +23,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     }
 
-    public async getById(id: number): Promise<ProjectEnvironment> {
+    public async getById(id: string): Promise<ProjectEnvironment> {
 
         try {
             const rawProjectEnvironment: any = await this.httpClient.request('/projectenvironments/' + id + '');

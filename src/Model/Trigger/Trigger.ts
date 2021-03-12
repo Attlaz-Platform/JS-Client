@@ -8,13 +8,13 @@ import {ApiTriggerData} from './ApiTriggerData';
 export class Trigger {
     public id: string;
     public type: TriggerType;
-    public projectEnvironment: number;
+    public projectEnvironment: string;
     public task: string;
     public arguments: {};
     public data: TriggerData;
     public state: State = State.Active;
 
-    public constructor(id: string, type: TriggerType, projectEnvironment: number, task: string, data: TriggerData) {
+    public constructor(id: string, type: TriggerType, projectEnvironment: string, task: string, data: TriggerData) {
         this.id = id;
         this.type = type;
         this.projectEnvironment = projectEnvironment;
@@ -22,10 +22,6 @@ export class Trigger {
         this.data = data;
 
         this.arguments = {};
-    }
-
-    public getData(): TriggerData {
-        return this.data;
     }
 
     public static parse(rawTrigger: any): Trigger {
@@ -57,5 +53,9 @@ export class Trigger {
         trigger.state = State.fromString(rawTrigger.state);
 
         return trigger
+    }
+
+    public getData(): TriggerData {
+        return this.data;
     }
 }

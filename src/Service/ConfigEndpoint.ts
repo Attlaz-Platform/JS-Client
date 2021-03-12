@@ -4,7 +4,7 @@ import {Config} from '../Model/Config';
 
 export class ConfigEndpoint extends Endpoint {
 
-    public getConfigByTask(taskId: string, projectEnvironmentId: number = null): Promise<Config[]> {
+    public getConfigByTask(taskId: string, projectEnvironmentId: string = null): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
 
             let parameters: any = null;
@@ -32,7 +32,7 @@ export class ConfigEndpoint extends Endpoint {
         });
     }
 
-    public getByProject(projectId: string, projectEnvironmentId: number = null): Promise<Config[]> {
+    public getByProject(projectId: string, projectEnvironmentId: string = null): Promise<Config[]> {
         return new Promise<Config[]>((resolve, reject) => {
 
             let parameters: any = null;

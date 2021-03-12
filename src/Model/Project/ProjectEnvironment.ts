@@ -2,12 +2,12 @@ import {State} from '../State';
 import {Utils} from '../../Utils';
 
 export class ProjectEnvironment {
-    public id: number;
+    public id: string;
     public key: string;
     public projectId: string;
     public name: string;
     public sourceBranch: string;
-    public parent?: number = null;
+    public parent?: string = null;
     public isLocal: boolean = false;
     public state: State = State.Active;
 

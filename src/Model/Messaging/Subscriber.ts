@@ -6,15 +6,15 @@ export class Subscriber {
     public id: string;
     public eventTypes: EventType[];
 
-    public projectEnvironment: number;
+    public projectEnvironment: string;
     public task: string;
     public taskExecution: string;
 
-    public channels: number[];
+    public channels: string[];
     public logLevelThreshold: LogLevel;
     public state: State = State.Active;
 
-    constructor(id: string, eventTypes: EventType[], projectEnvironment: number, task: string, taskExecution: string, channels: number[], logLevelThreshold: LogLevel = null) {
+    constructor(id: string, eventTypes: EventType[], projectEnvironment: string, task: string, taskExecution: string, channels: string[], logLevelThreshold: LogLevel = null) {
         this.id = id;
         this.eventTypes = eventTypes;
 

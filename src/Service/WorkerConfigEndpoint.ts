@@ -2,7 +2,7 @@ import {DataResult, Endpoint, Utils, WorkerConfig} from '..';
 
 export class WorkerConfigEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: number): Promise<WorkerConfig[]> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<WorkerConfig[]> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';

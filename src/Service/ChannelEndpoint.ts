@@ -3,7 +3,7 @@ import {Channel, ChannelHistory, DataResult, Utils} from '..';
 
 export class ChannelEndpoint extends Endpoint {
 
-    public async getById(channelId: number): Promise<DataResult<Channel>> {
+    public async getById(channelId: string): Promise<DataResult<Channel>> {
 
         try {
             const result: DataResult<Channel> = await this.request('/channels/' + channelId + '');
@@ -64,17 +64,16 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async getMessages(channelId:number): Promise<DataResult<ChannelHistory[]>> {
+    public async getMessages(channelId: string): Promise<DataResult<ChannelHistory[]>> {
 
         try {
             const rawChannelHistory: DataResult<any[]> = await this.request('/channels/' + channelId + '/messages');
 
-            const data:ChannelHistory[] = [];
+            const data: ChannelHistory[] = [];
 
-            const orig:ChannelHistory[] = rawChannelHistory.getData();
+            const orig: ChannelHistory[] = rawChannelHistory.getData();
 
-            for(const rawChannelMessage of orig)
-            {
+            for (const rawChannelMessage of orig) {
                 data.push(ChannelHistory.parse(rawChannelMessage));
             }
 
