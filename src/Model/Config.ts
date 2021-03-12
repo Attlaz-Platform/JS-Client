@@ -4,7 +4,7 @@ import {Utils} from '../Utils';
 export class Config {
     public id: number;
     public project: string;
-    public projectEnvironment: number;
+    public projectEnvironment: string;
     public task: string;
     public scope: string;
     public key: string;

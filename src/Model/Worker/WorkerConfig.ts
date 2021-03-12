@@ -6,11 +6,11 @@ export class WorkerConfig {
     public static KEY_CPU_LIMIT: string = 'cpu_limit';
     public static KEY_IMAGE: string = 'image';
 
-    public projectEnvironment: number;
+    public projectEnvironment: string;
     public key: string;
     public value: string;
 
-    constructor(project_environment: number, key: string, value: string) {
+    constructor(project_environment: string, key: string, value: string) {
         this.projectEnvironment = project_environment;
         this.key = key;
         this.value = value;

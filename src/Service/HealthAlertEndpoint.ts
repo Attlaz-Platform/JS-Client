@@ -2,7 +2,7 @@ import {DataResult, Endpoint, HealthAlert, Utils} from '..';
 
 export class HealthAlertEndpoint extends Endpoint {
 
-    public async getLatestByProjectEnvironment(projectEnvironmentId: number): Promise<HealthAlert[]> {
+    public async getLatestByProjectEnvironment(projectEnvironmentId: string): Promise<HealthAlert[]> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/health';

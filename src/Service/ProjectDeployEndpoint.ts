@@ -21,7 +21,7 @@ export class ProjectDeployEndpoint extends Endpoint {
 
     }
 
-    public async getByProjectEnvironment(projectEnvironmentId: number): Promise<ProjectDeploy[]> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<ProjectDeploy[]> {
 
         try {
             const rawProjectDeploys: any[] = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploys');
@@ -41,7 +41,7 @@ export class ProjectDeployEndpoint extends Endpoint {
 
     }
 
-    public async requestDeploy(projectEnvironmentId: number): Promise<any> {
+    public async requestDeploy(projectEnvironmentId: string): Promise<any> {
 
         try {
             const projectDeploy: any = await this.httpClient.request('/projectenvironments/' + projectEnvironmentId + '/deploys', {}, 'POST');

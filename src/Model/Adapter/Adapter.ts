@@ -3,7 +3,6 @@ export class Adapter {
     public name: string;
     public description: string;
     public vendor: string;
-    public image: string;
     public icon: string;
     public logo: string;
     public type: string;
@@ -17,7 +16,6 @@ export class Adapter {
         adapter.name = rawAdapter.name;
         adapter.description = rawAdapter.description;
         adapter.vendor = rawAdapter.vendor;
-        adapter.image = rawAdapter.image;
         adapter.icon = rawAdapter.icon;
         adapter.logo = rawAdapter.logo;
         adapter.type = rawAdapter.type;

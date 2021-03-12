@@ -4,7 +4,7 @@ import {DataResult, Worker, WorkerImage} from '..';
 
 export class WorkerEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: number): Promise<Worker> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<Worker> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
@@ -26,7 +26,7 @@ export class WorkerEndpoint extends Endpoint {
 
     }
 
-    public async update(projectEnvironmentId: number): Promise<DataResult<boolean>> {
+    public async update(projectEnvironmentId: string): Promise<DataResult<boolean>> {
 
         try {
 

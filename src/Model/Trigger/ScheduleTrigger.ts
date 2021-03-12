@@ -3,7 +3,7 @@ import {Trigger} from './Trigger';
 import {TriggerType} from './TriggerType';
 
 export class ScheduleTrigger extends Trigger {
-    constructor(id: string, projectEnvironment: number, task: string, data: ScheduleTriggerData) {
+    constructor(id: string, projectEnvironment: string, task: string, data: ScheduleTriggerData) {
         super(id, TriggerType.Schedule, projectEnvironment, task, data);
     }
 

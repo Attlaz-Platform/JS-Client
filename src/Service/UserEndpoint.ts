@@ -1,4 +1,5 @@
 import {DataResult, Endpoint, Member, State, User, Utils} from '..';
+import {UserAuthProvider} from '../Model/User/UserAuthProvider';
 
 export class UserEndpoint extends Endpoint {
 
@@ -34,10 +35,10 @@ export class UserEndpoint extends Endpoint {
 
     }
 
-    public async socialAuth(provider: string, data: any): Promise<any> {
+    public async authenticateByAuthProvider(provider: string, data: any): Promise<any> {
         try {
 
-            const result: any = await this.httpClient.request('/auth/social/' + provider, data, 'POST', false);
+            const result: any = await this.httpClient.request('/auth/providers/' + provider, data, 'POST', false);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -45,6 +46,18 @@ export class UserEndpoint extends Endpoint {
             }
             throw e;
         }
+    }
+
+    public async getAuthProviders(): Promise<DataResult<UserAuthProvider[]>> {
+
+        let cmd: string = '/auth/providers';
+
+        const rawAuthProviders: DataResult<any[]> = await this.request<any[]>(cmd);
+
+        rawAuthProviders.setData(this.parseCollection(rawAuthProviders, UserAuthProvider.parse));
+
+        return rawAuthProviders;
+
     }
 
     public async update(user: User): Promise<User> {

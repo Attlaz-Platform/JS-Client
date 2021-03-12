@@ -2,7 +2,7 @@ import {DataResult, Endpoint, Storage, StorageType} from '..';
 
 export class StorageEndpoint extends Endpoint {
 
-    public async getStorage(projectEnvironmentId: number, storageType: StorageType): Promise<DataResult<Storage>> {
+    public async getStorage(projectEnvironmentId: string, storageType: StorageType): Promise<DataResult<Storage>> {
         const result: DataResult<Storage> = new DataResult<Storage>()
         switch (storageType) {
             case StorageType.Vault:
@@ -26,7 +26,7 @@ export class StorageEndpoint extends Endpoint {
     //     return ['default']
     // }
 
-    public async getItemKeys(projectEnvironmentId: number, storageType: StorageType, poolKey: string): Promise<string[]> {
+    public async getItemKeys(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<string[]> {
         return ['item1', 'item2', 'item3']
     }
 }

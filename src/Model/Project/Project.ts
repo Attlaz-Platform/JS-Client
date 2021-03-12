@@ -7,7 +7,7 @@ export class Project {
     public team: string;
     public default: boolean = false;
 
-    public defaultEnvironmentId: number;
+    public defaultEnvironmentId: string;
 
     public source_account: number;
     public source_repository: string;

@@ -24,7 +24,7 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null, projectEnvironmentId: number = null): Promise<TaskExecutionSummary[]> {
+    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null, projectEnvironmentId: string = null): Promise<TaskExecutionSummary[]> {
 
         try {
             let params: any = null;
