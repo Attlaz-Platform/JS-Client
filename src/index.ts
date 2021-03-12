@@ -6,6 +6,7 @@
 /* HTTP */
 export {HttpClient} from './Http/HttpClient';
 export {HttpClientRequest} from './Http/HttpClientRequest';
+export {HttpClientResponse} from './Http/HttpClientResponse';
 export {OAuthClient} from './Http/OAuthClient';
 export {OAuthClientOptions} from './Http/OAuthClientOptions';
 

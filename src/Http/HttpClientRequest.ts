@@ -13,10 +13,19 @@ export class HttpClientRequest {
     }
 
     public setJsonHeader(): void {
-        this.headers['Content-Type'] = 'application/json';
+        this.setHeader('Content-Type', 'application/json');
     }
 
     public setBasicAuth(user: string, password: string): void {
-        this.headers['Authorization'] = 'Basic ' + Utils.base64encode(user + ':' + password);
+        this.setHeader('Authorization', 'Basic ' + Utils.base64encode(user + ':' + password));
+    }
+
+    public setHeader(key: string, value: string): void {
+        this.headers[key] = value;
+    }
+
+    public setJsonBody(data: any): void {
+        this.setJsonHeader();
+        this.body = JSON.stringify(data);
     }
 }
