@@ -10,5 +10,6 @@ export class TeamMemberInvite {
     public date: Date;
     public expiration: Date;
     public inviterId: string;
+    public inviterEmail: string;
     public state: TeamMemberInviteState = TeamMemberInviteState.Accepted;
 }

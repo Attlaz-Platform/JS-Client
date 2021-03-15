@@ -1,6 +1,6 @@
-import {TeamMemberInviteState} from 'attlaz-client';
+import {TeamMemberInviteState} from './TeamMemberInviteState';
 
-export class TeamMemberInvite {
+export class TeamMemberInvite2 {
     code: string;
     state: TeamMemberInviteState;
     email: string | null;

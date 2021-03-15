@@ -4,6 +4,8 @@ export enum TeamMemberInviteState {
     Pending = 'pending',
     Declined = 'declined',
     Accepted = 'accepted',
+    Revoked = 'revoked',
+    Expired = 'expired',
     Removed = 'removed',
 
 }
