@@ -79,6 +79,7 @@ export {WorkerState} from './Model/Worker/WorkerState';
 export {Team} from './Model/Team/Team';
 export {TeamMember} from './Model/Team/TeamMember';
 export {TeamMemberInvite} from './Model/Team/TeamMemberInvite';
+export {TeamMemberInvite2} from './Model/Team/TeamMemberInvite2';
 export {TeamMemberInviteState} from './Model/Team/TeamMemberInviteState';
 export {TeamMemberRole} from './Model/Team/TeamMemberRole';
 /** **/

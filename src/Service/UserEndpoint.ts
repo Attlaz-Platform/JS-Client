@@ -54,10 +54,11 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async create(user: User): Promise<DataResult<{ createdUser: User }>> {
+    public async create(user: User, invitationCode: string | null = null): Promise<DataResult<{ createdUser: User }>> {
         try {
             let url: string = '/user/';
-            const result: DataResult<{ createdUser: User }> = await this.request(url, user, 'PUT', false);
+            const data: {} = {user, invitation_code: invitationCode};
+            const result: DataResult<{ createdUser: User }> = await this.request(url, data, 'PUT', false);
             if (!Utils.isNullOrUndefined(result.getData().createdUser)) {
                 result.setData({createdUser: User.parse(result.getData().createdUser)})
             }

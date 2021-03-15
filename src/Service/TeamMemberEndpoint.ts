@@ -1,6 +1,6 @@
 import {Endpoint} from './Endpoint';
-import {DataResult, State, TeamMember, TeamMemberInvite, TeamMemberInviteState, Utils} from '..';
-import {TeamMemberRole} from '../Model/Team/TeamMemberRole';
+import {DataResult, State, TeamMember, TeamMemberInvite, TeamMemberInviteState, TeamMemberRole, Utils} from '..';
+import {TeamMemberInvite2} from '../Model/Team/TeamMemberInvite2';
 
 export class TeamMemberEndpoint extends Endpoint {
 
@@ -21,7 +21,7 @@ export class TeamMemberEndpoint extends Endpoint {
             member.role = TeamMemberRole.fromString(rawMember.role);
 
             if (member.invite) {
-                member.state = TeamMemberInviteState.fromString(member.state);
+                member.state = TeamMemberInviteState.fromString(rawMember.state);
             } else {
                 member.state = State.fromString(rawMember.state);
             }
@@ -41,7 +41,7 @@ export class TeamMemberEndpoint extends Endpoint {
         }
 
         try {
-            const result: DataResult<void> = await this.request(cmd, {rawInvites}, 'POST');
+            const result: DataResult<void> = await this.request(cmd, {invites: rawInvites}, 'POST');
 
             if (Utils.isNullOrUndefined(result)) {
                 return null;
@@ -58,14 +58,22 @@ export class TeamMemberEndpoint extends Endpoint {
 
     }
 
-    public async getTeamInviteByCode(inviteCode: string): Promise<TeamMemberInvite | null> {
+    public async getTeamInviteByCode(inviteCode: string): Promise<TeamMemberInvite2 | null> {
 
         let cmd: string = '/teams/invites/' + inviteCode;
 
-        const rawInvite: any = await this.httpClient.request(cmd);
+        const rawInvite: any = await this.httpClient.request(cmd, null, 'GET', false);
         if (rawInvite !== null) {
 
-            const teamMemberInvite: TeamMemberInvite = rawInvite as TeamMemberInvite;
+            const teamMemberInvite: TeamMemberInvite2 = {
+                code: rawInvite.code,
+                email: rawInvite.email,
+                inviter_name: rawInvite.inviter_name,
+                inviter_email: rawInvite.inviter_email,
+                team_name: rawInvite.team_name,
+                state: TeamMemberInviteState.fromString(rawInvite.state)
+            };
+
             return teamMemberInvite;
         }
 
