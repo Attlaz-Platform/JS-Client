@@ -12,7 +12,6 @@ export class TeamsEndpoint extends Endpoint {
                 team.id = rawTeam.id;
                 team.name = rawTeam.name;
                 team.state = State.fromString(rawTeam.state);
-                team.default = rawTeam.default;
                 teams.push(team);
             }
 

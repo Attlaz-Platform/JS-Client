@@ -5,7 +5,7 @@ import {
     Endpoint, HealthAlertEndpoint,
     LanguageEndpoint,
     LogEndpoint,
-    MemberEndpoint,
+    TeamMemberEndpoint,
     NotificationsEndpoint,
     OAuthClient,
     OAuthClientOptions,
@@ -25,6 +25,7 @@ import {
     WorkerConfigEndpoint,
     WorkerEndpoint
 } from ".";
+import {Token} from 'client-oauth2';
 
 export class Client {
 
@@ -48,7 +49,7 @@ export class Client {
         TeamsEndpoint,
         TriggerEndpoint,
         UserEndpoint,
-        MemberEndpoint,
+        MemberEndpoint: TeamMemberEndpoint,
         SourcesAccountEndpoint,
         LanguageEndpoint,
         StorageEndpoint,
@@ -102,6 +103,10 @@ export class Client {
 
     public setAccessToken(accessToken: string): void {
         this.httpClient.setAccessToken(accessToken);
+    }
+
+    public x(accessToken:string,refreshToken:string):Promise<Token>{
+        return this.httpClient.refreshToken(accessToken,refreshToken);
     }
 
     public unsetAccessToken(): void {
@@ -169,7 +174,7 @@ export class Client {
         return this.getEndpoint('user', this.Store.UserEndpoint);
     }
 
-    public getMemberEndpoint(): MemberEndpoint {
+    public getMemberEndpoint(): TeamMemberEndpoint {
         return this.getEndpoint('member', this.Store.MemberEndpoint);
     }
 
