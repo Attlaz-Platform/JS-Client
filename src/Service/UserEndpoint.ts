@@ -1,4 +1,4 @@
-import {DataResult, Endpoint, Member, State, User, Utils} from '..';
+import {DataResult, Endpoint, User, Utils} from '..';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider';
 
 export class UserEndpoint extends Endpoint {
@@ -13,25 +13,6 @@ export class UserEndpoint extends Endpoint {
         }
 
         return User.parse(rawUser);
-
-    }
-
-    public async getUsersByTeam(teamId: string): Promise<Member[]> {
-
-        let cmd: string = '/teams/' + teamId + '/users';
-
-        const rawMembers: any[] = await this.httpClient.request(cmd);
-
-        const result: Member[] = [];
-        for (let rawMember of rawMembers) {
-
-            const user: User = User.parse(rawMember);
-            const role = rawMember.role;
-            const member: Member = new Member(user, role);
-            member.state = State.fromString(rawMember.state);
-            result.push(member);
-        }
-        return result;
 
     }
 

@@ -16,6 +16,7 @@ export {ClientError} from './Model/Error/ClientError';
 export {EventType} from './Model/Event/EventType';
 
 export {HealthAlert} from './Model/HealthAlert/HealthAlert';
+export {HealthAlertStatus} from './Model/HealthAlert/HealthAlertStatus';
 export {HealthTestType} from './Model/HealthAlert/HealthTestType';
 
 export {Log} from './Model/Log/Log';
@@ -75,10 +76,11 @@ export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 export {WorkerState} from './Model/Worker/WorkerState';
 
 /** Team **/
-export {Member} from './Model/Team/Member';
 export {Team} from './Model/Team/Team';
-export {TeamInvite} from './Model/Team/TeamInvite';
+export {TeamMember} from './Model/Team/TeamMember';
+export {TeamMemberInvite} from './Model/Team/TeamMemberInvite';
 export {TeamMemberInviteState} from './Model/Team/TeamMemberInviteState';
+export {TeamMemberRole} from './Model/Team/TeamMemberRole';
 /** **/
 export {Adapter} from './Model/Adapter/Adapter';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
@@ -110,7 +112,7 @@ export {ProjectEndpoint} from './Service/ProjectEndpoint';
 export {ConfigEndpoint} from './Service/ConfigEndpoint';
 export {LanguageEndpoint} from './Service/LanguageEndpoint';
 export {LogEndpoint} from './Service/LogEndpoint';
-export {MemberEndpoint} from './Service/MemberEndpoint';
+export {TeamMemberEndpoint} from './Service/TeamMemberEndpoint';
 export {NotificationsEndpoint} from './Service/NotificationsEndpoint';
 export {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
