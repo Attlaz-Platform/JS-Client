@@ -47,7 +47,7 @@ export class HttpClient {
             body: request.body
         };
 
-        return HttpClient.get(request.url, rawRequest);
+        return HttpClient.get(request.getFullUrl(), rawRequest);
     }
 
     public static async request2(request: HttpClientRequest): Promise<HttpClientResponse> {
@@ -60,7 +60,7 @@ export class HttpClient {
             body: request.body
         };
 
-        const response: Response = await fetch(request.url, rawRequest);
+        const response: Response = await fetch(request.getFullUrl(), rawRequest);
 
         const httpResponse: HttpClientResponse = new HttpClientResponse();
         httpResponse.status = response.status;

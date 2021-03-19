@@ -3,7 +3,7 @@ export class OAuthClientToken {
     public token_type: string;
     public refresh_token: string | null;
     public expires: Date;
-    public scopes: string;
+    public scope: string;
 
     public static isExpired(token: OAuthClientToken): boolean {
         return token.expires <= new Date()
