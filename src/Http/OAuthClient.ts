@@ -1,6 +1,5 @@
 import {OAuthClientOptions} from './OAuthClientOptions';
 import {ClientError} from '../Model/Error/ClientError';
-// import {Token} from 'client-oauth2';
 import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
@@ -8,8 +7,6 @@ import {HttpClientResponse} from './HttpClientResponse';
 import {OAuthClientToken} from './OAuthClientToken';
 import {Token} from 'client-oauth2';
 import ClientOAuth2 = require('client-oauth2');
-
-// import ClientOAuth2 = require('client-oauth2');
 
 export class OAuthClient {
 
@@ -36,10 +33,6 @@ export class OAuthClient {
         });
 
     }
-
-    // public getClient(): ClientOAuth2 {
-    //     return this.oauthClient;
-    // }
 
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(): Promise<boolean>;
@@ -99,15 +92,6 @@ export class OAuthClient {
         return this.oauthToken !== null && this.oauthToken !== undefined;
     }
 
-    // public async refreshToken(accessToken: string, refreshToken: string): Promise<AccessToken> {
-    //
-    //     const refreshParams = {
-    //         scope: this.options.scopes,
-    //     };
-    //     this.oauthToken = await this.oauthToken.refresh(refreshParams);
-    //     return this.oauthToken;
-    // }
-
     public getToken(): OAuthClientToken | null {
 
         if (this.oauthToken === null) {
@@ -119,7 +103,7 @@ export class OAuthClient {
             token_type: this.oauthToken.tokenType,
             refresh_token: this.oauthToken.refreshToken,
             expires: (this.oauthToken as any as { expires: Date }).expires,
-            scopes: this.oauthToken.data.scope
+            scope: this.oauthToken.data.scope
         };
 
     }
@@ -130,7 +114,7 @@ export class OAuthClient {
             access_token: token.access_token,
             token_type: token.token_type,
             refresh_token: token.refresh_token,
-            scope: token.scopes
+            scope: token.scope
 
         };
         const oauthToken: Token = this.oauthClient.createToken(data);
@@ -138,10 +122,6 @@ export class OAuthClient {
 
         this.oauthToken = oauthToken;
     }
-
-    // public async revokeToken(): Promise<void> {
-    //     await this.oauthToken.revokeAll();
-    // }
 
     public unsetToken(): void {
         this.oauthToken = null;
@@ -169,13 +149,6 @@ export class OAuthClient {
 
     }
 
-    // private encodeQueryString(params: any): string {
-    //
-    //     return Object.keys(params)
-    //         .map(k => `${k}=${encodeURI(params[k])}`)
-    //         .join('&');
-    // }
-
     private createRequestData(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): HttpClientRequest {
 
         const url: string = this.getUri(action);
@@ -200,9 +173,6 @@ export class OAuthClient {
                 const value: string | number = parameters[key];
                 requestData.addQueryParam(key, value);
             })
-            //     .map(k => `${k}=${encodeURI(params[k])}`)
-            //     .join('&');
-            // requestData.url = requestData.url + '?' + this.encodeQueryString(parameters);
         }
 
         if (signWithOauthToken) {
@@ -218,22 +188,12 @@ export class OAuthClient {
     }
 
     private signRequest(requestObject: HttpClientRequest): HttpClientRequest {
-        // requestObject.headers = requestObject.headers || {}
-
-        // console.log(this.oauthToken);
         const tokenType: string = this.oauthToken.tokenType;
         const accessToken: string = this.oauthToken.accessToken;
         if (tokenType.toLowerCase() === 'bearer') {
             requestObject.setHeader('Authorization', 'Bearer ' + accessToken);
         } else {
-            var parts = requestObject.url.split('#')
-            var token = 'access_token=' + accessToken;
-            var url = parts[0].replace(/[?&]access_token=[^&#]/, '')
-            var fragment = parts[1] ? '#' + parts[1] : ''
-
-            // Prepend the correct query string parameter to the url.
-            requestObject.url = url + (url.indexOf('?') > -1 ? '&' : '?') + token + fragment
-
+            requestObject.addQueryParam('access_token', accessToken);
             // Attempt to avoid storing the url in proxies, since the access token
             // is exposed in the query parameters.
             requestObject.setHeader('Pragma', 'no-store');

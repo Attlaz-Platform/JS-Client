@@ -5,7 +5,6 @@ export class HttpClientRequest {
     static readonly POST = 'POST';
     static readonly PUT = 'PUT';
 
-    public url: string;
     public method: string;
     public headers: any = {};
     public body: any = null;
@@ -13,9 +12,8 @@ export class HttpClientRequest {
     private urlObj: URL;
 
     public constructor(url: string, method: string = HttpClientRequest.GET) {
-        this.url = url;
-        this.urlObj = new URL(this.url);
 
+        this.urlObj = new URL(url);
         this.method = method;
     }
 
@@ -45,9 +43,8 @@ export class HttpClientRequest {
         let result: string = this.urlObj.href;
         //Remove trailing slash
         result = result.replace(/\/$/, "");
-// Remove slash in query
+        //Remove slash in query
         result = result.replace('/?', '?');
         return result;
-        return this.url;
     }
 }

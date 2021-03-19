@@ -1,5 +1,6 @@
 import {DataResult, Endpoint, User, Utils} from '..';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider';
+import {OAuthClientToken} from '../Http/OAuthClientToken';
 
 export class UserEndpoint extends Endpoint {
 
@@ -16,11 +17,15 @@ export class UserEndpoint extends Endpoint {
 
     }
 
-    public async authenticateByAuthProvider(provider: string, data: any): Promise<any> {
+    public async authenticateByAuthProvider(provider: string, data: any): Promise<OAuthClientToken> {
         try {
 
             const result: any = await this.httpClient.request('/auth/providers/' + provider, data, 'POST', false);
-            return result;
+
+            // TODO: should we validate this more?
+            const token: OAuthClientToken = result as OAuthClientToken;
+            token.expires = new Date(result.expires);
+            return token;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to perform social auth: ', e);
