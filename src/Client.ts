@@ -2,10 +2,10 @@ import {
     AdapterEndpoint,
     ChannelEndpoint,
     ConfigEndpoint,
-    Endpoint, HealthAlertEndpoint,
+    Endpoint,
+    HealthAlertEndpoint,
     LanguageEndpoint,
     LogEndpoint,
-    TeamMemberEndpoint,
     NotificationsEndpoint,
     OAuthClient,
     OAuthClientOptions,
@@ -19,13 +19,14 @@ import {
     TaskEndpoint,
     TaskExecutionEndpoint,
     TaskExecutionRequestEndpoint,
+    TeamMemberEndpoint,
     TeamsEndpoint,
     TriggerEndpoint,
     UserEndpoint,
     WorkerConfigEndpoint,
     WorkerEndpoint
 } from ".";
-import {Token} from 'client-oauth2';
+import {OAuthClientToken} from './Http/OAuthClientToken';
 
 export class Client {
 
@@ -85,32 +86,36 @@ export class Client {
         return this.httpClient;
     }
 
-    public authenticate(): Promise<boolean>;
-    public authenticate(username: string, password: string): Promise<boolean>;
+    public async authenticate(): Promise<boolean>;
+    public async authenticate(username: string, password: string): Promise<boolean>;
 
-    public authenticate(username?: string, password?: string): Promise<boolean> {
+    public async authenticate(username?: string, password?: string): Promise<boolean> {
         return this.httpClient.authenticate(username, password);
-
     }
 
     public isAuthenticated(): boolean {
         return this.httpClient.isAuthenticated();
     }
 
-    public getAccessToken(): string {
-        return this.httpClient.getAccessToken();
+    public getToken(): OAuthClientToken {
+        return this.httpClient.getToken();
     }
 
-    public setAccessToken(accessToken: string): void {
-        this.httpClient.setAccessToken(accessToken);
+    // public getAccessToken(): string {
+    //     return this.httpClient.getAccessToken();
+    // }
+    //
+    public setToken(token: OAuthClientToken): void {
+        this.httpClient.setToken(token);
     }
 
-    public x(accessToken:string,refreshToken:string):Promise<Token>{
-        return this.httpClient.refreshToken(accessToken,refreshToken);
-    }
+    //
+    // public x(accessToken: string, refreshToken: string): Promise<Token> {
+    //     return this.httpClient.refreshToken(accessToken, refreshToken);
+    // }
 
     public unsetAccessToken(): void {
-        this.httpClient.unsetAccessToken();
+        this.httpClient.unsetToken();
     }
 
     /* Endpoints */
@@ -197,13 +202,14 @@ export class Client {
     public getWorkerConfigEndpoint(): WorkerConfigEndpoint {
         return this.getEndpoint('workerconfig', this.Store.WorkerConfigEndpoint);
     }
+
     public getQueueEndpoint(): QueueEndpoint {
         return this.getEndpoint('queue', this.Store.QueueEndpoint);
     }
+
     public getHealthAlertEndpoint(): HealthAlertEndpoint {
         return this.getEndpoint('healtalert', this.Store.HealthAlertEndpoint);
     }
-
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
 

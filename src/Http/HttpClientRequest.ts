@@ -1,14 +1,21 @@
 import {Utils} from '../Utils';
 
 export class HttpClientRequest {
+    static readonly GET = 'GET';
+    static readonly POST = 'POST';
+    static readonly PUT = 'PUT';
+
     public url: string;
-    public method: string = 'GET';
+    public method: string;
     public headers: any = {};
-    public omitDefaultHeaders: boolean = true;
     public body: any = null;
 
-    public constructor(url: string, method: string = 'GET') {
+    private urlObj: URL;
+
+    public constructor(url: string, method: string = HttpClientRequest.GET) {
         this.url = url;
+        this.urlObj = new URL(this.url);
+
         this.method = method;
     }
 
@@ -24,8 +31,23 @@ export class HttpClientRequest {
         this.headers[key] = value;
     }
 
+    public addQueryParam(key: string, value: string | number): void {
+        this.urlObj.searchParams.append(key, value.toString());
+    }
+
     public setJsonBody(data: any): void {
         this.setJsonHeader();
         this.body = JSON.stringify(data);
+    }
+
+    public getFullUrl(): string {
+
+        let result: string = this.urlObj.href;
+        //Remove trailing slash
+        result = result.replace(/\/$/, "");
+// Remove slash in query
+        result = result.replace('/?', '?');
+        return result;
+        return this.url;
     }
 }
