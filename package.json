@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "1.1.112",
+  "version": "1.2.0",
   "description": "Javascript Client to access Attlaz API",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -25,9 +25,11 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
+    "@types/simple-oauth2": "^4.1.0",
     "client-oauth2": "^4.2.5",
     "esm": "^3.2.25",
-    "popsicle": "^12.1.0"
+    "popsicle": "^12.1.0",
+    "simple-oauth2": "^4.2.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",
