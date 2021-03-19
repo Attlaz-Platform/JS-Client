@@ -25,11 +25,9 @@
     "registry": "https://registry.npmjs.org"
   },
   "dependencies": {
-    "@types/simple-oauth2": "^4.1.0",
     "client-oauth2": "^4.2.5",
     "esm": "^3.2.25",
-    "popsicle": "^12.1.0",
-    "simple-oauth2": "^4.2.0"
+    "popsicle": "^12.1.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",

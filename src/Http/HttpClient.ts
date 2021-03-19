@@ -38,21 +38,47 @@ export class HttpClient {
     }
 
     public static async request(request: HttpClientRequest): Promise<any> {
-        return HttpClient.get(request.url, request as any);
+
+        const rawRequest: any = {
+            url: request.getFullUrl(),
+            method: request.method,
+            headers: request.headers,
+            omitDefaultHeaders: true,
+            body: request.body
+        };
+
+        return HttpClient.get(request.url, rawRequest);
     }
 
     public static async request2(request: HttpClientRequest): Promise<HttpClientResponse> {
 
-        let requestData: any = request as any;
-        if (Utils.isNullOrUndefined(requestData)) {
-            requestData = {};
-        }
-        const response: Response = await fetch(request.url, requestData);
+        const rawRequest: any = {
+            url: request.getFullUrl(),
+            method: request.method,
+            headers: request.headers,
+            omitDefaultHeaders: true,
+            body: request.body
+        };
+
+        const response: Response = await fetch(request.url, rawRequest);
 
         const httpResponse: HttpClientResponse = new HttpClientResponse();
         httpResponse.status = response.status;
         httpResponse.statusText = response.statusText;
-        httpResponse.body = await response.text();
+        // TODO: should we get JSON immediately?
+        // response.json
+        // httpResponse.body = await response.text();
+        httpResponse.body = await response.json();
+
+        const error: ClientError = ClientError.byStatus(response.status, response.statusText);
+        if (!Utils.isNullOrUndefined(error)) {
+
+            // const body: string = await response.text();
+            // console.log('Text' + body);
+            //
+            // console.log(response);
+            throw error;
+        }
 
         // //TODO: validate status
         //

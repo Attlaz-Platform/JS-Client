@@ -66,7 +66,7 @@ const readableBytes = (bytes: number, si: boolean = true): string => {
 let before: number = process.memoryUsage().heapUsed;
 
 // test2(100);
-test();
+// test();
 
 function test() {
     let endpoint: string = 'http://localhost:5728/';
@@ -113,7 +113,7 @@ function test() {
         /**
          * We expect an exception!
          */
-        client.getTaskEndpoint().getTaskSummary('3B4A1772A', 41).then((taskSummary: TaskSummary) => {
+        client.getTaskEndpoint().getTaskSummary('3B4A1772A', '41').then((taskSummary: TaskSummary) => {
             console.log('Task', taskSummary);
         }).catch((error: Error) => {
             console.error(error);
@@ -154,6 +154,25 @@ async function testHTTPAuth() {
         console.log(res);
     } catch (e) {
         console.error('Error', e);
+    }
+}
+
+testExpiredToken();
+
+async function testExpiredToken() {
+    try {
+        let attlazClient: Client = new Client('https://api2.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
+        await attlazClient.authenticate();
+        console.log(await attlazClient.getHttpClient().getToken());
+
+        // client.setToken('c2bb0b9c8e870486a2adae9f350193fc9414318d');
+        //
+        // console.log(await client.x())
+        //
+        // const user: User = await client.getUserEndpoint().getUser();
+        // console.log(user);
+    } catch (e) {
+        console.error(e);
     }
 }
 
