@@ -1,4 +1,5 @@
-import {Endpoint, TaskExecutionResponse} from '..';
+import {Endpoint} from './Endpoint';
+import {TaskExecutionResponse} from '../Model/TaskExecutionResponse';
 
 export class TaskExecutionRequestEndpoint extends Endpoint {
     public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<TaskExecutionResponse> {

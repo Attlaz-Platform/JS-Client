@@ -1,0 +1,203 @@
+import {Client} from './Client';
+import {User} from './Model/User';
+import {OAuthClientToken} from './Http/OAuthClientToken';
+import {Utils} from './Utils';
+import {HttpClient} from './Http/HttpClient';
+
+jest.setTimeout((60) * 1000);
+
+// const apiEndpoint: string = 'http://localhost:5728/';
+const apiEndpoint: string = 'https://api2.attlaz.com';
+const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
+const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
+const passwordFlowClientId: string = 'MXexCeRqNrGnh5tw';
+const passwordFlowClientSecret: string = 'NPYYu6hgMRRzcWN4';
+const passwordFlowUsername: string = 'eline@attlaz.com';
+const passwordFlowPassword: string = 'koetjeboe';
+
+const tokenExpirationInSeconds: number = 5;
+test('Test client credentials flow', async () => {
+
+    expect.assertions(2);
+
+    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate();
+
+    const user: User = await client.getUserEndpoint().getUser()
+    // console.log('User', user);
+
+    expect(user.email).toBe('demo@attlaz.com');
+
+    // TODO: how to get the seconds to wait for the token to expire?
+    const expiresIn: number = client.getToken().expires.getTime() - (new Date()).getTime();
+    if (expiresIn < 30) {
+
+        const waitSecondsForTokenToExpire: number = expiresIn + 5;
+        // console.log(client.getToken().expires);
+
+        await new Promise((r) => setTimeout(r, waitSecondsForTokenToExpire * 1000));
+
+        // TODO: make sure we are not authenticated anymore
+
+        expect(OAuthClientToken.isExpired(client.getToken())).toBeTruthy();
+    }
+    // const user2: User = await client.getUserEndpoint().getUser()
+    // expect(user.email).toBe('demo@attlaz.com');
+
+});
+test('Test password authentication - valid', async () => {
+
+    expect.assertions(3);
+
+    let client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate(passwordFlowUsername, passwordFlowPassword);
+
+    const user: User = await client.getUserEndpoint().getUser()
+    // console.log('User', user);
+
+    expect(user.email).toBe('eline@attlaz.com');
+
+    // TODO: how to get the seconds to wait for the token to expire?
+    const waitSecondsForTokenToExpire: number = tokenExpirationInSeconds + 5;
+    // console.log(client.getToken().expires);
+
+    await new Promise((r) => setTimeout(r, waitSecondsForTokenToExpire * 1000));
+
+    expect(OAuthClientToken.isExpired(client.getToken())).toBeTruthy();
+    const user2: User = await client.getUserEndpoint().getUser()
+    expect(user.email).toBe(passwordFlowUsername);
+
+});
+test('Test password authentication - invalid', async () => {
+
+    expect.assertions(3);
+
+    let client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await expect(client.authenticate(passwordFlowUsername, 'wrongpassword'))
+        .rejects
+        .toHaveProperty('code', HttpClient.HTTP_UNAUTHORIZED);
+
+    await expect(client.getUserEndpoint().getUser())
+        .rejects
+        .toHaveProperty('message', 'Unable to perform request, access token not provided');
+
+    await expect(client.authenticate('wrongusername', 'wrongpassword'))
+        .rejects
+        .toHaveProperty('code', HttpClient.HTTP_UNAUTHORIZED);
+
+});
+test('Test set access token + JSON encode', async () => {
+
+    expect.assertions(4);
+
+    let client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate(passwordFlowUsername, passwordFlowPassword);
+
+    const token: OAuthClientToken = client.getToken();
+
+    expect(OAuthClientToken.isExpired(token)).toBeFalsy();
+
+    const encoded: string = OAuthClientToken.serialize(token);
+
+    console.log(encoded);
+
+    const decodedToken: any = OAuthClientToken.deserialize(encoded);
+    client.setToken(decodedToken);
+
+    const user: User = await client.getUserEndpoint().getUser()
+    expect(user.email).toBe(passwordFlowUsername);
+
+    let client2: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    client2.getHttpClient().enableDebug();
+
+    console.log(decodedToken);
+
+    client2.setToken(decodedToken);
+
+    expect(client2.getToken()).toStrictEqual(client.getToken());
+
+    const user2: User = await client2.getUserEndpoint().getUser()
+    expect(user2.email).toBe(passwordFlowUsername);
+
+    // const newToken = client.setAccessToken()
+
+    //
+    //
+    //
+    //
+    // client.setAccessToken('nonexisint', 'hmmz');
+    //
+    // await expect(client.getUserEndpoint().getUser())
+    //     .rejects
+    //     .toHaveProperty('message', 'Unable to perform request, access token not provided');
+    //
+    // await expect(client.authenticate('wrongusername', 'wrongpassword'))
+    //     .rejects
+    //     .toHaveProperty('code', 'EAUTH');
+
+});
+
+test('Test set expired tokens', async () => {
+
+    expect.assertions(4);
+
+    let client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    client.getHttpClient().enableDebug();
+
+    const encodedToken: string = Utils.base64decode('eyJhY2Nlc3NfdG9rZW4iOiJvZVZpYXVhdk9wTkNpekNLRmxXUGpuaEI5aHNSdFViMFFTTVJlQWFuIiwidG9rZW5fdHlwZSI6ImJlYXJlciIsInJlZnJlc2hfdG9rZW4iOiJ4N0pINTVaR3U5OGFPN3VQaGlmS2RZME8yc3BYS0IzN296bElDUGtJIiwiZXhwaXJlcyI6IjIwMjEtMDMtMTlUMjE6MTQ6MTkuNzkyWiIsInNjb3BlIjoiYWxsIn0=');
+
+    const token: OAuthClientToken = OAuthClientToken.deserialize(encodedToken);
+
+    client.setToken(token);
+
+    expect(OAuthClientToken.isExpired(token)).toBeTruthy();
+    expect(client.getHttpClient().isTokenExpires()).toBeTruthy();
+
+    await expect(client.getHttpClient().refreshToken())
+        .rejects
+        .toHaveProperty('code', HttpClient.HTTP_UNAUTHORIZED);
+
+    await expect(client.getUserEndpoint().getUser())
+        .rejects
+        .toHaveProperty('code', HttpClient.HTTP_UNAUTHORIZED);
+
+    // const user: User = await client.getUserEndpoint().getUser()
+    // expect(user.email).toBe(passwordFlowUsername);
+    //
+    // let client2: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    // client2.getHttpClient().enableDebug();
+    //
+    // console.log(decodedToken);
+    //
+    // client2.setToken(decodedToken);
+    //
+    // expect(client2.getToken()).toStrictEqual(client.getToken());
+    //
+    // const user2: User = await client2.getUserEndpoint().getUser()
+    // expect(user2.email).toBe(passwordFlowUsername);
+
+    // const newToken = client.setAccessToken()
+
+    //
+    //
+    //
+    //
+    // client.setAccessToken('nonexisint', 'hmmz');
+    //
+    // await expect(client.getUserEndpoint().getUser())
+    //     .rejects
+    //     .toHaveProperty('message', 'Unable to perform request, access token not provided');
+    //
+    // await expect(client.authenticate('wrongusername', 'wrongpassword'))
+    //     .rejects
+    //     .toHaveProperty('code', 'EAUTH');
+
+});

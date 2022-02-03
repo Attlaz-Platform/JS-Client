@@ -6,6 +6,7 @@ export class OAuthClientToken {
     public scope: string;
 
     public static isExpired(token: OAuthClientToken): boolean {
+        console.log(token);
         return token.expires <= new Date()
     }
 

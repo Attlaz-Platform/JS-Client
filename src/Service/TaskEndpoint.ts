@@ -1,4 +1,7 @@
-import {Endpoint, Task, TaskSummary, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {Task} from '../Model/Task';
+import {Utils} from '../Utils';
+import {TaskSummary} from '../Model/TaskSummary';
 
 export class TaskEndpoint extends Endpoint {
 

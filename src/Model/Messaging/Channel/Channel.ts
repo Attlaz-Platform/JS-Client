@@ -1,8 +1,9 @@
 import {ChannelType} from './ChannelType';
 import {State} from '../../State';
 import {Utils} from '../../../Utils';
+import {StateAware} from '../../StateAware';
 
-export class Channel {
+export class Channel implements StateAware{
     public id: string;
     public owner: string;
     public label: string;

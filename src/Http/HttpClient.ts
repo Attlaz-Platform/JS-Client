@@ -1,9 +1,14 @@
 import {Response} from 'servie';
-import {fetch} from 'popsicle';
+import {fetch} from 'popsicle'
 import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
-import {ClientError} from '..';
+// import {ClientError} from '..';
 import {HttpClientResponse} from './HttpClientResponse';
+import {ClientError} from '../Model/Error/ClientError';
+import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
+import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
+
+// import {NegotiateHttpVersion} from 'popsicle-transport-http';
 
 export class HttpClient {
 
@@ -19,6 +24,13 @@ export class HttpClient {
         if (Utils.isNullOrUndefined(requestData)) {
             requestData = {};
         }
+        // TODO: how to pass this?
+        // const x: TransportOptions = {
+        //     negotiateHttpVersion: NegotiateHttpVersion.HTTP1_ONLY
+        // }
+
+        // const controller = new AbortController();
+
         const response: Response = await fetch(url, requestData);
 
         //TODO: validate status
@@ -58,8 +70,11 @@ export class HttpClient {
             headers: request.headers,
             omitDefaultHeaders: true,
             body: request.body
-        };
+        } as BrowserRequestOptions | NodeRequestOptions;
 
+        // TODO: set user agent
+
+        // rawRequest.negotiateHttpVersion = NegotiateHttpVersion.HTTP1_ONLY;
         const response: Response = await fetch(request.getFullUrl(), rawRequest);
 
         const httpResponse: HttpClientResponse = new HttpClientResponse();
@@ -68,7 +83,16 @@ export class HttpClient {
         // TODO: should we get JSON immediately?
         // response.json
         // httpResponse.body = await response.text();
-        httpResponse.body = await response.json();
+
+        const rawData: string = await response.text();
+        let jsonData: any | null = null;
+        try {
+            jsonData = JSON.parse(rawData);
+        } catch (e) {
+            console.log(httpResponse.statusText)
+            console.error('Unable to parse response data to JSON');
+        }
+        httpResponse.body = jsonData;
 
         const error: ClientError = ClientError.byStatus(response.status, response.statusText);
         if (!Utils.isNullOrUndefined(error)) {

@@ -1,32 +1,30 @@
-import {
-    AdapterEndpoint,
-    ChannelEndpoint,
-    ConfigEndpoint,
-    Endpoint,
-    HealthAlertEndpoint,
-    LanguageEndpoint,
-    LogEndpoint,
-    NotificationsEndpoint,
-    OAuthClient,
-    OAuthClientOptions,
-    ProjectDeployEndpoint,
-    ProjectEndpoint,
-    ProjectEnvironmentEndpoint,
-    QueueEndpoint,
-    SourcesAccountEndpoint,
-    StorageEndpoint,
-    SubscriberEndpoint,
-    TaskEndpoint,
-    TaskExecutionEndpoint,
-    TaskExecutionRequestEndpoint,
-    TeamMemberEndpoint,
-    TeamsEndpoint,
-    TriggerEndpoint,
-    UserEndpoint,
-    WorkerConfigEndpoint,
-    WorkerEndpoint
-} from ".";
 import {OAuthClientToken} from './Http/OAuthClientToken';
+import {WorkerEndpoint} from './Service/WorkerEndpoint';
+import {AdapterEndpoint} from './Service/AdapterEndpoint';
+import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
+import {ProjectEndpoint} from './Service/ProjectEndpoint';
+import {TaskExecutionRequestEndpoint} from './Service/TaskExecutionRequestEndpoint';
+import {OAuthClient} from './Http/OAuthClient';
+import {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint';
+import {TeamsEndpoint} from './Service/TeamsEndpoint';
+import {UserEndpoint} from './Service/UserEndpoint';
+import {ConfigEndpoint} from './Service/ConfigEndpoint';
+import {SubscriberEndpoint} from './Service/SubscriberEndpoint';
+import {TaskEndpoint} from './Service/TaskEndpoint';
+import {TeamMemberEndpoint} from './Service/TeamMemberEndpoint';
+import {StorageEndpoint} from './Service/StorageEndpoint';
+import {QueueEndpoint} from './Service/QueueEndpoint';
+import {NotificationsEndpoint} from './Service/NotificationsEndpoint';
+import {Endpoint} from './Service/Endpoint';
+import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
+import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
+import {OAuthClientOptions} from './Http/OAuthClientOptions';
+import {LanguageEndpoint} from './Service/LanguageEndpoint';
+import {ChannelEndpoint} from './Service/ChannelEndpoint';
+import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint';
+import {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
+import {LogEndpoint} from './Service/LogEndpoint';
+import {TriggerEndpoint} from './Service/TriggerEndpoint';
 
 export class Client {
 
@@ -64,7 +62,7 @@ export class Client {
 
     // private socketService;
 
-    constructor(private apiEndpoint: string, private  clientId: string, private clientSecret: string) {
+    constructor(private apiEndpoint: string, private clientId: string, private clientSecret: string) {
 
         const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret);
         this.httpClient = new OAuthClient(options);

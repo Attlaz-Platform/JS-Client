@@ -1,5 +1,8 @@
 import {Endpoint} from './Endpoint';
-import {Channel, ChannelHistory, DataResult, Utils} from '..';
+import {DataResult} from '../Model/Result/DataResult';
+import {Channel} from '../Model/Messaging/Channel/Channel';
+import {Utils} from '../Utils';
+import {ChannelHistory} from '../Model/Messaging/ChannelHistory';
 
 export class ChannelEndpoint extends Endpoint {
 

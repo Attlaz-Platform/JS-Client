@@ -14,11 +14,13 @@ export class DataResult<T> {
         const data: any = raw.data;
         result.setData(data);
 
-        const errors: any[] = raw.errors;
-        for (const error of errors) {
-            result.addError(error);
+        if (data.hasOwnProperty('errors')) {
+            const errors: any[] = raw.errors;
+            for (const error of errors) {
+                result.addError(error);
+            }
         }
-
+        
         return result;
     }
 

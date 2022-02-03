@@ -1,6 +1,9 @@
-import {DataResult, Endpoint, User, Utils} from '..';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider';
 import {OAuthClientToken} from '../Http/OAuthClientToken';
+import {Endpoint} from './Endpoint';
+import {User} from '../Model/User';
+import {Utils} from '../Utils';
+import {DataResult} from '../Model/Result/DataResult';
 
 export class UserEndpoint extends Endpoint {
 
@@ -17,10 +20,10 @@ export class UserEndpoint extends Endpoint {
 
     }
 
-    public async authenticateByAuthProvider(provider: string, data: any): Promise<OAuthClientToken> {
+    public async authenticateByAuthProvider(providerType: string, data: { code: string; state: string }): Promise<OAuthClientToken> {
         try {
 
-            const result: any = await this.httpClient.request('/auth/providers/' + provider, data, 'POST', false);
+            const result: any = await this.httpClient.request('/auth/providers/' + providerType, data, 'POST', false);
 
             // TODO: should we validate this more?
             const token: OAuthClientToken = result as OAuthClientToken;
@@ -34,9 +37,35 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
+    public async createAuthProvider(providerType: string, data: { code: string; state: string }): Promise<boolean> {
+        try {
+
+            const result: any = await this.httpClient.request('/user/auth/providers', {provider_type: providerType, code: data.code, state: data.state}, 'POST');
+            return true;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to assign auth provider: ', e);
+            }
+            throw e;
+        }
+    }
+
+    public async removeAuthProvider(providerId: number): Promise<boolean> {
+        try {
+
+            const result: any = await this.httpClient.request('/user/auth/providers', {provider: providerId}, 'DELETE');
+            return true;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to assign auth provider: ', e);
+            }
+            throw e;
+        }
+    }
+
     public async getAuthProviders(): Promise<DataResult<UserAuthProvider[]>> {
 
-        let cmd: string = '/auth/providers';
+        let cmd: string = '/user/auth/providers';
 
         const rawAuthProviders: DataResult<any[]> = await this.request<any[]>(cmd);
 
@@ -49,7 +78,7 @@ export class UserEndpoint extends Endpoint {
     public async update(user: User): Promise<User> {
         try {
             let url: string = '/user/' + user.id;
-            const result: any = await this.httpClient.request(url, user, 'POST');
+            const result: any = await this.httpClient.request(url, {user}, 'POST');
             return User.parse(result);
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -72,6 +101,32 @@ export class UserEndpoint extends Endpoint {
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to create user: ', e);
+            }
+            throw e;
+        }
+    }
+
+    public async requestResetPassword(email: string): Promise<boolean> {
+        try {
+            let url: string = '/users/resetpassword';
+            const result: any = await this.httpClient.request(url, {email}, 'POST', false);
+            return true;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save user: ', e);
+            }
+            throw e;
+        }
+    }
+
+    public async resetPassword(code: string, password: string): Promise<boolean> {
+        try {
+            let url: string = '/users/resetpassword/' + code;
+            const result: any = await this.httpClient.request(url, {password}, 'POST', false);
+            return true;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save user: ', e);
             }
             throw e;
         }

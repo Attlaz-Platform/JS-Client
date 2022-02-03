@@ -1,6 +1,7 @@
 import {State} from '../State';
+import {StateAware} from '../StateAware';
 
-export class WorkerImage {
+export class WorkerImage implements StateAware {
     public id: number;
     public name: string;
     public image: string;

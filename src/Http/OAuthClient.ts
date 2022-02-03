@@ -5,8 +5,11 @@ import {HttpClientRequest} from './HttpClientRequest';
 import {Utils} from '../Utils';
 import {HttpClientResponse} from './HttpClientResponse';
 import {OAuthClientToken} from './OAuthClientToken';
+import * as ClientOAuth2 from 'client-oauth2';
 import {Token} from 'client-oauth2';
-import ClientOAuth2 = require('client-oauth2');
+
+// import {Token} from 'client-oauth2';
+// import ClientOAuth2 = require('client-oauth2');
 
 export class OAuthClient {
 
@@ -51,9 +54,31 @@ export class OAuthClient {
             this.oauthToken = accessToken;
             return true;
         } catch (e) {
+            console.log(e);
             throw ClientError.fromError(e);
         }
 
+    }
+
+    public async refreshToken(): Promise<void> {
+        if (this.oauthToken.refreshToken !== undefined && this.oauthToken.refreshToken !== null && this.oauthToken.refreshToken !== '') {
+            try {
+                this.oauthToken = await this.oauthToken.refresh();
+            } catch (e) {
+                const error: ClientError = ClientError.fromError(e);
+                throw error;
+            }
+
+        } else {
+            await this.authenticate();
+        }
+    }
+
+    public isTokenExpires(): boolean {
+        if (this.oauthToken === null) {
+            throw new Error('No token defined');
+        }
+        return this.oauthToken.expired();
     }
 
     public async request(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
@@ -63,11 +88,8 @@ export class OAuthClient {
         } else {
             if (signWithOauthToken && this.oauthToken.expired()) {
 
-                if (this.oauthToken.refreshToken !== undefined && this.oauthToken.refreshToken !== null && this.oauthToken.refreshToken !== '') {
-                    this.oauthToken = await this.oauthToken.refresh();
-                } else {
-                    await this.authenticate();
-                }
+                await this.refreshToken();
+
             }
 
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
@@ -118,7 +140,9 @@ export class OAuthClient {
 
         };
         const oauthToken: Token = this.oauthClient.createToken(data);
-        oauthToken.expiresIn(token.expires);
+        if (token.expires !== null && token.expires !== undefined) {
+            oauthToken.expiresIn(token.expires);
+        }
 
         this.oauthToken = oauthToken;
     }
@@ -140,6 +164,14 @@ export class OAuthClient {
         return this.debug;
     }
 
+    public getTokenFlowUrl(options: {
+        query?: {
+            [key: string]: string | string[];
+        };
+    } | null = null): string {
+        return this.oauthClient.token.getUri(options);
+    }
+
     private getUri(uri: string): string {
 
         if (uri.indexOf("http://") == 0 || uri.indexOf("https://") == 0) {
@@ -155,7 +187,7 @@ export class OAuthClient {
 
         let requestData: HttpClientRequest = new HttpClientRequest(url, method);
 
-        if ((method === 'POST' || method === 'PUT') && parameters !== null && parameters !== undefined) {
+        if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
                 parameters = JSON.stringify(parameters);
             } else if (typeof parameters === 'string') {
@@ -188,9 +220,9 @@ export class OAuthClient {
     }
 
     private signRequest(requestObject: HttpClientRequest): HttpClientRequest {
-        const tokenType: string = this.oauthToken.tokenType;
+        const tokenType: string | undefined = this.oauthToken.tokenType;
         const accessToken: string = this.oauthToken.accessToken;
-        if (tokenType.toLowerCase() === 'bearer') {
+        if (tokenType !== undefined && tokenType.toLowerCase() === 'bearer') {
             requestObject.setHeader('Authorization', 'Bearer ' + accessToken);
         } else {
             requestObject.addQueryParam('access_token', accessToken);

@@ -1,4 +1,9 @@
-import {Endpoint, TaskExecution, TaskExecutionHistory, TaskExecutionStatus, TaskExecutionSummary, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {TaskExecution} from '../Model/TaskExecution';
+import {Utils} from '../Utils';
+import {TaskExecutionSummary} from '../Model/TaskExecutionSummary';
+import {TaskExecutionHistory} from '../Model/TaskExecutionHistory';
+import {TaskExecutionStatus} from '../Model/TaskExecutionStatus';
 
 export class TaskExecutionEndpoint extends Endpoint {
 
