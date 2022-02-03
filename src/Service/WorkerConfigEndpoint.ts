@@ -1,4 +1,7 @@
-import {DataResult, Endpoint, Utils, WorkerConfig} from '..';
+import {Endpoint} from './Endpoint';
+import {DataResult} from '../Model/Result/DataResult';
+import {Utils} from '../Utils';
+import {WorkerConfig} from '../Model/Worker/WorkerConfig';
 
 export class WorkerConfigEndpoint extends Endpoint {
 

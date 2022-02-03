@@ -1,4 +1,4 @@
-import {Utils} from '../..';
+import {Utils} from '../../Utils';
 
 export enum HealthAlertStatus {
     PASSED = 'pass',

@@ -1,8 +1,9 @@
 import {State} from '../State';
 import {EventType} from '../Event/EventType';
 import {LogLevel} from '../Log/LogLevel';
+import {StateAware} from '../StateAware';
 
-export class Subscriber {
+export class Subscriber implements StateAware{
     public id: string;
     public eventTypes: EventType[];
 

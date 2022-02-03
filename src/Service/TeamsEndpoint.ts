@@ -1,4 +1,6 @@
-import {Endpoint, State, Team} from '..';
+import {Endpoint} from './Endpoint';
+import {Team} from '../Model/Team/Team';
+import {State} from '../Model/State';
 
 export class TeamsEndpoint extends Endpoint {
 

@@ -1,4 +1,5 @@
-import {Endpoint, Notification} from '..';
+import {Endpoint} from './Endpoint';
+import {Notification} from '../Model/Notification';
 
 export class NotificationsEndpoint extends Endpoint {
 

@@ -4,8 +4,9 @@ import {TriggerType} from './TriggerType';
 import {ScheduleTriggerData} from './ScheduleTriggerData';
 import {WebhookTriggerData} from './WebhookTriggerData';
 import {ApiTriggerData} from './ApiTriggerData';
+import {StateAware} from '../StateAware';
 
-export class Trigger {
+export class Trigger implements StateAware{
     public id: string;
     public type: TriggerType;
     public projectEnvironment: string;

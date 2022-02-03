@@ -1,7 +1,8 @@
 import {Utils} from '../Utils';
 import {State} from './State';
+import {StateAware} from './StateAware';
 
-export class User {
+export class User implements StateAware {
     id: string;
     username: string;
     firstname: string;
@@ -9,7 +10,7 @@ export class User {
     email: string;
     phone: string;
 
-    password:string;
+    password: string;
 
     language: string;
     time_zone: string;

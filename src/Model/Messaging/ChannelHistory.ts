@@ -1,4 +1,4 @@
-import {Utils} from '../..';
+import {Utils} from '../../Utils';
 
 export class ChannelHistory {
     public id: number;

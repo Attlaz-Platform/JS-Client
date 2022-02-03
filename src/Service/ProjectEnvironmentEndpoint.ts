@@ -1,4 +1,5 @@
-import {Endpoint, ProjectEnvironment} from '..';
+import {Endpoint} from './Endpoint';
+import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
 

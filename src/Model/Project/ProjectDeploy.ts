@@ -22,7 +22,7 @@ export class ProjectDeploy {
         projectDeploy.id = rawProjectDeploy.id;
         projectDeploy.projectEnvironmentId = rawProjectDeploy.projectEnvironmentId;
         projectDeploy.userId = rawProjectDeploy.userId;
-        projectDeploy.requested = rawProjectDeploy.requested;
+        projectDeploy.requested = new Date(rawProjectDeploy.requested);
         projectDeploy.started = new Date(rawProjectDeploy.started);
         projectDeploy.finished = new Date(rawProjectDeploy.finished);
         projectDeploy.status = ProjectDeployStatus.fromString(rawProjectDeploy.status);

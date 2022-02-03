@@ -7,6 +7,7 @@ import {LogLevel} from './Model/Log/LogLevel';
 import {StorageType} from './Model/Storage/StorageType';
 import {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 import {WorkerState} from './Model/Worker/WorkerState';
+import {Utils} from './Utils';
 
 test('Test enum parsing', () => {
 
@@ -19,4 +20,10 @@ test('Test enum parsing', () => {
     expect(State.fromString('active')).toBe(State.Active);
     expect(WorkerInstanceState.fromString('started')).toBe(WorkerInstanceState.Started);
     expect(WorkerState.fromString('active')).toBe(WorkerState.Active);
+});
+test('Test base64 encode/decode', () => {
+
+    expect(Utils.base64encode('Lorem ipsum')).toBe('TG9yZW0gaXBzdW0=');
+    expect(Utils.base64decode('TG9yZW0gaXBzdW0=')).toBe('Lorem ipsum');
+
 });

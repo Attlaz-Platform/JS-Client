@@ -1,4 +1,7 @@
-import {DataResult, Endpoint, HealthAlert, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {HealthAlert} from '../Model/HealthAlert/HealthAlert';
+import {DataResult} from '../Model/Result/DataResult';
+import {Utils} from '../Utils';
 
 export class HealthAlertEndpoint extends Endpoint {
 

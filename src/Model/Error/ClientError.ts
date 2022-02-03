@@ -26,6 +26,9 @@ export class ClientError implements Error {
                 if (error.code === 'EUNAVAILABLE') {
                     clientError.code = HttpClient.HTTP_UNAVAILABLE;
                 }
+                if (error.code === 'EAUTH') {
+                    clientError.code = HttpClient.HTTP_UNAUTHORIZED;
+                }
                     // if (error.code === 'ESTATUS' && error.message === 'HTTP status 503') {
                     //     clientError.code = HttpClient.HTTP_UNAVAILABLE;
                 // }

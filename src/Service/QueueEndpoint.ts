@@ -1,6 +1,8 @@
 import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
-import {DataResult, QueueStatus} from '..';
+import {DataResult} from '../Model/Result/DataResult';
+import {QueueStatus} from '../Model/Queue/QueueStatus';
+
 
 export class QueueEndpoint extends Endpoint {
 

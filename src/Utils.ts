@@ -6,6 +6,7 @@ export class Utils {
     public static isTrue(input: string | number | boolean | null | undefined): boolean {
         return (input === true || input === 'true' || input === 1 || input === '1');
     }
+
     public static parseRawDate(input: Date): Date | null {
         if (input !== null && input !== undefined) {
             return new Date(input);
@@ -13,7 +14,7 @@ export class Utils {
         return null;
     }
 
-    public static parseEnum<T>(input: string, Enum: any): T|null {
+    public static parseEnum<T>(input: string, Enum: any): T | null {
 
         if (this.isNullOrUndefined(input)) {
             return null;
@@ -30,7 +31,15 @@ export class Utils {
             }
         }
     }
+
     public static base64encode(input: string): string {
         return Buffer.from(input).toString('base64');
+    }
+    public static base64decode(encodedString: string): string {
+
+        if (encodedString === null || encodedString === undefined || encodedString === '') {
+            return '';
+        }
+        return Buffer.from(encodedString, 'base64').toString();
     }
 }

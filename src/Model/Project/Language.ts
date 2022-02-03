@@ -1,6 +1,7 @@
 import {State} from '../State';
+import {StateAware} from '../StateAware';
 
-export class Language {
+export class Language implements StateAware {
     public id: number;
     public name: string;
     public description: string;

@@ -1,4 +1,6 @@
-import {Endpoint, Subscriber, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {Subscriber} from '../Model/Messaging/Subscriber';
+import {Utils} from '../Utils';
 
 export class SubscriberEndpoint extends Endpoint {
 

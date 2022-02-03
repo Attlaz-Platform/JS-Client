@@ -1,6 +1,8 @@
-import {Endpoint, Trigger, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {Trigger} from '../Model/Trigger/Trigger';
+import {Utils} from '../Utils';
 
-export class TriggerEndpoint extends Endpoint {
+export class TriggerEndpoint extends Endpoint{
 
     public async getByTask(taskId: string, projectEnvironmentId: string = null): Promise<Trigger[]> {
 

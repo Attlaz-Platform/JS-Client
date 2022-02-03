@@ -1,4 +1,7 @@
-import {DataResult, Endpoint, Storage, StorageType} from '..';
+import {Endpoint} from './Endpoint';
+import {DataResult} from '../Model/Result/DataResult';
+import {StorageType} from '../Model/Storage/StorageType';
+import {Storage} from '../Model/Storage/Storage';
 
 export class StorageEndpoint extends Endpoint {
 

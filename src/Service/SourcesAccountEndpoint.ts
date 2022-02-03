@@ -1,4 +1,6 @@
-import {Endpoint, SourcesAccount, SourcesAccountRepository} from '..';
+import {Endpoint} from './Endpoint';
+import {SourcesAccount} from '../Model/SourcesAccount';
+import {SourcesAccountRepository} from '../Model/SourcesAccountRepository';
 
 export class SourcesAccountEndpoint extends Endpoint {
 

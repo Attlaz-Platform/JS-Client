@@ -2,7 +2,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs",
+    "module": "ES6",
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
@@ -11,13 +12,19 @@
     "alwaysStrict": true,
     "noImplicitReturns": false,
     "noImplicitAny": true,
+    "baseUrl": "src",
     "lib": [
       "es2017",
       "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/typings.d.ts"
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/node_modules/*"
   ],
   "include": [
     "index.ts",

@@ -1,4 +1,6 @@
-import {Endpoint, Project, Utils} from '..';
+import {Endpoint} from './Endpoint';
+import {Project} from '../Model/Project/Project';
+import {Utils} from '../Utils';
 
 export class ProjectEndpoint extends Endpoint {
 

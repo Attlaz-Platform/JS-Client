@@ -1,4 +1,4 @@
-import {Utils} from '../..';
+import {Utils} from '../../Utils';
 
 export enum HealthTestType {
     PROJECT_ENVIRONMENT_HAS_WORKERS = 'project_environment_has_workers',

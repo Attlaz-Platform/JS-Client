@@ -1,6 +1,12 @@
 import {Endpoint} from './Endpoint';
-import {DataResult, State, TeamMember, TeamMemberInvite, TeamMemberInviteState, TeamMemberRole, Utils} from '..';
 import {TeamMemberInvite2} from '../Model/Team/TeamMemberInvite2';
+import {TeamMember} from '../Model/Team/TeamMember';
+import {Utils} from '../Utils';
+import {TeamMemberRole} from '../Model/Team/TeamMemberRole';
+import {TeamMemberInviteState} from '../Model/Team/TeamMemberInviteState';
+import {State} from '../Model/State';
+import {TeamMemberInvite} from '../Model/Team/TeamMemberInvite';
+import {DataResult} from '../Model/Result/DataResult';
 
 export class TeamMemberEndpoint extends Endpoint {
 

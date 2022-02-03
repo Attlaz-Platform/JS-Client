@@ -1,6 +1,9 @@
 import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
-import {DataResult, Worker, WorkerImage} from '..';
+import {Worker} from '../Model/Worker/Worker';
+import {DataResult} from '../Model/Result/DataResult';
+import {WorkerImage} from '../Model/Worker/WorkerImage';
+// import {DataResult, Worker, WorkerImage} from '..';
 
 export class WorkerEndpoint extends Endpoint {
 

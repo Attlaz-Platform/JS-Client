@@ -1,7 +1,8 @@
 import {State} from '../State';
 import {Utils} from '../../Utils';
+import {StateAware} from '../StateAware';
 
-export class UserAuthProvider {
+export class UserAuthProvider implements StateAware{
     public id: number;
     public userId: string;
     public provider: string;

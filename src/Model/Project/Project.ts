@@ -1,6 +1,7 @@
 import {State} from '../State';
+import {StateAware} from '../StateAware';
 
-export class Project {
+export class Project implements StateAware{
     public id: string;
     public key: string;
     public name: string;
