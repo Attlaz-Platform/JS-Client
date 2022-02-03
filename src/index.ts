@@ -22,6 +22,7 @@ export {HealthTestType} from './Model/HealthAlert/HealthTestType';
 export {Log} from './Model/Log/Log';
 export {LogLevel} from './Model/Log/LogLevel';
 export {LogQuery} from './Model/Log/LogQuery';
+export {LogStreamId} from './Model/Log/LogStreamId';
 export {LogType} from './Model/Log/LogType';
 /** Messaging **/
 

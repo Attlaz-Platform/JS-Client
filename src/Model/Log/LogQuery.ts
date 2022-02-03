@@ -1,9 +1,12 @@
 import {LogLevel} from './LogLevel';
+import {LogStreamId} from './LogStreamId';
 
 export class LogQuery {
 
+    public readonly logStreamId: LogStreamId;
+    
     public message: string = null;
-    public resolved: boolean = null;
+    public hidden: boolean = null;
     public logLevels: LogLevel[];
     public tags: Array<{ key: string, value: string }>;
 
@@ -12,7 +15,8 @@ export class LogQuery {
 
     public sort: Array<{ field: string, direction: number }>;
 
-    public constructor() {
+    public constructor(logStreamId: LogStreamId) {
+        this.logStreamId = logStreamId;
     }
 
 }
