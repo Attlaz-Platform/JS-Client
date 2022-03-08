@@ -4,12 +4,12 @@ import {Utils} from '../Utils';
 
 export class ProjectDeployEndpoint extends Endpoint {
 
-    public async getById(deployId: number): Promise<ProjectDeploy> {
+    public async getById(deployId: number): Promise<ProjectDeploy > {
 
         try {
             const rawProjectDeploy: any = await this.httpClient.request('/deploys/' + deployId);
             if (Utils.isNullOrUndefined(rawProjectDeploy)) {
-                return null;
+              throw new Error('Unable to get deploy');
             }
             return ProjectDeploy.parse(rawProjectDeploy);
 

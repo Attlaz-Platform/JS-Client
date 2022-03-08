@@ -1,7 +1,6 @@
 import {Endpoint} from './Endpoint';
 import {HealthAlert} from '../Model/HealthAlert/HealthAlert';
 import {DataResult} from '../Model/Result/DataResult';
-import {Utils} from '../Utils';
 
 export class HealthAlertEndpoint extends Endpoint {
 
@@ -11,14 +10,18 @@ export class HealthAlertEndpoint extends Endpoint {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/health';
 
             const result: DataResult<HealthAlert[]> = await this.request(url);
-            if (Utils.isNullOrUndefined(result)) {
-                return null;
-            }
+            // if (Utils.isNullOrUndefined(result)) {
+            //     return null;
+            // }
             let alerts: HealthAlert[] = [];
-            for (let raw of result.getData()) {
 
-                alerts.push(HealthAlert.parse(raw));
+            const resultData: any | null = result.getData();
+            if (resultData !== null) {
+                for (let raw of resultData) {
+                    alerts.push(HealthAlert.parse(raw));
+                }
             }
+
             return alerts;
 
         } catch (error) {

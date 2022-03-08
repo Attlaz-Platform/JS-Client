@@ -4,7 +4,7 @@ import {Utils} from '../Utils';
 
 export class SubscriberEndpoint extends Endpoint {
 
-    public getSubscribersByTask(taskId: string, projectEnvironmentId: string = null): Promise<Subscriber[]> {
+    public getSubscribersByTask(taskId: string, projectEnvironmentId: string | null = null): Promise<Subscriber[]> {
         return new Promise<Subscriber[]>((resolve, reject) => {
 
             let parameters: any = null;

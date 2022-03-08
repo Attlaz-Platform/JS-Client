@@ -35,7 +35,7 @@ export class HttpClient {
 
         //TODO: validate status
 
-        const error: ClientError = ClientError.byStatus(response.status, response.statusText);
+        const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
         if (!Utils.isNullOrUndefined(error)) {
 
             // const body: string = await response.text();
@@ -77,9 +77,9 @@ export class HttpClient {
         // rawRequest.negotiateHttpVersion = NegotiateHttpVersion.HTTP1_ONLY;
         const response: Response = await fetch(request.getFullUrl(), rawRequest);
 
-        const httpResponse: HttpClientResponse = new HttpClientResponse();
-        httpResponse.status = response.status;
-        httpResponse.statusText = response.statusText;
+        const httpResponse: HttpClientResponse = new HttpClientResponse(response.status, response.statusText);
+        // httpResponse.status = response.status;
+        // httpResponse.statusText = response.statusText;
         // TODO: should we get JSON immediately?
         // response.json
         // httpResponse.body = await response.text();
@@ -94,7 +94,7 @@ export class HttpClient {
         }
         httpResponse.body = jsonData;
 
-        const error: ClientError = ClientError.byStatus(response.status, response.statusText);
+        const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
         if (!Utils.isNullOrUndefined(error)) {
 
             // const body: string = await response.text();

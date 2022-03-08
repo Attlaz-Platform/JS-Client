@@ -4,7 +4,7 @@ export class OAuthClientOptions {
     clientSecret: string;
     accessTokenUri: string = 'oauth/token';
     authorizationUri: string = 'oauth/authorize';
-    redirectUri: string = 'http://example.com/auth/github/callback';
+    redirectUri: string = 'https://example.com/auth/github/callback';
     scopes: string[] = ['all'];
     state: string = 'xyz';
 

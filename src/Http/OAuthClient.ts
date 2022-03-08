@@ -2,14 +2,11 @@ import {OAuthClientOptions} from './OAuthClientOptions';
 import {ClientError} from '../Model/Error/ClientError';
 import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
-import {Utils} from '../Utils';
 import {HttpClientResponse} from './HttpClientResponse';
 import {OAuthClientToken} from './OAuthClientToken';
 import * as ClientOAuth2 from 'client-oauth2';
 import {Token} from 'client-oauth2';
-
-// import {Token} from 'client-oauth2';
-// import ClientOAuth2 = require('client-oauth2');
+import {JsonSerializable} from '../Model/JsonSerializable';
 
 export class OAuthClient {
 
@@ -20,6 +17,7 @@ export class OAuthClient {
     private oauthClient: ClientOAuth2;
 
     private oauthToken: Token | null = null;
+    private oathClientToken: OAuthClientToken | null = null;
 
     constructor(options: OAuthClientOptions) {
 
@@ -39,12 +37,12 @@ export class OAuthClient {
 
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(): Promise<boolean>;
-    public async authenticate(username?: string, password?: string): Promise<boolean> {
+    public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         //TODO: should we encrypt the password in the client (or is https save enough)?
 
         try {
             let accessToken: Token;
-            if (!Utils.isNullOrUndefined(username) && !Utils.isNullOrUndefined(password)) {
+            if (username !== null && username !== undefined && password !== null && password !== undefined) {
                 // Password flow
                 accessToken = await this.oauthClient.owner.getToken(username, password);
             } else {
@@ -61,9 +59,13 @@ export class OAuthClient {
     }
 
     public async refreshToken(): Promise<void> {
+        if (this.oauthToken === null) {
+            throw new Error('unable to refresh token, auth token not set');
+        }
         if (this.oauthToken.refreshToken !== undefined && this.oauthToken.refreshToken !== null && this.oauthToken.refreshToken !== '') {
             try {
                 this.oauthToken = await this.oauthToken.refresh();
+                this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
             } catch (e) {
                 const error: ClientError = ClientError.fromError(e);
                 throw error;
@@ -86,10 +88,15 @@ export class OAuthClient {
         if (signWithOauthToken && !this.isAuthenticated()) {
             throw new ClientError('Unable to perform request, access token not provided');
         } else {
-            if (signWithOauthToken && this.oauthToken.expired()) {
+            if (signWithOauthToken) {
+                if (this.oauthToken === null) {
+                    throw new ClientError('Unable to perform request, access token not provided');
+                }
+                if (signWithOauthToken && this.oauthToken.expired()) {
 
-                await this.refreshToken();
+                    await this.refreshToken();
 
+                }
             }
 
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
@@ -111,7 +118,7 @@ export class OAuthClient {
 
     public isAuthenticated(): boolean {
         //TODO: other ways to determine if the client is authenticated?
-        return this.oauthToken !== null && this.oauthToken !== undefined;
+        return this.oathClientToken !== null && this.oathClientToken !== undefined;
     }
 
     public getToken(): OAuthClientToken | null {
@@ -119,14 +126,13 @@ export class OAuthClient {
         if (this.oauthToken === null) {
             return null;
         }
-        console.log(this.oauthToken.data);
-        return {
-            access_token: this.oauthToken.accessToken,
-            token_type: this.oauthToken.tokenType,
-            refresh_token: this.oauthToken.refreshToken,
-            expires: (this.oauthToken as any as { expires: Date }).expires,
-            scope: this.oauthToken.data.scope
-        };
+
+        if (this.oathClientToken === null) {
+
+            this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
+        }
+
+        return this.oathClientToken;
 
     }
 
@@ -145,10 +151,12 @@ export class OAuthClient {
         }
 
         this.oauthToken = oauthToken;
+        this.oathClientToken = token;
     }
 
     public unsetToken(): void {
         this.oauthToken = null;
+        this.oathClientToken = null;
 
     }
 
@@ -164,12 +172,18 @@ export class OAuthClient {
         return this.debug;
     }
 
-    public getTokenFlowUrl(options: {
-        query?: {
-            [key: string]: string | string[];
-        };
-    } | null = null): string {
-        return this.oauthClient.token.getUri(options);
+    public getTokenFlowUrl(options: { query?: { [key: string]: string | string[] } } | null = null): string {
+        return this.oauthClient.token.getUri(options === null ? undefined : options);
+    }
+
+    private tokenToOauthClientToken(oauthToken: Token): OAuthClientToken {
+        const token: OAuthClientToken = new OAuthClientToken(oauthToken.accessToken, oauthToken.tokenType, oauthToken.refreshToken, oauthToken.data.scopes)
+
+        const rawTokenExpires = (oauthToken as any as { expires: Date }).expires;
+        if (rawTokenExpires !== null && rawTokenExpires !== undefined) {
+            token.expires = rawTokenExpires;
+        }
+        return token;
     }
 
     private getUri(uri: string): string {
@@ -189,7 +203,7 @@ export class OAuthClient {
 
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
-                parameters = JSON.stringify(parameters);
+                parameters = JsonSerializable.stringify(parameters);
             } else if (typeof parameters === 'string') {
 
             } else {
@@ -208,6 +222,9 @@ export class OAuthClient {
         }
 
         if (signWithOauthToken) {
+            if (this.oauthToken === null) {
+                throw new ClientError('Unable to perform request, access token not provided');
+            }
             if (this.oauthToken.expired()) {
                 throw new Error('Unable to sign request, token is expired');
             }
@@ -220,8 +237,11 @@ export class OAuthClient {
     }
 
     private signRequest(requestObject: HttpClientRequest): HttpClientRequest {
-        const tokenType: string | undefined = this.oauthToken.tokenType;
-        const accessToken: string = this.oauthToken.accessToken;
+        if (this.oathClientToken === null) {
+            throw new ClientError('Unable to sign request, access token not provided');
+        }
+        const tokenType: string | undefined = this.oathClientToken.token_type;
+        const accessToken: string = this.oathClientToken.access_token;
         if (tokenType !== undefined && tokenType.toLowerCase() === 'bearer') {
             requestObject.setHeader('Authorization', 'Bearer ' + accessToken);
         } else {

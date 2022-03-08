@@ -1,4 +1,5 @@
 import {Utils} from '../Utils';
+import {JsonSerializable} from '../Model/JsonSerializable';
 
 export class HttpClientRequest {
     static readonly GET = 'GET';
@@ -35,7 +36,7 @@ export class HttpClientRequest {
 
     public setJsonBody(data: any): void {
         this.setJsonHeader();
-        this.body = JSON.stringify(data);
+        this.body = JsonSerializable.stringify(data);
     }
 
     public getFullUrl(): string {

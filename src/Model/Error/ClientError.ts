@@ -19,7 +19,11 @@ export class ClientError implements Error {
         if (error.status !== null && error.status !== undefined) {
             const statusCode: number = error.status;
             const body: string = error.body;
-            clientError = this.byStatus(statusCode, body)
+
+            const clientErrorByStatus: ClientError | null = this.byStatus(statusCode, body);
+            if (clientErrorByStatus !== null) {
+                clientError = clientErrorByStatus;
+            }
 
         } else {
             if (error.code !== null && error.code !== undefined) {

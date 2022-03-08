@@ -10,8 +10,8 @@ export enum HealthTestType {
 export namespace HealthTestType {
 
     export function fromString(input: string): HealthTestType {
-        const result: HealthTestType = Utils.parseEnum<HealthTestType>(input, HealthTestType);
-        if (Utils.isNullOrUndefined(result)) {
+        const result: HealthTestType | null = Utils.parseEnum<HealthTestType>(input, HealthTestType);
+        if (result === null) {
             throw new Error('Unable to parse HealthTestType from string: Unknown HealthTestType "' + input + '"');
         }
         return result;

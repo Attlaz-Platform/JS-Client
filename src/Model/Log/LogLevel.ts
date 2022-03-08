@@ -50,8 +50,8 @@ export namespace LogLevel {
     }
 
     export function fromString(input: string): LogLevel {
-        const result: LogLevel = Utils.parseEnum<LogLevel>(input, LogLevel);
-        if (Utils.isNullOrUndefined(result)) {
+        const result: LogLevel | null = Utils.parseEnum<LogLevel>(input, LogLevel);
+        if (result === null) {
             throw new Error('Unable to parse LogLevel from string: Unknown LogLevel "' + input + '"');
         }
         return result;

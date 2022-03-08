@@ -1,12 +1,15 @@
+import {DataValueCollection} from '../DataValueCollection';
+
 export class AdapterConnection {
     id: number;
     key: string;
     adapter: string;
     name: string;
-    configuration: {
-        key: string;
-        value: string;
-    }[];
+    configuration: DataValueCollection;
+
+    public constructor() {
+        this.configuration = new DataValueCollection();
+    }
 
     public static parse(rawAdapterConnection: any): AdapterConnection {
         let adapterConnection: AdapterConnection = new AdapterConnection();
@@ -14,7 +17,7 @@ export class AdapterConnection {
         adapterConnection.key = rawAdapterConnection.key;
         adapterConnection.adapter = rawAdapterConnection.adapter;
         adapterConnection.name = rawAdapterConnection.name;
-        adapterConnection.configuration = rawAdapterConnection.configuration;
+        adapterConnection.configuration = DataValueCollection.fromObject(rawAdapterConnection.configuration);
 
         return adapterConnection;
         // adapter.id = rawAdapter.id;

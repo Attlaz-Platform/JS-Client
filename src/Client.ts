@@ -87,7 +87,10 @@ export class Client {
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string, password: string): Promise<boolean>;
 
-    public async authenticate(username?: string, password?: string): Promise<boolean> {
+    public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
+        if (username === null || password === null) {
+            return this.httpClient.authenticate();
+        }
         return this.httpClient.authenticate(username, password);
     }
 
@@ -95,7 +98,7 @@ export class Client {
         return this.httpClient.isAuthenticated();
     }
 
-    public getToken(): OAuthClientToken {
+    public getToken(): OAuthClientToken | null {
         return this.httpClient.getToken();
     }
 
@@ -114,6 +117,11 @@ export class Client {
 
     public unsetAccessToken(): void {
         this.httpClient.unsetToken();
+    }
+
+    public async getApiInformation(): Promise<{ version: string }> {
+        const result: { version: string } = await this.httpClient.request('/system/health', null, 'GET', false);
+        return {version: result.version};
     }
 
     /* Endpoints */
@@ -220,7 +228,7 @@ export class Client {
             try {
                 const endpoint: Endpoint = new className(this.httpClient);
                 this.endpoints.set(key, endpoint);
-            } catch (e) {
+            } catch (e: any) {
                 throw new Error('Unable to initialize ' + key + ' endpoint (' + e.message + ')');
             }
 

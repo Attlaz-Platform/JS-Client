@@ -29,25 +29,25 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public async getTaskExecutionSummaries(taskId: string, from: Date = null, to: Date = null, projectEnvironmentId: string = null): Promise<TaskExecutionSummary[]> {
+    public async getTaskExecutionSummaries(taskId: string, from: Date | null = null, to: Date | null = null, projectEnvironmentId: string | null = null): Promise<TaskExecutionSummary[]> {
 
         try {
-            let params: any = null;
-            if (!Utils.isNullOrUndefined(from)) {
-                if (Utils.isNullOrUndefined(params)) {
+            let params: any | null = null;
+            if (from !== null && from !== undefined) {
+                if (params === null || params === undefined) {
                     params = {};
                 }
                 params.from = from.toISOString();
             }
-            if (!Utils.isNullOrUndefined(to)) {
-                if (Utils.isNullOrUndefined(params)) {
+            if (to !== null && to !== undefined) {
+                if (params === null || params === undefined) {
                     params = {};
                 }
                 params.to = to.toISOString();
             }
 
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
-                if (Utils.isNullOrUndefined(params)) {
+                if (params === null || params === undefined) {
                     params = {};
                 }
                 params.environment = projectEnvironmentId;
@@ -73,13 +73,13 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     }
 
-    public async getTaskExecutionSummary(taskId: string, taskExecutionId: string): Promise<TaskExecutionSummary> {
+    public async getTaskExecutionSummary(taskExecutionId: string): Promise<TaskExecutionSummary > {
 
         try {
             const rawTaskExecution: any = await this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries');
 
             if (Utils.isNullOrUndefined(rawTaskExecution)) {
-                return null;
+                throw new Error('Unable to get task execution');
             }
             return TaskExecutionSummary.parse(rawTaskExecution);
         } catch (e) {
@@ -119,7 +119,7 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public async updateTaskExecution(taskExecutionId: string, status: TaskExecutionStatus, time: Date = null): Promise<TaskExecution> {
+    public async updateTaskExecution(taskExecutionId: string, status: TaskExecutionStatus, time: Date | null = null): Promise<TaskExecution> {
 
         if (taskExecutionId.length === 0) {
             throw new Error('Task execution id cannot be empty');

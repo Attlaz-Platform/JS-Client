@@ -23,7 +23,7 @@ test('Test get user', async () => {
 
     await client.authenticate();
 
-    const user: User = await client.getUserEndpoint().getUser()
+    const user: User | null = await client.getUserEndpoint().getUser()
     // console.log('User', user);
 
     expect(user.email).toBe('demo@attlaz.com');
@@ -38,7 +38,10 @@ test('Test get project', async () => {
 
     await client.authenticate();
 
-    const project: Project = await client.getProjectEndpoint().getById('8B5C14EBB');
+    const project: Project | null = await client.getProjectEndpoint().getById('8B5C14EBB');
+    if (project === null) {
+        throw new Error('Project is null');
+    }
     // console.log('User', user);
 
     expect(project.id).toBe('8B5C14EBB');

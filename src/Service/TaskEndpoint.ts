@@ -33,7 +33,7 @@ export class TaskEndpoint extends Endpoint {
             const rawTask: any = await this.httpClient.request('/tasks/' + taskId);
 
             if (Utils.isNullOrUndefined(rawTask)) {
-                return null;
+                throw new Error('Task not found');
             }
             return Task.parse(rawTask);
 
@@ -85,7 +85,7 @@ export class TaskEndpoint extends Endpoint {
         try {
             const rawTaskSummary: any = await this.httpClient.request('tasks/' + taskId + '/summaries', parameters);
             if (Utils.isNullOrUndefined(rawTaskSummary)) {
-                return null;
+                throw new Error('Task not found');
             }
             return TaskSummary.parse(rawTaskSummary);
         } catch (e) {

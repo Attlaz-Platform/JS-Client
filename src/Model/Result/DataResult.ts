@@ -1,7 +1,7 @@
 import {ResultError} from './ResultError';
 
 export class DataResult<T> {
-    private data: T;
+    private data: T | null;
     private errors: ResultError[];
 
     public constructor() {
@@ -20,7 +20,7 @@ export class DataResult<T> {
                 result.addError(error);
             }
         }
-        
+
         return result;
     }
 
@@ -29,7 +29,14 @@ export class DataResult<T> {
     }
 
     public getData(): T {
+        if (this.data === null) {
+            throw new Error('Data is empty');
+        }
         return this.data;
+    }
+
+    public hasData(): boolean {
+        return this.data !== null;
     }
 
     public addError(error: ResultError): void {

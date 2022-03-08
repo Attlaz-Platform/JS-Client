@@ -6,6 +6,7 @@ import {Utils} from '../Utils';
 import {LogStreamId} from '../Model/Log/LogStreamId';
 import {LogLevel} from '../Model/Log/LogLevel';
 import {DataResult} from '../Model/Result/DataResult';
+import {DataValueValue} from '../Model/DataValue';
 
 export class LogEndpoint extends Endpoint {
 
@@ -37,7 +38,7 @@ export class LogEndpoint extends Endpoint {
 
                 //TODO: map this
                 for (const tag of logQuery.tags) {
-                    arrTags.push(tag.key + ':' + tag.value);
+                    arrTags.push(tag.key + ':' + tag.values);
                 }
                 const strTags: string = arrTags.join(',');
 
@@ -68,25 +69,22 @@ export class LogEndpoint extends Endpoint {
         });
     }
 
-    public save(log: Log): Promise<Log> {
+    public async save(log: Log): Promise<Log> {
 
-        return new Promise<Log>((resolve, reject) => {
-
+        try {
             let cmd: string = '/logstreams/' + Utils.base64encode(log.logStream.id) + '/logs';
 
-            this.httpClient.request(cmd, log, 'POST').then((rawSavedLog: any) => {
+            const result: DataResult<Log> = await this.request(cmd, log, 'POST');
 
-                resolve(Log.parse(rawSavedLog));
+            return Log.parse(result.getData());
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save log: ', error);
+            }
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save log: ', reason);
-                }
+            throw error;
+        }
 
-                reject(reason);
-            });
-
-        });
     }
 
     public async delete(logId: string): Promise<boolean> {
@@ -121,33 +119,48 @@ export class LogEndpoint extends Endpoint {
         }
     }
 
-    public async getInformation(logStreamId: LogStreamId): Promise<{ logLevels: Map<LogLevel, number> }> {
+    public async getInformation(logStreamId: LogStreamId): Promise<{ logLevels: Map<LogLevel, number>, tags: Map<string, (DataValueValue)[]> }> {
         try {
             let url: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/info';
 
-            const dataResult: DataResult<{ level_count: Map<LogLevel, number> }> = await this.request(url);
+            const dataResult: DataResult<{ level_count: {}, tags: {} }> = await this.request(url);
             if (Utils.isNullOrUndefined(dataResult)) {
-                return null;
+                throw new Error('Invalid response');
             }
 
-            const rawData: { level_count: any } = dataResult.getData();
+            const data: { level_count: any, tags: any } | null = dataResult.getData();
+            if (data === null) {
+                throw new Error('Invalid response');
+            }
+            const rawData: { level_count: any, tags: any } = data;
 
             const logLevels: Map<LogLevel, number> = new Map<LogLevel, number>();
 
-            Object.keys(rawData.level_count).forEach((key, index) => {
+            Object.keys(rawData.level_count).forEach((logLevelKey: string, index) => {
 
-                const logLevel: LogLevel = LogLevel.fromString(key);
+                const logLevel: LogLevel = LogLevel.fromString(logLevelKey);
 
-                const parsedCount: number | null = parseInt(rawData.level_count[key], undefined);
+                const parsedCount: number | null = parseInt(rawData.level_count[logLevelKey], undefined);
                 if (parsedCount !== null) {
                     logLevels.set(logLevel, parsedCount);
                 } else {
-                    console.error('Unserialize log level count: Unable to parse log level count', rawData.level_count[key]);
+                    console.error('Unserialize log level count: Unable to parse log level count', rawData.level_count[logLevelKey]);
                 }
 
             });
 
-            return {logLevels: logLevels};
+            const tags: Map<string, DataValueValue[]> = new Map<string, DataValueValue[]>();
+            if (rawData.tags !== null && rawData.tags !== undefined) {
+
+                Object.keys(rawData.tags).forEach((tagKey: string, index) => {
+
+                    const values: DataValueValue[] = rawData.tags[tagKey];
+
+                    tags.set(tagKey, values);
+
+                });
+            }
+            return {logLevels: logLevels, tags};
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

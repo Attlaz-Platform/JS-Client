@@ -6,7 +6,7 @@ export class TeamMember {
     id: string;
     email: string;
     invite: boolean;
-    last_login: Date | null;
+    last_login: Date | null = null;
     name: string;
     role: TeamMemberRole;
     state: State | TeamMemberInviteState;

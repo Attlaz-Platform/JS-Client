@@ -22,8 +22,8 @@ export {HealthTestType} from './Model/HealthAlert/HealthTestType';
 export {Log} from './Model/Log/Log';
 export {LogLevel} from './Model/Log/LogLevel';
 export {LogQuery} from './Model/Log/LogQuery';
+export {LogStatus} from './Model/Log/LogStatus';
 export {LogStreamId} from './Model/Log/LogStreamId';
-export {LogType} from './Model/Log/LogType';
 /** Messaging **/
 
 export {Channel} from './Model/Messaging/Channel/Channel';
@@ -55,7 +55,7 @@ export {QueueStatus} from './Model/Queue/QueueStatus';
 export {DataResult} from './Model/Result/DataResult';
 export {ResultError} from './Model/Result/ResultError';
 
-export {Storage} from './Model/Storage/Storage';
+export {StorageInformation} from './Model/Storage/StorageInformation';
 export {StorageType} from './Model/Storage/StorageType';
 /** Trigger **/
 export {ApiTrigger} from './Model/Trigger/ApiTrigger';
@@ -71,7 +71,7 @@ export {WebhookTriggerData} from './Model/Trigger/WebhookTriggerData';
 
 export {Worker} from './Model/Worker/Worker';
 export {WorkerConfig} from './Model/Worker/WorkerConfig';
-export {WorkerImage} from './Model/Worker/WorkerImage';
+export {Platform} from './Model/Worker/Platform';
 export {WorkerInstance} from './Model/Worker/WorkerInstance';
 export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 export {WorkerState} from './Model/Worker/WorkerState';
@@ -89,6 +89,7 @@ export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
 export {AdapterConnection} from './Model/Adapter/AdapterConnection';
 
 export {Config} from './Model/Config';
+export {DataValue, DataValueValue} from './Model/DataValue';
 
 export {Notification} from './Model/Notification';
 export {PagedResult} from './Model/PagedResult';

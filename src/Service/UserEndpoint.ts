@@ -13,7 +13,7 @@ export class UserEndpoint extends Endpoint {
 
         const rawUser: any = await this.httpClient.request(cmd);
         if (Utils.isNullOrUndefined(rawUser)) {
-            return null;
+            throw new Error('User not found');
         }
 
         return User.parse(rawUser);
@@ -93,8 +93,10 @@ export class UserEndpoint extends Endpoint {
             let url: string = '/user/';
             const data: {} = {user, invitation_code: invitationCode};
             const result: DataResult<{ createdUser: User }> = await this.request(url, data, 'PUT', false);
-            if (!Utils.isNullOrUndefined(result.getData().createdUser)) {
-                result.setData({createdUser: User.parse(result.getData().createdUser)})
+
+            const resultData: any | null = result.getData();
+            if (resultData !== null && resultData.createdUser !== null) {
+                result.setData({createdUser: User.parse(resultData.createdUser)})
             }
 
             return result;

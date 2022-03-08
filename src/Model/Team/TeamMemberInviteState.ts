@@ -13,8 +13,8 @@ export enum TeamMemberInviteState {
 export namespace TeamMemberInviteState {
 
     export function fromString(input: string): TeamMemberInviteState {
-        const result: TeamMemberInviteState = Utils.parseEnum<TeamMemberInviteState>(input, TeamMemberInviteState);
-        if (Utils.isNullOrUndefined(result)) {
+        const result: TeamMemberInviteState|null = Utils.parseEnum<TeamMemberInviteState>(input, TeamMemberInviteState);
+        if (result === null) {
             throw new Error('Unable to parse TeamMemberInviteState from string: Unknown TeamMemberInviteState "' + input + '"');
         }
         return result;

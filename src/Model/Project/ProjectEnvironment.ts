@@ -2,13 +2,13 @@ import {State} from '../State';
 import {Utils} from '../../Utils';
 import {StateAware} from '../StateAware';
 
-export class ProjectEnvironment implements StateAware{
+export class ProjectEnvironment implements StateAware {
     public id: string;
     public key: string;
     public projectId: string;
     public name: string;
     public sourceBranch: string;
-    public parent?: string = null;
+    public parent: string | null = null;
     public isLocal: boolean = false;
     public state: State = State.Active;
 

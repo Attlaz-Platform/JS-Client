@@ -22,7 +22,9 @@ export class TeamMemberEndpoint extends Endpoint {
             member.id = rawMember.id;
             member.email = rawMember.email;
             member.invite = Utils.isTrue(rawMember.invite);
-            member.last_login = Utils.parseRawDate(rawMember.last_login);
+            if (rawMember.last_login !== null && rawMember.last_login !== undefined) {
+                member.last_login = Utils.parseRawDate(rawMember.last_login);
+            }
             member.name = rawMember.name;
             member.role = TeamMemberRole.fromString(rawMember.role);
 
@@ -49,9 +51,9 @@ export class TeamMemberEndpoint extends Endpoint {
         try {
             const result: DataResult<void> = await this.request(cmd, {invites: rawInvites}, 'POST');
 
-            if (Utils.isNullOrUndefined(result)) {
-                return null;
-            }
+            // if (Utils.isNullOrUndefined(result)) {
+            //     return null;
+            // }
 
             return result;
         } catch (ex) {
