@@ -1,11 +1,13 @@
 import {HealthTestType} from './HealthTestType';
 import {HealthAlertStatus} from './HealthAlertStatus';
+import {DataValue, DataValueValue} from '../DataValue';
 
 export class HealthAlert {
+    public id: number;
     public healthTestType: HealthTestType;
     public status: HealthAlertStatus;
     public date: Date;
-    public data: { key: string, value: string | number }[] = [];
+    public data: DataValue[] = [];
 
     public constructor(healthTestType: HealthTestType, status: HealthAlertStatus) {
         this.healthTestType = healthTestType;
@@ -15,13 +17,14 @@ export class HealthAlert {
     }
 
     public static parse(raw: any): HealthAlert {
-        let log: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.healthTestType), HealthAlertStatus.fromString(raw.status));
-        log.date = new Date(raw.date);
-        log.data = raw.data;
-        return log;
+        let healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.healthTestType), HealthAlertStatus.fromString(raw.status));
+        healthAlert.id = raw.id;
+        healthAlert.date = new Date(raw.date);
+        healthAlert.data = raw.data;
+        return healthAlert;
     }
 
-    public getDataValue(key: string): string | number | null {
+    public getDataValue(key: string): DataValueValue | null {
         for (const tag of this.data) {
             if (tag.key === key) {
                 return tag.value;

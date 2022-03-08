@@ -1,16 +1,19 @@
+import {DataValueValue} from '../DataValue';
+
 export class WorkerConfig {
 
     public static KEY_STATE: string = 'state';
     public static KEY_SCALE: string = 'scale';
     public static KEY_MEMORY_LIMIT: string = 'memory_limit';
     public static KEY_CPU_LIMIT: string = 'cpu_limit';
-    public static KEY_IMAGE: string = 'image';
+    public static KEY_PLATFORM: string = 'platform';
+    public static KEY_WORKER_VERSION: string = 'worker_version';
 
     public projectEnvironment: string;
     public key: string;
-    public value: string;
+    public value: DataValueValue | null;
 
-    constructor(project_environment: string, key: string, value: string) {
+    constructor(project_environment: string, key: string, value: DataValueValue | null) {
         this.projectEnvironment = project_environment;
         this.key = key;
         this.value = value;

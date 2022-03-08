@@ -113,7 +113,7 @@ function test() {
         /**
          * We expect an exception!
          */
-        client.getTaskEndpoint().getTaskSummary('3B4A1772A', '41').then((taskSummary: TaskSummary) => {
+        client.getTaskEndpoint().getTaskSummary('3B4A1772A', '41').then((taskSummary: TaskSummary | null) => {
             console.log('Task', taskSummary);
         }).catch((error: Error) => {
             console.error(error);

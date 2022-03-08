@@ -2,8 +2,9 @@ import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Worker} from '../Model/Worker/Worker';
 import {DataResult} from '../Model/Result/DataResult';
-import {WorkerImage} from '../Model/Worker/WorkerImage';
-// import {DataResult, Worker, WorkerImage} from '..';
+import {Platform} from '../Model/Worker/Platform';
+
+// import {DataResult, Worker, Platform} from '..';
 
 export class WorkerEndpoint extends Endpoint {
 
@@ -14,7 +15,7 @@ export class WorkerEndpoint extends Endpoint {
 
             const result: any = await this.httpClient.request(url);
             if (Utils.isNullOrUndefined(result)) {
-                return null;
+                throw new Error('Unable to find worker')
             }
 
             return Worker.parse(result);
@@ -48,15 +49,15 @@ export class WorkerEndpoint extends Endpoint {
 
     }
 
-    public async getWorkerImages(): Promise<WorkerImage[]> {
+    public async getPlatforms(): Promise<Platform[]> {
 
-        let cmd: string = '/workerimages';
+        let cmd: string = '/platforms';
 
-        const rawWorkerImages: any[] = await this.httpClient.request(cmd);
+        const rawPlatforms: any[] = await this.httpClient.request(cmd);
 
-        const result: WorkerImage[] = [];
-        for (let rawWorkerImage of rawWorkerImages) {
-            result.push(WorkerImage.parse(rawWorkerImage));
+        const result: Platform[] = [];
+        for (let rawPlatform of rawPlatforms) {
+            result.push(Platform.parse(rawPlatform));
         }
         return result;
 

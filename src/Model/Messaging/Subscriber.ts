@@ -3,7 +3,7 @@ import {EventType} from '../Event/EventType';
 import {LogLevel} from '../Log/LogLevel';
 import {StateAware} from '../StateAware';
 
-export class Subscriber implements StateAware{
+export class Subscriber implements StateAware {
     public id: string;
     public eventTypes: EventType[];
 
@@ -15,7 +15,7 @@ export class Subscriber implements StateAware{
     public logLevelThreshold: LogLevel;
     public state: State = State.Active;
 
-    constructor(id: string, eventTypes: EventType[], projectEnvironment: string, task: string, taskExecution: string, channels: string[], logLevelThreshold: LogLevel = null) {
+    constructor(id: string, eventTypes: EventType[], projectEnvironment: string, task: string, taskExecution: string, channels: string[], logLevelThreshold: LogLevel = LogLevel.Debug) {
         this.id = id;
         this.eventTypes = eventTypes;
 

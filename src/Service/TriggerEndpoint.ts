@@ -2,9 +2,9 @@ import {Endpoint} from './Endpoint';
 import {Trigger} from '../Model/Trigger/Trigger';
 import {Utils} from '../Utils';
 
-export class TriggerEndpoint extends Endpoint{
+export class TriggerEndpoint extends Endpoint {
 
-    public async getByTask(taskId: string, projectEnvironmentId: string = null): Promise<Trigger[]> {
+    public async getByTask(taskId: string, projectEnvironmentId: string | null = null): Promise<Trigger[]> {
 
         try {
             let parameters: any = null;
@@ -30,12 +30,12 @@ export class TriggerEndpoint extends Endpoint{
 
     }
 
-    public async getById(id: string): Promise<Trigger | null> {
+    public async getById(id: string): Promise<Trigger > {
 
         try {
             const result: any = await this.httpClient.request('/triggers/' + id);
             if (Utils.isNullOrUndefined(result)) {
-                return null;
+                throw new Error('Unable to get trigger');
             }
             return Trigger.parse(result);
 

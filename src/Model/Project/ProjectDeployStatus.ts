@@ -12,8 +12,8 @@ export enum ProjectDeployStatus {
 
 export namespace ProjectDeployStatus {
     export function fromString(input: string): ProjectDeployStatus {
-        const result: ProjectDeployStatus = Utils.parseEnum<ProjectDeployStatus>(input, ProjectDeployStatus);
-        if (Utils.isNullOrUndefined(result)) {
+        const result: ProjectDeployStatus | null = Utils.parseEnum<ProjectDeployStatus>(input, ProjectDeployStatus);
+        if (result === null) {
             throw new Error('Unable to parse ProjectDeployStatus from string: Unknown ProjectDeployStatus "' + input + '"');
         }
         return result;

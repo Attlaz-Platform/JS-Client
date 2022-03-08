@@ -5,17 +5,22 @@ import {WorkerConfig} from '../Model/Worker/WorkerConfig';
 
 export class WorkerConfigEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<WorkerConfig[]> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<WorkerConfig[] > {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';
 
             const result: DataResult<any[]> = await this.request(url);
+
             if (Utils.isNullOrUndefined(result)) {
-                return null;
+                throw new Error('Unable to get project environment');
+            }
+            const resultData: any | null = result.getData();
+            if (resultData === null) {
+                throw new Error('Unable to get project environment');
             }
             let workerConfigValues: WorkerConfig[] = [];
-            for (let rawConfig of result.getData()) {
+            for (let rawConfig of resultData) {
 
                 workerConfigValues.push(WorkerConfig.parse(rawConfig));
             }

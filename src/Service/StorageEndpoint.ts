@@ -1,36 +1,55 @@
 import {Endpoint} from './Endpoint';
 import {DataResult} from '../Model/Result/DataResult';
 import {StorageType} from '../Model/Storage/StorageType';
-import {Storage} from '../Model/Storage/Storage';
+import {Utils} from '../Utils';
+import {StorageInformation} from '../Model/Storage/StorageInformation';
 
 export class StorageEndpoint extends Endpoint {
 
-    public async getStorage(projectEnvironmentId: string, storageType: StorageType): Promise<DataResult<Storage>> {
-        const result: DataResult<Storage> = new DataResult<Storage>()
-        switch (storageType) {
-            case StorageType.Vault:
-                result.setData({name: '', type: storageType, pools: ['default'], size_current: 0, size_total: 512 * 1024});
-                break;
-            case StorageType.Persistent:
-                result.setData({name: '', type: storageType, pools: ['default'], size_current: Math.random() * 1024 * 1024, size_total: 1 * 1024 * 1024 * 1024});
-                break;
-            case StorageType.Cache:
-                result.setData({name: '', type: storageType, pools: ['default'], size_current: 20 * 1024 * 1024, size_total: 1024 * 1024 * 1024});
-                break;
-            case StorageType.Workers:
-                result.setData({name: '', type: storageType, pools: ['default'], size_current: 259 * 1024 * 1024, size_total: 512 * 1024 * 1024});
-                break;
+    public async getInformation(projectEnvironmentId: string, storageType: StorageType): Promise<DataResult<StorageInformation>> {
+
+        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType;
+
+        try {
+            const result: DataResult<StorageInformation> = await this.request(cmd, null, 'GET');
+
+            // if (Utils.isNullOrUndefined(result)) {
+            //     return null;
+            // }
+
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to get storage information', ex);
+            }
+
+            throw ex;
         }
 
-        return result;
     }
 
-    // public async getPoolKeys(projectEnvironmentId: number, storageType: StorageType): Promise<string[]> {
-    //     return ['default']
+    public async clearPool(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<DataResult<any>> {
+        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey;
+
+        try {
+            const result: DataResult<void> = await this.request(cmd, null, 'DELETE');
+
+            // if (Utils.isNullOrUndefined(result)) {
+            //     return null;
+            // }
+
+            return result;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to get storage information', ex);
+            }
+
+            throw ex;
+        }
+    }
+
+    // public async getItemKeys(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<string[]> {
+    //     return ['item1', 'item2', 'item3']
     // }
-
-    public async getItemKeys(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<string[]> {
-        return ['item1', 'item2', 'item3']
-    }
 }
 

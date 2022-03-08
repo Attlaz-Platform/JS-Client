@@ -12,10 +12,10 @@ export class ChannelEndpoint extends Endpoint {
             const result: DataResult<Channel> = await this.request('/channels/' + channelId + '');
 
             if (Utils.isNullOrUndefined(result)) {
-                return null;
-            }
 
-            result.setData(Channel.parse(result.getData()));
+            } else {
+                result.setData(Channel.parse(result.getData()));
+            }
             return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
@@ -74,10 +74,13 @@ export class ChannelEndpoint extends Endpoint {
 
             const data: ChannelHistory[] = [];
 
-            const orig: ChannelHistory[] = rawChannelHistory.getData();
+            const resultData: any | null = rawChannelHistory.getData();
+            if (resultData !== null) {
+                const orig: ChannelHistory[] = resultData;
 
-            for (const rawChannelMessage of orig) {
-                data.push(ChannelHistory.parse(rawChannelMessage));
+                for (const rawChannelMessage of orig) {
+                    data.push(ChannelHistory.parse(rawChannelMessage));
+                }
             }
 
             rawChannelHistory.setData(data);

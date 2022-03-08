@@ -3,24 +3,24 @@ import {State} from './State';
 import {StateAware} from './StateAware';
 
 export class User implements StateAware {
-    id: string;
-    username: string;
-    firstname: string;
-    lastname: string;
-    email: string;
-    phone: string;
+    public id: string;
+    public username: string;
+    public firstname: string;
+    public lastname: string;
+    public email: string;
+    public phone: string;
 
-    password: string;
+    public password: string;
 
-    language: string;
-    time_zone: string;
-    date_format: string;
-    time_format: string;
-    picture: string;
+    public language: string;
+    public time_zone: string;
+    public date_format: string;
+    public time_format: string;
+    public picture: string;
 
     public state: State = State.Active;
 
-    last_active: Date;
+    public last_active: Date | null = null;
 
     public static parse(rawUser: any): User {
         let user: User = new User();
@@ -36,7 +36,9 @@ export class User implements StateAware {
         user.time_format = rawUser.time_format;
         user.picture = rawUser.picture;
         user.state = State.fromString(rawUser.state);
-        user.last_active = Utils.parseRawDate(rawUser.last_active);
+        if (rawUser.last_active !== null && rawUser.last_active !== undefined) {
+            user.last_active = Utils.parseRawDate(rawUser.last_active);
+        }
         return user;
     }
 }

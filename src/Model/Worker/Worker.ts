@@ -6,7 +6,7 @@ export class Worker {
     projectEnvironment: string;
     state: WorkerState;
 
-    imageId: number;
+    version: string;
 
     scale: number;
 
@@ -18,7 +18,7 @@ export class Worker {
         worker.projectEnvironment = raw.projectEnvironment;
         worker.state = WorkerState.fromString(raw.state);
 
-        worker.imageId = raw.workerImageId;
+        worker.version = raw.version;
 
         worker.scale = raw.scale;
 

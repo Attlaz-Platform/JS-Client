@@ -3,7 +3,6 @@ import {Utils} from '../Utils';
 import {DataResult} from '../Model/Result/DataResult';
 import {QueueStatus} from '../Model/Queue/QueueStatus';
 
-
 export class QueueEndpoint extends Endpoint {
 
     public async getByProjectEnvironment(projectEnvironmentId: string): Promise<DataResult<QueueStatus>> {
@@ -13,10 +12,10 @@ export class QueueEndpoint extends Endpoint {
 
             const result: DataResult<QueueStatus> = await this.request(url);
             if (Utils.isNullOrUndefined(result)) {
-                return null;
+                // return null;
+            } else {
+                result.setData(QueueStatus.parse(result.getData()));
             }
-
-            result.setData(QueueStatus.parse(result.getData()));
             return result;
 
         } catch (error) {

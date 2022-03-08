@@ -1,6 +1,7 @@
 import {Endpoint} from './Endpoint';
 import {SourcesAccount} from '../Model/SourcesAccount';
 import {SourcesAccountRepository} from '../Model/SourcesAccountRepository';
+import {Utils} from '../Utils';
 
 export class SourcesAccountEndpoint extends Endpoint {
 
@@ -28,7 +29,7 @@ export class SourcesAccountEndpoint extends Endpoint {
 
     public async getRepositoryBranches(sourcesAccountId: number, repositoryKey: string): Promise<string[]> {
 
-        repositoryKey = btoa(repositoryKey);
+        repositoryKey = Utils.base64encode(repositoryKey);
         const rawBranches: string[] = await this.httpClient.request('sourcesaccounts/' + sourcesAccountId + '/repositories/' + repositoryKey + '/branches');
 
         return rawBranches;

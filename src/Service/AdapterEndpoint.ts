@@ -105,4 +105,24 @@ export class AdapterEndpoint extends Endpoint {
         }
 
     }
+
+    public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<DataResult<AdapterConnection>> {
+        try {
+
+            let url: string = '/connections';
+            const data: AdapterConnection & { projectId: string } = adapter as any;
+            data.projectId = projectId;
+            const result: DataResult<AdapterConnection> = await this.request(url, data, 'POST');
+
+            result.setData(AdapterConnection.parse(result.getData()));
+
+            return result
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save connection: ', error);
+            }
+
+            throw error;
+        }
+    }
 }

@@ -25,13 +25,23 @@ test('Test client credentials flow', async () => {
 
     await client.authenticate();
 
-    const user: User = await client.getUserEndpoint().getUser()
+    const user: User | null = await client.getUserEndpoint().getUser();
+    if (user === null) {
+        throw new Error('User is null');
+    }
     // console.log('User', user);
 
     expect(user.email).toBe('demo@attlaz.com');
 
     // TODO: how to get the seconds to wait for the token to expire?
-    const expiresIn: number = client.getToken().expires.getTime() - (new Date()).getTime();
+    const token: OAuthClientToken | null = client.getToken();
+    if (token === null) {
+        throw new Error('Token is null');
+    }
+    if (token.expires === null) {
+        throw new Error('Token expires not set');
+    }
+    const expiresIn: number = token.expires.getTime() - (new Date()).getTime();
     if (expiresIn < 30) {
 
         const waitSecondsForTokenToExpire: number = expiresIn + 5;
@@ -41,7 +51,11 @@ test('Test client credentials flow', async () => {
 
         // TODO: make sure we are not authenticated anymore
 
-        expect(OAuthClientToken.isExpired(client.getToken())).toBeTruthy();
+        const token: OAuthClientToken | null = client.getToken();
+        if (token === null) {
+            throw new Error('Token is null');
+        }
+        expect(OAuthClientToken.isExpired(token)).toBeTruthy();
     }
     // const user2: User = await client.getUserEndpoint().getUser()
     // expect(user.email).toBe('demo@attlaz.com');
@@ -56,7 +70,8 @@ test('Test password authentication - valid', async () => {
 
     await client.authenticate(passwordFlowUsername, passwordFlowPassword);
 
-    const user: User = await client.getUserEndpoint().getUser()
+    const user: User = await client.getUserEndpoint().getUser();
+
     // console.log('User', user);
 
     expect(user.email).toBe('eline@attlaz.com');
@@ -67,9 +82,14 @@ test('Test password authentication - valid', async () => {
 
     await new Promise((r) => setTimeout(r, waitSecondsForTokenToExpire * 1000));
 
-    expect(OAuthClientToken.isExpired(client.getToken())).toBeTruthy();
-    const user2: User = await client.getUserEndpoint().getUser()
-    expect(user.email).toBe(passwordFlowUsername);
+    const token: OAuthClientToken | null = client.getToken();
+    if (token === null) {
+        throw new Error('Token is null');
+    }
+    expect(OAuthClientToken.isExpired(token)).toBeTruthy();
+    const user2: User = await client.getUserEndpoint().getUser();
+
+    expect(user2.email).toBe(passwordFlowUsername);
 
 });
 test('Test password authentication - invalid', async () => {
@@ -101,7 +121,10 @@ test('Test set access token + JSON encode', async () => {
 
     await client.authenticate(passwordFlowUsername, passwordFlowPassword);
 
-    const token: OAuthClientToken = client.getToken();
+    const token: OAuthClientToken | null = client.getToken();
+    if (token === null) {
+        throw new Error('Token is null');
+    }
 
     expect(OAuthClientToken.isExpired(token)).toBeFalsy();
 
@@ -112,7 +135,8 @@ test('Test set access token + JSON encode', async () => {
     const decodedToken: any = OAuthClientToken.deserialize(encoded);
     client.setToken(decodedToken);
 
-    const user: User = await client.getUserEndpoint().getUser()
+    const user: User = await client.getUserEndpoint().getUser();
+
     expect(user.email).toBe(passwordFlowUsername);
 
     let client2: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
@@ -124,7 +148,8 @@ test('Test set access token + JSON encode', async () => {
 
     expect(client2.getToken()).toStrictEqual(client.getToken());
 
-    const user2: User = await client2.getUserEndpoint().getUser()
+    const user2: User = await client2.getUserEndpoint().getUser();
+
     expect(user2.email).toBe(passwordFlowUsername);
 
     // const newToken = client.setAccessToken()

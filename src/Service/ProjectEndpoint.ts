@@ -51,7 +51,7 @@ export class ProjectEndpoint extends Endpoint {
         try {
             const rawProject: any = await this.httpClient.request('projects/' + projectId + '');
             if (Utils.isNullOrUndefined(rawProject)) {
-                return null;
+                throw new Error('Unable to get project');
             }
             return Project.parse(rawProject);
         } catch (e) {
