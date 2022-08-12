@@ -4,8 +4,7 @@ import {HttpClient} from './HttpClient';
 import {HttpClientRequest} from './HttpClientRequest';
 import {HttpClientResponse} from './HttpClientResponse';
 import {OAuthClientToken} from './OAuthClientToken';
-import * as ClientOAuth2 from 'client-oauth2';
-import {Token} from 'client-oauth2';
+import ClientOAuth2, {Token} from 'client-oauth2';
 import {JsonSerializable} from '../Model/JsonSerializable';
 
 export class OAuthClient {
@@ -39,7 +38,7 @@ export class OAuthClient {
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         //TODO: should we encrypt the password in the client (or is https save enough)?
-
+        console.log('Authenticate')
         try {
             let accessToken: Token;
             if (username !== null && username !== undefined && password !== null && password !== undefined) {
@@ -50,28 +49,37 @@ export class OAuthClient {
                 accessToken = await this.oauthClient.credentials.getToken();
             }
             this.oauthToken = accessToken;
+            this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
             return true;
         } catch (e) {
-            console.log(e);
+            if (this.debug) {
+                console.debug('[Client] Error during authentication', e);
+            }
             throw ClientError.fromError(e);
         }
 
     }
 
+    private refreshTokenPromise: Promise<void> | null = null;
+
     public async refreshToken(): Promise<void> {
+
+        console.log('Get refresh token');
         if (this.oauthToken === null) {
             throw new Error('unable to refresh token, auth token not set');
         }
         if (this.oauthToken.refreshToken !== undefined && this.oauthToken.refreshToken !== null && this.oauthToken.refreshToken !== '') {
+
             try {
                 this.oauthToken = await this.oauthToken.refresh();
                 this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
             } catch (e) {
-                const error: ClientError = ClientError.fromError(e);
-                throw error;
+                console.log('Error during refresh token', e);
+                throw ClientError.fromError(e);
             }
 
         } else {
+
             await this.authenticate();
         }
     }
@@ -94,7 +102,19 @@ export class OAuthClient {
                 }
                 if (signWithOauthToken && this.oauthToken.expired()) {
 
-                    await this.refreshToken();
+                    if (this.refreshTokenPromise === null) {
+
+                        this.refreshTokenPromise = this.refreshToken();
+                        await this.refreshTokenPromise;
+                        // this.refreshTokenPromise.then(() => {
+                        this.refreshTokenPromise = null;
+                        console.log('Refresh token done');
+                        // });
+                    } else {
+                        console.log('Waiting for refresh token promise')
+                        await this.refreshTokenPromise;
+                        console.log('Refresh token promise resolved');
+                    }
 
                 }
             }
@@ -102,15 +122,24 @@ export class OAuthClient {
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
 
             if (this.debug) {
-                console.info('[Client request] ', requestData);
+                console.debug('[Client] REQ: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
             }
             try {
 
-                const response: HttpClientResponse = await HttpClient.request2(requestData);
+                const response: HttpClientResponse = await HttpClient.request2(requestData)
+
+                // if (this.debug) {
+                //     console.info('[Client response] ', {body: response.body});
+                // }
                 return response.body;
 
-            } catch (e) {
-                throw ClientError.fromError(e);
+            } catch (error) {
+
+                const clientError: Error = ClientError.fromError(error);
+                if (this.debug) {
+                    console.error('[Client] Error:', {error, clientError});
+                }
+                throw clientError;
             }
         }
 
