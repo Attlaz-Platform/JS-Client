@@ -1,69 +1,47 @@
 import {Response} from 'servie';
 import {fetch} from 'popsicle'
 import {HttpClientRequest} from './HttpClientRequest';
-import {Utils} from '../Utils';
-// import {ClientError} from '..';
 import {HttpClientResponse} from './HttpClientResponse';
 import {ClientError} from '../Model/Error/ClientError';
 import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
 import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
-
-// import {NegotiateHttpVersion} from 'popsicle-transport-http';
+import {VERSION} from '../version';
 
 export class HttpClient {
 
-    public static HTTP_ERROR: string = 'xxx';
-    public static HTTP_BAD_REQUEST: string = '400';
-    public static HTTP_UNAUTHORIZED: string = '401';
-    public static HTTP_NOTFOUND: string = '404';
-    public static HTTP_NOT_ALLOWED: string = '405';
-    public static HTTP_UNPROCESSABLE_ENTITY: string = '422';
-    public static HTTP_UNAVAILABLE: string = '503';
+    public static HTTP_BAD_REQUEST: number = 400;
+    public static HTTP_UNAUTHORIZED: number = 401;
+    public static HTTP_FORBIDDEN: number = 403;
+    public static HTTP_NOTFOUND: number = 404;
+    public static HTTP_NOT_ALLOWED: number = 405;
+    public static HTTP_UNPROCESSABLE_ENTITY: number = 422;
 
-    public static async get(url: string, requestData: any = {}): Promise<any> {
-        if (Utils.isNullOrUndefined(requestData)) {
-            requestData = {};
-        }
-        // TODO: how to pass this?
-        // const x: TransportOptions = {
-        //     negotiateHttpVersion: NegotiateHttpVersion.HTTP1_ONLY
-        // }
+    public static HTTP_INTERNAL_SERVER_ERROR: number = 500;
+    public static HTTP_BAD_GATEWAY: number = 502;
+    public static HTTP_UNAVAILABLE: number = 503;
 
-        // const controller = new AbortController();
-
-        const response: Response = await fetch(url, requestData);
-
-        //TODO: validate status
-
-        const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
-        if (!Utils.isNullOrUndefined(error)) {
-
-            // const body: string = await response.text();
-            // console.log('Text' + body);
-            //
-            // console.log(response);
-            throw error;
-        }
-
-        // TODO: make it possible to do request without parsing the json
-        return await response.json();
-    }
-
-    public static async request(request: HttpClientRequest): Promise<any> {
-
-        const rawRequest: any = {
-            url: request.getFullUrl(),
-            method: request.method,
-            headers: request.headers,
-            omitDefaultHeaders: true,
-            body: request.body
-        };
-
-        return HttpClient.get(request.getFullUrl(), rawRequest);
-    }
+    // public static async get(url: string, requestData: any = {}): Promise<any> {
+    //     if (Utils.isNullOrUndefined(requestData)) {
+    //         requestData = {};
+    //     }
+    //     const response: Response = await fetch(url, requestData);
+    //
+    //     //TODO: validate status
+    //     const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
+    //     if (!Utils.isNullOrUndefined(error)) {
+    //         throw error;
+    //     }
+    //
+    //     // TODO: make it possible to do request without parsing the json
+    //     return await response.json();
+    // }
 
     public static async request2(request: HttpClientRequest): Promise<HttpClientResponse> {
 
+        if (typeof window === 'undefined') {
+            // Add user agent when running in Node
+            request.headers['User-Agent'] = 'Attlaz Http/' + VERSION;
+        }
         const rawRequest: any = {
             url: request.getFullUrl(),
             method: request.method,
@@ -72,54 +50,56 @@ export class HttpClient {
             body: request.body
         } as BrowserRequestOptions | NodeRequestOptions;
 
-        // TODO: set user agent
-
-        // rawRequest.negotiateHttpVersion = NegotiateHttpVersion.HTTP1_ONLY;
         const response: Response = await fetch(request.getFullUrl(), rawRequest);
 
         const httpResponse: HttpClientResponse = new HttpClientResponse(response.status, response.statusText);
-        // httpResponse.status = response.status;
-        // httpResponse.statusText = response.statusText;
-        // TODO: should we get JSON immediately?
-        // response.json
-        // httpResponse.body = await response.text();
+
+        let contentType: { type: string, options: string | null } = this.getContentType(response);
 
         const rawData: string = await response.text();
-        let jsonData: any | null = null;
-        try {
-            jsonData = JSON.parse(rawData);
-        } catch (e) {
-            console.log(httpResponse.statusText)
-            console.error('Unable to parse response data to JSON');
+        if (contentType.type === 'application/json') {
+            let jsonData: any | null = null;
+            try {
+                jsonData = JSON.parse(rawData);
+            } catch (e) {
+                console.log(httpResponse.statusText)
+                console.error('Unable to parse response data to JSON');
+            }
+            httpResponse.body = jsonData;
+        } else {
+            httpResponse.body = rawData;
         }
-        httpResponse.body = jsonData;
 
         const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
-        if (!Utils.isNullOrUndefined(error)) {
-
-            // const body: string = await response.text();
-            // console.log('Text' + body);
-            //
-            // console.log(response);
+        if (error !== null && error !== undefined) {
+            error.body = httpResponse.body;
             throw error;
         }
 
-        // //TODO: validate status
-        //
-        // const error: ClientError = ClientError.byStatus(response.status, response.statusText);
-        // if (!Utils.isNullOrUndefined(error)) {
-        //
-        //     // const body: string = await response.text();
-        //     // console.log('Text' + body);
-        //     //
-        //     // console.log(response);
-        //     throw error;
-        // }
-        //
-        // // TODO: make it possible to do request without parsing the json
-        // return await response.json();
-
         return httpResponse;
+
+    }
+
+    private static getContentType(response: Response): { type: string, options: string | null } {
+
+        if (response.headers.has('Content-Type')) {
+            const rawContentType: string | null = response.headers.get('Content-Type');
+            if (rawContentType !== null) {
+                return this.formatContentType(rawContentType);
+            }
+        }
+        return {type: 'application/json', options: null};
+    }
+
+    private static formatContentType(input: string): { type: string, options: string | null } {
+        const d: string[] = input.split(';');
+        if (d.length === 1) {
+            return {type: d[0], options: null}
+        } else if (d.length === 2) {
+            return {type: d[0], options: d[1].trim()}
+        }
+        console.error('Unable to parse content type "' + input + '"');
+        return {type: input, options: null}
 
     }
 }

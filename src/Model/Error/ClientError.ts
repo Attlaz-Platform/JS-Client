@@ -3,16 +3,28 @@ import {HttpClient} from '../../Http/HttpClient';
 export class ClientError implements Error {
     message: string;
     name: string;
-    code: string;
+    code: number | null;
     stack: string;
+    body: string | null = null;
 
-    constructor(message: string, code: string = '') {
+    constructor(message: string, code: number | null = null) {
         this.message = message;
         this.code = code;
     }
 
     public static fromError(error: Error | any): ClientError {
-        let clientError: ClientError = new ClientError(error.message);
+
+        console.log('Incoming error', error);
+        if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
+            error = error.body.error;
+        }
+
+        let message: string = error;
+        if (error.message !== undefined && error.message !== null) {
+            message = error.message;
+        }
+
+        let clientError: ClientError = new ClientError(message);
 
         //console.error(error);
 
@@ -61,24 +73,30 @@ export class ClientError implements Error {
             case 401:
                 return new ClientError('Unauthorized', HttpClient.HTTP_UNAUTHORIZED);
                 break;
-            case 404:
-                return new ClientError('Not Found', HttpClient.HTTP_NOTFOUND);
+            case 403:
+                return new ClientError('Forbidden', HttpClient.HTTP_FORBIDDEN);
                 break;
             case 404:
-                return new ClientError('Unprocessable Entity', HttpClient.HTTP_UNPROCESSABLE_ENTITY);
+                return new ClientError('Not Found', HttpClient.HTTP_NOTFOUND);
                 break;
             case 405:
                 return new ClientError('Not allowed', HttpClient.HTTP_NOT_ALLOWED);
                 break;
+            case 422:
+                return new ClientError('Unprocessable Entity', HttpClient.HTTP_UNPROCESSABLE_ENTITY);
+                break;
             case 500:
-                return new ClientError('Internal Server Error', HttpClient.HTTP_NOTFOUND);
+                return new ClientError('Internal Server Error', HttpClient.HTTP_INTERNAL_SERVER_ERROR);
+                break;
+            case 502:
+                return new ClientError('Bad gateway', HttpClient.HTTP_BAD_GATEWAY);
                 break;
             case 503:
                 return new ClientError('Service not available', HttpClient.HTTP_UNAVAILABLE);
                 break;
             default:
                 console.error('Unknown status code "' + statusCode + '"', {code: statusCode, text: statusText});
-                return new ClientError('Status code ' + statusCode + ': ' + statusText, HttpClient.HTTP_ERROR);
+                return new ClientError('Status code ' + statusCode + ': ' + statusText, statusCode);
 
         }
         return null;
