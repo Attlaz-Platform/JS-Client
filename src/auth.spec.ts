@@ -12,8 +12,8 @@ const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
 const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
 const passwordFlowClientId: string = 'MXexCeRqNrGnh5tw';
 const passwordFlowClientSecret: string = 'NPYYu6hgMRRzcWN4';
-const passwordFlowUsername: string = 'eline@attlaz.com';
-const passwordFlowPassword: string = 'koetjeboe';
+const passwordFlowUsername: string = 'demo@attlaz.com';
+const passwordFlowPassword: string = 'Kd9X&jKiSJDXb3@cTq';
 
 const tokenExpirationInSeconds: number = 5;
 test('Test client credentials flow', async () => {
@@ -74,7 +74,7 @@ test('Test password authentication - valid', async () => {
 
     // console.log('User', user);
 
-    expect(user.email).toBe('eline@attlaz.com');
+    expect(user.email).toBe('demo@attlaz.com');
 
     // TODO: how to get the seconds to wait for the token to expire?
     const waitSecondsForTokenToExpire: number = tokenExpirationInSeconds + 5;

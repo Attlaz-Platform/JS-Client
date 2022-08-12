@@ -1,0 +1,8 @@
+.idea
+*.iml
+dist
+node_modules
+.env
+package-lock.json
+*.spec.js
+e2e/*

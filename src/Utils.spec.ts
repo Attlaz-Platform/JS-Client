@@ -27,3 +27,20 @@ test('Test base64 encode/decode', () => {
     expect(Utils.base64decode('TG9yZW0gaXBzdW0=')).toBe('Lorem ipsum');
 
 });
+test('Test if iterable', async () => {
+
+    expect(Utils.isIterable(null)).toBe(false);
+    expect(Utils.isIterable('')).toBe(false);
+    expect(Utils.isIterable('Lorem')).toBe(false);
+    expect(Utils.isIterable(false)).toBe(false);
+    expect(Utils.isIterable(true)).toBe(false);
+    expect(Utils.isIterable(undefined)).toBe(false);
+    expect(Utils.isIterable(12)).toBe(false);
+
+    expect(Utils.isIterable([])).toBe(true);
+    expect(Utils.isIterable(['L', 'O', 'R', 'E', 'M'])).toBe(true);
+
+    expect(Utils.isIterable({})).toBe(false);
+    expect(Utils.isIterable({a: 'a', b: 'b'})).toBe(false);
+
+});

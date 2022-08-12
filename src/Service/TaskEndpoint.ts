@@ -100,7 +100,7 @@ export class TaskEndpoint extends Endpoint {
 
     public save(task: Task): Promise<Task> {
         return new Promise<any>((resolve, reject) => {
-            let url: string = '/projects/' + task.project + '/tasks';
+            let url: string = '/projects/' + task.projectId + '/tasks';
 
             this.httpClient.request(url, task, 'POST').then((result: any) => {
 

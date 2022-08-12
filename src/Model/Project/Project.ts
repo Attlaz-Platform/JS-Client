@@ -1,17 +1,21 @@
 import {State} from '../State';
 import {StateAware} from '../StateAware';
+import {Utils} from '../../Utils';
 
-export class Project implements StateAware{
+export class Project implements StateAware {
     public id: string;
     public key: string;
     public name: string;
-    public team: string;
+    public teamId: string;
     public default: boolean = false;
 
     public defaultEnvironmentId: string;
 
+    /** @deprecated **/
     public source_account: number;
+    /** @deprecated **/
     public source_repository: string;
+    /** @deprecated **/
     public language: number;
 
     public state: State = State.Active;
@@ -25,9 +29,14 @@ export class Project implements StateAware{
     public static parse(rawProject: any): Project {
         let project: Project = new Project(rawProject.id, rawProject.key, rawProject.name);
 
-        project.team = rawProject.team;
+        if (rawProject.team !== undefined) {
+            project.teamId = rawProject.team;
+        } else {
+            project.teamId = rawProject.teamId;
+        }
+
         if (rawProject.default !== null && rawProject.default !== undefined) {
-            project.default = (rawProject.default.toString() === '1');
+            project.default = Utils.isTrue(rawProject.default);
         }
 
         project.defaultEnvironmentId = rawProject.defaultEnvironmentId;

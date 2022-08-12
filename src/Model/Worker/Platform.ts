@@ -1,28 +1,27 @@
 import {State} from '../State';
 import {StateAware} from '../StateAware';
+import {Utils} from '../../Utils';
 
 export class Platform implements StateAware {
     public id: number;
     public name: string;
-    public image: string;
-    public version: string;
-    public language: string;
-    public languageVersion: string;
-    public buildDate: Date;
+    public languageId: number;
+    public released: Date;
+    public endOfSupport: Date;
+    public endOfLife: Date;
     public state: State = State.Active;
 
     public static parse(raw: any): Platform {
-        const worker: Platform = new Platform();
-        worker.id = raw.id;
-        worker.name = raw.name;
-        worker.image = raw.image;
-        worker.version = raw.version;
-        worker.language = raw.language;
-        worker.languageVersion = raw.languageVersion;
-        worker.buildDate = raw.buildDate;
-        worker.state = State.fromString(raw.state);
+        const platform: Platform = new Platform();
+        platform.id = raw.id;
+        platform.name = raw.name;
+        platform.languageId = raw.languageId;
+        platform.released = Utils.parseRawDate(raw.released);
+        platform.endOfSupport = Utils.parseRawDate(raw.endOfSupport)
+        platform.endOfLife = Utils.parseRawDate(raw.endOfLife)
+        platform.state = State.fromString(raw.state);
 
-        return worker;
+        return platform;
     }
 
 }

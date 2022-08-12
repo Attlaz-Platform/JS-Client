@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "target": "es2017",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",
@@ -11,8 +11,10 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
     "alwaysStrict": true,
-    "noImplicitReturns": false,
+    "noImplicitReturns": true,
     "noImplicitAny": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": "src",
     "lib": [
       "es2017",

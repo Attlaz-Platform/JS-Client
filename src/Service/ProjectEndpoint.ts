@@ -1,49 +1,35 @@
 import {Endpoint} from './Endpoint';
 import {Project} from '../Model/Project/Project';
 import {Utils} from '../Utils';
+import {DataResult} from '../Model/Result/DataResult';
 
 export class ProjectEndpoint extends Endpoint {
 
-    public getAll(): Promise<Project[]> {
-        return new Promise<Project[]>((resolve, reject) => {
-            this.httpClient.request('projects').then((rawProjects: any) => {
-
-                let projects: Project[] = [];
-                for (let rawProject of rawProjects) {
-                    projects.push(Project.parse(rawProject));
-                }
-
-                resolve(projects);
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load projects: ' + reason);
-                }
-
-                reject(reason);
-            });
-        });
+    public async getAll(): Promise<Project[]> {
+        try {
+            const result: DataResult<Project[]> = await this.request('/projects');
+            result.setData(this.parseCollection(result, Project.parse));
+            return result.getData();
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load projects: ' + e);
+            }
+            throw e;
+        }
 
     }
 
-    public getByTeam(teamId: string): Promise<Project[]> {
-        return new Promise<Project[]>((resolve, reject) => {
-            this.httpClient.request('teams/' + teamId + '/projects').then((rawProjects: any) => {
-
-                let projects: Project[] = [];
-                for (let rawProject of rawProjects) {
-                    projects.push(Project.parse(rawProject));
-                }
-
-                resolve(projects);
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load projects: ' + reason);
-                }
-
-                reject(reason);
-            });
-        });
-
+    public async getByTeam(teamId: string): Promise<Project[]> {
+        try {
+            const result: DataResult<Project[]> = await this.request('teams/' + teamId + '/projects');
+            result.setData(this.parseCollection(result, Project.parse));
+            return result.getData();
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load projects: ' + e);
+            }
+            throw e;
+        }
     }
 
     public async getById(projectId: string): Promise<Project> {

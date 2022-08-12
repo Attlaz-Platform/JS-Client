@@ -150,7 +150,7 @@ async function testHTTPAuth() {
     requestData.setBasicAuth('attlaz', '4$0x51eIaF9w');
 
     try {
-        const res: any = await HttpClient.request(requestData);
+        const res: any = await HttpClient.request2(requestData);
         console.log(res);
     } catch (e) {
         console.error('Error', e);

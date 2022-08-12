@@ -1,23 +1,15 @@
 import {Endpoint} from './Endpoint';
 import {Team} from '../Model/Team/Team';
-import {State} from '../Model/State';
+
+import {DataResult} from '../Model/Result/DataResult';
 
 export class TeamsEndpoint extends Endpoint {
 
     public async getAll(): Promise<Team[]> {
-
         try {
-            const rawTeams: any[] = await this.httpClient.request('/teams');
-            let teams: Team[] = [];
-            for (let rawTeam of rawTeams) {
-                let team: Team = new Team();
-                team.id = rawTeam.id;
-                team.name = rawTeam.name;
-                team.state = State.fromString(rawTeam.state);
-                teams.push(team);
-            }
-
-            return teams;
+            const result: DataResult<Team[]> = await this.request('/teams');
+            result.setData(this.parseCollection(result, Team.parse));
+            return result.getData();
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load teams: ' + e);

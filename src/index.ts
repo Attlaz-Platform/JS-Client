@@ -9,7 +9,7 @@ export {HttpClientRequest} from './Http/HttpClientRequest';
 export {HttpClientResponse} from './Http/HttpClientResponse';
 export {OAuthClient} from './Http/OAuthClient';
 export {OAuthClientOptions} from './Http/OAuthClientOptions';
-
+export {OAuthClientToken} from './Http/OAuthClientToken';
 /* Models */
 export {ClientError} from './Model/Error/ClientError';
 
@@ -23,6 +23,7 @@ export {Log} from './Model/Log/Log';
 export {LogLevel} from './Model/Log/LogLevel';
 export {LogQuery} from './Model/Log/LogQuery';
 export {LogStatus} from './Model/Log/LogStatus';
+export {LogStream} from './Model/Log/LogStream';
 export {LogStreamId} from './Model/Log/LogStreamId';
 /** Messaging **/
 
@@ -40,7 +41,7 @@ export {Subscriber} from './Model/Messaging/Subscriber';
 export {ChannelHistory} from './Model/Messaging/ChannelHistory';
 /** Project **/
 
-export {Language} from './Model/Project/Language';
+export {PlatformLanguage} from './Model/Project/PlatformLanguage';
 export {Project} from './Model/Project/Project';
 export {ProjectDeploy} from './Model/Project/ProjectDeploy';
 export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit';
@@ -57,6 +58,8 @@ export {ResultError} from './Model/Result/ResultError';
 
 export {StorageInformation} from './Model/Storage/StorageInformation';
 export {StorageType} from './Model/Storage/StorageType';
+export {StorageItem} from './Model/Storage/StorageItem';
+export {StorageItemInformation} from './Model/Storage/StorageItemInformation';
 /** Trigger **/
 export {ApiTrigger} from './Model/Trigger/ApiTrigger';
 export {ApiTriggerData} from './Model/Trigger/ApiTriggerData';
@@ -68,10 +71,11 @@ export {TriggerType} from './Model/Trigger/TriggerType';
 export {WebhookTrigger} from './Model/Trigger/WebhookTrigger';
 export {WebhookTriggerData} from './Model/Trigger/WebhookTriggerData';
 /** Worker**/
-
+export {Platform} from './Model/Worker/Platform';
+export {PlatformImage} from './Model/Worker/PlatformImage';
 export {Worker} from './Model/Worker/Worker';
 export {WorkerConfig} from './Model/Worker/WorkerConfig';
-export {Platform} from './Model/Worker/Platform';
+
 export {WorkerInstance} from './Model/Worker/WorkerInstance';
 export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 export {WorkerState} from './Model/Worker/WorkerState';
@@ -102,6 +106,7 @@ export {TaskExecutionHistory} from './Model/TaskExecutionHistory';
 export {TaskExecutionResponse} from './Model/TaskExecutionResponse';
 export {TaskExecutionStatus} from './Model/TaskExecutionStatus';
 export {TaskExecutionSummary} from './Model/TaskExecutionSummary';
+export {TaskExecutionStats} from './Model/TaskExecution/TaskExecutionStats';
 export {TaskSummary} from './Model/TaskSummary';
 
 export {User} from './Model/User';
@@ -113,10 +118,11 @@ export {AdapterEndpoint} from './Service/AdapterEndpoint';
 export {ChannelEndpoint} from './Service/ChannelEndpoint';
 export {ProjectEndpoint} from './Service/ProjectEndpoint';
 export {ConfigEndpoint} from './Service/ConfigEndpoint';
-export {LanguageEndpoint} from './Service/LanguageEndpoint';
+export {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint';
 export {LogEndpoint} from './Service/LogEndpoint';
 export {TeamMemberEndpoint} from './Service/TeamMemberEndpoint';
 export {NotificationsEndpoint} from './Service/NotificationsEndpoint';
+export {PlatformEndpoint} from './Service/PlatformEndpoint';
 export {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 export {QueueEndpoint} from './Service/QueueEndpoint';
@@ -126,6 +132,7 @@ export {SubscriberEndpoint} from './Service/SubscriberEndpoint';
 export {TaskEndpoint} from './Service/TaskEndpoint';
 export {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
 export {TaskExecutionRequestEndpoint} from './Service/TaskExecutionRequestEndpoint';
+export {TaskExecutionStatsEndpoint} from './Service/TaskExecutionStatsEndpoint';
 export {TeamsEndpoint} from './Service/TeamsEndpoint';
 export {TriggerEndpoint} from './Service/TriggerEndpoint';
 export {UserEndpoint} from './Service/UserEndpoint';

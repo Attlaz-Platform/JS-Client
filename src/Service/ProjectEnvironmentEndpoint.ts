@@ -1,19 +1,15 @@
 import {Endpoint} from './Endpoint';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
+import {DataResult} from '../Model/Result/DataResult';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
 
     public async getByProject(id: string): Promise<ProjectEnvironment[]> {
 
         try {
-            const rawProjectEnvironments: any[] = await this.httpClient.request('/projects/' + id + '/environments');
-
-            let projectEnvironment: ProjectEnvironment[] = [];
-            for (let rawProjectEnvironment of rawProjectEnvironments) {
-//TODO: add parsing
-                projectEnvironment.push(rawProjectEnvironment);
-            }
-            return projectEnvironment;
+            const result: DataResult<ProjectEnvironment[]> = await this.request('/projects/' + id + '/environments');
+            result.setData(this.parseCollection(result, ProjectEnvironment.parse));
+            return result.getData();
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load project environments', error);
@@ -29,7 +25,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
         try {
             const rawProjectEnvironment: any = await this.httpClient.request('/projectenvironments/' + id + '');
 
-            const projectEnvironment: ProjectEnvironment = rawProjectEnvironment as ProjectEnvironment;
+            const projectEnvironment: ProjectEnvironment = ProjectEnvironment.parse(rawProjectEnvironment);
             return projectEnvironment;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -47,7 +43,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
             const rawProjectEnvironment: any = await this.httpClient.request('projectenvironments/', projectEnvironment, 'POST');
 
             // TODO: parse result
-            const savedProjectEnvironment: ProjectEnvironment = rawProjectEnvironment as ProjectEnvironment;
+            const savedProjectEnvironment: ProjectEnvironment = ProjectEnvironment.parse(rawProjectEnvironment);
             return savedProjectEnvironment;
 
         } catch (error) {

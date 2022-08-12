@@ -2,13 +2,10 @@ import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Worker} from '../Model/Worker/Worker';
 import {DataResult} from '../Model/Result/DataResult';
-import {Platform} from '../Model/Worker/Platform';
-
-// import {DataResult, Worker, Platform} from '..';
 
 export class WorkerEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<Worker> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<DataResult<Worker>> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
@@ -18,8 +15,8 @@ export class WorkerEndpoint extends Endpoint {
                 throw new Error('Unable to find worker')
             }
 
-            return Worker.parse(result);
-
+            return new DataResult<Worker>(Worker.parse(result));
+      
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);
@@ -46,20 +43,6 @@ export class WorkerEndpoint extends Endpoint {
 
             throw error;
         }
-
-    }
-
-    public async getPlatforms(): Promise<Platform[]> {
-
-        let cmd: string = '/platforms';
-
-        const rawPlatforms: any[] = await this.httpClient.request(cmd);
-
-        const result: Platform[] = [];
-        for (let rawPlatform of rawPlatforms) {
-            result.push(Platform.parse(rawPlatform));
-        }
-        return result;
 
     }
 }

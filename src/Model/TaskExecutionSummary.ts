@@ -11,7 +11,7 @@ export class TaskExecutionSummary extends TaskExecution {
     public static parse(rawTaskExecutionSummary: any): TaskExecutionSummary {
         let taskExecutionSummary: TaskExecutionSummary = TaskExecution.parse(rawTaskExecutionSummary) as TaskExecutionSummary;
 
-        if (rawTaskExecutionSummary.time !== null && rawTaskExecutionSummary.time !== undefined) {
+        if (rawTaskExecutionSummary.time === null || rawTaskExecutionSummary.time === undefined) {
             throw new Error('Task execution time cannot be empty')
         }
         taskExecutionSummary.time = Utils.parseRawDate(rawTaskExecutionSummary.time);
