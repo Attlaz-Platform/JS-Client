@@ -19,12 +19,14 @@ import {Endpoint} from './Service/Endpoint';
 import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
 import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
 import {OAuthClientOptions} from './Http/OAuthClientOptions';
-import {LanguageEndpoint} from './Service/LanguageEndpoint';
+import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint';
 import {ChannelEndpoint} from './Service/ChannelEndpoint';
 import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint';
 import {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
 import {LogEndpoint} from './Service/LogEndpoint';
 import {TriggerEndpoint} from './Service/TriggerEndpoint';
+import {PlatformEndpoint} from './Service/PlatformEndpoint';
+import {TaskExecutionStatsEndpoint} from './Service/TaskExecutionStatsEndpoint';
 
 export class Client {
 
@@ -50,10 +52,12 @@ export class Client {
         UserEndpoint,
         MemberEndpoint: TeamMemberEndpoint,
         SourcesAccountEndpoint,
-        LanguageEndpoint,
+        LanguageEndpoint: PlatformLanguageEndpoint,
         StorageEndpoint,
         WorkerConfigEndpoint,
-        HealthAlertEndpoint
+        HealthAlertEndpoint,
+        PlatformEndpoint,
+        TaskExecutionStatsEndpoint
     };
 
     private httpClient: OAuthClient;
@@ -150,7 +154,11 @@ export class Client {
     }
 
     public getNotificationsEndpoint(): NotificationsEndpoint {
-        return this.getEndpoint('notiication', this.Store.NotificationsEndpoint);
+        return this.getEndpoint('notication', this.Store.NotificationsEndpoint);
+    }
+
+    public getPlatformEndpoint(): PlatformEndpoint {
+        return this.getEndpoint('platform', this.Store.PlatformEndpoint);
     }
 
     public getSubscriberEndpoint(): SubscriberEndpoint {
@@ -171,6 +179,10 @@ export class Client {
 
     public getTaskExecutionRequestEndpoint(): TaskExecutionRequestEndpoint {
         return this.getEndpoint('taskexecutionrequest', this.Store.TaskExecutionRequestEndpoint);
+    }
+
+    public getTaskExecutionStatsEndpoint(): TaskExecutionStatsEndpoint {
+        return this.getEndpoint('taskexecutionstats', this.Store.TaskExecutionStatsEndpoint);
     }
 
     public getTeamsEndpoint(): TeamsEndpoint {
@@ -197,7 +209,7 @@ export class Client {
         return this.getEndpoint('sourcesaccount', this.Store.SourcesAccountEndpoint);
     }
 
-    public getLanguageEndpoint(): LanguageEndpoint {
+    public getLanguageEndpoint(): PlatformLanguageEndpoint {
         return this.getEndpoint('language', this.Store.LanguageEndpoint);
     }
 

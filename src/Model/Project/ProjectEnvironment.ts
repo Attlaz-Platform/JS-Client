@@ -7,8 +7,9 @@ export class ProjectEnvironment implements StateAware {
     public key: string;
     public projectId: string;
     public name: string;
+    /** @deprecated **/
     public sourceBranch: string;
-    public parent: string | null = null;
+    public parentId: string | null = null;
     public isLocal: boolean = false;
     public state: State = State.Active;
 
@@ -17,10 +18,20 @@ export class ProjectEnvironment implements StateAware {
 
         projectEnvironment.id = rawProjectEnvironment.id;
         projectEnvironment.key = rawProjectEnvironment.key;
-        projectEnvironment.projectId = rawProjectEnvironment.project;
+
+        if (rawProjectEnvironment.project !== undefined) {
+            projectEnvironment.projectId = rawProjectEnvironment.project;
+        } else {
+            projectEnvironment.projectId = rawProjectEnvironment.projectId;
+        }
+
         projectEnvironment.name = rawProjectEnvironment.name;
         projectEnvironment.sourceBranch = rawProjectEnvironment.source_branch;
-        projectEnvironment.parent = rawProjectEnvironment.parent;
+        if (rawProjectEnvironment.parent !== undefined) {
+            projectEnvironment.parentId = rawProjectEnvironment.parent;
+        } else {
+            projectEnvironment.parentId = rawProjectEnvironment.parentId;
+        }
         projectEnvironment.isLocal = Utils.isTrue(rawProjectEnvironment.is_local);
         projectEnvironment.state = State.fromString(rawProjectEnvironment.state);
         return projectEnvironment;

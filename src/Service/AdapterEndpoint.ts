@@ -69,9 +69,9 @@ export class AdapterEndpoint extends Endpoint {
     public async getConnections(projectId: string): Promise<DataResult<AdapterConnection[]>> {
         try {
 
-            let url: string = '/connections';
+            let url: string = '/project/' + projectId + '/connections';
 
-            const result: DataResult<AdapterConnection[]> = await this.request(url, {projectId}, 'GET');
+            const result: DataResult<AdapterConnection[]> = await this.request(url, null, 'GET');
 
             result.setData(this.parseCollection(result, AdapterConnection.parse));
 
@@ -109,10 +109,9 @@ export class AdapterEndpoint extends Endpoint {
     public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<DataResult<AdapterConnection>> {
         try {
 
-            let url: string = '/connections';
-            const data: AdapterConnection & { projectId: string } = adapter as any;
-            data.projectId = projectId;
-            const result: DataResult<AdapterConnection> = await this.request(url, data, 'POST');
+            let url: string = '/project/' + projectId + '/connections';
+
+            const result: DataResult<AdapterConnection> = await this.request(url, adapter, 'POST');
 
             result.setData(AdapterConnection.parse(result.getData()));
 

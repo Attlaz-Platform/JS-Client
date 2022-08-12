@@ -7,7 +7,7 @@ export class Utils {
         return (input === true || input === 'true' || input === 1 || input === '1');
     }
 
-    public static parseRawDate(input: Date): Date  {
+    public static parseRawDate(input: Date): Date {
         if (input !== null && input !== undefined) {
             return new Date(input);
         }
@@ -39,6 +39,10 @@ export class Utils {
         return null;
     }
 
+    public static parseInt(input: string | number | boolean): number {
+        return parseInt(input.toString(), undefined);
+    }
+
     public static base64encode(input: string): string {
         if (input === null || input === undefined || input === '') {
             return '';
@@ -52,5 +56,13 @@ export class Utils {
             return '';
         }
         return Buffer.from(encodedString, 'base64').toString();
+    }
+
+    public static isIterable(variable: any): boolean {
+        if (Utils.isNullOrUndefined(variable) || typeof variable === 'string') {
+            return false;
+        }
+        return Symbol.iterator in Object(variable);
+        // return typeof obj[Symbol.iterator] === 'function';
     }
 }

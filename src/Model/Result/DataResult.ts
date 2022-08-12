@@ -4,21 +4,34 @@ export class DataResult<T> {
     private data: T | null;
     private errors: ResultError[];
 
-    public constructor() {
-        this.data = null;
+    public constructor(data: T | null = null) {
+        this.data = data;
         this.errors = [];
     }
 
     public static parse<T>(raw: any): DataResult<T> {
         const result: DataResult<T> = new DataResult<T>();
-        const data: any = raw.data;
-        result.setData(data);
+        if (raw === null || raw === undefined) {
+            throw new Error('Unable to parse DataResult: result: empty');
+        }
 
-        if (data.hasOwnProperty('errors')) {
-            const errors: any[] = raw.errors;
-            for (const error of errors) {
-                result.addError(error);
+        if (raw.hasOwnProperty('errors')) {
+            if (raw.errors === undefined || raw.errors === null) {
+                console.error('Unable to parse DataResult: errors defined but invalid value', raw);
+            } else {
+                const errors: any[] = raw.errors;
+                for (const error of errors) {
+                    result.addError(error);
+                }
             }
+            return result;
+
+        }
+
+        if (!raw.hasOwnProperty('data') || raw.data === undefined) {
+            throw new Error('Unable to parse DataResult: data is not defined');
+        } else {
+            result.setData(raw.data);
         }
 
         return result;

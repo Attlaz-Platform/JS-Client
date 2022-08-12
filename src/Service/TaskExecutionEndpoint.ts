@@ -4,6 +4,8 @@ import {Utils} from '../Utils';
 import {TaskExecutionSummary} from '../Model/TaskExecutionSummary';
 import {TaskExecutionHistory} from '../Model/TaskExecutionHistory';
 import {TaskExecutionStatus} from '../Model/TaskExecutionStatus';
+import {ClientError} from '../Model/Error/ClientError';
+import {HttpClient} from '../Http/HttpClient';
 
 export class TaskExecutionEndpoint extends Endpoint {
 
@@ -29,7 +31,7 @@ export class TaskExecutionEndpoint extends Endpoint {
         });
     }
 
-    public async getTaskExecutionSummaries(taskId: string, from: Date | null = null, to: Date | null = null, projectEnvironmentId: string | null = null): Promise<TaskExecutionSummary[]> {
+    public async getTaskExecutionSummaries(taskId: string, from: Date | null = null, to: Date | null = null, taskExecutionStatuses: TaskExecutionStatus[] | null = null, projectEnvironmentId: string | null = null): Promise<TaskExecutionSummary[]> {
 
         try {
             let params: any | null = null;
@@ -52,7 +54,12 @@ export class TaskExecutionEndpoint extends Endpoint {
                 }
                 params.environment = projectEnvironmentId;
             }
-
+            if (taskExecutionStatuses !== null && taskExecutionStatuses.length > 0) {
+                if (params === null || params === undefined) {
+                    params = {};
+                }
+                params.statuses = taskExecutionStatuses;
+            }
             const rawTaskExecutions: any[] = await this.httpClient.request('/tasks/' + taskId + '/executionsummaries', params);
 
             let taskExecutions: TaskExecutionSummary[] = [];
@@ -73,20 +80,23 @@ export class TaskExecutionEndpoint extends Endpoint {
 
     }
 
-    public async getTaskExecutionSummary(taskExecutionId: string): Promise<TaskExecutionSummary > {
+    public async getTaskExecutionSummary(taskExecutionId: string): Promise<TaskExecutionSummary | null> {
 
         try {
             const rawTaskExecution: any = await this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries');
 
-            if (Utils.isNullOrUndefined(rawTaskExecution)) {
-                throw new Error('Unable to get task execution');
+            if (rawTaskExecution === null || rawTaskExecution === undefined) {
+                return null;
             }
             return TaskExecutionSummary.parse(rawTaskExecution);
-        } catch (e) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load tasks executions: ' + e);
+        } catch (error: any) {
+            if (error instanceof ClientError && error.code === HttpClient.HTTP_NOTFOUND) {
+                return null;
             }
-            throw e;
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load tasks executions: ' + error);
+            }
+            throw error;
         }
 
     }

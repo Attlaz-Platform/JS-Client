@@ -1,10 +1,16 @@
 module.exports = {
+    // preset: 'ts-jest/presets/default-esm',
+    // extensionsToTreatAsEsm: ['.ts'],
     "roots": [
-        "<rootDir>/src"
+        "<rootDir>/src",
+        "<rootDir>/e2e"
     ],
-    "transform": {
-        "^.+\\.tsx?$": "ts-jest"
-    },
+    // 'globals': {
+    //     'ts-jest': {
+    //         useESM: true,
+    //     }
+    // },
+    transform: {"\\.ts$": ['ts-jest']},
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     "moduleFileExtensions": [
         "ts",
@@ -14,5 +20,8 @@ module.exports = {
         "json",
         "node"
     ],
-    "testTimeout": 10000
-}
+    setupFiles: [
+        'dotenv/config'
+    ],
+    "testTimeout": 10000,
+};
