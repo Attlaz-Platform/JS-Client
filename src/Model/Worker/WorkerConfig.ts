@@ -14,7 +14,7 @@ export class WorkerConfig {
 
     public static KEY_API_ENDPOINT: string = 'api_endpoint';
     public static KEY_API_CLIENT_ID: string = 'api_client_id';
-    public static KEY_CLIENT_SECRET: string = 'api_client_secret';
+    public static KEY_API_CLIENT_SECRET: string = 'api_client_secret';
 
     public projectEnvironment: string;
     public key: string;

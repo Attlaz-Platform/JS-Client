@@ -43,7 +43,7 @@ export class WorkerConfigEndpoint extends Endpoint {
             let url: string = '/projectenvironments/' + workerConfig.projectEnvironment + '/workerconfiguration';
 
             const result: DataResult<any> = await this.request(url, workerConfig, 'POST');
-            console.log(result);
+            // console.log(result);
             return WorkerConfig.parse(result);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
