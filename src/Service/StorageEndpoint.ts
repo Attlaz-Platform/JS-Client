@@ -60,11 +60,12 @@ export class StorageEndpoint extends Endpoint {
 
         try {
             const result: DataResult<StorageItem> = await this.request(cmd, null, 'GET');
-            if (result.getData() === null) {
+            if (!result.hasData()) {
                 return null;
-            } else {
-                return StorageItem.parse(result.getData());
             }
+
+            return StorageItem.parse(result.getData());
+
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage item', ex);

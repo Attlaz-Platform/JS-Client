@@ -19,6 +19,7 @@ export class HttpClient {
     public static HTTP_INTERNAL_SERVER_ERROR: number = 500;
     public static HTTP_BAD_GATEWAY: number = 502;
     public static HTTP_UNAVAILABLE: number = 503;
+    public static HTTP_TIMEOUT: number = 504;
 
     // public static async get(url: string, requestData: any = {}): Promise<any> {
     //     if (Utils.isNullOrUndefined(requestData)) {
@@ -62,8 +63,7 @@ export class HttpClient {
             try {
                 jsonData = JSON.parse(rawData);
             } catch (e) {
-                console.log(httpResponse.statusText)
-                console.error('Unable to parse response data to JSON');
+                console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
             }
             httpResponse.body = jsonData;
         } else {

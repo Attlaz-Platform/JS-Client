@@ -3,8 +3,8 @@ import {StateAware} from '../StateAware';
 import {Utils} from '../../Utils';
 
 export class PlatformImage implements StateAware {
-    public id: number;
-    public platformId: number;
+    public id: string;
+    public platformId: string;
     public image: string;
     public version: string;
     public languageVersion: string;

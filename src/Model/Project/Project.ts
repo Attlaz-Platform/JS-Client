@@ -11,13 +11,6 @@ export class Project implements StateAware {
 
     public defaultEnvironmentId: string;
 
-    /** @deprecated **/
-    public source_account: number;
-    /** @deprecated **/
-    public source_repository: string;
-    /** @deprecated **/
-    public language: number;
-
     public state: State = State.Active;
 
     constructor(id: string, key: string, name: string) {
@@ -40,10 +33,6 @@ export class Project implements StateAware {
         }
 
         project.defaultEnvironmentId = rawProject.defaultEnvironmentId;
-
-        project.source_account = rawProject.source_account;
-        project.source_repository = rawProject.source_repository;
-        project.language = rawProject.language;
 
         project.state = State.fromString(rawProject.state);
         return project;

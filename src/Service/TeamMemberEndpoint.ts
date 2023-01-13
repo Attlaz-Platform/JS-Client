@@ -7,6 +7,9 @@ import {TeamMemberInviteState} from '../Model/Team/TeamMemberInviteState';
 import {State} from '../Model/State';
 import {TeamMemberInvite} from '../Model/Team/TeamMemberInvite';
 import {DataResult} from '../Model/Result/DataResult';
+import {UserAction} from '../Model/User/UserAction';
+import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration';
+import {DataValueCollection} from '../Model/DataValueCollection';
 
 export class TeamMemberEndpoint extends Endpoint {
 
@@ -89,4 +92,40 @@ export class TeamMemberEndpoint extends Endpoint {
 
     }
 
+    public async getTeamMemberEvents(teamId: string, memberId: string): Promise<DataResult<UserAction[]>> {
+
+        try {
+
+            const url: string = '/teams/' + teamId + '/members/' + memberId + '/events';
+
+            const result: DataResult<UserAction[]> = await this.request(url, null, 'GET');
+
+            result.setData(this.parseCollection(result, TeamMemberEndpoint.parse));
+
+            return result
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load adapter configuration: ', error);
+            }
+            throw error;
+        }
+    }
+
+    private static parse(rawUserEvent: any): UserAction {
+        const userAction: UserAction = new UserAction();
+
+        userAction.id = rawUserEvent.id;
+        userAction.userId = rawUserEvent.user;
+        userAction.teamId = rawUserEvent.team;
+        userAction.action = rawUserEvent.action;
+        userAction.resourceId = rawUserEvent.resource_id;
+        userAction.resourceType = rawUserEvent.resource_type;
+        userAction.description = rawUserEvent.description;
+        userAction.ip = rawUserEvent.ip;
+        userAction.time = new Date(rawUserEvent.time);
+        userAction.result = rawUserEvent.result;
+        userAction.data = DataValueCollection.fromObject(rawUserEvent.data);
+
+        return userAction;
+    }
 }

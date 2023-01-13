@@ -1,5 +1,5 @@
-export class SourcesAccount {
-    public id: number;
+export class CodeSourceAccount {
+    public id: string;
     public key: string;
     public name: string;
     public user: string;
@@ -8,12 +8,12 @@ export class SourcesAccount {
     public refresh_token: string;
     public scopes: string;
 
-    public static parse(rawSourcesAccount: any): SourcesAccount {
-        let sourcesAccount: SourcesAccount = new SourcesAccount();
+    public static parse(rawSourcesAccount: any): CodeSourceAccount {
+        let sourcesAccount: CodeSourceAccount = new CodeSourceAccount();
         sourcesAccount.id = rawSourcesAccount.id;
         sourcesAccount.key = rawSourcesAccount.key;
         sourcesAccount.name = rawSourcesAccount.name;
-        sourcesAccount.user = rawSourcesAccount.user;
+        sourcesAccount.user = rawSourcesAccount.userId;
         sourcesAccount.type = rawSourcesAccount.type;
         sourcesAccount.access_token = rawSourcesAccount.access_token;
         sourcesAccount.refresh_token = rawSourcesAccount.refresh_token;

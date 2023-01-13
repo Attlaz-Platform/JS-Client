@@ -2,12 +2,12 @@ import {State} from '../State';
 import {StateAware} from '../StateAware';
 
 export class PlatformLanguage implements StateAware {
-    public id: number;
+    public id: string;
     public name: string;
     public description: string = '';
     public state: State = State.Active;
 
-    public constructor(id: number, name: string) {
+    public constructor(id: string, name: string) {
         this.id = id;
         this.name = name;
     }

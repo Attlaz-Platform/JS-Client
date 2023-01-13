@@ -80,6 +80,9 @@ export {WorkerInstance} from './Model/Worker/WorkerInstance';
 export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 export {WorkerState} from './Model/Worker/WorkerState';
 
+/** Deployment **/
+export {CodeSource} from './Model/Deployment/CodeSource';
+export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount';
 /** Team **/
 export {Team} from './Model/Team/Team';
 export {TeamMember} from './Model/Team/TeamMember';
@@ -97,7 +100,7 @@ export {DataValue, DataValueValue} from './Model/DataValue';
 
 export {Notification} from './Model/Notification';
 export {PagedResult} from './Model/PagedResult';
-export {SourcesAccount} from './Model/SourcesAccount';
+
 export {SourcesAccountRepository} from './Model/SourcesAccountRepository';
 export {State} from './Model/State';
 export {Task} from './Model/Task';

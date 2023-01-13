@@ -2,6 +2,7 @@ import {Endpoint} from './Endpoint';
 import {Project} from '../Model/Project/Project';
 import {Utils} from '../Utils';
 import {DataResult} from '../Model/Result/DataResult';
+import {HttpClient} from '../Http/HttpClient';
 
 export class ProjectEndpoint extends Endpoint {
 
@@ -32,19 +33,22 @@ export class ProjectEndpoint extends Endpoint {
         }
     }
 
-    public async getById(projectId: string): Promise<Project> {
+    public async getById(projectId: string): Promise<Project | null> {
 
         try {
             const rawProject: any = await this.httpClient.request('projects/' + projectId + '');
             if (Utils.isNullOrUndefined(rawProject)) {
-                throw new Error('Unable to get project');
+                return null;
             }
             return Project.parse(rawProject);
-        } catch (e) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load project by id: ' + e);
+        } catch (error: any) {
+            if (error.code === HttpClient.HTTP_NOTFOUND) {
+                return null;
             }
-            throw e;
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load project by id: ' + error);
+            }
+            throw error;
         }
 
     }

@@ -2,6 +2,7 @@ import {Endpoint} from './Endpoint';
 import {Task} from '../Model/Task';
 import {Utils} from '../Utils';
 import {TaskSummary} from '../Model/TaskSummary';
+import {HttpClient} from '../Http/HttpClient';
 
 export class TaskEndpoint extends Endpoint {
 
@@ -27,22 +28,25 @@ export class TaskEndpoint extends Endpoint {
         });
     }
 
-    public async getTask(taskId: string): Promise<Task> {
+    public async getTask(taskId: string): Promise<Task | null> {
 
         try {
             const rawTask: any = await this.httpClient.request('/tasks/' + taskId);
 
             if (Utils.isNullOrUndefined(rawTask)) {
-                throw new Error('Task not found');
+                return null;
             }
             return Task.parse(rawTask);
 
-        } catch (e) {
+        } catch (error: any) {
+            if (error.code === HttpClient.HTTP_NOTFOUND) {
+                return null;
+            }
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load tasks: ' + e);
+                console.error('Failed to load tasks: ' + error);
             }
 
-            throw e;
+            throw error;
         }
 
     }

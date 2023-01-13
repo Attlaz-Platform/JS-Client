@@ -1,6 +1,7 @@
 import {Endpoint} from './Endpoint';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
 import {DataResult} from '../Model/Result/DataResult';
+import {HttpClient} from '../Http/HttpClient';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
 
@@ -20,14 +21,19 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     }
 
-    public async getById(id: string): Promise<ProjectEnvironment> {
+    public async getById(id: string): Promise<ProjectEnvironment | null> {
 
         try {
             const rawProjectEnvironment: any = await this.httpClient.request('/projectenvironments/' + id + '');
-
+            if (rawProjectEnvironment === null || rawProjectEnvironment === undefined) {
+                return null;
+            }
             const projectEnvironment: ProjectEnvironment = ProjectEnvironment.parse(rawProjectEnvironment);
             return projectEnvironment;
-        } catch (error) {
+        } catch (error: any) {
+            if (error.code === HttpClient.HTTP_NOTFOUND) {
+                return null;
+            }
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load project environment by id', error);
             }
