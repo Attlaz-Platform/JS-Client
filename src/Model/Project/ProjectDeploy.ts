@@ -4,23 +4,25 @@ import {Utils} from '../../Utils';
 
 export class ProjectDeploy {
     public id: string;
-    public projectEnvironmentId: string;
+    public platformId: string;
+    public buildStrategyId: string;
     public userId: string;
     public requested: Date;
     public started: Date;
     public finished: Date;
     public status: ProjectDeployStatus = ProjectDeployStatus.Unknown;
-
     public bytes: number;
-
-    public commit_hash: string;
     public commits: ProjectDeployCommit[] = [];
+    public path: string;
+    public commitHash: string;
+    public errors: { message: string }[] | null = null;
 
     public static parse(rawProjectDeploy: any): ProjectDeploy {
         const projectDeploy: ProjectDeploy = new ProjectDeploy();
 
-        projectDeploy.id = rawProjectDeploy.id;
-        projectDeploy.projectEnvironmentId = rawProjectDeploy.projectEnvironmentId;
+        projectDeploy.id = rawProjectDeploy.id.toString();
+        projectDeploy.platformId = rawProjectDeploy.platformId;
+        projectDeploy.buildStrategyId = rawProjectDeploy.buildStrategyId;
         projectDeploy.userId = rawProjectDeploy.userId;
         projectDeploy.requested = new Date(rawProjectDeploy.requested);
         projectDeploy.started = new Date(rawProjectDeploy.started);
@@ -30,7 +32,8 @@ export class ProjectDeploy {
         if (!Utils.isNullOrUndefined(rawProjectDeploy.bytes)) {
             projectDeploy.bytes = parseInt(rawProjectDeploy.bytes);
         }
-        projectDeploy.commit_hash = rawProjectDeploy.commit_hash;
+        projectDeploy.path = rawProjectDeploy.path;
+        projectDeploy.commitHash = rawProjectDeploy.commit_hash;
 
         const rawProjectDeployCommits: any[] = rawProjectDeploy.commits;
 
@@ -44,6 +47,8 @@ export class ProjectDeploy {
 
             projectDeploy.commits.push(projectDeployCommit);
         }
+
+        projectDeploy.errors = rawProjectDeploy.errors;
 
         return projectDeploy;
     }

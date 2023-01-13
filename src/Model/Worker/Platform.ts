@@ -3,9 +3,9 @@ import {StateAware} from '../StateAware';
 import {Utils} from '../../Utils';
 
 export class Platform implements StateAware {
-    public id: number;
+    public id: string;
     public name: string;
-    public languageId: number;
+    public languageId: string;
     public released: Date;
     public endOfSupport: Date;
     public endOfLife: Date;

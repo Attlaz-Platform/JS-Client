@@ -12,7 +12,7 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
         try {
             // TODO: parse
             const result: any = await this.httpClient.request(url, params, 'POST');
-            console.log('TODO: parse postTaskExecutionRequest result', result);
+            // console.log('TODO: parse postTaskExecutionRequest result', result);
             return result as TaskExecutionResponse;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {

@@ -38,7 +38,6 @@ export class OAuthClient {
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         //TODO: should we encrypt the password in the client (or is https save enough)?
-        console.log('Authenticate')
         try {
             let accessToken: Token;
             if (username !== null && username !== undefined && password !== null && password !== undefined) {
@@ -64,7 +63,10 @@ export class OAuthClient {
 
     public async refreshToken(): Promise<void> {
 
-        console.log('Get refresh token');
+        if(this.debug)
+        {
+            console.debug('[OAuthClient] refresh token');
+        }
         if (this.oauthToken === null) {
             throw new Error('unable to refresh token, auth token not set');
         }
@@ -74,7 +76,6 @@ export class OAuthClient {
                 this.oauthToken = await this.oauthToken.refresh();
                 this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
             } catch (e) {
-                console.log('Error during refresh token', e);
                 throw ClientError.fromError(e);
             }
 
@@ -106,14 +107,9 @@ export class OAuthClient {
 
                         this.refreshTokenPromise = this.refreshToken();
                         await this.refreshTokenPromise;
-                        // this.refreshTokenPromise.then(() => {
                         this.refreshTokenPromise = null;
-                        console.log('Refresh token done');
-                        // });
                     } else {
-                        console.log('Waiting for refresh token promise')
                         await this.refreshTokenPromise;
-                        console.log('Refresh token promise resolved');
                     }
 
                 }
@@ -122,7 +118,7 @@ export class OAuthClient {
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
 
             if (this.debug) {
-                console.debug('[Client] REQ: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
+                console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
             }
             try {
 

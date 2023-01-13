@@ -11,7 +11,7 @@ export class TaskExecution {
     public projectEnvironmentId: string;
     public triggerId: string;
 
-    public deployId: number;
+    public deployId: string;
 
     public logLevelCount: Map<LogLevel, number>;
     public logsPurged: boolean = false;

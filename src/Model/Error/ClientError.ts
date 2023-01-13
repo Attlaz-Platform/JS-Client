@@ -14,7 +14,6 @@ export class ClientError implements Error {
 
     public static fromError(error: Error | any): ClientError {
 
-        console.log('Incoming error', error);
         if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
             error = error.body.error;
         }
@@ -93,6 +92,9 @@ export class ClientError implements Error {
                 break;
             case 503:
                 return new ClientError('Service not available', HttpClient.HTTP_UNAVAILABLE);
+                break;
+            case 504:
+                return new ClientError('Gateway Time-out', HttpClient.HTTP_TIMEOUT);
                 break;
             default:
                 console.error('Unknown status code "' + statusCode + '"', {code: statusCode, text: statusText});
