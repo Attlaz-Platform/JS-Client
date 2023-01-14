@@ -5,11 +5,11 @@
 import {Client} from "./Client";
 import {ClientError} from './Model/Error/ClientError';
 import {User} from './Model/User';
-import {TaskSummary} from './Model/TaskSummary';
+
 import {HttpClientRequest} from './Http/HttpClientRequest';
 import {HttpClient} from './Http/HttpClient';
-import {DataResult} from './Model/Result/DataResult';
 import {State} from './Model/State';
+import {FlowSummary} from './Model/Flow/FlowSummary';
 
 // client.authenticate('admin@attlaz.com', 'admin2').subscribe((success) => {
 //     console.log('Authenticate', success);
@@ -97,7 +97,7 @@ function test() {
         //
         // logEntry.context = context;
         //
-        client.getUserEndpoint().getUser().then((user: User) => {
+        client.getUserEndpoint().getUser().then((user: User | null) => {
             console.log('User', user);
         });
 
@@ -106,14 +106,14 @@ function test() {
         newUser.email = 'email@domain.com';
         newUser.password = 'BoyWMpu3N7h47IGt5kKT4FYK';
         newUser.state = State.Active;
-        client.getUserEndpoint().create(newUser).then((result: DataResult<{ createdUser: User }>) => {
+        client.getUserEndpoint().create(newUser).then((result: User) => {
             console.log('Create user result', result);
         })
 
         /**
          * We expect an exception!
          */
-        client.getTaskEndpoint().getTaskSummary('3B4A1772A', '41').then((taskSummary: TaskSummary | null) => {
+        client.getFlowEndpoint().getFlowSummary('3B4A1772A', '41').then((taskSummary: FlowSummary | null) => {
             console.log('Task', taskSummary);
         }).catch((error: Error) => {
             console.error(error);
@@ -157,7 +157,9 @@ async function testHTTPAuth() {
     }
 }
 
-testExpiredToken();
+testExpiredToken().then(() => {
+
+})
 
 async function testExpiredToken() {
     try {

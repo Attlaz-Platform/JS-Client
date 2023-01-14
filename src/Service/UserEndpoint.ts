@@ -2,28 +2,24 @@ import {UserAuthProvider} from '../Model/User/UserAuthProvider';
 import {OAuthClientToken} from '../Http/OAuthClientToken';
 import {Endpoint} from './Endpoint';
 import {User} from '../Model/User';
-import {Utils} from '../Utils';
-import {DataResult} from '../Model/Result/DataResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class UserEndpoint extends Endpoint {
 
-    public async getUser(): Promise<User> {
+    public async getUser(): Promise<User | null> {
 
         let cmd: string = '/user';
 
-        const rawUser: any = await this.httpClient.request(cmd);
-        if (Utils.isNullOrUndefined(rawUser)) {
-            throw new Error('User not found');
-        }
-
-        return User.parse(rawUser);
+        const rawUser: ObjectResult<User> = await this.requestObject(cmd, null, User.parse);
+        return rawUser.getData();
 
     }
 
     public async authenticateByAuthProvider(providerType: string, data: { code: string; state: string }): Promise<OAuthClientToken> {
         try {
 
-            const result: any = await this.httpClient.request('/auth/providers/' + providerType, data, 'POST', false);
+            const result: any = await this.request('/auth/providers/' + providerType, data, 'POST', false);
 
             // TODO: should we validate this more?
             const token: OAuthClientToken = result as OAuthClientToken;
@@ -40,7 +36,7 @@ export class UserEndpoint extends Endpoint {
     public async createAuthProvider(providerType: string, data: { code: string; state: string }): Promise<boolean> {
         try {
 
-            const result: any = await this.httpClient.request('/user/auth/providers', {provider_type: providerType, code: data.code, state: data.state}, 'POST');
+            const result: any = await this.request('/user/auth/providers', {provider_type: providerType, code: data.code, state: data.state}, 'POST');
             return true;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -53,7 +49,7 @@ export class UserEndpoint extends Endpoint {
     public async removeAuthProvider(providerId: number): Promise<boolean> {
         try {
 
-            const result: any = await this.httpClient.request('/user/auth/providers', {provider: providerId}, 'DELETE');
+            const result: any = await this.request('/user/auth/providers', {provider: providerId}, 'DELETE');
             return true;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -63,13 +59,11 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async getAuthProviders(): Promise<DataResult<UserAuthProvider[]>> {
+    public async getAuthProviders(): Promise<CollectionResult<UserAuthProvider>> {
 
         let cmd: string = '/user/auth/providers';
 
-        const rawAuthProviders: DataResult<any[]> = await this.request<any[]>(cmd);
-
-        rawAuthProviders.setData(this.parseCollection(rawAuthProviders, UserAuthProvider.parse));
+        const rawAuthProviders: CollectionResult<UserAuthProvider> = await this.requestCollection<UserAuthProvider>(cmd, null, UserAuthProvider.parse);
 
         return rawAuthProviders;
 
@@ -78,8 +72,12 @@ export class UserEndpoint extends Endpoint {
     public async update(user: User): Promise<User> {
         try {
             let url: string = '/user/' + user.id;
-            const result: any = await this.httpClient.request(url, {user}, 'POST');
-            return User.parse(result);
+            const result: ObjectResult<User> = await this.requestObject(url, {user}, User.parse, 'POST');
+            const updatedUser: User | null = result.getData();
+            if (updatedUser === null) {
+                throw new Error('User not updated');
+            }
+            return updatedUser;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save user: ', e);
@@ -88,18 +86,21 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async create(user: User, invitationCode: string | null = null): Promise<DataResult<{ createdUser: User }>> {
+    public async create(user: User, invitationCode: string | null = null): Promise<User> {
         try {
             let url: string = '/user/';
             const data: {} = {user, invitation_code: invitationCode};
-            const result: DataResult<{ createdUser: User }> = await this.request(url, data, 'PUT', false);
 
-            const resultData: any | null = result.getData();
-            if (resultData !== null && resultData.createdUser !== null) {
-                result.setData({createdUser: User.parse(resultData.createdUser)})
+            const parser = (raw: any): User => {
+                return User.parse(raw.createdUser)
             }
+            const result: ObjectResult<User> = await this.requestObject(url, data, parser, 'PUT', false);
 
-            return result;
+            const createdUser: User | null = result.getData();
+            if (createdUser === null) {
+                throw new Error('User not created');
+            }
+            return createdUser;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to create user: ', e);
@@ -111,7 +112,7 @@ export class UserEndpoint extends Endpoint {
     public async requestResetPassword(email: string): Promise<boolean> {
         try {
             let url: string = '/users/resetpassword';
-            const result: any = await this.httpClient.request(url, {email}, 'POST', false);
+            const result: any = await this.request(url, {email}, 'POST', false);
             return true;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -124,7 +125,7 @@ export class UserEndpoint extends Endpoint {
     public async resetPassword(code: string, password: string): Promise<boolean> {
         try {
             let url: string = '/users/resetpassword/' + code;
-            const result: any = await this.httpClient.request(url, {password}, 'POST', false);
+            const result: any = await this.request(url, {password}, 'POST', false);
             return true;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {

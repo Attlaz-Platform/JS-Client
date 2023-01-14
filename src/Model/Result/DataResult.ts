@@ -2,11 +2,38 @@ import {ResultError} from './ResultError';
 
 export class DataResult<T> {
     private data: T | null;
-    private errors: ResultError[];
+    private readonly errors: ResultError[];
 
     public constructor(data: T | null = null) {
         this.data = data;
         this.errors = [];
+    }
+
+    private static parseResponse(raw: any) {
+        if (raw === null || raw === undefined) {
+            throw new Error('Unable to parse response: empty');
+        }
+    }
+
+    public static appendErrors(result: DataResult<any>, rawResponse: any): void {
+        if (rawResponse.hasOwnProperty('errors')) {
+            if (rawResponse.errors === undefined || rawResponse.errors === null) {
+                console.error('Unable to parse DataResult: errors defined but invalid value', rawResponse);
+            } else {
+                const errors: any[] = rawResponse.errors;
+                for (const error of errors) {
+                    result.addError(error);
+                }
+            }
+        }
+    }
+
+    private static appendData(result: DataResult<any>, rawResponse: any): void {
+        if (!rawResponse.hasOwnProperty('data') || rawResponse.data === undefined) {
+            throw new Error('Unable to parse DataResult: data is not defined');
+        } else {
+            result.setData(rawResponse.data);
+        }
     }
 
     public static parse<T>(raw: any): DataResult<T> {
@@ -15,24 +42,7 @@ export class DataResult<T> {
             throw new Error('Unable to parse DataResult: result: empty');
         }
 
-        if (raw.hasOwnProperty('errors')) {
-            if (raw.errors === undefined || raw.errors === null) {
-                console.error('Unable to parse DataResult: errors defined but invalid value', raw);
-            } else {
-                const errors: any[] = raw.errors;
-                for (const error of errors) {
-                    result.addError(error);
-                }
-            }
-            return result;
-
-        }
-
-        if (!raw.hasOwnProperty('data') || raw.data === undefined) {
-            throw new Error('Unable to parse DataResult: data is not defined');
-        } else {
-            result.setData(raw.data);
-        }
+        DataResult.appendErrors(result, raw);
 
         return result;
     }

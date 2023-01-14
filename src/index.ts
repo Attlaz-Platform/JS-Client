@@ -83,13 +83,14 @@ export {WorkerState} from './Model/Worker/WorkerState';
 /** Deployment **/
 export {CodeSource} from './Model/Deployment/CodeSource';
 export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount';
-/** Team **/
-export {Team} from './Model/Team/Team';
-export {TeamMember} from './Model/Team/TeamMember';
-export {TeamMemberInvite} from './Model/Team/TeamMemberInvite';
-export {TeamMemberInvite2} from './Model/Team/TeamMemberInvite2';
-export {TeamMemberInviteState} from './Model/Team/TeamMemberInviteState';
-export {TeamMemberRole} from './Model/Team/TeamMemberRole';
+
+/** Workspace **/
+export {Workspace} from './Model/Workspace/Workspace';
+export {WorkspaceMember} from './Model/Workspace/WorkspaceMember';
+export {WorkspaceMemberInvite} from './Model/Workspace/WorkspaceMemberInvite';
+export {WorkspaceMemberInvite2} from './Model/Workspace/WorkspaceMemberInvite2';
+export {WorkspaceMemberInviteState} from './Model/Workspace/WorkspaceMemberInviteState';
+export {WorkspaceMemberRole} from './Model/Workspace/WorkspaceMemberRole';
 /** **/
 export {Adapter} from './Model/Adapter/Adapter';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
@@ -103,14 +104,16 @@ export {PagedResult} from './Model/PagedResult';
 
 export {SourcesAccountRepository} from './Model/SourcesAccountRepository';
 export {State} from './Model/State';
-export {Task} from './Model/Task';
-export {TaskExecution} from './Model/TaskExecution';
-export {TaskExecutionHistory} from './Model/TaskExecutionHistory';
-export {TaskExecutionResponse} from './Model/TaskExecutionResponse';
-export {TaskExecutionStatus} from './Model/TaskExecutionStatus';
-export {TaskExecutionSummary} from './Model/TaskExecutionSummary';
-export {TaskExecutionStats} from './Model/TaskExecution/TaskExecutionStats';
-export {TaskSummary} from './Model/TaskSummary';
+
+/** Flow **/
+export {Flow} from './Model/Flow/Flow';
+export {FlowRun} from './Model/Flow/FlowRun';
+export {FlowRunHistory} from './Model/Flow/FlowRunHistory';
+export {FlowRunResponse} from './Model/Flow/FlowRunResponse';
+export {FlowRunStatus} from './Model/Flow/FlowRunStatus';
+export {FlowRunSummary} from './Model/Flow/FlowRunSummary';
+export {FlowRunStats} from './Model/Flow/FlowRunStats';
+export {FlowSummary} from './Model/Flow/FlowSummary';
 
 export {User} from './Model/User';
 
@@ -123,7 +126,7 @@ export {ProjectEndpoint} from './Service/ProjectEndpoint';
 export {ConfigEndpoint} from './Service/ConfigEndpoint';
 export {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint';
 export {LogEndpoint} from './Service/LogEndpoint';
-export {TeamMemberEndpoint} from './Service/TeamMemberEndpoint';
+export {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint';
 export {NotificationsEndpoint} from './Service/NotificationsEndpoint';
 export {PlatformEndpoint} from './Service/PlatformEndpoint';
 export {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
@@ -132,11 +135,11 @@ export {QueueEndpoint} from './Service/QueueEndpoint';
 export {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
 export {StorageEndpoint} from './Service/StorageEndpoint';
 export {SubscriberEndpoint} from './Service/SubscriberEndpoint';
-export {TaskEndpoint} from './Service/TaskEndpoint';
-export {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
-export {TaskExecutionRequestEndpoint} from './Service/TaskExecutionRequestEndpoint';
-export {TaskExecutionStatsEndpoint} from './Service/TaskExecutionStatsEndpoint';
-export {TeamsEndpoint} from './Service/TeamsEndpoint';
+export {FlowEndpoint} from './Service/FlowEndpoint';
+export {FlowRunEndpoint} from './Service/FlowRunEndpoint';
+export {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint';
+export {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint';
+export {WorkspaceEndpoint} from './Service/WorkspaceEndpoint';
 export {TriggerEndpoint} from './Service/TriggerEndpoint';
 export {UserEndpoint} from './Service/UserEndpoint';
 export {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint';

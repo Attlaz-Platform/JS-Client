@@ -1,6 +1,6 @@
 export class Notification {
     public id: number;
-    public user: number;
+    public userId: number;
     public type: string;
     public subject: string;
     public body: string;

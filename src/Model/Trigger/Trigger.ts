@@ -6,20 +6,20 @@ import {WebhookTriggerData} from './WebhookTriggerData';
 import {ApiTriggerData} from './ApiTriggerData';
 import {StateAware} from '../StateAware';
 
-export class Trigger implements StateAware{
+export class Trigger implements StateAware {
     public id: string;
     public type: TriggerType;
-    public projectEnvironment: string;
-    public task: string;
+    public projectEnvironmentId: string;
+    public flowId: string;
     public arguments: {};
     public data: TriggerData;
     public state: State = State.Active;
 
-    public constructor(id: string, type: TriggerType, projectEnvironment: string, task: string, data: TriggerData) {
+    public constructor(id: string, type: TriggerType, projectEnvironmentId: string, flowId: string, data: TriggerData) {
         this.id = id;
         this.type = type;
-        this.projectEnvironment = projectEnvironment;
-        this.task = task;
+        this.projectEnvironmentId = projectEnvironmentId;
+        this.flowId = flowId;
         this.data = data;
 
         this.arguments = {};
@@ -30,7 +30,7 @@ export class Trigger implements StateAware{
 
         const data: any = rawTrigger.data;
 
-        const task: string = rawTrigger.task;
+        const flowId: string = rawTrigger.flow;
 
         let triggerData: TriggerData;
         switch (type) {
@@ -47,7 +47,7 @@ export class Trigger implements StateAware{
                 throw new Error('Unknown trigger type "' + type + '"');
         }
 
-        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.projectEnvironment, task, triggerData);
+        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project_environment, flowId, triggerData);
 
         trigger.arguments = rawTrigger.arguments;
 

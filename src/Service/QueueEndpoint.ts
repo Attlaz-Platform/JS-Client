@@ -1,22 +1,16 @@
 import {Endpoint} from './Endpoint';
-import {Utils} from '../Utils';
-import {DataResult} from '../Model/Result/DataResult';
 import {QueueStatus} from '../Model/Queue/QueueStatus';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class QueueEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<DataResult<QueueStatus>> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<QueueStatus | null> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/queues';
 
-            const result: DataResult<QueueStatus> = await this.request(url);
-            if (Utils.isNullOrUndefined(result)) {
-                // return null;
-            } else {
-                result.setData(QueueStatus.parse(result.getData()));
-            }
-            return result;
+            const result: ObjectResult<QueueStatus> = await this.requestObject(url, null, QueueStatus.parse);
+            return result.getData();
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

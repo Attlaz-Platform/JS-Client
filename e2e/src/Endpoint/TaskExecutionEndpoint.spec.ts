@@ -1,4 +1,4 @@
-import {Client, TaskExecutionSummary} from '../../../src';
+import {Client, FlowRunSummary} from '../../../src';
 import {Helper} from '../helper';
 
 test('That we get a null and not an error when trying to fetch a non existing task execution summary', async () => {
@@ -8,6 +8,6 @@ test('That we get a null and not an error when trying to fetch a non existing ta
     // client.getHttpClient().enableDebug();
     const authenticated: boolean = await client.authenticate();
 
-    const taskExecutionSummary: TaskExecutionSummary | null = await client.getTaskExecutionEndpoint().getTaskExecutionSummary('Nonexisting');
+    const taskExecutionSummary: FlowRunSummary | null = await client.getFlowRunEndpoint().getTaskExecutionSummary('Nonexisting');
     expect(taskExecutionSummary).toBeNull();
 });

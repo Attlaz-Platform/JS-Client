@@ -1,72 +1,52 @@
 import {Endpoint} from './Endpoint';
 import {LogQuery} from '../Model/Log/LogQuery';
-import {PagedResult} from '../Model/PagedResult';
 import {Log} from '../Model/Log/Log';
 import {Utils} from '../Utils';
 import {LogStreamId} from '../Model/Log/LogStreamId';
 import {LogLevel} from '../Model/Log/LogLevel';
 import {DataResult} from '../Model/Result/DataResult';
 import {DataValueValue} from '../Model/DataValue';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class LogEndpoint extends Endpoint {
 
-    public getLogs(logQuery: LogQuery): Promise<PagedResult<Log>> {
+    public async getLogs(logQuery: LogQuery): Promise<CollectionResult<Log>> {
 
-        return new Promise<PagedResult<Log>>((resolve, reject) => {
+        const arrQuery: string[] = [];
+        arrQuery.push('pageSize=' + logQuery.pageSize);
+        arrQuery.push('pageNum=' + logQuery.pageNum);
 
-            const arrQuery: string[] = [];
-            arrQuery.push('pageSize=' + logQuery.pageSize);
-            arrQuery.push('pageNum=' + logQuery.pageNum);
-
-            // Resolved
-            if (logQuery.hidden !== null && logQuery.hidden !== undefined) {
-                if (logQuery.hidden === true) {
-                    arrQuery.push('hidden=1');
-                } else {
-                    arrQuery.push('hidden=0');
-                }
+        // Resolved
+        if (logQuery.hidden !== null && logQuery.hidden !== undefined) {
+            if (logQuery.hidden) {
+                arrQuery.push('hidden=1');
+            } else {
+                arrQuery.push('hidden=0');
             }
+        }
 
-            // LogLevels
-            if (logQuery.logLevels !== null && logQuery.logLevels !== undefined && logQuery.logLevels.length > 0) {
-                arrQuery.push('logLevels=' + logQuery.logLevels.join(','));
+        // LogLevels
+        if (logQuery.logLevels !== null && logQuery.logLevels !== undefined && logQuery.logLevels.length > 0) {
+            arrQuery.push('logLevels=' + logQuery.logLevels.join(','));
+        }
+        // Tags
+        if (logQuery.tags !== null && logQuery.tags !== undefined && logQuery.tags.length > 0) {
+
+            const arrTags: string[] = [];
+
+            //TODO: map this
+            for (const tag of logQuery.tags) {
+                arrTags.push(tag.key + ':' + tag.values);
             }
-            // Tags
-            if (logQuery.tags !== null && logQuery.tags !== undefined && logQuery.tags.length > 0) {
+            const strTags: string = arrTags.join(',');
 
-                const arrTags: string[] = [];
+            arrQuery.push('tags=' + strTags);
+        }
 
-                //TODO: map this
-                for (const tag of logQuery.tags) {
-                    arrTags.push(tag.key + ':' + tag.values);
-                }
-                const strTags: string = arrTags.join(',');
+        let cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.id) + '/logs/?' + arrQuery.join('&');
 
-                arrQuery.push('tags=' + strTags);
-            }
-
-            let cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.id) + '/logs/?' + arrQuery.join('&');
-
-            this.httpClient.request(cmd).then((rawLogs: any) => {
-
-                let logs: Log[] = [];
-                for (let rawLog of rawLogs.data) {
-
-                    logs.push(Log.parse(rawLog));
-                }
-
-                let result: PagedResult<Log> = new PagedResult<Log>(logs, rawLogs.pageSize, rawLogs.totalCount);
-                resolve(result);
-
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load logs: ', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
+        const result: CollectionResult<Log> = await this.requestCollection(cmd, null, Log.parse);
+        return result;
     }
 
     public async save(log: Log): Promise<Log> {

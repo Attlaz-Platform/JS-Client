@@ -22,7 +22,7 @@ test('Handle request with invalid or expired token', async () => {
     const token: OAuthClientToken = new OAuthClientToken("txVbCqJRHqqI03asKHGzUrsvkwI6KcmIDFbGKDVJ", 'Bearer', "hPpMiU9yxOMD0DreRTrMz2UXa2Vk6bUYc0oIXyMe", "all")
     client.setToken(token);
 
-    return client.getUserEndpoint().getUser().then((result: User) => {
+    return client.getUserEndpoint().getUser().then((result: User | null) => {
         fail('Should not be able to authenticate');
     }, (error) => {
         console.log(error);
@@ -39,7 +39,7 @@ test('Handle refresh token', async () => {
     token.expires = new Date();
     client.setToken(token);
 
-    return client.getUserEndpoint().getUser().then((result: User) => {
+    return client.getUserEndpoint().getUser().then((result: User | null) => {
         fail('Should not be able to authenticate');
     }, (error: ClientError) => {
         expect(error.message).toBe('unauthorized_client');
@@ -62,16 +62,16 @@ test('Handle multiple refresh tokens at the same time', async () => {
     token.expires = new Date('2000-07-21');
     client.setToken(token);
 
-    const x: Promise<User | ClientError>[] = [];
+    const x: Promise<(User | null) | ClientError>[] = [];
     for (let i = 0; i < 10; i++) {
-        const y: Promise<User | ClientError> = client.getUserEndpoint().getUser().then((result: User) => {
+        const y: Promise<(User | null) | ClientError> = client.getUserEndpoint().getUser().then((result: User | null) => {
             return result;
         }, (error: ClientError) => {
             return error;
         });
         x.push(y);
     }
-    return Promise.all(x).then((results: (User | ClientError)[]) => {
+    return Promise.all(x).then((results: ((User | null) | ClientError)[]) => {
 
         console.log(results);
         expect(results).toHaveLength(10);

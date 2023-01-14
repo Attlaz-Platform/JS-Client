@@ -3,9 +3,9 @@ import {Utils} from '../Utils';
 
 export class Config {
     public id: number;
-    public project: string;
-    public projectEnvironment: string;
-    public task: string;
+    public projectId: string;
+    public projectEnvironmentId: string;
+    public flowId: string;
     public scope: string;
     public key: string;
     public value: string;
@@ -16,9 +16,9 @@ export class Config {
     public static parse(rawConfig: any): Config {
         let config: Config = new Config();
         config.id = rawConfig.id;
-        config.project = rawConfig.project;
-        config.projectEnvironment = rawConfig.projectEnvironment;
-        config.task = rawConfig.task;
+        config.projectId = rawConfig.project;
+        config.projectEnvironmentId = rawConfig.project_environment;
+        config.flowId = rawConfig.flow;
         config.scope = rawConfig.scope;
         config.key = rawConfig.key;
         config.value = rawConfig.value;

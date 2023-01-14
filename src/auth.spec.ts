@@ -6,8 +6,8 @@ import {HttpClient} from './Http/HttpClient';
 
 jest.setTimeout((60) * 1000);
 
-// const apiEndpoint: string = 'http://localhost:5728/';
-const apiEndpoint: string = 'https://api2.attlaz.com';
+const apiEndpoint: string = 'http://localhost:5728/';
+// const apiEndpoint: string = 'https://api2.attlaz.com';
 const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
 const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
 const passwordFlowClientId: string = 'MXexCeRqNrGnh5tw';
@@ -70,8 +70,11 @@ test('Test password authentication - valid', async () => {
 
     await client.authenticate(passwordFlowUsername, passwordFlowPassword);
 
-    const user: User = await client.getUserEndpoint().getUser();
+    const user: User | null = await client.getUserEndpoint().getUser();
 
+    if (user === null) {
+        throw new Error('User is null');
+    }
     // console.log('User', user);
 
     expect(user.email).toBe('demo@attlaz.com');
@@ -87,8 +90,10 @@ test('Test password authentication - valid', async () => {
         throw new Error('Token is null');
     }
     expect(OAuthClientToken.isExpired(token)).toBeTruthy();
-    const user2: User = await client.getUserEndpoint().getUser();
-
+    const user2: User | null = await client.getUserEndpoint().getUser();
+    if (user2 === null) {
+        throw new Error('User2 is null');
+    }
     expect(user2.email).toBe(passwordFlowUsername);
 
 });
@@ -135,8 +140,10 @@ test('Test set access token + JSON encode', async () => {
     const decodedToken: any = OAuthClientToken.deserialize(encoded);
     client.setToken(decodedToken);
 
-    const user: User = await client.getUserEndpoint().getUser();
-
+    const user: User | null = await client.getUserEndpoint().getUser();
+    if (user === null) {
+        throw new Error('User is null');
+    }
     expect(user.email).toBe(passwordFlowUsername);
 
     let client2: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
@@ -148,8 +155,10 @@ test('Test set access token + JSON encode', async () => {
 
     expect(client2.getToken()).toStrictEqual(client.getToken());
 
-    const user2: User = await client2.getUserEndpoint().getUser();
-
+    const user2: User | null = await client2.getUserEndpoint().getUser();
+    if (user2 === null) {
+        throw new Error('User2 is null');
+    }
     expect(user2.email).toBe(passwordFlowUsername);
 
     // const newToken = client.setAccessToken()

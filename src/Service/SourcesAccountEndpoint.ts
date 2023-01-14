@@ -5,29 +5,24 @@ import {Utils} from '../Utils';
 import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount';
 import {CodeSource} from '../Model/Deployment/CodeSource';
 import {HttpClient} from '../Http/HttpClient';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class SourcesAccountEndpoint extends Endpoint {
 
-    public async getAllCodeSourceAccounts(): Promise<CodeSourceAccount[]> {
+    public async getAllCodeSourceAccounts(): Promise<CollectionResult<CodeSourceAccount>> {
 
-        const rawSourcesAccounts: any[] = await this.httpClient.request('codesourceaccounts');
+        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('codesourceaccounts', null, CodeSourceAccount.parse);
 
-        let sourcesAccounts: CodeSourceAccount[] = [];
-        for (let rawSourcesAccount of rawSourcesAccounts) {
-            sourcesAccounts.push(CodeSourceAccount.parse(rawSourcesAccount));
-        }
-        return sourcesAccounts;
+        return result;
 
     }
 
     public async getCodeSourceAccountById(id: string): Promise<CodeSourceAccount | null> {
         try {
-            const rawSourcesAccounts: any | null = await this.httpClient.request('codesourceaccounts/' + id);
+            const rawSourcesAccounts: ObjectResult<CodeSourceAccount> = await this.requestObject('codesourceaccounts/' + id, null, CodeSourceAccount.parse);
 
-            if (rawSourcesAccounts === null) {
-                return null;
-            }
-            return CodeSourceAccount.parse(rawSourcesAccounts);
+            return rawSourcesAccounts.getData();
         } catch (error: any) {
             if (error.code === HttpClient.HTTP_NOTFOUND) {
                 return null;
@@ -49,11 +44,9 @@ export class SourcesAccountEndpoint extends Endpoint {
     public async getCodeSourceById(codeSourceId: string): Promise<CodeSource | null> {
 
         try {
-            const rawCodeSource: any | null = await this.httpClient.request('/codesources/' + codeSourceId);
-            if (rawCodeSource === null) {
-                return null;
-            }
-            return CodeSource.parse(rawCodeSource);
+
+            const result: ObjectResult<CodeSource> = await this.requestObject('/codesources/' + codeSourceId, null, CodeSource.parse);
+            return result.getData();
         } catch (error: any) {
             if (error.code === HttpClient.HTTP_NOTFOUND) {
                 return null;
@@ -67,20 +60,18 @@ export class SourcesAccountEndpoint extends Endpoint {
 
     }
 
-    public async getRepositories(codeSourceAccountId: string): Promise<SourcesAccountRepository[]> {
-        const rawSourcesAccountRepositories: any[] = await this.httpClient.request('codesourceaccounts/' + codeSourceAccountId + '/repositories');
-
-        let sourcesAccountRepositories: SourcesAccountRepository[] = [];
-        for (let rawSourcesAccountRepository of rawSourcesAccountRepositories) {
-            sourcesAccountRepositories.push(SourcesAccountRepository.parse(rawSourcesAccountRepository));
-        }
-        return sourcesAccountRepositories;
+    public async getRepositories(codeSourceAccountId: string): Promise<CollectionResult<SourcesAccountRepository>> {
+        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories', null, SourcesAccountRepository.parse);
+        return rawSourcesAccountRepositories;
     }
 
-    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<string[]> {
+    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<CollectionResult<string>> {
 
         repositoryKey = Utils.base64encode(repositoryKey);
-        const rawBranches: string[] = await this.httpClient.request('sourcesaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches');
+        const parser = (raw: any): string => {
+            return raw;
+        }
+        const rawBranches: CollectionResult<string> = await this.requestCollection('sourcesaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', null, parser);
 
         return rawBranches;
     }
