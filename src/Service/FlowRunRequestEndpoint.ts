@@ -1,10 +1,11 @@
 import {Endpoint} from './Endpoint';
-import {TaskExecutionResponse} from '../Model/TaskExecutionResponse';
+import {FlowRunResponse} from '../Model/Flow/FlowRunResponse';
 
-export class TaskExecutionRequestEndpoint extends Endpoint {
-    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<TaskExecutionResponse> {
 
-        let url: string = '/tasks/' + taskId + '/taskexecutionrequests';
+export class FlowRunRequestEndpoint extends Endpoint {
+    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<FlowRunResponse> {
+
+        let url: string = '/flows/' + taskId + '/flowrunrequests';
         if (wait) {
             url = url + "?wait=true";
         }
@@ -13,7 +14,7 @@ export class TaskExecutionRequestEndpoint extends Endpoint {
             // TODO: parse
             const result: any = await this.httpClient.request(url, params, 'POST');
             // console.log('TODO: parse postTaskExecutionRequest result', result);
-            return result as TaskExecutionResponse;
+            return result as FlowRunResponse;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to execute task: ', ex);

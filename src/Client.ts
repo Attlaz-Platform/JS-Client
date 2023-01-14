@@ -3,15 +3,15 @@ import {WorkerEndpoint} from './Service/WorkerEndpoint';
 import {AdapterEndpoint} from './Service/AdapterEndpoint';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 import {ProjectEndpoint} from './Service/ProjectEndpoint';
-import {TaskExecutionRequestEndpoint} from './Service/TaskExecutionRequestEndpoint';
+import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint';
 import {OAuthClient} from './Http/OAuthClient';
 import {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint';
-import {TeamsEndpoint} from './Service/TeamsEndpoint';
+import {WorkspaceEndpoint} from './Service/WorkspaceEndpoint';
 import {UserEndpoint} from './Service/UserEndpoint';
 import {ConfigEndpoint} from './Service/ConfigEndpoint';
 import {SubscriberEndpoint} from './Service/SubscriberEndpoint';
-import {TaskEndpoint} from './Service/TaskEndpoint';
-import {TeamMemberEndpoint} from './Service/TeamMemberEndpoint';
+import {FlowEndpoint} from './Service/FlowEndpoint';
+import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint';
 import {StorageEndpoint} from './Service/StorageEndpoint';
 import {QueueEndpoint} from './Service/QueueEndpoint';
 import {NotificationsEndpoint} from './Service/NotificationsEndpoint';
@@ -22,16 +22,17 @@ import {OAuthClientOptions} from './Http/OAuthClientOptions';
 import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint';
 import {ChannelEndpoint} from './Service/ChannelEndpoint';
 import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint';
-import {TaskExecutionEndpoint} from './Service/TaskExecutionEndpoint';
+import {FlowRunEndpoint} from './Service/FlowRunEndpoint';
 import {LogEndpoint} from './Service/LogEndpoint';
 import {TriggerEndpoint} from './Service/TriggerEndpoint';
 import {PlatformEndpoint} from './Service/PlatformEndpoint';
-import {TaskExecutionStatsEndpoint} from './Service/TaskExecutionStatsEndpoint';
+import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint';
+import {VERSION} from './version';
 
 export class Client {
 
     private endpoints: Map<string, any>;
-
+    private readonly httpClient: OAuthClient;
     private Store: any = {
         WorkerEndpoint,
         AdapterEndpoint,
@@ -44,31 +45,25 @@ export class Client {
         NotificationsEndpoint,
         SubscriberEndpoint,
         LogEndpoint,
-        TaskEndpoint,
-        TaskExecutionEndpoint,
-        TaskExecutionRequestEndpoint,
-        TeamsEndpoint,
+        FlowEndpoint,
+        FlowRunEndpoint,
+        FlowRunRequestEndpoint,
+        WorkspaceEndpoint,
         TriggerEndpoint,
         UserEndpoint,
-        MemberEndpoint: TeamMemberEndpoint,
+        WorkspaceMemberEndpoint,
         SourcesAccountEndpoint,
-        LanguageEndpoint: PlatformLanguageEndpoint,
+        PlatformLanguageEndpoint,
         StorageEndpoint,
         WorkerConfigEndpoint,
         HealthAlertEndpoint,
         PlatformEndpoint,
-        TaskExecutionStatsEndpoint
+        FlowRunStatsEndpoint
     };
 
-    private httpClient: OAuthClient;
+    constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
 
-    // private test: Map<string, any>;
-
-    // private socketService;
-
-    constructor(private apiEndpoint: string, private clientId: string, private clientSecret: string) {
-
-        const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret);
+        const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret, this.getHeaders());
         this.httpClient = new OAuthClient(options);
 
         this.endpoints = new Map<string, any>();
@@ -82,6 +77,19 @@ export class Client {
         // this.socketService.on('message', (data: any) => {
         //     console.log('Incoming:', data);
         // });
+    }
+
+    private getHeaders(): { [key: string]: string | string[] } {
+        const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
+            version: VERSION,
+            language: 'Javascript',
+            language_version: '',
+            publisher: 'Attlaz'
+        }
+        return {
+            'User-Agent': 'Attlaz Javascript Client/' + VERSION,
+            'X-Attlaz-Client-User-Agent': JSON.stringify(userAgentInfo)
+        }
     }
 
     public getHttpClient(): OAuthClient {
@@ -154,7 +162,7 @@ export class Client {
     }
 
     public getNotificationsEndpoint(): NotificationsEndpoint {
-        return this.getEndpoint('notication', this.Store.NotificationsEndpoint);
+        return this.getEndpoint('notification', this.Store.NotificationsEndpoint);
     }
 
     public getPlatformEndpoint(): PlatformEndpoint {
@@ -169,24 +177,24 @@ export class Client {
         return this.getEndpoint('log', this.Store.LogEndpoint);
     }
 
-    public getTaskEndpoint(): TaskEndpoint {
-        return this.getEndpoint('task', this.Store.TaskEndpoint);
+    public getFlowEndpoint(): FlowEndpoint {
+        return this.getEndpoint('task', this.Store.FlowEndpoint);
     }
 
-    public getTaskExecutionEndpoint(): TaskExecutionEndpoint {
-        return this.getEndpoint('taskexecution', this.Store.TaskExecutionEndpoint);
+    public getFlowRunEndpoint(): FlowRunEndpoint {
+        return this.getEndpoint('flowrun', this.Store.FlowRunEndpoint);
     }
 
-    public getTaskExecutionRequestEndpoint(): TaskExecutionRequestEndpoint {
-        return this.getEndpoint('taskexecutionrequest', this.Store.TaskExecutionRequestEndpoint);
+    public getFlowRunRequestEndpoint(): FlowRunRequestEndpoint {
+        return this.getEndpoint('flowrunrequest', this.Store.FlowRunRequestEndpoint);
     }
 
-    public getTaskExecutionStatsEndpoint(): TaskExecutionStatsEndpoint {
-        return this.getEndpoint('taskexecutionstats', this.Store.TaskExecutionStatsEndpoint);
+    public getTaskExecutionStatsEndpoint(): FlowRunStatsEndpoint {
+        return this.getEndpoint('flowrunstats', this.Store.FlowRunStatsEndpoint);
     }
 
-    public getTeamsEndpoint(): TeamsEndpoint {
-        return this.getEndpoint('teams', this.Store.TeamsEndpoint);
+    public getWorkspaceEndpoint(): WorkspaceEndpoint {
+        return this.getEndpoint('workspaces', this.Store.WorkspaceEndpoint);
     }
 
     public getTriggerEndpoint(): TriggerEndpoint {
@@ -197,8 +205,8 @@ export class Client {
         return this.getEndpoint('user', this.Store.UserEndpoint);
     }
 
-    public getMemberEndpoint(): TeamMemberEndpoint {
-        return this.getEndpoint('member', this.Store.MemberEndpoint);
+    public getWorkspaceMemberEndpoint(): WorkspaceMemberEndpoint {
+        return this.getEndpoint('member', this.Store.WorkspaceMemberEndpoint);
     }
 
     public getWorkerEndpoint(): WorkerEndpoint {
@@ -210,7 +218,7 @@ export class Client {
     }
 
     public getLanguageEndpoint(): PlatformLanguageEndpoint {
-        return this.getEndpoint('language', this.Store.LanguageEndpoint);
+        return this.getEndpoint('language', this.Store.PlatformLanguageEndpoint);
     }
 
     public getStorageEndpoint(): StorageEndpoint {

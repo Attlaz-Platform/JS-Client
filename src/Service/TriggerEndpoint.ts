@@ -1,10 +1,12 @@
 import {Endpoint} from './Endpoint';
 import {Trigger} from '../Model/Trigger/Trigger';
 import {Utils} from '../Utils';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class TriggerEndpoint extends Endpoint {
 
-    public async getByTask(taskId: string, projectEnvironmentId: string | null = null): Promise<Trigger[]> {
+    public async getByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Trigger>> {
 
         try {
             let parameters: any = null;
@@ -12,14 +14,9 @@ export class TriggerEndpoint extends Endpoint {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            const rawTriggers: any[] = await this.httpClient.request('/tasks/' + taskId + '/triggers', parameters);
+            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection('/flows/' + flowId + '/triggers', parameters, Trigger.parse);
 
-            let triggers: Trigger[] = [];
-            for (let rawTrigger of rawTriggers) {
-
-                triggers.push(Trigger.parse(rawTrigger));
-            }
-            return triggers;
+            return rawTriggers;
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -30,14 +27,11 @@ export class TriggerEndpoint extends Endpoint {
 
     }
 
-    public async getById(id: string): Promise<Trigger > {
+    public async getById(id: string): Promise<Trigger | null> {
 
         try {
-            const result: any = await this.httpClient.request('/triggers/' + id);
-            if (Utils.isNullOrUndefined(result)) {
-                throw new Error('Unable to get trigger');
-            }
-            return Trigger.parse(result);
+            const result: ObjectResult<Trigger> = await this.requestObject('/triggers/' + id, null, Trigger.parse);
+            return result.getData();
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -53,11 +47,15 @@ export class TriggerEndpoint extends Endpoint {
 
         try {
 
-            let url: string = '/tasks/' + trigger.task + '/triggers';
+            let url: string = '/flows/' + trigger.flowId + '/triggers';
 
-            const result: any = await this.httpClient.request(url, trigger, 'POST');
+            const result: any = await this.requestObject(url, trigger, Trigger.parse, 'POST');
 
-            return Trigger.parse(result);
+            const createdTrigger: Trigger | null = result.getData();
+            if (createdTrigger === null) {
+                throw new Error('Trigger not created');
+            }
+            return createdTrigger;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save trigger: ', error);

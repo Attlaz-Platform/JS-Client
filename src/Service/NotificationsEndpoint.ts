@@ -1,57 +1,34 @@
 import {Endpoint} from './Endpoint';
 import {Notification} from '../Model/Notification';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class NotificationsEndpoint extends Endpoint {
 
-    public getAll(unacknowledgedOnly: boolean = false): Promise<Notification[]> {
-        return new Promise<Notification[]>((resolve, reject) => {
-            this.httpClient.request('/notifications?unacknowledgedOnly=' + unacknowledgedOnly).then((rawNotifications: any) => {
+    public async getAll(unacknowledgedOnly: boolean = false): Promise<CollectionResult<Notification>> {
 
-                let notifications: Notification[] = [];
-                for (let rawNotification of rawNotifications) {
-//TODO: parse to objects
-                    // subscribers.push(rawSubscriber);
+        const parser = (rawNotification: any): Notification => {
+            let notification: Notification = new Notification();
+            notification.id = rawNotification.id;
+            notification.userId = rawNotification.user;
+            notification.type = rawNotification.type;
+            notification.subject = rawNotification.subject;
+            notification.body = rawNotification.body;
+            notification.time = rawNotification.time;
+            notification.acknowledged = rawNotification.acknowledged === 1;
+            return notification;
+        }
+        const result: CollectionResult<Notification> = await this.requestCollection('/notifications?unacknowledgedOnly=' + unacknowledgedOnly, null, parser);
+        return result;
 
-                    let notification: Notification = new Notification();
-                    notification.id = rawNotification.id;
-                    notification.user = rawNotification.user;
-                    notification.type = rawNotification.type;
-                    notification.subject = rawNotification.subject;
-                    notification.body = rawNotification.body;
-                    notification.time = rawNotification.time;
-                    notification.acknowledged = rawNotification.acknowledged === 1;
-
-                    notifications.push(notification);
-
-                }
-                resolve(notifications);
-
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load notifications: ', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
     }
 
-    public save(notification: Notification): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            let url: string = '/notifications';
+    public async save(notification: Notification): Promise<any> {
 
-            this.httpClient.request(url, notification, 'POST').then((result: any) => {
-
-                resolve(result);
-
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save notification: ', reason);
-                }
-                reject(reason);
-            });
-
-        });
+        const parser = (raw: any): any => {
+            return raw;
+        }
+        const result: ObjectResult<any> = await this.requestObject('/notifications', notification, parser, 'POST');
+        return result.getData();
     }
 }

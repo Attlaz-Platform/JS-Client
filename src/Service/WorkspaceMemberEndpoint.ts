@@ -1,27 +1,27 @@
 import {Endpoint} from './Endpoint';
-import {TeamMemberInvite2} from '../Model/Team/TeamMemberInvite2';
-import {TeamMember} from '../Model/Team/TeamMember';
+
 import {Utils} from '../Utils';
-import {TeamMemberRole} from '../Model/Team/TeamMemberRole';
-import {TeamMemberInviteState} from '../Model/Team/TeamMemberInviteState';
 import {State} from '../Model/State';
-import {TeamMemberInvite} from '../Model/Team/TeamMemberInvite';
+
 import {DataResult} from '../Model/Result/DataResult';
 import {UserAction} from '../Model/User/UserAction';
-import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration';
 import {DataValueCollection} from '../Model/DataValueCollection';
+import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember';
+import {WorkspaceMemberRole} from '../Model/Workspace/WorkspaceMemberRole';
+import {WorkspaceMemberInviteState} from '../Model/Workspace/WorkspaceMemberInviteState';
+import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite';
+import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
-export class TeamMemberEndpoint extends Endpoint {
+export class WorkspaceMemberEndpoint extends Endpoint {
 
-    public async getByTeam(teamId: string): Promise<TeamMember[]> {
+    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<WorkspaceMember>> {
 
-        let cmd: string = '/teams/' + teamId + '/members';
+        let cmd: string = '/workspaces/' + workspaceId + '/members';
 
-        const rawMembers: any[] = await this.httpClient.request(cmd);
-
-        const result: TeamMember[] = [];
-        for (let rawMember of rawMembers) {
-            const member: TeamMember = new TeamMember();
+        const parser = (rawMember: any): WorkspaceMember => {
+            const member: WorkspaceMember = new WorkspaceMember();
             member.id = rawMember.id;
             member.email = rawMember.email;
             member.invite = Utils.isTrue(rawMember.invite);
@@ -29,22 +29,24 @@ export class TeamMemberEndpoint extends Endpoint {
                 member.last_login = Utils.parseRawDate(rawMember.last_login);
             }
             member.name = rawMember.name;
-            member.role = TeamMemberRole.fromString(rawMember.role);
+            member.role = WorkspaceMemberRole.fromString(rawMember.role);
 
             if (member.invite) {
-                member.state = TeamMemberInviteState.fromString(rawMember.state);
+                member.state = WorkspaceMemberInviteState.fromString(rawMember.state);
             } else {
                 member.state = State.fromString(rawMember.state);
             }
-            result.push(member);
+            return member;
         }
+        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, null, parser);
+
         return result;
 
     }
 
-    public async invite(teamId: string, invites: TeamMemberInvite[]): Promise<DataResult<void>> {
+    public async invite(teamId: string, invites: WorkspaceMemberInvite[]): Promise<DataResult<void>> {
 
-        let cmd: string = '/teams/' + teamId + '/invites';
+        let cmd: string = '/workspaces/' + teamId + '/invites';
 
         const rawInvites: { email: string, role: string }[] = [];
         for (let invite of invites) {
@@ -69,38 +71,27 @@ export class TeamMemberEndpoint extends Endpoint {
 
     }
 
-    public async getTeamInviteByCode(inviteCode: string): Promise<TeamMemberInvite2 | null> {
+    public async getWorkspaceInviteByCode(inviteCode: string): Promise<WorkspaceMemberInvite2 | null> {
 
-        let cmd: string = '/teams/invites/' + inviteCode;
+        let cmd: string = '/workspaces/invites/' + inviteCode;
 
-        const rawInvite: any = await this.httpClient.request(cmd, null, 'GET', false);
+        const rawInvite: ObjectResult<WorkspaceMemberInvite2> = await this.requestObject(cmd, null, WorkspaceMemberInvite2.parse, 'GET', false);
         if (rawInvite !== null) {
 
-            const teamMemberInvite: TeamMemberInvite2 = {
-                code: rawInvite.code,
-                email: rawInvite.email,
-                inviter_name: rawInvite.inviter_name,
-                inviter_email: rawInvite.inviter_email,
-                team_name: rawInvite.team_name,
-                state: TeamMemberInviteState.fromString(rawInvite.state)
-            };
-
-            return teamMemberInvite;
+            return rawInvite.getData();
         }
 
         return null;
 
     }
 
-    public async getTeamMemberEvents(teamId: string, memberId: string): Promise<DataResult<UserAction[]>> {
+    public async getTeamMemberEvents(teamId: string, memberId: string): Promise<CollectionResult<UserAction>> {
 
         try {
 
             const url: string = '/teams/' + teamId + '/members/' + memberId + '/events';
 
-            const result: DataResult<UserAction[]> = await this.request(url, null, 'GET');
-
-            result.setData(this.parseCollection(result, TeamMemberEndpoint.parse));
+            const result: CollectionResult<UserAction> = await this.requestCollection(url, null, WorkspaceMemberEndpoint.parse, 'GET');
 
             return result
         } catch (error) {

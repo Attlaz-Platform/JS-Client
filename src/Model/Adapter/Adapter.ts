@@ -19,7 +19,7 @@ export class Adapter {
         adapter.icon = rawAdapter.icon;
         adapter.logo = rawAdapter.logo;
         adapter.type = rawAdapter.type;
-        adapter.categoryIds = rawAdapter.categoryIds;
+        adapter.categoryIds = rawAdapter.category_ids;
         adapter.docs = rawAdapter.docs;
         adapter.website = rawAdapter.website;
 

@@ -1,79 +1,56 @@
 import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Config} from '../Model/Config';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class ConfigEndpoint extends Endpoint {
 
-    public getConfigByTask(taskId: string, projectEnvironmentId: string | null = null): Promise<Config[]> {
-        return new Promise<Config[]>((resolve, reject) => {
+    public async getConfigByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
 
+        try {
             let parameters: any = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            this.httpClient.request('/tasks/' + taskId + '/config', parameters).then((rawConfigs: any) => {
+            const result: CollectionResult<Config> = await this.requestCollection('/flows/' + flowId + '/configvalues', parameters, Config.parse);
 
-                let configs: Config[] = [];
-                for (let rawConfig of rawConfigs) {
-
-                    configs.push(Config.parse(rawConfig));
-                }
-                resolve(configs);
-
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Unable to load task configuration', reason);
-                }
-
-                reject(reason);
-            });
-
-        });
-    }
-
-    public getByProject(projectId: string, projectEnvironmentId: string | null = null): Promise<Config[]> {
-        return new Promise<Config[]>((resolve, reject) => {
-
-            let parameters: any = null;
-            if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
-                parameters = {environment: projectEnvironmentId};
+            return result;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Unable to load flow configuration', e);
             }
+            throw e;
+        }
 
-            this.httpClient.request('/projects/' + projectId + '/config', parameters).then((rawConfigs: any) => {
-
-                let configs: Config[] = [];
-                for (let rawConfig of rawConfigs) {
-
-                    configs.push(Config.parse(rawConfig));
-                }
-                resolve(configs);
-
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Unable to load project configuration', reason);
-                }
-                reject(reason);
-            });
-
-        });
     }
 
-    public saveByProject(projectId: string, configs: Config[]): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            let url: string = '/projects/' + projectId + '/config';
+    public async getByProjectEnvironment(projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
 
-            this.httpClient.request(url, configs, 'POST').then((result: any) => {
+        try {
+            const result: CollectionResult<Config> = await this.requestCollection('/projectEnvironment/' + projectEnvironmentId + '/configvalues', null, Config.parse)
+            return result;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Unable to load project configuration', e);
+            }
+            throw e;
+        }
 
-                resolve(result);
+    }
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to load config: ', reason);
-                }
-                reject(reason);
-            });
+    public async saveConfigs(projectId: string, configs: Config[]): Promise<CollectionResult<Config>> {
 
-        });
+        try {
+            let url: string = '/configvalues';
+            const result: CollectionResult<Config> = await this.requestCollection(url, configs, Config.parse, 'POST');
+            return result;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load config: ', e);
+            }
+            throw e;
+        }
+
     }
 }

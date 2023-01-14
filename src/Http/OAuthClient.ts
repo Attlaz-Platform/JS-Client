@@ -9,8 +9,6 @@ import {JsonSerializable} from '../Model/JsonSerializable';
 
 export class OAuthClient {
 
-    private options: OAuthClientOptions;
-
     private debug: boolean = false;
 
     private oauthClient: ClientOAuth2;
@@ -18,18 +16,16 @@ export class OAuthClient {
     private oauthToken: Token | null = null;
     private oathClientToken: OAuthClientToken | null = null;
 
-    constructor(options: OAuthClientOptions) {
-
-        this.options = options;
-        //
+    constructor(private readonly options: OAuthClientOptions) {
         this.oauthClient = new ClientOAuth2({
-            clientId: this.options.clientId,
-            clientSecret: this.options.clientSecret,
-            accessTokenUri: this.getUri(this.options.accessTokenUri),
-            authorizationUri: this.getUri(this.options.authorizationUri),
-            redirectUri: this.options.redirectUri,
-            scopes: this.options.scopes,
-            state: this.options.state
+            clientId: options.clientId,
+            clientSecret: options.clientSecret,
+            accessTokenUri: this.getUri(options.accessTokenUri),
+            authorizationUri: this.getUri(options.authorizationUri),
+            redirectUri: options.redirectUri,
+            scopes: options.scopes,
+            state: options.state,
+            headers: options.headers
         });
 
     }
@@ -63,8 +59,7 @@ export class OAuthClient {
 
     public async refreshToken(): Promise<void> {
 
-        if(this.debug)
-        {
+        if (this.debug) {
             console.debug('[OAuthClient] refresh token');
         }
         if (this.oauthToken === null) {

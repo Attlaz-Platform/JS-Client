@@ -1,9 +1,7 @@
-export class DataResultCollection<T> {
-    private data: T[];
-
+export class ObjectResult<T> {
+    private data: T | null;
 
     public constructor() {
-        this.data = [];
 
     }
 
@@ -20,13 +18,12 @@ export class DataResultCollection<T> {
     //     return result;
     // }
 
-    public setData(data: T[]): void {
+    public setData(data: T | null): void {
         this.data = data;
     }
 
-    public getData(): T[] {
+    public getData(): T | null {
         return this.data;
     }
-
 
 }

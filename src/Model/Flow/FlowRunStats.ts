@@ -1,6 +1,6 @@
-export class TaskExecutionStats {
+export class FlowRunStats {
 
-    public taskExecution: string;
+    public flowRunId: string;
 
     public time: Date;
 

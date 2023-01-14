@@ -1,16 +1,16 @@
 import {Endpoint} from './Endpoint';
 import {Project} from '../Model/Project/Project';
 import {Utils} from '../Utils';
-import {DataResult} from '../Model/Result/DataResult';
 import {HttpClient} from '../Http/HttpClient';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class ProjectEndpoint extends Endpoint {
 
-    public async getAll(): Promise<Project[]> {
+    public async getAll(): Promise<CollectionResult<Project>> {
         try {
-            const result: DataResult<Project[]> = await this.request('/projects');
-            result.setData(this.parseCollection(result, Project.parse));
-            return result.getData();
+            const result: CollectionResult<Project> = await this.requestCollection('/projects', null, Project.parse);
+            return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load projects: ' + e);
@@ -20,11 +20,10 @@ export class ProjectEndpoint extends Endpoint {
 
     }
 
-    public async getByTeam(teamId: string): Promise<Project[]> {
+    public async getByTeam(teamId: string): Promise<CollectionResult<Project>> {
         try {
-            const result: DataResult<Project[]> = await this.request('teams/' + teamId + '/projects');
-            result.setData(this.parseCollection(result, Project.parse));
-            return result.getData();
+            const result: CollectionResult<Project> = await this.requestCollection('teams/' + teamId + '/projects', null, Project.parse);
+            return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load projects: ' + e);
@@ -53,20 +52,23 @@ export class ProjectEndpoint extends Endpoint {
 
     }
 
-    public save(project: Project): Promise<Project> {
-        return new Promise<any>((resolve, reject) => {
+    public async save(project: Project): Promise<Project> {
 
-            this.httpClient.request('projects/', project, 'POST').then((rawProject: any) => {
+        try {
 
-                resolve(Project.parse(rawProject));
+            let url: string = '/projects';
+            const result: ObjectResult<Project> = await this.requestObject(url, project, Project.parse, 'POST');
+            const updatedProject: Project | null = result.getData();
+            if (updatedProject === null) {
+                throw new Error('Project not updated');
+            }
+            return updatedProject;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save project: ', error);
+            }
+            throw error;
+        }
 
-            }).catch((reason: any) => {
-                if (this.httpClient.isDebugEnabled()) {
-                    console.error('Failed to save project: ', reason);
-                }
-                reject(reason);
-            });
-
-        });
     }
 }

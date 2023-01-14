@@ -1,30 +1,18 @@
 import {Endpoint} from './Endpoint';
-import {DataResult} from '../Model/Result/DataResult';
-import {Utils} from '../Utils';
 import {WorkerConfig} from '../Model/Worker/WorkerConfig';
+import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class WorkerConfigEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<WorkerConfig[] > {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<CollectionResult<WorkerConfig>> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';
 
-            const result: DataResult<any[]> = await this.request(url);
+            const result: CollectionResult<WorkerConfig> = await this.requestCollection(url, null, WorkerConfig.parse);
 
-            if (Utils.isNullOrUndefined(result)) {
-                throw new Error('Unable to get project environment');
-            }
-            const resultData: any | null = result.getData();
-            if (resultData === null) {
-                throw new Error('Unable to get project environment');
-            }
-            let workerConfigValues: WorkerConfig[] = [];
-            for (let rawConfig of resultData) {
-
-                workerConfigValues.push(WorkerConfig.parse(rawConfig));
-            }
-            return workerConfigValues;
+            return result;
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -42,9 +30,12 @@ export class WorkerConfigEndpoint extends Endpoint {
 
             let url: string = '/projectenvironments/' + workerConfig.projectEnvironment + '/workerconfiguration';
 
-            const result: DataResult<any> = await this.request(url, workerConfig, 'POST');
-            // console.log(result);
-            return WorkerConfig.parse(result);
+            const result: ObjectResult<WorkerConfig> = await this.requestObject(url, workerConfig, WorkerConfig.parse, 'POST');
+            const createdWorkerConfig: WorkerConfig | null = result.getData();
+            if (createdWorkerConfig === null) {
+                throw new Error('WorkerConfig not created');
+            }
+            return createdWorkerConfig;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save worker config: ', error);

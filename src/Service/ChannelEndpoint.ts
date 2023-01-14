@@ -1,22 +1,22 @@
 import {Endpoint} from './Endpoint';
-import {DataResult} from '../Model/Result/DataResult';
 import {Channel} from '../Model/Messaging/Channel/Channel';
-import {Utils} from '../Utils';
 import {ChannelHistory} from '../Model/Messaging/ChannelHistory';
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class ChannelEndpoint extends Endpoint {
 
-    public async getById(channelId: string): Promise<DataResult<Channel>> {
+    public async getById(channelId: string): Promise<Channel | null> {
 
         try {
-            const result: DataResult<Channel> = await this.request('/channels/' + channelId + '');
+            const result: ObjectResult<Channel> = await this.requestObject('/channels/' + channelId + '', null, Channel.parse);
 
-            if (Utils.isNullOrUndefined(result)) {
-
-            } else {
-                result.setData(Channel.parse(result.getData()));
-            }
-            return result;
+            // if (Utils.isNullOrUndefined(result)) {
+            //
+            // } else {
+            //     result.setData(Channel.parse(result.getData()));
+            // }
+            return result.getData();
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load channels by id "' + channelId + '": ', ex);
@@ -27,19 +27,15 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async getByTeam(teamId: string): Promise<Channel[]> {
+    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Channel>> {
 
         try {
-            const rawChannels: any = await this.httpClient.request('/teams/' + teamId + '/channels');
+            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels', null, Channel.parse);
 
-            let subscriberChannels: Channel[] = [];
-            for (let rawChannel of rawChannels) {
-                subscriberChannels.push(Channel.parse(rawChannel));
-            }
-            return subscriberChannels;
+            return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load channels for team "' + teamId + '": ', ex);
+                console.error('Failed to load channels for team "' + workspaceId + '": ', ex);
             }
 
             throw ex;
@@ -47,16 +43,12 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async getByOwner(): Promise<Channel[]> {
+    public async getByOwner(): Promise<CollectionResult<Channel>> {
 
         try {
-            const rawChannels: any = await this.httpClient.request('/channels');
+            const result: CollectionResult<Channel> = await this.requestCollection('/channels', null, Channel.parse);
 
-            let subscriberChannels: Channel[] = [];
-            for (let rawChannel of rawChannels) {
-                subscriberChannels.push(Channel.parse(rawChannel));
-            }
-            return subscriberChannels;
+            return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load channels for current user: ', ex);
@@ -67,25 +59,26 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async getMessages(channelId: string): Promise<DataResult<ChannelHistory[]>> {
+    public async getMessages(channelId: string): Promise<CollectionResult<ChannelHistory>> {
 
         try {
-            const rawChannelHistory: DataResult<any[]> = await this.request('/channels/' + channelId + '/messages');
+            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages', null, ChannelHistory.parse);
 
-            const data: ChannelHistory[] = [];
-
-            const resultData: any | null = rawChannelHistory.getData();
-            if (resultData !== null) {
-                const orig: ChannelHistory[] = resultData;
-
-                for (const rawChannelMessage of orig) {
-                    data.push(ChannelHistory.parse(rawChannelMessage));
-                }
-            }
-
-            rawChannelHistory.setData(data);
-
-            return rawChannelHistory;
+            return result;
+            // const data: ChannelHistory[] = [];
+            //
+            // const resultData: any | null = rawChannelHistory.getData();
+            // if (resultData !== null) {
+            //     const orig: ChannelHistory[] = resultData;
+            //
+            //     for (const rawChannelMessage of orig) {
+            //         data.push(ChannelHistory.parse(rawChannelMessage));
+            //     }
+            // }
+            //
+            // rawChannelHistory.setData(data);
+            //
+            // return rawChannelHistory;
             // let subscriberChannels: Channel[] = [];
             // for (let rawChannel of rawChannels) {
             //     subscriberChannels.push(Channel.parse(rawChannel));
@@ -101,14 +94,14 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async save(subscriberChannel: Channel): Promise<Channel> {
+    public async save(subscriberChannel: Channel): Promise<Channel | null> {
 
         try {
             let url: string = '/channels/';
 
-            const rawResult: any = await this.httpClient.request(url, subscriberChannel, 'POST');
+            const result: ObjectResult<Channel> = await this.requestObject(url, subscriberChannel, Channel.parse, 'POST');
 
-            return Channel.parse(rawResult);
+            return result.getData();
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save channel: ', ex);
@@ -118,7 +111,7 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async test(subscriberChannel: Channel): Promise<any> {
+    public async testChannel(subscriberChannel: Channel): Promise<any> {
 
         try {
             let url: string = '/channels/' + subscriberChannel.id + '/test';

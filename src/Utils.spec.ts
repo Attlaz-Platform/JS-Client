@@ -1,5 +1,4 @@
 import {TriggerType} from './Model/Trigger/TriggerType';
-import {TaskExecutionStatus} from './Model/TaskExecutionStatus';
 import {ChannelType} from './Model/Messaging/Channel/ChannelType';
 import {ProjectDeployStatus} from './Model/Project/ProjectDeployStatus';
 import {State} from './Model/State';
@@ -8,11 +7,12 @@ import {StorageType} from './Model/Storage/StorageType';
 import {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
 import {WorkerState} from './Model/Worker/WorkerState';
 import {Utils} from './Utils';
+import {FlowRunStatus} from './Model/Flow/FlowRunStatus';
 
 test('Test enum parsing', () => {
 
     expect(TriggerType.fromString('webhook')).toBe(TriggerType.Webhook);
-    expect(TaskExecutionStatus.fromString('complete')).toBe(TaskExecutionStatus.Complete);
+    expect(FlowRunStatus.fromString('complete')).toBe(FlowRunStatus.Complete);
     expect(ChannelType.fromString('slack')).toBe(ChannelType.Slack);
     expect(LogLevel.fromString('debug')).toBe(LogLevel.Debug);
     expect(ProjectDeployStatus.fromString('complete')).toBe(ProjectDeployStatus.Complete);

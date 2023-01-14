@@ -1,22 +1,19 @@
 import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Worker} from '../Model/Worker/Worker';
-import {DataResult} from '../Model/Result/DataResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
 
 export class WorkerEndpoint extends Endpoint {
 
-    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<DataResult<Worker>> {
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<Worker | null> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
-            const result: any = await this.httpClient.request(url);
-            if (Utils.isNullOrUndefined(result)) {
-                throw new Error('Unable to find worker')
-            }
+            const result: ObjectResult<Worker> = await this.requestObject(url, null, Worker.parse);
 
-            return new DataResult<Worker>(Worker.parse(result));
-      
+            return result.getData();
+
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);
@@ -27,15 +24,22 @@ export class WorkerEndpoint extends Endpoint {
 
     }
 
-    public async update(projectEnvironmentId: string): Promise<DataResult<boolean>> {
+    public async update(projectEnvironmentId: string): Promise<boolean> {
 
         try {
 
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
-            const result: DataResult<boolean> = await this.request(url, null, 'POST');
+            const parser = (input: any): boolean => {
+                return Utils.isTrue(input);
+            }
+            const result: ObjectResult<boolean> = await this.requestObject(url, null, parser, 'POST');
 
-            return result
+            const isUpdated: boolean | null = result.getData();
+            if (isUpdated === null) {
+                throw new Error('Worker probably not updated');
+            }
+            return isUpdated;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to update worker: ', error);

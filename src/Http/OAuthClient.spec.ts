@@ -3,7 +3,7 @@ import {OAuthClientOptions} from './OAuthClientOptions';
 
 test('Test enum parsing', async () => {
 
-    const options: OAuthClientOptions = new OAuthClientOptions('https://github.com/login', '3b938da6f58d6bef7d59', 'da05698a6bd449de9437e11ff0b99003f511e40f');
+    const options: OAuthClientOptions = new OAuthClientOptions('https://github.com/login', '3b938da6f58d6bef7d59', 'da05698a6bd449de9437e11ff0b99003f511e40f', {'User-Agent': 'Attlaz Javascript Client/testing'});
     const client: OAuthClient = new OAuthClient(options);
 
     // client.getClient().cod.getToken()

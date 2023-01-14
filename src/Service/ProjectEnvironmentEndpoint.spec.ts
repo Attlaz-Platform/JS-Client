@@ -1,5 +1,4 @@
 import {Client} from '../Client';
-import {ProjectDeploy} from '../Model/Project/ProjectDeploy';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
 
 jest.setTimeout((60) * 1000);

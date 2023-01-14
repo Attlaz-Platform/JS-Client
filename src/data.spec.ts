@@ -4,8 +4,8 @@ import {Project} from './Model/Project/Project';
 
 jest.setTimeout((60) * 1000);
 
-// const apiEndpoint: string = 'http://localhost:5728/';
-const apiEndpoint: string = 'https://api2.attlaz.com';
+const apiEndpoint: string = 'http://localhost:5728/';
+// const apiEndpoint: string = 'https://api2.attlaz.com';
 const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
 const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
 const passwordFlowClientId: string = 'MXexCeRqNrGnh5tw';
@@ -25,7 +25,9 @@ test('Test get user', async () => {
 
     const user: User | null = await client.getUserEndpoint().getUser()
     // console.log('User', user);
-
+    if (user === null) {
+        throw new Error('User is null');
+    }
     expect(user.email).toBe('demo@attlaz.com');
 
 });
