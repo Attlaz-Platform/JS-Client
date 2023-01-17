@@ -5,14 +5,14 @@ import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class PlatformEndpoint extends Endpoint {
 
-    public async getAll(): Promise<CollectionResult<Platform>> {
-        let cmd: string = '/platforms';
+    public async getAll(workspaceId: string): Promise<CollectionResult<Platform>> {
+        let cmd: string = '/workspaces/' + workspaceId + '/platforms';
         const result: CollectionResult<Platform> = await this.requestCollection(cmd, null, Platform.parse);
         return result;
     }
 
-    public async getPlatformImages(platformId: string): Promise<CollectionResult<PlatformImage>> {
-        let cmd: string = '/platforms/' + platformId + '/images';
+    public async getPlatformImages(workspaceId: string, platformId: string): Promise<CollectionResult<PlatformImage>> {
+        let cmd: string = '/workspaces/' + workspaceId + '/platforms/' + platformId + '/images';
         const result: CollectionResult<PlatformImage> = await this.requestCollection(cmd, null, PlatformImage.parse);
         return result;
     }

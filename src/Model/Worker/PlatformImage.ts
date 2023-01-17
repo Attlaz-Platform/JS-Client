@@ -14,11 +14,11 @@ export class PlatformImage implements StateAware {
     public static parse(raw: any): PlatformImage {
         const platformImage: PlatformImage = new PlatformImage();
         platformImage.id = raw.id;
-        platformImage.platformId = raw.platformId;
+        platformImage.platformId = raw.platform;
         platformImage.image = raw.image;
         platformImage.version = raw.version;
-        platformImage.languageVersion = raw.languageVersion;
-        platformImage.buildDate = Utils.parseRawDate(raw.buildDate);
+        platformImage.languageVersion = raw.language_version;
+        platformImage.buildDate = Utils.parseRawDate(raw.build_date);
         platformImage.state = State.fromString(raw.state);
         return platformImage;
     }

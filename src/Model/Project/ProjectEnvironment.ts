@@ -14,25 +14,13 @@ export class ProjectEnvironment implements StateAware {
 
     public static parse(rawProjectEnvironment: any): ProjectEnvironment {
         const projectEnvironment: ProjectEnvironment = new ProjectEnvironment();
-
         projectEnvironment.id = rawProjectEnvironment.id.toString();
         projectEnvironment.key = rawProjectEnvironment.key;
-
-        if (rawProjectEnvironment.project !== undefined) {
-            projectEnvironment.projectId = rawProjectEnvironment.project;
-        } else {
-            projectEnvironment.projectId = rawProjectEnvironment.projectId;
-        }
-
+        projectEnvironment.projectId = rawProjectEnvironment.project;
         projectEnvironment.name = rawProjectEnvironment.name;
-        projectEnvironment.codeSourceId = rawProjectEnvironment.codeSourceId;
-
-        if (rawProjectEnvironment.parent !== undefined) {
-            projectEnvironment.parentId = rawProjectEnvironment.parent;
-        } else {
-            projectEnvironment.parentId = rawProjectEnvironment.parentId;
-        }
-        projectEnvironment.isLocal = Utils.isTrue(rawProjectEnvironment.isLocal);
+        projectEnvironment.codeSourceId = rawProjectEnvironment.code_source;
+        projectEnvironment.parentId = rawProjectEnvironment.parent;
+        projectEnvironment.isLocal = Utils.isTrue(rawProjectEnvironment.is_local);
         projectEnvironment.state = State.fromString(rawProjectEnvironment.state);
         return projectEnvironment;
     }

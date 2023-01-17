@@ -13,7 +13,7 @@ export class FlowSummary extends Flow {
     public static parse(rawTask: any): FlowSummary {
         let task: FlowSummary = Flow.parse(rawTask) as FlowSummary;
         task.status = FlowRunStatus.fromString(rawTask.status);
-        task.latestRun = Utils.parseRawDate(rawTask.latest_run);
+        task.latestRun = rawTask.latest_run === null?null:Utils.parseRawDate(rawTask.latest_run);
         task.averageRunDuration = rawTask.average_run_duration;
         task.averagePendingDuration = rawTask.average_pending_duration;
         task.runCount = rawTask.run_count;

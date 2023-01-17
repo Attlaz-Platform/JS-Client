@@ -23,12 +23,16 @@ export class NotificationsEndpoint extends Endpoint {
 
     }
 
-    public async save(notification: Notification): Promise<any> {
+    public async save(notification: Notification): Promise<Notification> {
 
         const parser = (raw: any): any => {
             return raw;
         }
-        const result: ObjectResult<any> = await this.requestObject('/notifications', notification, parser, 'POST');
-        return result.getData();
+        const result: ObjectResult<Notification> = await this.requestObject('/notifications', notification, parser, 'POST');
+        const savedNotification: Notification | null = result.getData();
+        if (savedNotification === null) {
+            throw new Error('Unable to save notification: wrong response from API');
+        }
+        return savedNotification;
     }
 }

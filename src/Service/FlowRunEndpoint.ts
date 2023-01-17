@@ -7,6 +7,8 @@ import {FlowRunStatus} from '../Model/Flow/FlowRunStatus';
 import {FlowRunSummary} from '../Model/Flow/FlowRunSummary';
 import {FlowRunHistory} from '../Model/Flow/FlowRunHistory';
 import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class FlowRunEndpoint extends Endpoint {
 
@@ -17,44 +19,35 @@ export class FlowRunEndpoint extends Endpoint {
 
     }
 
-    public async getFlowRunSummaries(flowId: string, from: Date | null = null, to: Date | null = null, flowRunStatuses: FlowRunStatus[] | null = null, projectEnvironmentId: string | null = null): Promise<FlowRunSummary[]> {
+    public async getFlowRunSummaries(flowId: string, from: Date | null = null, to: Date | null = null, flowRunStatuses: FlowRunStatus[] | null = null, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowRunSummary>> {
 
         try {
-            let params: any | null = null;
-            if (from !== null && from !== undefined) {
-
-                params = {};
-
-                params.from = from.toISOString();
-            }
-            if (to !== null && to !== undefined) {
-                if (params === null || params === undefined) {
-                    params = {};
-                }
-                params.to = to.toISOString();
-            }
+            let params: Parameters = null;
+            // if (from !== null && from !== undefined) {
+            //
+            //     params = {};
+            //
+            //     params.from = from.toISOString();
+            // }
+            // if (to !== null && to !== undefined) {
+            //     if (params === null || params === undefined) {
+            //         params = {};
+            //     }
+            //     params.to = to.toISOString();
+            // }
 
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
-                if (params === null || params === undefined) {
-                    params = {};
-                }
-                params.environment = projectEnvironmentId;
+                params = {project_environment: projectEnvironmentId};
             }
-            if (flowRunStatuses !== null && flowRunStatuses.length > 0) {
-                if (params === null || params === undefined) {
-                    params = {};
-                }
-                params.statuses = flowRunStatuses;
-            }
-            const rawTaskExecutions: any[] = await this.httpClient.request('/flows/' + flowId + '/runsummaries', params);
+            // if (flowRunStatuses !== null && flowRunStatuses.length > 0) {
+            //     if (params === null || params === undefined) {
+            //         params = {};
+            //     }
+            //     params.statuses = flowRunStatuses;
+            // }
+            const result: CollectionResult<FlowRunSummary> = await this.requestCollection('/flows/' + flowId + '/runsummaries', params, FlowRunSummary.parse);
 
-            let taskExecutions: FlowRunSummary[] = [];
-            for (let rawTaskExecution of rawTaskExecutions) {
-                taskExecutions.push(FlowRunSummary.parse(rawTaskExecution));
-
-            }
-
-            return taskExecutions;
+            return result;
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -66,15 +59,12 @@ export class FlowRunEndpoint extends Endpoint {
 
     }
 
-    public async getTaskExecutionSummary(taskExecutionId: string): Promise<FlowRunSummary | null> {
+    public async getFlowRunSummary(flowRunId: string): Promise<FlowRunSummary | null> {
 
         try {
-            const rawTaskExecution: any = await this.httpClient.request('/taskexecutions/' + taskExecutionId + '/summaries');
+            const result: ObjectResult<FlowRunSummary | null> = await this.requestObject('/flowruns/' + flowRunId + '/summaries', null, FlowRunSummary.parse);
 
-            if (rawTaskExecution === null || rawTaskExecution === undefined) {
-                return null;
-            }
-            return FlowRunSummary.parse(rawTaskExecution);
+            return result.getData();
         } catch (error: any) {
             if (error instanceof ClientError && error.code === HttpClient.HTTP_NOTFOUND) {
                 return null;
@@ -94,23 +84,28 @@ export class FlowRunEndpoint extends Endpoint {
 
     }
 
-    public async updateTaskExecution(taskExecutionId: string, status: FlowRunStatus, time: Date | null = null): Promise<FlowRun> {
+    public async updateFlowRun(taskExecutionId: string, status: FlowRunStatus, time: Date | null = null): Promise<FlowRun> {
 
         if (taskExecutionId.length === 0) {
             throw new Error('Task execution id cannot be empty');
         }
 
-        let params: any = {};
+        let params: { status?: FlowRunStatus, time?: Date } = {};
 
-        if (!Utils.isNullOrUndefined(status)) {
+        if (status !== null && status !== undefined) {
             params.status = status;
         }
-        if (!Utils.isNullOrUndefined(time)) {
+        if (time !== null && time !== undefined) {
             params.time = time;
         }
 
-        const rawTaskExecution: any = await this.httpClient.request('/taskexecutions/' + taskExecutionId + '', params, 'POST');
-        return FlowRun.parse(rawTaskExecution);
+        const result: ObjectResult<FlowRun> = await this.requestObject('/flowruns/' + taskExecutionId + '', params, FlowRun.parse, 'POST');
+
+        const updatedFlowRun: FlowRun | null = result.getData();
+        if (updatedFlowRun === null) {
+            throw new Error('FlowRun not updated');
+        }
+        return updatedFlowRun;
 
     }
 }

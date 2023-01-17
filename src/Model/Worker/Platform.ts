@@ -15,10 +15,10 @@ export class Platform implements StateAware {
         const platform: Platform = new Platform();
         platform.id = raw.id;
         platform.name = raw.name;
-        platform.languageId = raw.languageId;
+        platform.languageId = raw.language;
         platform.released = Utils.parseRawDate(raw.released);
-        platform.endOfSupport = Utils.parseRawDate(raw.endOfSupport)
-        platform.endOfLife = Utils.parseRawDate(raw.endOfLife)
+        platform.endOfSupport = Utils.parseRawDate(raw.end_of_support)
+        platform.endOfLife = Utils.parseRawDate(raw.end_of_life)
         platform.state = State.fromString(raw.state);
 
         return platform;

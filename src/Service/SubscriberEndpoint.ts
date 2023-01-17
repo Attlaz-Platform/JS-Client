@@ -3,12 +3,13 @@ import {Subscriber} from '../Model/Messaging/Subscriber';
 import {Utils} from '../Utils';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class SubscriberEndpoint extends Endpoint {
 
     public async getSubscribersByTask(taskId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Subscriber>> {
 
-        let parameters: any = null;
+        let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }

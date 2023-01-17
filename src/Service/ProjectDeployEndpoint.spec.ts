@@ -1,12 +1,12 @@
 import {Client} from '../Client';
 import {ProjectDeploy} from '../Model/Project/ProjectDeploy';
+import {Helper} from '../../e2e/src/helper';
 
 jest.setTimeout((60) * 1000);
 
-const apiEndpoint: string = 'http://localhost:5728/';
-// const apiEndpoint: string = 'https://api2.attlaz.com';
-const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
-const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
+const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
+const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
+const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test get project deploy', async () => {
 
@@ -21,8 +21,9 @@ test('Test get project deploy', async () => {
     expect(existingProjectDeploy).not.toBeNull();
     expect(existingProjectDeploy?.id).toBe('5');
 
+
+
     const nonExistingProjectDeploy: ProjectDeploy | null = await client.getProjectDeployEndpoint().getById('test')
     expect(nonExistingProjectDeploy).toBeNull();
 
 });
-

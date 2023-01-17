@@ -7,6 +7,10 @@ export class Utils {
         return (input === true || input === 'true' || input === 1 || input === '1');
     }
 
+    public static isDate(value: any): boolean {
+        return value !== null && value instanceof Date && !isNaN(value.getTime());
+    }
+
     public static parseRawDate(input: Date): Date {
         if (input !== null && input !== undefined) {
             return new Date(input);

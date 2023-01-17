@@ -96,12 +96,16 @@ export class AdapterEndpoint extends Endpoint {
 
     }
 
-    public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<ObjectResult<AdapterConnection>> {
+    public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<AdapterConnection> {
         try {
 
             let url: string = '/projects/' + projectId + '/connections';
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, adapter, AdapterConnection.parse, 'POST');
-            return result
+            const updatedAdapterConnection: AdapterConnection | null = result.getData();
+            if (updatedAdapterConnection === null) {
+                throw new Error('AdapterConnection not updated');
+            }
+            return updatedAdapterConnection;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save connection: ', error);
