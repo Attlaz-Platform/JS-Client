@@ -1,12 +1,10 @@
-import {Utils} from '../Utils';
 import {State} from './State';
 import {StateAware} from './StateAware';
 
 export class User implements StateAware {
     public id: string;
-    public username: string;
-    public firstname: string;
-    public lastname: string;
+    public name: string;
+    public emailIsVerified: boolean;
     public email: string;
     public phone: string;
 
@@ -17,18 +15,14 @@ export class User implements StateAware {
     public date_format: string;
     public time_format: string;
     public picture: string;
-
     public state: State = State.Active;
-
-    public last_active: Date | null = null;
 
     public static parse(rawUser: any): User {
         let user: User = new User();
         user.id = rawUser.id;
-        user.username = rawUser.username;
-        user.firstname = rawUser.firstname;
-        user.lastname = rawUser.lastname;
+        user.name = rawUser.name;
         user.email = rawUser.email;
+        user.emailIsVerified = rawUser.email_is_verified;
         user.phone = rawUser.phone;
         user.language = rawUser.language;
         user.time_zone = rawUser.time_zone;
@@ -36,9 +30,7 @@ export class User implements StateAware {
         user.time_format = rawUser.time_format;
         user.picture = rawUser.picture;
         user.state = State.fromString(rawUser.state);
-        if (rawUser.last_active !== null && rawUser.last_active !== undefined) {
-            user.last_active = Utils.parseRawDate(rawUser.last_active);
-        }
+
         return user;
     }
 }

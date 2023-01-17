@@ -3,13 +3,14 @@ import {Trigger} from '../Model/Trigger/Trigger';
 import {Utils} from '../Utils';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class TriggerEndpoint extends Endpoint {
 
     public async getByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Trigger>> {
 
         try {
-            let parameters: any = null;
+            let parameters: Parameters = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
@@ -49,11 +50,11 @@ export class TriggerEndpoint extends Endpoint {
 
             let url: string = '/flows/' + trigger.flowId + '/triggers';
 
-            const result: any = await this.requestObject(url, trigger, Trigger.parse, 'POST');
+            const result: ObjectResult<Trigger> = await this.requestObject(url, trigger, Trigger.parse, 'POST');
 
             const createdTrigger: Trigger | null = result.getData();
             if (createdTrigger === null) {
-                throw new Error('Trigger not created');
+                throw new Error('Unable save trigger: wrong response from API');
             }
             return createdTrigger;
         } catch (error) {

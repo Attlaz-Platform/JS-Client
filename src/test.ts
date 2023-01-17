@@ -102,7 +102,7 @@ function test() {
         });
 
         const newUser: User = new User();
-        newUser.username = 'Test user';
+        newUser.name = 'Test user';
         newUser.email = 'email@domain.com';
         newUser.password = 'BoyWMpu3N7h47IGt5kKT4FYK';
         newUser.state = State.Active;

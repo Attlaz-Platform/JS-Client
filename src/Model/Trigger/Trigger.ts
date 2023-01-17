@@ -5,8 +5,10 @@ import {ScheduleTriggerData} from './ScheduleTriggerData';
 import {WebhookTriggerData} from './WebhookTriggerData';
 import {ApiTriggerData} from './ApiTriggerData';
 import {StateAware} from '../StateAware';
+import {MetaDataAware} from '../../Core/MetaDataAware';
+import {DataValueCollection} from '../DataValueCollection';
 
-export class Trigger implements StateAware {
+export class Trigger extends MetaDataAware implements StateAware {
     public id: string;
     public type: TriggerType;
     public projectEnvironmentId: string;
@@ -16,6 +18,7 @@ export class Trigger implements StateAware {
     public state: State = State.Active;
 
     public constructor(id: string, type: TriggerType, projectEnvironmentId: string, flowId: string, data: TriggerData) {
+        super();
         this.id = id;
         this.type = type;
         this.projectEnvironmentId = projectEnvironmentId;
@@ -26,6 +29,7 @@ export class Trigger implements StateAware {
     }
 
     public static parse(rawTrigger: any): Trigger {
+
         const type: TriggerType = TriggerType.fromString(rawTrigger.type);
 
         const data: any = rawTrigger.data;
@@ -50,8 +54,8 @@ export class Trigger implements StateAware {
         let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project_environment, flowId, triggerData);
 
         trigger.arguments = rawTrigger.arguments;
-
         trigger.state = State.fromString(rawTrigger.state);
+        trigger.metadata = DataValueCollection.fromObject(rawTrigger.metadata);
 
         return trigger
     }

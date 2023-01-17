@@ -2,13 +2,14 @@ import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Config} from '../Model/Config';
 import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class ConfigEndpoint extends Endpoint {
 
     public async getConfigByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
 
         try {
-            let parameters: any = null;
+            let parameters: Parameters | null = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }

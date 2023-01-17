@@ -6,6 +6,7 @@ import {HttpClientResponse} from './HttpClientResponse';
 import {OAuthClientToken} from './OAuthClientToken';
 import ClientOAuth2, {Token} from 'client-oauth2';
 import {JsonSerializable} from '../Model/JsonSerializable';
+import {Parameters} from './Data/Parameters';
 
 export class OAuthClient {
 
@@ -87,7 +88,7 @@ export class OAuthClient {
         return this.oauthToken.expired();
     }
 
-    public async request(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
+    public async request(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
 
         if (signWithOauthToken && !this.isAuthenticated()) {
             throw new ClientError('Unable to perform request, access token not provided');
@@ -215,7 +216,7 @@ export class OAuthClient {
 
     }
 
-    private createRequestData(action: string, parameters: any = null, method: string = 'GET', signWithOauthToken: boolean = true): HttpClientRequest {
+    private createRequestData(action: string, parameters: Parameters | null = null, method: string = 'GET', signWithOauthToken: boolean = true): HttpClientRequest {
 
         const url: string = this.getUri(action);
 
@@ -223,19 +224,20 @@ export class OAuthClient {
 
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
-                parameters = JsonSerializable.stringify(parameters);
+                requestData.body = JsonSerializable.stringify(parameters);
             } else if (typeof parameters === 'string') {
-
+                requestData.body = parameters;
             } else {
                 console.error('Unknown parameter type: ' + typeof parameters);
             }
 
-            requestData.body = parameters;
             requestData.setJsonHeader();
         }
         if (method === 'GET' && parameters !== null && parameters !== undefined) {
 
             Object.keys(parameters).forEach((key: string, index: number) => {
+
+                // @ts-ignore
                 const value: string | number = parameters[key];
                 requestData.addQueryParam(key, value);
             })

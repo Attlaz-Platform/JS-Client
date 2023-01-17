@@ -2,8 +2,10 @@ import {State} from '../State';
 import {EventType} from '../Event/EventType';
 import {LogLevel} from '../Log/LogLevel';
 import {StateAware} from '../StateAware';
+import {MetaDataAware} from '../../Core/MetaDataAware';
+import {DataValueCollection} from '../DataValueCollection';
 
-export class Subscriber implements StateAware {
+export class Subscriber extends MetaDataAware implements StateAware {
     public id: string;
     public eventTypes: EventType[];
 
@@ -16,6 +18,7 @@ export class Subscriber implements StateAware {
     public state: State = State.Active;
 
     constructor(id: string, eventTypes: EventType[], projectEnvironment: string, task: string, taskExecution: string, channels: string[], logLevelThreshold: LogLevel = LogLevel.Debug) {
+        super();
         this.id = id;
         this.eventTypes = eventTypes;
 
@@ -31,7 +34,7 @@ export class Subscriber implements StateAware {
     public static parseRaw(rawSubscriber: any): Subscriber {
         let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.eventTypes, rawSubscriber.projectEnvironment, rawSubscriber.task, rawSubscriber.task_execution, rawSubscriber.channels, rawSubscriber.logLevelThreshold);
         subscriber.state = State.fromString(rawSubscriber.state);
-
+        subscriber.metadata = DataValueCollection.fromObject(rawSubscriber.metadata);
         return subscriber;
     }
 

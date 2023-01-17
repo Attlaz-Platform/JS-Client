@@ -15,7 +15,7 @@ export namespace WorkspaceMemberInviteState {
     export function fromString(input: string): WorkspaceMemberInviteState {
         const result: WorkspaceMemberInviteState | null = Utils.parseEnum<WorkspaceMemberInviteState>(input, WorkspaceMemberInviteState);
         if (result === null) {
-            throw new Error('Unable to parse WorkspaceMemberInviteState from string: Unknown TeamMemberInviteState "' + input + '"');
+            throw new Error('Unable to parse WorkspaceMemberInviteState from string: Unknown WorkspaceMemberInviteState "' + input + '"');
         }
         return result;
 

@@ -6,12 +6,12 @@ export class Workspace implements StateAware {
     name: string;
     state: State;
 
-    public static parse(rawTeam: any): Workspace {
-        const team: Workspace = new Workspace();
-        team.id = rawTeam.id;
-        team.name = rawTeam.name;
-        team.state = State.fromString(rawTeam.state);
+    public static parse(raw: any): Workspace {
+        const workspace: Workspace = new Workspace();
+        workspace.id = raw.id;
+        workspace.name = raw.name;
+        workspace.state = State.fromString(raw.state);
 
-        return team;
+        return workspace;
     }
 }

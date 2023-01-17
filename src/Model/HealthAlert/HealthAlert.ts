@@ -17,7 +17,7 @@ export class HealthAlert {
     }
 
     public static parse(raw: any): HealthAlert {
-        let healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.healthTestType), HealthAlertStatus.fromString(raw.status));
+        let healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.health_test_type), HealthAlertStatus.fromString(raw.status));
         healthAlert.id = raw.id;
         healthAlert.date = new Date(raw.date);
         healthAlert.data = raw.data;

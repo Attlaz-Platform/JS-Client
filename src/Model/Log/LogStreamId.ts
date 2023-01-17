@@ -4,4 +4,8 @@ export class LogStreamId {
     public constructor(id: string) {
         this.id = id;
     }
+
+    public jsonSerialize(): string {
+        return this.id;
+    }
 }

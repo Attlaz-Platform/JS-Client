@@ -1,21 +1,23 @@
 import {Endpoint} from './Endpoint';
 
-import {SourcesAccountRepository} from '../Model/SourcesAccountRepository';
 import {Utils} from '../Utils';
 import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount';
 import {CodeSource} from '../Model/Deployment/CodeSource';
 import {HttpClient} from '../Http/HttpClient';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
+import {SourcesAccountRepository} from '../Model/Deployment/SourcesAccountRepository';
+import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch';
 
 export class SourcesAccountEndpoint extends Endpoint {
-
-    public async getAllCodeSourceAccounts(): Promise<CollectionResult<CodeSourceAccount>> {
-
-        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('codesourceaccounts', null, CodeSourceAccount.parse);
-
+    public async getAllCodeSources(workspaceId: string): Promise<CollectionResult<CodeSource>> {
+        const result: CollectionResult<CodeSource> = await this.requestCollection('workspaces/' + workspaceId + '/codesources', null, CodeSource.parse);
         return result;
+    }
 
+    public async getAllCodeSourceAccounts(workspaceId: string): Promise<CollectionResult<CodeSourceAccount>> {
+        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts', null, CodeSourceAccount.parse);
+        return result;
     }
 
     public async getCodeSourceAccountById(id: string): Promise<CodeSourceAccount | null> {
@@ -65,15 +67,31 @@ export class SourcesAccountEndpoint extends Endpoint {
         return rawSourcesAccountRepositories;
     }
 
-    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<CollectionResult<string>> {
-
+    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
         repositoryKey = Utils.base64encode(repositoryKey);
-        const parser = (raw: any): string => {
-            return raw;
-        }
-        const rawBranches: CollectionResult<string> = await this.requestCollection('sourcesaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', null, parser);
-
+        const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', null, SourcesAccountRepositoryBranch.parse);
         return rawBranches;
+    }
+
+    public async saveCodeSource(codeSource: CodeSource): Promise<CodeSource> {
+
+        try {
+            let url: string = '/codesources/';
+
+            const result: ObjectResult<CodeSource> = await this.requestObject(url, codeSource, CodeSource.parse, 'POST');
+
+            const updatedCodeSource: CodeSource | null = result.getData();
+            if (updatedCodeSource === null) {
+                throw new Error('Unable to update code source: wrong response from API');
+            }
+            return updatedCodeSource;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save code source: ', ex);
+            }
+            throw ex;
+        }
+
     }
 
 }

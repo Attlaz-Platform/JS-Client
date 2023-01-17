@@ -5,6 +5,7 @@ import {Flow} from '../Model/Flow/Flow';
 import {FlowSummary} from '../Model/Flow/FlowSummary';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class FlowEndpoint extends Endpoint {
 
@@ -12,7 +13,7 @@ export class FlowEndpoint extends Endpoint {
 
         try {
 
-            let url: string = '/project/' + projectId + '/flows';
+            let url: string = '/projects/' + projectId + '/flows';
             const result: CollectionResult<Flow> = await this.requestCollection(url, null, Flow.parse);
             return result
         } catch (error) {
@@ -45,7 +46,7 @@ export class FlowEndpoint extends Endpoint {
 
     public async getFlowSummaries(projectId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowSummary>> {
 
-        let parameters: any = null;
+        let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }
@@ -64,7 +65,7 @@ export class FlowEndpoint extends Endpoint {
 
     public async getFlowSummary(flowId: string, projectEnvironmentId: string | null = null): Promise<FlowSummary | null> {
 
-        let parameters: any = null;
+        let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }

@@ -2,8 +2,10 @@ import {ChannelType} from './ChannelType';
 import {State} from '../../State';
 import {Utils} from '../../../Utils';
 import {StateAware} from '../../StateAware';
+import {MetaDataAware} from '../../../Core/MetaDataAware';
+import {DataValueCollection} from '../../DataValueCollection';
 
-export class Channel implements StateAware{
+export class Channel extends MetaDataAware implements StateAware {
     public id: string;
     public owner: string;
     public label: string;
@@ -14,6 +16,7 @@ export class Channel implements StateAware{
     public private: boolean = false;
 
     public constructor(id: string, owner: string, label: string, type: ChannelType, data: any) {
+        super();
         this.id = id;
         this.owner = owner;
         this.label = label;
@@ -26,6 +29,7 @@ export class Channel implements StateAware{
         const channel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, type, rawChannel.data);
         channel.state = State.fromString(rawChannel.state);
         channel.private = Utils.isTrue(rawChannel.private);
+        channel.metadata = DataValueCollection.fromObject(rawChannel.metadata);
         return channel;
     }
 

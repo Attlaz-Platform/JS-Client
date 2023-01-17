@@ -28,7 +28,7 @@ export class Log {
     public static parse(rawLog: any): Log {
         const date: Date = new Date(rawLog.date);
         const level: LogLevel = LogLevel.fromString(rawLog.level);
-        const logStream: LogStreamId = new LogStreamId(rawLog.logStream.id);
+        const logStream: LogStreamId = new LogStreamId(rawLog.log_stream.id);
         let log: Log = new Log(logStream, rawLog.message, level, date);
         log.id = rawLog.id;
         log.context = rawLog.context;

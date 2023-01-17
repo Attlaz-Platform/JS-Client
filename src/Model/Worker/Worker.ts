@@ -15,7 +15,7 @@ export class Worker {
 
     public static parse(raw: any): Worker {
         const worker: Worker = new Worker();
-        worker.projectEnvironment = raw.projectEnvironment;
+        worker.projectEnvironment = raw.project_environment;
         worker.state = WorkerState.fromString(raw.state);
 
         worker.version = raw.version;
@@ -30,7 +30,7 @@ export class Worker {
             worker.instances.push(instance);
         }
 
-        worker.memoryLimit = raw.memoryLimit;
+        worker.memoryLimit = raw.memory_limit;
 
         return worker;
     }

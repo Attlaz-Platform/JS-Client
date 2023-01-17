@@ -1,7 +1,5 @@
 import {Endpoint} from './Endpoint';
 import {Project} from '../Model/Project/Project';
-import {Utils} from '../Utils';
-import {HttpClient} from '../Http/HttpClient';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
 
@@ -20,9 +18,9 @@ export class ProjectEndpoint extends Endpoint {
 
     }
 
-    public async getByTeam(teamId: string): Promise<CollectionResult<Project>> {
+    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('teams/' + teamId + '/projects', null, Project.parse);
+            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects', null, Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -35,15 +33,9 @@ export class ProjectEndpoint extends Endpoint {
     public async getById(projectId: string): Promise<Project | null> {
 
         try {
-            const rawProject: any = await this.httpClient.request('projects/' + projectId + '');
-            if (Utils.isNullOrUndefined(rawProject)) {
-                return null;
-            }
-            return Project.parse(rawProject);
+            const result: ObjectResult<Project> = await this.requestObject('projects/' + projectId + '', null, Project.parse);
+            return result.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
-                return null;
-            }
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load project by id: ' + error);
             }

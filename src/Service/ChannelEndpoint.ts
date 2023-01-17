@@ -35,7 +35,7 @@ export class ChannelEndpoint extends Endpoint {
             return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load channels for team "' + workspaceId + '": ', ex);
+                console.error('Failed to load channels for workspace "' + workspaceId + '": ', ex);
             }
 
             throw ex;
@@ -94,14 +94,18 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async save(subscriberChannel: Channel): Promise<Channel | null> {
+    public async save(subscriberChannel: Channel): Promise<Channel> {
 
         try {
             let url: string = '/channels/';
 
             const result: ObjectResult<Channel> = await this.requestObject(url, subscriberChannel, Channel.parse, 'POST');
 
-            return result.getData();
+            const updatedChannel: Channel | null = result.getData();
+            if (updatedChannel === null) {
+                throw new Error('Unable to update channel: wrong response from API');
+            }
+            return updatedChannel;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save channel: ', ex);
@@ -111,13 +115,22 @@ export class ChannelEndpoint extends Endpoint {
 
     }
 
-    public async testChannel(subscriberChannel: Channel): Promise<any> {
+    public async testChannel(subscriberChannel: Channel): Promise<boolean> {
 
         try {
             let url: string = '/channels/' + subscriberChannel.id + '/test';
 
-            const result: any = await this.httpClient.request(url, {}, 'POST');
-            return result;
+            const parser = (raw: any): { tested: boolean } => {
+                return {tested: raw.tested};
+            }
+            const result: ObjectResult<{ tested: boolean }> = await this.requestObject(url, {}, parser, 'POST');
+
+            const re: { tested: boolean } | null = result.getData();
+            if (re === null) {
+                console.log('testChannel wrong data', {result, parsed: re});
+                throw new Error('Unable to test channel: wrong response from API');
+            }
+            return re.tested;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to test channel: ', ex);
