@@ -1,28 +1,16 @@
 import {Endpoint} from './Endpoint';
 import {HealthAlert} from '../Model/HealthAlert/HealthAlert';
-import {DataResult} from '../Model/Result/DataResult';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class HealthAlertEndpoint extends Endpoint {
 
-    public async getLatestByProjectEnvironment(projectEnvironmentId: string): Promise<HealthAlert[]> {
+    public async getLatestByProjectEnvironment(projectEnvironmentId: string): Promise<CollectionResult<HealthAlert>> {
 
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/health';
 
-            const result: DataResult<HealthAlert[]> = await this.request(url);
-            // if (Utils.isNullOrUndefined(result)) {
-            //     return null;
-            // }
-            let alerts: HealthAlert[] = [];
-
-            const resultData: any | null = result.getData();
-            if (resultData !== null) {
-                for (let raw of resultData) {
-                    alerts.push(HealthAlert.parse(raw));
-                }
-            }
-
-            return alerts;
+            const result: CollectionResult<HealthAlert> = await this.requestCollection(url,  HealthAlert.parse);
+            return result;
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

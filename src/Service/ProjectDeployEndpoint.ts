@@ -40,7 +40,7 @@ export class ProjectDeployEndpoint extends Endpoint {
     public async getByCodeSource(codeSourceId: string): Promise<CollectionResult<ProjectDeploy>> {
 
         try {
-            const rawProjectDeploys: CollectionResult<ProjectDeploy> = await this.requestCollection('/codesources/' + codeSourceId + '/deploys', null, ProjectDeploy.parse);
+            const rawProjectDeploys: CollectionResult<ProjectDeploy> = await this.requestCollection('/codesources/' + codeSourceId + '/deploys',  ProjectDeploy.parse);
 
             return rawProjectDeploys;
         } catch (error) {
@@ -53,12 +53,16 @@ export class ProjectDeployEndpoint extends Endpoint {
 
     }
 
-    public async requestDeploy(codeSourceId: string): Promise<any> {
+    public async requestDeploy(codeSourceId: string): Promise<ProjectDeploy> {
 
         try {
-            const projectDeploy: any = await this.request('/codesources/' + codeSourceId + '/deploys', {}, 'POST');
-            // TODO: parse deploy
-            return projectDeploy;
+            const result: ObjectResult<ProjectDeploy> = await this.requestObject('/codesources/' + codeSourceId + '/deploys', null, ProjectDeploy.parse, 'POST');
+            const requestedDeploy: ProjectDeploy | null = result.getData();
+            if (requestedDeploy === null) {
+                throw new Error('ProjectDeploy not requested');
+            }
+            return requestedDeploy;
+
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to request project deploy', error);

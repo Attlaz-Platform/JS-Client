@@ -2,8 +2,8 @@ import {Utils} from '../../Utils';
 
 export class ChannelHistory {
     public id: number;
-    public subscriber: string;
-    public channel: number;
+    public subscriberId: string;
+    public channelId: number;
     public time: Date;
     public message: any;
     public success: boolean;
@@ -19,15 +19,15 @@ export class ChannelHistory {
     //     this.result = result;
     //
     // }
-    public static parse(rawLog: any): ChannelHistory {
+    public static parse(rawChannelHistory: any): ChannelHistory {
         let log: ChannelHistory = new ChannelHistory();
-        log.id = rawLog.id;
-        log.subscriber = rawLog.subscriber;
-        log.channel = rawLog.channel;
-        log.time = new Date(rawLog.time);
-        log.message = rawLog.message;
-        log.success = Utils.isTrue(rawLog.success);
-        log.result = rawLog.result;
+        log.id = rawChannelHistory.id;
+        log.subscriberId = rawChannelHistory.subscriber;
+        log.channelId = rawChannelHistory.channel;
+        log.time = Utils.parseRawDate(rawChannelHistory.time);
+        log.message = rawChannelHistory.message;
+        log.success = Utils.isTrue(rawChannelHistory.success);
+        log.result = rawChannelHistory.result;
         return log;
     }
 }

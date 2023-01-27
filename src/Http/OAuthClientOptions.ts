@@ -1,3 +1,5 @@
+import {Headers} from './Data/Header';
+
 export class OAuthClientOptions {
     public apiEndpoint: string;
     public clientId: string;
@@ -8,11 +10,9 @@ export class OAuthClientOptions {
     public scopes: string[] = ['all'];
     public state: string = 'xyz';
 
-    public headers: {
-        [key: string]: string | string[];
-    };
+    public headers: Headers;
 
-    constructor(apiEndpoint: string, clientId: string, clientSecret: string, headers: { [key: string]: string | string[] }) {
+    constructor(apiEndpoint: string, clientId: string, clientSecret: string, headers: Headers) {
         this.apiEndpoint = apiEndpoint;
         this.clientId = clientId;
         this.clientSecret = clientSecret;

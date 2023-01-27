@@ -16,17 +16,17 @@ export class WorkerConfig {
     public static KEY_API_CLIENT_ID: string = 'api_client_id';
     public static KEY_API_CLIENT_SECRET: string = 'api_client_secret';
 
-    public projectEnvironment: string;
+    public projectEnvironmentId: string;
     public key: string;
     public value: DataValueValue | null;
 
-    constructor(project_environment: string, key: string, value: DataValueValue | null) {
-        this.projectEnvironment = project_environment;
+    constructor(projectEnvironmentId: string, key: string, value: DataValueValue | null) {
+        this.projectEnvironmentId = projectEnvironmentId;
         this.key = key;
         this.value = value;
     }
 
     public static parse(raw: any): WorkerConfig {
-        return new WorkerConfig(raw.projectEnvironment, raw.key, raw.value);
+        return new WorkerConfig(raw.project_environment, raw.key, raw.value);
     }
 }

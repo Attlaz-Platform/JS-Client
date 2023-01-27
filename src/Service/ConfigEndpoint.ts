@@ -2,18 +2,19 @@ import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {Config} from '../Model/Config';
 import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class ConfigEndpoint extends Endpoint {
 
     public async getConfigByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
 
         try {
-            let parameters: any = null;
+            let parameters: Parameters | null = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            const result: CollectionResult<Config> = await this.requestCollection('/flows/' + flowId + '/configvalues', parameters, Config.parse);
+            const result: CollectionResult<Config> = await this.requestCollection('/flows/' + flowId + '/configvalues', Config.parse, parameters);
 
             return result;
         } catch (e) {
@@ -28,7 +29,7 @@ export class ConfigEndpoint extends Endpoint {
     public async getByProjectEnvironment(projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
 
         try {
-            const result: CollectionResult<Config> = await this.requestCollection('/projectEnvironment/' + projectEnvironmentId + '/configvalues', null, Config.parse)
+            const result: CollectionResult<Config> = await this.requestCollection('/projectenvironments/' + projectEnvironmentId + '/configvalues', Config.parse)
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -43,7 +44,7 @@ export class ConfigEndpoint extends Endpoint {
 
         try {
             let url: string = '/configvalues';
-            const result: CollectionResult<Config> = await this.requestCollection(url, configs, Config.parse, 'POST');
+            const result: CollectionResult<Config> = await this.requestCollection(url, Config.parse, configs, 'POST');
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {

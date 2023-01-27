@@ -1,16 +1,12 @@
 import {State} from '../State';
 import {StateAware} from '../StateAware';
-import {Utils} from '../../Utils';
 
 export class Project implements StateAware {
     public id: string;
     public key: string;
     public name: string;
-    public teamId: string;
-    public default: boolean = false;
-
+    public workspaceId: string;
     public defaultEnvironmentId: string;
-
     public state: State = State.Active;
 
     constructor(id: string, key: string, name: string) {
@@ -21,18 +17,13 @@ export class Project implements StateAware {
 
     public static parse(rawProject: any): Project {
         let project: Project = new Project(rawProject.id, rawProject.key, rawProject.name);
+        project.workspaceId = rawProject.workspace;
 
-        if (rawProject.team !== undefined) {
-            project.teamId = rawProject.team;
-        } else {
-            project.teamId = rawProject.teamId;
-        }
+        // if (rawProject.default !== null && rawProject.default !== undefined) {
+        //     project.default = Utils.isTrue(rawProject.default);
+        // }
 
-        if (rawProject.default !== null && rawProject.default !== undefined) {
-            project.default = Utils.isTrue(rawProject.default);
-        }
-
-        project.defaultEnvironmentId = rawProject.defaultEnvironmentId;
+        project.defaultEnvironmentId = rawProject.default_environment;
 
         project.state = State.fromString(rawProject.state);
         return project;

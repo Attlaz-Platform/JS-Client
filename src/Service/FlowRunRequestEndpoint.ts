@@ -1,23 +1,37 @@
 import {Endpoint} from './Endpoint';
 import {FlowRunResponse} from '../Model/Flow/FlowRunResponse';
-
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Parameters} from '../Http/Data/Parameters';
 
 export class FlowRunRequestEndpoint extends Endpoint {
-    public async postTaskExecutionRequest(taskId: string, params: any, wait: boolean = false): Promise<FlowRunResponse> {
+    public async postFlowRunRequest(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
 
-        let url: string = '/flows/' + taskId + '/flowrunrequests';
+        let url: string = '/flows/' + flowId + '/flowrunrequests';
         if (wait) {
             url = url + "?wait=true";
         }
 
         try {
-            // TODO: parse
-            const result: any = await this.httpClient.request(url, params, 'POST');
+
+            const parser = (raw: any): FlowRunResponse => {
+
+                const flowRunResponse: FlowRunResponse = new FlowRunResponse();
+                flowRunResponse.flowRunRequestId = raw.flow_run_request;
+                flowRunResponse.result = raw.result;
+                flowRunResponse.success = raw.success;
+                return flowRunResponse;
+            }
+            const result: ObjectResult<FlowRunResponse> = await this.requestObject(url, params, parser, 'POST');
             // console.log('TODO: parse postTaskExecutionRequest result', result);
-            return result as FlowRunResponse;
+
+            const postedFlowRunResponse: FlowRunResponse | null = result.getData();
+            if (postedFlowRunResponse === null) {
+                throw new Error('FlowRunResponse not updated');
+            }
+            return postedFlowRunResponse;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to execute task: ', ex);
+                console.error('Failed to request flow run: ', ex);
             }
 
             throw ex;

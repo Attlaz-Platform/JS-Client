@@ -1,3 +1,5 @@
+import {Utils} from '../../Utils';
+
 export class FlowRunStats {
 
     public flowRunId: string;
@@ -15,4 +17,26 @@ export class FlowRunStats {
 
     public fileRead: number | null = null;
     public fileWrite: number | null = null;
+
+    public static parse(raw: any): FlowRunStats {
+
+        const flowRunStats: FlowRunStats = new FlowRunStats();
+        flowRunStats.flowRunId = raw.flow_run;
+        flowRunStats.time = Utils.parseRawDate(raw.time);
+
+        flowRunStats.memory = raw.memory;
+        flowRunStats.memoryLimit = raw.memory_limit;
+
+        flowRunStats.cpu = raw.cpu;
+        flowRunStats.cpuLimit = raw.cpu_limit;
+
+        flowRunStats.networkOutbound = raw.network_outbound;
+        flowRunStats.networkInbound = raw.network_inbound;
+
+        flowRunStats.fileRead = raw.file_read;
+        flowRunStats.fileWrite = raw.file_write;
+
+        return flowRunStats;
+
+    }
 }

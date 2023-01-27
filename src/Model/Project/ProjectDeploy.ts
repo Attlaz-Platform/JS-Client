@@ -8,30 +8,27 @@ export class ProjectDeploy {
     public buildStrategyId: string;
     public userId: string;
     public requested: Date;
-    public started: Date;
-    public finished: Date;
+    public started: Date | null = null;
+    public finished: Date | null = null;
     public status: ProjectDeployStatus = ProjectDeployStatus.Unknown;
-    public bytes: number;
+    public bytes: number | null = null;
     public commits: ProjectDeployCommit[] = [];
-    public path: string;
-    public commitHash: string;
+    public path: string | null = null;
+    public commitHash: string | null = null;
     public errors: { message: string }[] | null = null;
 
     public static parse(rawProjectDeploy: any): ProjectDeploy {
         const projectDeploy: ProjectDeploy = new ProjectDeploy();
 
         projectDeploy.id = rawProjectDeploy.id.toString();
-        projectDeploy.platformId = rawProjectDeploy.platformId;
-        projectDeploy.buildStrategyId = rawProjectDeploy.buildStrategyId;
-        projectDeploy.userId = rawProjectDeploy.userId;
-        projectDeploy.requested = new Date(rawProjectDeploy.requested);
-        projectDeploy.started = new Date(rawProjectDeploy.started);
-        projectDeploy.finished = new Date(rawProjectDeploy.finished);
+        projectDeploy.platformId = rawProjectDeploy.platform;
+        projectDeploy.buildStrategyId = rawProjectDeploy.build_strategy;
+        projectDeploy.userId = rawProjectDeploy.user;
+        projectDeploy.requested = Utils.parseRawDate(rawProjectDeploy.requested);
+        projectDeploy.started = rawProjectDeploy.started === null ? null : Utils.parseRawDate(rawProjectDeploy.started);
+        projectDeploy.finished = rawProjectDeploy.finished === null ? null : Utils.parseRawDate(rawProjectDeploy.finished);
         projectDeploy.status = ProjectDeployStatus.fromString(rawProjectDeploy.status);
-
-        if (!Utils.isNullOrUndefined(rawProjectDeploy.bytes)) {
-            projectDeploy.bytes = parseInt(rawProjectDeploy.bytes);
-        }
+        projectDeploy.bytes = rawProjectDeploy.bytes === null ? null : parseInt(rawProjectDeploy.bytes);
         projectDeploy.path = rawProjectDeploy.path;
         projectDeploy.commitHash = rawProjectDeploy.commit_hash;
 
@@ -39,11 +36,11 @@ export class ProjectDeploy {
 
         for (let rawProjectDeployCommit of rawProjectDeployCommits) {
             let projectDeployCommit: ProjectDeployCommit = new ProjectDeployCommit();
-            projectDeployCommit.commit_hash = rawProjectDeployCommit.commit_hash;
-            projectDeployCommit.commit_date = new Date(rawProjectDeployCommit.commit_date);
-            projectDeployCommit.commit_message = rawProjectDeployCommit.commit_message;
-            projectDeployCommit.commit_author_name = rawProjectDeployCommit.commit_author_name;
-            projectDeployCommit.commit_author_email = rawProjectDeployCommit.commit_author_email;
+            projectDeployCommit.hash = rawProjectDeployCommit.commit_hash;
+            projectDeployCommit.date = Utils.parseRawDate(rawProjectDeployCommit.commit_date);
+            projectDeployCommit.message = rawProjectDeployCommit.commit_message;
+            projectDeployCommit.authorName = rawProjectDeployCommit.commit_author_name;
+            projectDeployCommit.authorEmail = rawProjectDeployCommit.commit_author_email;
 
             projectDeploy.commits.push(projectDeployCommit);
         }

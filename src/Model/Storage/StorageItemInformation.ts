@@ -1,3 +1,5 @@
+import {Utils} from '../../Utils';
+
 export class StorageItemInformation {
     public key: string;
     public bytes: number;
@@ -7,7 +9,7 @@ export class StorageItemInformation {
         let storageItemInformation: StorageItemInformation = new StorageItemInformation();
         storageItemInformation.key = raw.key;
         storageItemInformation.bytes = raw.bytes;
-        storageItemInformation.expiration = raw.expiration === null ? null : new Date(raw.expiration);
+        storageItemInformation.expiration = raw.expiration === null ? null : Utils.parseRawDate(raw.expiration);
         return storageItemInformation;
     }
 }

@@ -10,7 +10,7 @@ export class WorkerConfigEndpoint extends Endpoint {
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';
 
-            const result: CollectionResult<WorkerConfig> = await this.requestCollection(url, null, WorkerConfig.parse);
+            const result: CollectionResult<WorkerConfig> = await this.requestCollection(url,  WorkerConfig.parse);
 
             return result;
 
@@ -28,7 +28,7 @@ export class WorkerConfigEndpoint extends Endpoint {
 
         try {
 
-            let url: string = '/projectenvironments/' + workerConfig.projectEnvironment + '/workerconfiguration';
+            let url: string = '/projectenvironments/' + workerConfig.projectEnvironmentId + '/workerconfiguration';
 
             const result: ObjectResult<WorkerConfig> = await this.requestObject(url, workerConfig, WorkerConfig.parse, 'POST');
             const createdWorkerConfig: WorkerConfig | null = result.getData();

@@ -3,18 +3,24 @@ import {LogQuery} from '../Model/Log/LogQuery';
 import {Log} from '../Model/Log/Log';
 import {Utils} from '../Utils';
 import {LogStreamId} from '../Model/Log/LogStreamId';
-import {LogLevel} from '../Model/Log/LogLevel';
-import {DataResult} from '../Model/Result/DataResult';
-import {DataValueValue} from '../Model/DataValue';
 import {CollectionResult} from '../Model/Result/CollectionResult';
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
+import {LogStream} from '../Model/Log/LogStream';
+import {CursorPagination} from '../Model/Pagination/CursorPagination';
+import {QueryString} from '../Http/Data/QueryString';
 
 export class LogEndpoint extends Endpoint {
 
     public async getLogs(logQuery: LogQuery): Promise<CollectionResult<Log>> {
 
         const arrQuery: string[] = [];
-        arrQuery.push('pageSize=' + logQuery.pageSize);
-        arrQuery.push('pageNum=' + logQuery.pageNum);
+        if (logQuery.limit !== null) {
+            arrQuery.push('limit=' + logQuery.limit);
+        }
+        if (logQuery.startingAfterId !== null) {
+            arrQuery.push('starting_after=' + logQuery.startingAfterId);
+        }
 
         // Resolved
         if (logQuery.hidden !== null && logQuery.hidden !== undefined) {
@@ -45,7 +51,17 @@ export class LogEndpoint extends Endpoint {
 
         let cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.id) + '/logs/?' + arrQuery.join('&');
 
-        const result: CollectionResult<Log> = await this.requestCollection(cmd, null, Log.parse);
+        const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
+        return result;
+    }
+
+    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null): Promise<CollectionResult<Log>> {
+
+        const queryString: QueryString = this.buildQuery(pagination);
+
+        let cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs' + queryString.build()
+
+        const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
         return result;
     }
 
@@ -54,9 +70,13 @@ export class LogEndpoint extends Endpoint {
         try {
             let cmd: string = '/logstreams/' + Utils.base64encode(log.logStream.id) + '/logs';
 
-            const result: DataResult<Log> = await this.request(cmd, log, 'POST');
+            const result: ObjectResult<Log> = await this.requestObject(cmd, log, Log.parse, 'POST');
+            const updatedLogEntry: Log | null = result.getData();
+            if (updatedLogEntry === null) {
+                throw new Error('Log not updated');
+            }
+            return updatedLogEntry;
 
-            return Log.parse(result.getData());
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save log: ', error);
@@ -72,9 +92,18 @@ export class LogEndpoint extends Endpoint {
         let cmd: string = '/logstreams/:streamId/logs/' + logId;
 
         try {
-            const removed: boolean = await this.httpClient.request(cmd, null, 'DELETE');
+            const parser = (raw: any): { deleted: boolean } => {
+                return {deleted: raw.deleted}
+            };
 
-            return removed;
+            const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
+
+            const re: { deleted: boolean } | null = result.getData();
+            if (re === null) {
+                console.log('delete log entry wrong data', {result, parsed: re});
+                throw new Error('Unable to delete log entry: wrong response from API');
+            }
+            return re.deleted;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save log: ', e);
@@ -88,9 +117,16 @@ export class LogEndpoint extends Endpoint {
         let cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/clear';
 
         try {
-            const removed: boolean = await this.httpClient.request(cmd, null, 'POST');
-
-            return removed;
+            const parser = (raw: any): { cleared: boolean } => {
+                return {cleared: raw.cleared}
+            };
+            const result: ObjectResult<{ cleared: boolean }> = await this.requestObject(cmd, null, parser, 'POST');
+            const re: { cleared: boolean } | null = result.getData();
+            if (re === null) {
+                console.log('Log stream cleared wrong data', {result, parsed: re});
+                throw new Error('Unable to clear log stream: wrong response from API');
+            }
+            return re.cleared;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save log: ', e);
@@ -99,48 +135,13 @@ export class LogEndpoint extends Endpoint {
         }
     }
 
-    public async getInformation(logStreamId: LogStreamId): Promise<{ logLevels: Map<LogLevel, number>, tags: Map<string, (DataValueValue)[]> }> {
+    public async getInformation(logStreamId: LogStreamId): Promise<LogStreamInformation | null> {
         try {
             let url: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/info';
 
-            const dataResult: DataResult<{ level_count: {}, tags: {} }> = await this.request(url);
-            if (Utils.isNullOrUndefined(dataResult)) {
-                throw new Error('Invalid response');
-            }
+            const result: ObjectResult<LogStreamInformation> = await this.requestObject(url, null, LogStreamInformation.parse);
 
-            const data: { level_count: any, tags: any } | null = dataResult.getData();
-            if (data === null) {
-                throw new Error('Invalid response');
-            }
-            const rawData: { level_count: any, tags: any } = data;
-
-            const logLevels: Map<LogLevel, number> = new Map<LogLevel, number>();
-
-            Object.keys(rawData.level_count).forEach((logLevelKey: string, index) => {
-
-                const logLevel: LogLevel = LogLevel.fromString(logLevelKey);
-
-                const parsedCount: number | null = parseInt(rawData.level_count[logLevelKey], undefined);
-                if (parsedCount !== null) {
-                    logLevels.set(logLevel, parsedCount);
-                } else {
-                    console.error('Unserialize log level count: Unable to parse log level count', rawData.level_count[logLevelKey]);
-                }
-
-            });
-
-            const tags: Map<string, DataValueValue[]> = new Map<string, DataValueValue[]>();
-            if (rawData.tags !== null && rawData.tags !== undefined) {
-
-                Object.keys(rawData.tags).forEach((tagKey: string, index) => {
-
-                    const values: DataValueValue[] = rawData.tags[tagKey];
-
-                    tags.set(tagKey, values);
-
-                });
-            }
-            return {logLevels: logLevels, tags};
+            return result.getData();
 
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -149,5 +150,13 @@ export class LogEndpoint extends Endpoint {
 
             throw error;
         }
+    }
+
+    public async getByProject(projectId: string): Promise<CollectionResult<LogStream>> {
+        const parser = (raw: any): LogStream => {
+            return new LogStream(new LogStreamId(raw['id']), raw['name']);
+        }
+        const result: CollectionResult<LogStream> = await this.requestCollection('projects/' + projectId + '/logstreams', parser);
+        return result;
     }
 }

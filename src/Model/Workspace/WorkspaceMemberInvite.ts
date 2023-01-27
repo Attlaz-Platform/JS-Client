@@ -4,7 +4,7 @@ import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState';
 export class WorkspaceMemberInvite {
     public id: string;
     public code: string;
-    public teamId: string;
+    public workspaceId: string;
     public email: string;
     public role: WorkspaceMemberRole;
     public date: Date;

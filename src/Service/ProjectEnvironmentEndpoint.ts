@@ -9,7 +9,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
 
         try {
-            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments', null, ProjectEnvironment.parse);
+            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments',  ProjectEnvironment.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

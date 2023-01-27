@@ -1,16 +1,19 @@
 /**
- * @module
- * @description
- * Entry point for all classes
+ * Http
  */
-/* HTTP */
 export {HttpClient} from './Http/HttpClient';
 export {HttpClientRequest} from './Http/HttpClientRequest';
 export {HttpClientResponse} from './Http/HttpClientResponse';
 export {OAuthClient} from './Http/OAuthClient';
 export {OAuthClientOptions} from './Http/OAuthClientOptions';
 export {OAuthClientToken} from './Http/OAuthClientToken';
-/* Models */
+/**
+ * Models
+ */
+export {Adapter} from './Model/Adapter/Adapter';
+export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
+export {AdapterConnection} from './Model/Adapter/AdapterConnection';
+
 export {ClientError} from './Model/Error/ClientError';
 
 export {EventType} from './Model/Event/EventType';
@@ -25,6 +28,7 @@ export {LogQuery} from './Model/Log/LogQuery';
 export {LogStatus} from './Model/Log/LogStatus';
 export {LogStream} from './Model/Log/LogStream';
 export {LogStreamId} from './Model/Log/LogStreamId';
+export {LogStreamInformation} from './Model/Log/LogStreamInformation';
 /** Messaging **/
 
 export {Channel} from './Model/Messaging/Channel/Channel';
@@ -52,8 +56,9 @@ export {ProjectEnvironment} from './Model/Project/ProjectEnvironment';
 export {QueueStatus} from './Model/Queue/QueueStatus';
 
 /** Result **/
-
+export {CollectionResult} from './Model/Result/CollectionResult';
 export {DataResult} from './Model/Result/DataResult';
+export {ObjectResult} from './Model/Result/ObjectResult';
 export {ResultError} from './Model/Result/ResultError';
 
 export {StorageInformation} from './Model/Storage/StorageInformation';
@@ -83,6 +88,8 @@ export {WorkerState} from './Model/Worker/WorkerState';
 /** Deployment **/
 export {CodeSource} from './Model/Deployment/CodeSource';
 export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount';
+export {SourcesAccountRepository} from './Model/Deployment/SourcesAccountRepository';
+export {SourcesAccountRepositoryBranch} from './Model/Deployment/SourcesAccountRepositoryBranch';
 
 /** Workspace **/
 export {Workspace} from './Model/Workspace/Workspace';
@@ -92,17 +99,12 @@ export {WorkspaceMemberInvite2} from './Model/Workspace/WorkspaceMemberInvite2';
 export {WorkspaceMemberInviteState} from './Model/Workspace/WorkspaceMemberInviteState';
 export {WorkspaceMemberRole} from './Model/Workspace/WorkspaceMemberRole';
 /** **/
-export {Adapter} from './Model/Adapter/Adapter';
-export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration';
-export {AdapterConnection} from './Model/Adapter/AdapterConnection';
 
 export {Config} from './Model/Config';
 export {DataValue, DataValueValue} from './Model/DataValue';
 
 export {Notification} from './Model/Notification';
-export {PagedResult} from './Model/PagedResult';
 
-export {SourcesAccountRepository} from './Model/SourcesAccountRepository';
 export {State} from './Model/State';
 
 /** Flow **/

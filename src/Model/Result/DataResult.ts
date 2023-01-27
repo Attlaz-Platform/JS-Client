@@ -1,5 +1,6 @@
 import {ResultError} from './ResultError';
 
+/** @deprecated **/
 export class DataResult<T> {
     private data: T | null;
     private readonly errors: ResultError[];
