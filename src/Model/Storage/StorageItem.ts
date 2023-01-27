@@ -1,3 +1,5 @@
+import {Utils} from '../../Utils';
+
 export class StorageItem {
     public key: string;
     public bytes: number;
@@ -9,7 +11,7 @@ export class StorageItem {
         storageItem.key = raw.key;
         storageItem.bytes = raw.bytes;
         storageItem.value = raw.value;
-        storageItem.expiration = raw.expiration === null ? null : new Date(raw.expiration);
+        storageItem.expiration = raw.expiration === null ? null : Utils.parseRawDate(raw.expiration);
         return storageItem;
     }
 }

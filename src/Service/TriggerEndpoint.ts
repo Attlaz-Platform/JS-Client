@@ -15,7 +15,7 @@ export class TriggerEndpoint extends Endpoint {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection('/flows/' + flowId + '/triggers', parameters, Trigger.parse);
+            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection('/flows/' + flowId + '/triggers', Trigger.parse, parameters);
 
             return rawTriggers;
 

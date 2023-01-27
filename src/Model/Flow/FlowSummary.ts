@@ -10,14 +10,14 @@ export class FlowSummary extends Flow {
     public averagePendingDuration: number | null = null;
     public runCount: number = 0;
 
-    public static parse(rawTask: any): FlowSummary {
-        let task: FlowSummary = Flow.parse(rawTask) as FlowSummary;
-        task.status = FlowRunStatus.fromString(rawTask.status);
-        task.latestRun = rawTask.latest_run === null?null:Utils.parseRawDate(rawTask.latest_run);
-        task.averageRunDuration = rawTask.average_run_duration;
-        task.averagePendingDuration = rawTask.average_pending_duration;
-        task.runCount = rawTask.run_count;
+    public static parse(rawFlowSummary: any): FlowSummary {
+        let flowSummary: FlowSummary = Flow.parse(rawFlowSummary) as FlowSummary;
+        flowSummary.status = FlowRunStatus.fromString(rawFlowSummary.status);
+        flowSummary.latestRun = rawFlowSummary.latest_run === null ? null : Utils.parseRawDate(rawFlowSummary.latest_run);
+        flowSummary.averageRunDuration = rawFlowSummary.average_run_duration;
+        flowSummary.averagePendingDuration = rawFlowSummary.average_pending_duration;
+        flowSummary.runCount = rawFlowSummary.run_count;
 
-        return task;
+        return flowSummary;
     }
 }

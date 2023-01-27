@@ -14,7 +14,7 @@ export class FlowEndpoint extends Endpoint {
         try {
 
             let url: string = '/projects/' + projectId + '/flows';
-            const result: CollectionResult<Flow> = await this.requestCollection(url, null, Flow.parse);
+            const result: CollectionResult<Flow> = await this.requestCollection(url, Flow.parse);
             return result
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -50,7 +50,7 @@ export class FlowEndpoint extends Endpoint {
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }
-        const result: CollectionResult<FlowSummary> = await this.requestCollection('projects/' + projectId + '/flowsummaries', parameters, FlowSummary.parse)
+        const result: CollectionResult<FlowSummary> = await this.requestCollection('projects/' + projectId + '/flowsummaries', FlowSummary.parse, parameters)
         return result;
         //
         //     }).catch((reason: any) => {
@@ -71,11 +71,11 @@ export class FlowEndpoint extends Endpoint {
         }
 
         try {
-            const rawTaskSummary: ObjectResult<FlowSummary> = await this.requestObject('flows/' + flowId + '/summaries', parameters, FlowSummary.parse);
-            if (Utils.isNullOrUndefined(rawTaskSummary)) {
+            const rawFlowSummaries: ObjectResult<FlowSummary> = await this.requestObject('flows/' + flowId + '/summaries', parameters, FlowSummary.parse);
+            if (rawFlowSummaries.getData() === null) {
                 return null;
             }
-            return rawTaskSummary.getData();
+            return rawFlowSummaries.getData();
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load flow by id ' + flowId + ': ' + e);
@@ -89,7 +89,7 @@ export class FlowEndpoint extends Endpoint {
     public async save(flow: Flow): Promise<Flow> {
 
         try {
-            let url: string = '/projects/' + flow.projectId + '/tasks';
+            let url: string = '/projects/' + flow.projectId + '/flows';
             const result: ObjectResult<Flow> = await this.requestObject(url, flow, Flow.parse, 'POST');
             const updatedFlow: Flow | null = result.getData();
             if (updatedFlow === null) {

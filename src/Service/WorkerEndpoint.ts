@@ -30,16 +30,16 @@ export class WorkerEndpoint extends Endpoint {
 
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
-            const parser = (input: any): boolean => {
-                return Utils.isTrue(input);
+            const parser = (input: any): { updated: boolean } => {
+                return {updated: input.updated};
             }
-            const result: ObjectResult<boolean> = await this.requestObject(url, null, parser, 'POST');
+            const result: ObjectResult<{ updated: boolean }> = await this.requestObject(url, null, parser, 'POST');
 
-            const isUpdated: boolean | null = result.getData();
+            const isUpdated: { updated: boolean } | null = result.getData();
             if (isUpdated === null) {
                 throw new Error('Worker probably not updated');
             }
-            return isUpdated;
+            return isUpdated.updated;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to update worker: ', error);

@@ -30,7 +30,7 @@ export class ChannelEndpoint extends Endpoint {
     public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Channel>> {
 
         try {
-            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels', null, Channel.parse);
+            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels',  Channel.parse);
 
             return result;
         } catch (ex) {
@@ -46,7 +46,7 @@ export class ChannelEndpoint extends Endpoint {
     public async getByOwner(): Promise<CollectionResult<Channel>> {
 
         try {
-            const result: CollectionResult<Channel> = await this.requestCollection('/channels', null, Channel.parse);
+            const result: CollectionResult<Channel> = await this.requestCollection('/channels', Channel.parse);
 
             return result;
         } catch (ex) {
@@ -62,7 +62,7 @@ export class ChannelEndpoint extends Endpoint {
     public async getMessages(channelId: string): Promise<CollectionResult<ChannelHistory>> {
 
         try {
-            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages', null, ChannelHistory.parse);
+            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages',  ChannelHistory.parse);
 
             return result;
             // const data: ChannelHistory[] = [];

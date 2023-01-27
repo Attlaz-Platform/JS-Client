@@ -2,6 +2,7 @@ import {LogLevel} from "./LogLevel";
 import {LogStreamId} from './LogStreamId';
 import {LogStatus} from './LogStatus';
 import {DataValueCollection} from '../DataValueCollection';
+import {Utils} from '../../Utils';
 
 export class Log {
     public id: string | null = null;
@@ -26,7 +27,7 @@ export class Log {
     }
 
     public static parse(rawLog: any): Log {
-        const date: Date = new Date(rawLog.date);
+        const date: Date = Utils.parseRawDate(rawLog.date);
         const level: LogLevel = LogLevel.fromString(rawLog.level);
         const logStream: LogStreamId = new LogStreamId(rawLog.log_stream.id);
         let log: Log = new Log(logStream, rawLog.message, level, date);

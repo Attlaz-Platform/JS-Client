@@ -63,7 +63,7 @@ export class StorageEndpoint extends Endpoint {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items';
 
         try {
-            const result: CollectionResult<StorageItemInformation> = await this.requestCollection(cmd, null, StorageItemInformation.parse, 'GET');
+            const result: CollectionResult<StorageItemInformation> = await this.requestCollection(cmd, StorageItemInformation.parse, null, 'GET');
             return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {

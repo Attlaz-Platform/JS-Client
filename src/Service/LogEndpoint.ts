@@ -7,6 +7,8 @@ import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
 import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
 import {LogStream} from '../Model/Log/LogStream';
+import {CursorPagination} from '../Model/Pagination/CursorPagination';
+import {QueryString} from '../Http/Data/QueryString';
 
 export class LogEndpoint extends Endpoint {
 
@@ -49,7 +51,17 @@ export class LogEndpoint extends Endpoint {
 
         let cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.id) + '/logs/?' + arrQuery.join('&');
 
-        const result: CollectionResult<Log> = await this.requestCollection(cmd, null, Log.parse);
+        const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
+        return result;
+    }
+
+    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null): Promise<CollectionResult<Log>> {
+
+        const queryString: QueryString = this.buildQuery(pagination);
+
+        let cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs' + queryString.build()
+
+        const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
         return result;
     }
 
@@ -142,9 +154,9 @@ export class LogEndpoint extends Endpoint {
 
     public async getByProject(projectId: string): Promise<CollectionResult<LogStream>> {
         const parser = (raw: any): LogStream => {
-            return new LogStream(new LogStreamId(raw['id']['id']), raw['name']);
+            return new LogStream(new LogStreamId(raw['id']), raw['name']);
         }
-        const result: CollectionResult<LogStream> = await this.requestCollection('projects/' + projectId + '/logstreams', null, parser);
+        const result: CollectionResult<LogStream> = await this.requestCollection('projects/' + projectId + '/logstreams', parser);
         return result;
     }
 }

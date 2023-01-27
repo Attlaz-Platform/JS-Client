@@ -8,6 +8,8 @@ import {DataValueCollection} from '../Model/DataValueCollection';
 import {JsonSerializable} from '../Model/JsonSerializable';
 import {Parameters} from '../Http/Data/Parameters';
 import {LogStreamId} from '../Model/Log/LogStreamId';
+import {CursorPagination} from '../Model/Pagination/CursorPagination';
+import {QueryString} from '../Http/Data/QueryString';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;
@@ -55,6 +57,10 @@ export abstract class Endpoint {
                 return this.formatParameters(data.jsonSerialize());
             }
 
+            if (data instanceof QueryString) {
+                return data.getParameters();
+            }
+
             const result: any = {};
 
             for (const [key, value] of Object.entries(data)) {
@@ -80,7 +86,8 @@ export abstract class Endpoint {
         return formattedKey;
     }
 
-    public async requestCollection<T>(action: string, parameters: Parameters = null, parser: (input: any) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
+    public async requestCollection<T>(action: string, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
+
         parameters = this.formatParameters(parameters);
         const requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
 
@@ -161,5 +168,22 @@ export abstract class Endpoint {
         const wrappedData: any = ObjectWrapper.wrap(rawObject);
         const parsedData: T = parser(wrappedData);
         return parsedData;
+    }
+
+    protected buildQuery(pagination: CursorPagination | null): QueryString {
+        const queryString: QueryString = new QueryString();
+
+        if (pagination !== null && pagination !== undefined) {
+            if (pagination.limit !== null && pagination.limit !== undefined) {
+                queryString.set('limit', pagination.limit);
+            }
+            if (pagination.startingAfter !== null && pagination.startingAfter !== undefined && pagination.startingAfter !== '') {
+                queryString.set('starting_after', pagination.startingAfter);
+            }
+            if (pagination.endingBefore !== null && pagination.endingBefore !== undefined && pagination.endingBefore !== '') {
+                queryString.set('ending_before', pagination.endingBefore);
+            }
+        }
+        return queryString;
     }
 }

@@ -9,7 +9,7 @@ export class HealthAlertEndpoint extends Endpoint {
         try {
             let url: string = '/projectenvironments/' + projectEnvironmentId + '/health';
 
-            const result: CollectionResult<HealthAlert> = await this.requestCollection(url, null, HealthAlert.parse);
+            const result: CollectionResult<HealthAlert> = await this.requestCollection(url,  HealthAlert.parse);
             return result;
 
         } catch (error) {

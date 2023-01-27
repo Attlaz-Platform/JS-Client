@@ -37,7 +37,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
             }
             return member;
         }
-        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, null, parser);
+        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, parser);
 
         return result;
 
@@ -99,7 +99,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
 
             const url: string = '/workspaces/' + workspaceId + '/members/' + memberId + '/events';
 
-            const result: CollectionResult<UserAction> = await this.requestCollection(url, null, WorkspaceMemberEndpoint.parse, 'GET');
+            const result: CollectionResult<UserAction> = await this.requestCollection(url, WorkspaceMemberEndpoint.parse, null, 'GET');
 
             return result
         } catch (error) {
@@ -121,7 +121,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
         userAction.resourceType = rawUserEvent.resource_type;
         userAction.description = rawUserEvent.description;
         userAction.ip = rawUserEvent.ip;
-        userAction.time = new Date(rawUserEvent.time);
+        userAction.time = Utils.parseRawDate(rawUserEvent.time);
         userAction.result = rawUserEvent.result;
         userAction.data = DataValueCollection.fromObject(rawUserEvent.data);
 

@@ -13,20 +13,20 @@ export class Flow extends MetaDataAware implements StateAware {
     public isDirect: boolean = false;
     public state: State = State.Active;
 
-    /** The maximum number of tasks to run at any time (0 = no limit) **/
+    /** The maximum number of flows to run at any time (0 = no limit) **/
     public parallelLimit: number = 0;
 
     public static parse(rawFlow: any): Flow {
-        const task: Flow = new Flow();
-        task.id = rawFlow.id;
-        task.key = rawFlow.key;
-        task.projectId = rawFlow.project;
-        task.name = rawFlow.name;
-        task.description = rawFlow.description;
-        task.isDirect = Utils.isTrue(rawFlow.is_direct);
-        task.state = State.fromString(rawFlow.state);
-        task.parallelLimit = Utils.parseInt(rawFlow.parallel_limit);
-        task.metadata = DataValueCollection.fromObject(rawFlow.metadata);
-        return task;
+        const flow: Flow = new Flow();
+        flow.id = rawFlow.id;
+        flow.key = rawFlow.key;
+        flow.projectId = rawFlow.project;
+        flow.name = rawFlow.name;
+        flow.description = rawFlow.description;
+        flow.isDirect = Utils.isTrue(rawFlow.is_direct);
+        flow.state = State.fromString(rawFlow.state);
+        flow.parallelLimit = Utils.parseInt(rawFlow.parallel_limit);
+        flow.metadata = DataValueCollection.fromObject(rawFlow.metadata);
+        return flow;
     }
 }

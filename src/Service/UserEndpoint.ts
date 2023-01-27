@@ -4,6 +4,7 @@ import {Endpoint} from './Endpoint';
 import {User} from '../Model/User';
 import {ObjectResult} from '../Model/Result/ObjectResult';
 import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Utils} from '../Utils';
 
 export class UserEndpoint extends Endpoint {
 
@@ -20,9 +21,12 @@ export class UserEndpoint extends Endpoint {
         try {
 
             const parser = (raw: any): OAuthClientToken => {
-                // TODO: should we validate this more?
-                const token: OAuthClientToken = raw as OAuthClientToken;
-                token.expires = new Date(raw.expires);
+                const access_token: string = raw.access_token;
+                const token_type: string = raw.token_type;
+                const refresh_token: string = raw.refresh_token;
+                const scope: string = raw.scope;
+                const token: OAuthClientToken = new OAuthClientToken(access_token, token_type, refresh_token, scope);
+                token.expires = Utils.parseRawDate(raw.expires);
                 return token;
             }
             const result: ObjectResult<OAuthClientToken> = await this.requestObject('/auth/providers/' + providerType, data, parser, 'POST', false);
@@ -83,7 +87,7 @@ export class UserEndpoint extends Endpoint {
 
         let cmd: string = '/users/auth/providers';
 
-        const rawAuthProviders: CollectionResult<UserAuthProvider> = await this.requestCollection<UserAuthProvider>(cmd, null, UserAuthProvider.parse);
+        const rawAuthProviders: CollectionResult<UserAuthProvider> = await this.requestCollection<UserAuthProvider>(cmd, UserAuthProvider.parse);
 
         return rawAuthProviders;
 
@@ -96,7 +100,7 @@ export class UserEndpoint extends Endpoint {
         const parser = (raw: any): { key: string; allowed: boolean } => {
             return {key: raw.key, allowed: raw.allowed};
         }
-        const data: CollectionResult<{ key: string; allowed: boolean }> = await this.requestCollection<{ key: string; allowed: boolean }>(cmd, null, parser);
+        const data: CollectionResult<{ key: string; allowed: boolean }> = await this.requestCollection<{ key: string; allowed: boolean }>(cmd, parser);
 
         return data;
 
@@ -105,7 +109,7 @@ export class UserEndpoint extends Endpoint {
     public async update(user: User): Promise<User> {
         try {
             let url: string = '/users/' + user.id;
-            const result: ObjectResult<User> = await this.requestObject(url, {user}, User.parse, 'POST');
+            const result: ObjectResult<User> = await this.requestObject(url, user, User.parse, 'POST');
             const updatedUser: User | null = result.getData();
             if (updatedUser === null) {
                 throw new Error('User not updated');
@@ -119,15 +123,14 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async create(user: User, invitationCode: string | null = null): Promise<User> {
+    public async create(user: User, password: string, invitationCode: string | null = null): Promise<User> {
         try {
             let url: string = '/users/';
-            const data: {} = {user, invitation_code: invitationCode};
+            const data: any = user;
+            data.password = password;
+            data.invitation_code = invitationCode;
 
-            const parser = (raw: any): User => {
-                return User.parse(raw.createdUser)
-            }
-            const result: ObjectResult<User> = await this.requestObject(url, data, parser, 'PUT', false);
+            const result: ObjectResult<User> = await this.requestObject(url, data, User.parse, 'PUT', false);
 
             const createdUser: User | null = result.getData();
             if (createdUser === null) {

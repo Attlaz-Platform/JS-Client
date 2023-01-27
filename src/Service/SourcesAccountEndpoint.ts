@@ -11,12 +11,12 @@ import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccount
 
 export class SourcesAccountEndpoint extends Endpoint {
     public async getAllCodeSources(workspaceId: string): Promise<CollectionResult<CodeSource>> {
-        const result: CollectionResult<CodeSource> = await this.requestCollection('workspaces/' + workspaceId + '/codesources', null, CodeSource.parse);
+        const result: CollectionResult<CodeSource> = await this.requestCollection('workspaces/' + workspaceId + '/codesources', CodeSource.parse);
         return result;
     }
 
     public async getAllCodeSourceAccounts(workspaceId: string): Promise<CollectionResult<CodeSourceAccount>> {
-        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts', null, CodeSourceAccount.parse);
+        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts',  CodeSourceAccount.parse);
         return result;
     }
 
@@ -63,13 +63,13 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getRepositories(codeSourceAccountId: string): Promise<CollectionResult<SourcesAccountRepository>> {
-        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories', null, SourcesAccountRepository.parse);
+        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories',  SourcesAccountRepository.parse);
         return rawSourcesAccountRepositories;
     }
 
     public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
         repositoryKey = Utils.base64encode(repositoryKey);
-        const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', null, SourcesAccountRepositoryBranch.parse);
+        const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', SourcesAccountRepositoryBranch.parse);
         return rawBranches;
     }
 

@@ -1,6 +1,7 @@
 import {HealthTestType} from './HealthTestType';
 import {HealthAlertStatus} from './HealthAlertStatus';
 import {DataValue, DataValueValue} from '../DataValue';
+import {Utils} from '../../Utils';
 
 export class HealthAlert {
     public id: number;
@@ -19,7 +20,7 @@ export class HealthAlert {
     public static parse(raw: any): HealthAlert {
         let healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.health_test_type), HealthAlertStatus.fromString(raw.status));
         healthAlert.id = raw.id;
-        healthAlert.date = new Date(raw.date);
+        healthAlert.date = Utils.parseRawDate(raw.date);
         healthAlert.data = raw.data;
         return healthAlert;
     }
