@@ -15,13 +15,11 @@ export class UserAuthProvider implements StateAware {
         const userAuthProvider: UserAuthProvider = new UserAuthProvider();
 
         userAuthProvider.id = raw.id;
-        userAuthProvider.userId = raw.userId;
+        userAuthProvider.userId = raw.user;
         userAuthProvider.provider = raw.provider;
-        userAuthProvider.providerUserId = raw.providerUserId;
-        userAuthProvider.providerUserEmail = raw.providerUserEmail;
-        if (raw.lastUsed !== null && raw.lastUsed !== undefined) {
-            userAuthProvider.lastUsed = Utils.parseRawDate(raw.lastUsed);
-        }
+        userAuthProvider.providerUserId = raw.provider_user;
+        userAuthProvider.providerUserEmail = raw.provider_user_email;
+        userAuthProvider.lastUsed = Utils.parseRawDate(raw.last_used);
         userAuthProvider.state = State.fromString(raw.state);
 
         return userAuthProvider;

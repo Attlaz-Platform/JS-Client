@@ -1,16 +1,17 @@
 import {FlowRunStatus} from './FlowRunStatus';
+import {Utils} from '../../Utils';
 
 export class FlowRunHistory {
     public id: number;
     public time: Date;
     public status: FlowRunStatus;
 
-    public static parse(rawTaskExecutionHistory: any): FlowRunHistory {
-        let taskExecutionHistory: FlowRunHistory = new FlowRunHistory();
-        taskExecutionHistory.id = rawTaskExecutionHistory.id;
-        taskExecutionHistory.time = new Date(rawTaskExecutionHistory.time);
-        taskExecutionHistory.status = FlowRunStatus.fromString(rawTaskExecutionHistory.status);
+    public static parse(rawFlowRunHistory: any): FlowRunHistory {
+        let flowRunHistory: FlowRunHistory = new FlowRunHistory();
+        flowRunHistory.id = rawFlowRunHistory.id;
+        flowRunHistory.time = Utils.parseRawDate(rawFlowRunHistory.time);
+        flowRunHistory.status = FlowRunStatus.fromString(rawFlowRunHistory.status);
 
-        return taskExecutionHistory;
+        return flowRunHistory;
     }
 }

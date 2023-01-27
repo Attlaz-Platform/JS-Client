@@ -3,7 +3,6 @@ import {Endpoint} from './Endpoint';
 import {Utils} from '../Utils';
 import {State} from '../Model/State';
 
-import {DataResult} from '../Model/Result/DataResult';
 import {UserAction} from '../Model/User/UserAction';
 import {DataValueCollection} from '../Model/DataValueCollection';
 import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember';
@@ -38,15 +37,15 @@ export class WorkspaceMemberEndpoint extends Endpoint {
             }
             return member;
         }
-        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, null, parser);
+        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, parser);
 
         return result;
 
     }
 
-    public async invite(teamId: string, invites: WorkspaceMemberInvite[]): Promise<DataResult<void>> {
+    public async invite(workspaceId: string, invites: WorkspaceMemberInvite[]): Promise<boolean> {
 
-        let cmd: string = '/workspaces/' + teamId + '/invites';
+        let cmd: string = '/workspaces/' + workspaceId + '/invites';
 
         const rawInvites: { email: string, role: string }[] = [];
         for (let invite of invites) {
@@ -54,16 +53,25 @@ export class WorkspaceMemberEndpoint extends Endpoint {
         }
 
         try {
-            const result: DataResult<void> = await this.request(cmd, {invites: rawInvites}, 'POST');
 
+            const parser = (raw: any): any => {
+                return raw;
+            }
+            const result: ObjectResult<void> = await this.requestObject(cmd, {invites: rawInvites}, parser, 'POST');
+
+            const re: any | null = result.getData();
+            if (re === null) {
+                console.log('invite member wrong data', {result, parsed: re});
+                throw new Error('Unable invite member: wrong response from API');
+            }
             // if (Utils.isNullOrUndefined(result)) {
             //     return null;
             // }
-
-            return result;
+            console.log('Invite', re);
+            return true;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to invite members to team "' + teamId + '": ', ex);
+                console.error('Failed to invite members to workspace "' + workspaceId + '": ', ex);
             }
 
             throw ex;
@@ -85,13 +93,13 @@ export class WorkspaceMemberEndpoint extends Endpoint {
 
     }
 
-    public async getTeamMemberEvents(teamId: string, memberId: string): Promise<CollectionResult<UserAction>> {
+    public async getWorkspaceMemberEvents(workspaceId: string, memberId: string): Promise<CollectionResult<UserAction>> {
 
         try {
 
-            const url: string = '/teams/' + teamId + '/members/' + memberId + '/events';
+            const url: string = '/workspaces/' + workspaceId + '/members/' + memberId + '/events';
 
-            const result: CollectionResult<UserAction> = await this.requestCollection(url, null, WorkspaceMemberEndpoint.parse, 'GET');
+            const result: CollectionResult<UserAction> = await this.requestCollection(url, WorkspaceMemberEndpoint.parse, null, 'GET');
 
             return result
         } catch (error) {
@@ -107,13 +115,13 @@ export class WorkspaceMemberEndpoint extends Endpoint {
 
         userAction.id = rawUserEvent.id;
         userAction.userId = rawUserEvent.user;
-        userAction.teamId = rawUserEvent.team;
+        userAction.workspaceId = rawUserEvent.workspace;
         userAction.action = rawUserEvent.action;
-        userAction.resourceId = rawUserEvent.resource_id;
+        userAction.resourceId = rawUserEvent.resource;
         userAction.resourceType = rawUserEvent.resource_type;
         userAction.description = rawUserEvent.description;
         userAction.ip = rawUserEvent.ip;
-        userAction.time = new Date(rawUserEvent.time);
+        userAction.time = Utils.parseRawDate(rawUserEvent.time);
         userAction.result = rawUserEvent.result;
         userAction.data = DataValueCollection.fromObject(rawUserEvent.data);
 

@@ -1,12 +1,12 @@
 import {Client} from '../Client';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
+import {Helper} from '../../e2e/src/helper';
 
 jest.setTimeout((60) * 1000);
 
-const apiEndpoint: string = 'http://localhost:5728/';
-// const apiEndpoint: string = 'https://api2.attlaz.com';
-const clientCredentialClientId: string = 'zSGdVWE3FAS8kY5C';
-const clientCredentialClientSecret: string = '6jhYgFPAUm9HmCus';
+const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
+const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
+const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test get project environment', async () => {
 

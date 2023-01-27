@@ -27,7 +27,10 @@ import {LogEndpoint} from './Service/LogEndpoint';
 import {TriggerEndpoint} from './Service/TriggerEndpoint';
 import {PlatformEndpoint} from './Service/PlatformEndpoint';
 import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint';
+import {FirewallEndpoint} from './Service/FirewallEndpoint';
 import {VERSION} from './version';
+import {Headers} from './Http/Data/Header';
+import {CodeSourceBuildStrategyEndpoint} from './Service/CodeSourceBuildStrategyEndpoint';
 
 export class Client {
 
@@ -58,7 +61,9 @@ export class Client {
         WorkerConfigEndpoint,
         HealthAlertEndpoint,
         PlatformEndpoint,
-        FlowRunStatsEndpoint
+        FlowRunStatsEndpoint,
+        CodeSourceBuildStrategyEndpoint,
+        FirewallEndpoint
     };
 
     constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
@@ -79,7 +84,7 @@ export class Client {
         // });
     }
 
-    private getHeaders(): { [key: string]: string | string[] } {
+    private getHeaders(): Headers {
         const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
             version: VERSION,
             language: 'Javascript',
@@ -146,11 +151,11 @@ export class Client {
     }
 
     public getProjectEnvironmentEndpoint(): ProjectEnvironmentEndpoint {
-        return this.getEndpoint('projectenvironment', this.Store.ProjectEnvironmentEndpoint);
+        return this.getEndpoint('project-environment', this.Store.ProjectEnvironmentEndpoint);
     }
 
     public getProjectDeployEndpoint(): ProjectDeployEndpoint {
-        return this.getEndpoint('projectdeploy', this.Store.ProjectDeployEndpoint);
+        return this.getEndpoint('project-deploy', this.Store.ProjectDeployEndpoint);
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
@@ -178,19 +183,19 @@ export class Client {
     }
 
     public getFlowEndpoint(): FlowEndpoint {
-        return this.getEndpoint('task', this.Store.FlowEndpoint);
+        return this.getEndpoint('flow', this.Store.FlowEndpoint);
     }
 
     public getFlowRunEndpoint(): FlowRunEndpoint {
-        return this.getEndpoint('flowrun', this.Store.FlowRunEndpoint);
+        return this.getEndpoint('flow-run', this.Store.FlowRunEndpoint);
     }
 
     public getFlowRunRequestEndpoint(): FlowRunRequestEndpoint {
-        return this.getEndpoint('flowrunrequest', this.Store.FlowRunRequestEndpoint);
+        return this.getEndpoint('flow-run-request', this.Store.FlowRunRequestEndpoint);
     }
 
-    public getTaskExecutionStatsEndpoint(): FlowRunStatsEndpoint {
-        return this.getEndpoint('flowrunstats', this.Store.FlowRunStatsEndpoint);
+    public getFlowRunStatsEndpoint(): FlowRunStatsEndpoint {
+        return this.getEndpoint('flow-run-stats', this.Store.FlowRunStatsEndpoint);
     }
 
     public getWorkspaceEndpoint(): WorkspaceEndpoint {
@@ -214,7 +219,7 @@ export class Client {
     }
 
     public getSourcesAccountEndpoint(): SourcesAccountEndpoint {
-        return this.getEndpoint('sourcesaccount', this.Store.SourcesAccountEndpoint);
+        return this.getEndpoint('sources-account', this.Store.SourcesAccountEndpoint);
     }
 
     public getLanguageEndpoint(): PlatformLanguageEndpoint {
@@ -226,7 +231,7 @@ export class Client {
     }
 
     public getWorkerConfigEndpoint(): WorkerConfigEndpoint {
-        return this.getEndpoint('workerconfig', this.Store.WorkerConfigEndpoint);
+        return this.getEndpoint('worker-config', this.Store.WorkerConfigEndpoint);
     }
 
     public getQueueEndpoint(): QueueEndpoint {
@@ -234,7 +239,16 @@ export class Client {
     }
 
     public getHealthAlertEndpoint(): HealthAlertEndpoint {
-        return this.getEndpoint('healtalert', this.Store.HealthAlertEndpoint);
+        return this.getEndpoint('healt-alert', this.Store.HealthAlertEndpoint);
+    }
+
+    public getCodeSourceBuildStrategyEndpoint(): CodeSourceBuildStrategyEndpoint {
+        return this.getEndpoint('code-source-deploy-strategy', this.Store.CodeSourceBuildStrategyEndpoint);
+    }
+
+    // TODO: this should be in a separate API?
+    public getFirewallEndpoint(): FirewallEndpoint {
+        return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {

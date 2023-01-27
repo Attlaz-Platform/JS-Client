@@ -1,8 +1,10 @@
 import {LogLevel} from '../Log/LogLevel';
 import {Utils} from '../../Utils';
 import {FlowRunPriority} from './FlowRunPriority';
+import {MetaDataAware} from '../../Core/MetaDataAware';
+import {DataValueCollection} from '../DataValueCollection';
 
-export class FlowRun {
+export class FlowRun extends MetaDataAware {
     public id: string;
     // public key: string;
     public flowId: string;
@@ -18,20 +20,18 @@ export class FlowRun {
     public logLevelCount: Map<LogLevel, number>;
     public logsPurged: boolean = false;
 
-    public static parse(rawTaskExecution: any): FlowRun {
-        let taskExecution: FlowRun = new FlowRun();
-        taskExecution.id = rawTaskExecution.id;
-        // taskExecution.code = rawTaskExecution.code;
-        taskExecution.name = rawTaskExecution.name;
-        taskExecution.flowId = rawTaskExecution.flow;
-        taskExecution.arguments = rawTaskExecution.arguments;
-        taskExecution.projectEnvironmentId = rawTaskExecution.project_environment;
-        taskExecution.priority = FlowRunPriority.fromString(rawTaskExecution.priority);
-        taskExecution.triggerId = rawTaskExecution.trigger;
-        taskExecution.deployId = rawTaskExecution.deploy;
-        taskExecution.logLevelCount = rawTaskExecution.log_level_count;
-        taskExecution.logsPurged = Utils.isTrue(rawTaskExecution.logs_purged);
-
-        return taskExecution;
+    public static parse(rawFlowRun: any): FlowRun {
+        let flowRun: FlowRun = new FlowRun();
+        flowRun.id = rawFlowRun.id;
+        flowRun.flowId = rawFlowRun.flow;
+        flowRun.arguments = rawFlowRun.arguments;
+        flowRun.projectEnvironmentId = rawFlowRun.project_environment;
+        flowRun.priority = FlowRunPriority.fromString(rawFlowRun.priority);
+        flowRun.triggerId = rawFlowRun.trigger;
+        flowRun.deployId = rawFlowRun.deploy;
+        flowRun.logLevelCount = rawFlowRun.log_level_count;
+        flowRun.logsPurged = Utils.isTrue(rawFlowRun.logs_purged);
+        flowRun.metadata = DataValueCollection.fromObject(rawFlowRun.metadata);
+        return flowRun;
     }
 }

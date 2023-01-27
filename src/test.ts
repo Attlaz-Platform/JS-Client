@@ -102,19 +102,19 @@ function test() {
         });
 
         const newUser: User = new User();
-        newUser.username = 'Test user';
+        newUser.name = 'Test user';
         newUser.email = 'email@domain.com';
-        newUser.password = 'BoyWMpu3N7h47IGt5kKT4FYK';
+        // newUser.password = 'BoyWMpu3N7h47IGt5kKT4FYK';
         newUser.state = State.Active;
-        client.getUserEndpoint().create(newUser).then((result: User) => {
+        client.getUserEndpoint().create(newUser, 'BoyWMpu3N7h47IGt5kKT4FYK').then((result: User) => {
             console.log('Create user result', result);
         })
 
         /**
          * We expect an exception!
          */
-        client.getFlowEndpoint().getFlowSummary('3B4A1772A', '41').then((taskSummary: FlowSummary | null) => {
-            console.log('Task', taskSummary);
+        client.getFlowEndpoint().getFlowSummary('3B4A1772A', '41').then((flowSummary: FlowSummary | null) => {
+            console.log('Flow', flowSummary);
         }).catch((error: Error) => {
             console.error(error);
         })

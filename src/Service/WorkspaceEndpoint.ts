@@ -6,7 +6,7 @@ export class WorkspaceEndpoint extends Endpoint {
 
     public async getAll(): Promise<CollectionResult<Workspace>> {
         try {
-            const result: CollectionResult<Workspace> = await this.requestCollection('/workspaces', null, Workspace.parse);
+            const result: CollectionResult<Workspace> = await this.requestCollection('/workspaces',  Workspace.parse);
 
             return result;
         } catch (e) {

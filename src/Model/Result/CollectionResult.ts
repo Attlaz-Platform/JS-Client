@@ -1,9 +1,10 @@
 export class CollectionResult<T> {
     private data: T[];
+    public hasMore: boolean = false;
 
-
-    public constructor() {
-        this.data = [];
+    public constructor(data: T[] | null = null, hasMore: boolean = false) {
+        this.data = data === null ? [] : data;
+        this.hasMore = hasMore;
 
     }
 
@@ -20,13 +21,13 @@ export class CollectionResult<T> {
     //     return result;
     // }
 
-    public setData(data: T[]): void {
+    public setData(data: T[], hasMore: boolean): void {
         this.data = data;
+        this.hasMore = hasMore;
     }
 
     public getData(): T[] {
         return this.data;
     }
-
 
 }

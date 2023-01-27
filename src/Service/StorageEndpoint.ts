@@ -1,19 +1,29 @@
 import {Endpoint} from './Endpoint';
-import {DataResult} from '../Model/Result/DataResult';
 import {StorageType} from '../Model/Storage/StorageType';
 import {StorageInformation} from '../Model/Storage/StorageInformation';
 import {StorageItem} from '../Model/Storage/StorageItem';
 import {StorageItemInformation} from '../Model/Storage/StorageItemInformation';
+import {ObjectResult} from '../Model/Result/ObjectResult';
+import {CollectionResult} from '../Model/Result/CollectionResult';
 
 export class StorageEndpoint extends Endpoint {
 
-    public async getInformation(projectEnvironmentId: string, storageType: StorageType): Promise<DataResult<StorageInformation>> {
+    public async getInformation(projectEnvironmentId: string, storageType: StorageType): Promise<StorageInformation | null> {
 
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType;
 
         try {
-            const result: DataResult<StorageInformation> = await this.request(cmd, null, 'GET');
-            return result;
+            const parser = (raw: any): StorageInformation => {
+                const storageInformation: StorageInformation = new StorageInformation();
+                storageInformation.bytes = raw.bytes;
+                storageInformation.bytes_limit = raw.bytes_limit;
+                storageInformation.items = raw.items;
+                storageInformation.pools = raw.pools;
+
+                return storageInformation;
+            }
+            const result: ObjectResult<StorageInformation> = await this.requestObject(cmd, null, parser, 'GET');
+            return result.getData();
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage information', ex);
@@ -24,12 +34,22 @@ export class StorageEndpoint extends Endpoint {
 
     }
 
-    public async clearPool(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<DataResult<any>> {
+    public async clearPool(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<boolean> {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey;
 
         try {
-            const result: DataResult<void> = await this.request(cmd, null, 'DELETE');
-            return result;
+
+            const parser = (raw: any): { deleted: boolean } => {
+                return raw.deleted;
+            }
+            const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
+
+            const re: { deleted: boolean } | null = result.getData();
+            if (re === null) {
+                console.log('clearpool wrong data', {result, parsed: re});
+                throw new Error('Unable to clear storage pool: wrong response from API');
+            }
+            return re.deleted;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage information', ex);
@@ -39,12 +59,11 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<DataResult<StorageItemInformation[]>> {
+    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<CollectionResult<StorageItemInformation>> {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items';
 
         try {
-            const result: DataResult<StorageItemInformation[]> = await this.request(cmd, null, 'GET');
-            result.setData(this.parseCollection(result, StorageItemInformation.parse));
+            const result: CollectionResult<StorageItemInformation> = await this.requestCollection(cmd, StorageItemInformation.parse, null, 'GET');
             return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
@@ -59,12 +78,9 @@ export class StorageEndpoint extends Endpoint {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
 
         try {
-            const result: DataResult<StorageItem> = await this.request(cmd, null, 'GET');
-            if (!result.hasData()) {
-                return null;
-            }
+            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, null, StorageItem.parse, 'GET');
 
-            return StorageItem.parse(result.getData());
+            return result.getData();
 
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
@@ -75,12 +91,20 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async setItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItem: StorageItem): Promise<void> {
+    public async setItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItem: StorageItem): Promise<StorageItem> {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
 
         try {
-            const result: DataResult<StorageItem> = await this.request(cmd, {'storage_item': storageItem}, 'POST');
-            return;
+
+            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, {'storage_item': storageItem}, StorageItem.parse, 'POST');
+
+            const savedItem: StorageItem | null = result.getData();
+            if (savedItem === null) {
+                console.log('Storage set item wrong data', {result, parsed: savedItem});
+                throw new Error('Unable to save storage item: wrong response from API');
+            }
+
+            return savedItem;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage information', ex);
@@ -90,12 +114,20 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async deleteItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string) {
+    public async deleteItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string): Promise<boolean> {
         let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
 
         try {
-            const result: DataResult<StorageItem> = await this.request(cmd, null, 'DELETE');
-            return result;
+            const parser = (raw: any): { deleted: boolean } => {
+                return {deleted: raw.deleted};
+            }
+            const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
+            const x: { deleted: boolean } | null = result.getData();
+            if (x === null) {
+                console.log('Storage delete item wrong data', {result, parsed: x});
+                throw new Error('Unable to delete storage item: wrong response from API');
+            }
+            return x.deleted;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage information', ex);

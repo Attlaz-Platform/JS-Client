@@ -3,7 +3,7 @@ import {DataValueCollection} from '../DataValueCollection';
 export class UserAction {
     public id: string;
     public userId: string;
-    public teamId: string;
+    public workspaceId: string;
     public action: string;
     public resourceId: string;
     public resourceType: string;

@@ -12,7 +12,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/adapters';
 
-            const result: CollectionResult<Adapter> = await this.requestCollection(url, null, Adapter.parse);
+            const result: CollectionResult<Adapter> = await this.requestCollection(url,  Adapter.parse);
 
             return result
         } catch (error) {
@@ -47,7 +47,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/adapters/' + adapterId + '/configuration';
 
-            const result: CollectionResult<AdapterConfiguration> = await this.requestCollection(url, null, AdapterConfiguration.parse);
+            const result: CollectionResult<AdapterConfiguration> = await this.requestCollection(url,  AdapterConfiguration.parse);
 
             return result
         } catch (error) {
@@ -65,7 +65,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/projects/' + projectId + '/connections';
 
-            const result: CollectionResult<AdapterConnection> = await this.requestCollection(url, null, AdapterConnection.parse);
+            const result: CollectionResult<AdapterConnection> = await this.requestCollection(url,  AdapterConnection.parse);
 
             return result
         } catch (error) {
@@ -96,12 +96,16 @@ export class AdapterEndpoint extends Endpoint {
 
     }
 
-    public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<ObjectResult<AdapterConnection>> {
+    public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<AdapterConnection> {
         try {
 
             let url: string = '/projects/' + projectId + '/connections';
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, adapter, AdapterConnection.parse, 'POST');
-            return result
+            const updatedAdapterConnection: AdapterConnection | null = result.getData();
+            if (updatedAdapterConnection === null) {
+                throw new Error('AdapterConnection not updated');
+            }
+            return updatedAdapterConnection;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save connection: ', error);
