@@ -27,6 +27,7 @@ import {LogEndpoint} from './Service/LogEndpoint';
 import {TriggerEndpoint} from './Service/TriggerEndpoint';
 import {PlatformEndpoint} from './Service/PlatformEndpoint';
 import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint';
+import {FirewallEndpoint} from './Service/FirewallEndpoint';
 import {VERSION} from './version';
 import {Headers} from './Http/Data/Header';
 import {CodeSourceBuildStrategyEndpoint} from './Service/CodeSourceBuildStrategyEndpoint';
@@ -61,7 +62,8 @@ export class Client {
         HealthAlertEndpoint,
         PlatformEndpoint,
         FlowRunStatsEndpoint,
-        CodeSourceBuildStrategyEndpoint
+        CodeSourceBuildStrategyEndpoint,
+        FirewallEndpoint
     };
 
     constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
@@ -192,7 +194,7 @@ export class Client {
         return this.getEndpoint('flow-run-request', this.Store.FlowRunRequestEndpoint);
     }
 
-    public getTaskExecutionStatsEndpoint(): FlowRunStatsEndpoint {
+    public getFlowRunStatsEndpoint(): FlowRunStatsEndpoint {
         return this.getEndpoint('flow-run-stats', this.Store.FlowRunStatsEndpoint);
     }
 
@@ -242,6 +244,11 @@ export class Client {
 
     public getCodeSourceBuildStrategyEndpoint(): CodeSourceBuildStrategyEndpoint {
         return this.getEndpoint('code-source-deploy-strategy', this.Store.CodeSourceBuildStrategyEndpoint);
+    }
+
+    // TODO: this should be in a separate API?
+    public getFirewallEndpoint(): FirewallEndpoint {
+        return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
