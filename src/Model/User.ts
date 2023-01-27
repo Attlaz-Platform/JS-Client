@@ -7,9 +7,6 @@ export class User implements StateAware {
     public emailIsVerified: boolean;
     public email: string;
     public phone: string;
-
-    public password: string;
-
     public language: string;
     public time_zone: string;
     public date_format: string;

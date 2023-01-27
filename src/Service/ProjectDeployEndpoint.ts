@@ -40,7 +40,7 @@ export class ProjectDeployEndpoint extends Endpoint {
     public async getByCodeSource(codeSourceId: string): Promise<CollectionResult<ProjectDeploy>> {
 
         try {
-            const rawProjectDeploys: CollectionResult<ProjectDeploy> = await this.requestCollection('/codesources/' + codeSourceId + '/deploys', null, ProjectDeploy.parse);
+            const rawProjectDeploys: CollectionResult<ProjectDeploy> = await this.requestCollection('/codesources/' + codeSourceId + '/deploys',  ProjectDeploy.parse);
 
             return rawProjectDeploys;
         } catch (error) {

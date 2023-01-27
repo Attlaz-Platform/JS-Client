@@ -8,7 +8,7 @@ export class CodeSourceBuildStrategyEndpoint extends Endpoint {
     public async getAll(workspaceId: string): Promise<CollectionResult<CodeSourceBuildStrategy>> {
 
         let cmd: string = '/workspaces/' + workspaceId + '/codesourcedeploystrategies';
-        const result: CollectionResult<CodeSourceBuildStrategy> = await this.requestCollection(cmd, null, CodeSourceBuildStrategy.parse);
+        const result: CollectionResult<CodeSourceBuildStrategy> = await this.requestCollection(cmd,  CodeSourceBuildStrategy.parse);
         return result;
 
         return result;

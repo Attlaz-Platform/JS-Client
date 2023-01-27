@@ -7,7 +7,7 @@ export class ProjectEndpoint extends Endpoint {
 
     public async getAll(): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('/projects', null, Project.parse);
+            const result: CollectionResult<Project> = await this.requestCollection('/projects',  Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -20,7 +20,7 @@ export class ProjectEndpoint extends Endpoint {
 
     public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects', null, Project.parse);
+            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects',  Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {

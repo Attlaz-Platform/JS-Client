@@ -3,8 +3,8 @@ import {Trigger} from './Trigger';
 import {TriggerType} from './TriggerType';
 
 export class WebhookTrigger extends Trigger {
-    constructor(id: string, projectEnvironment: string, task: string, data: WebhookTriggerData) {
-        super(id, TriggerType.Webhook, projectEnvironment, task, data);
+    constructor(id: string, projectEnvironmentId: string, flowId: string, data: WebhookTriggerData) {
+        super(id, TriggerType.Webhook, projectEnvironmentId, flowId, data);
     }
 
     public getData(): WebhookTriggerData {

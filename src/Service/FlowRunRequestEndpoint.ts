@@ -4,9 +4,9 @@ import {ObjectResult} from '../Model/Result/ObjectResult';
 import {Parameters} from '../Http/Data/Parameters';
 
 export class FlowRunRequestEndpoint extends Endpoint {
-    public async postFlowRunRequest(taskId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
+    public async postFlowRunRequest(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
 
-        let url: string = '/flows/' + taskId + '/flowrunrequests';
+        let url: string = '/flows/' + flowId + '/flowrunrequests';
         if (wait) {
             url = url + "?wait=true";
         }
@@ -31,7 +31,7 @@ export class FlowRunRequestEndpoint extends Endpoint {
             return postedFlowRunResponse;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to execute task: ', ex);
+                console.error('Failed to request flow run: ', ex);
             }
 
             throw ex;
