@@ -2,12 +2,14 @@ import {Endpoint} from './Endpoint';
 import {Project} from '../Model/Project/Project';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
+import {QueryString} from '../Http/Data/QueryString';
+import {State} from '../Model/State';
 
 export class ProjectEndpoint extends Endpoint {
 
     public async getAll(): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('/projects',  Project.parse);
+            const result: CollectionResult<Project> = await this.requestCollection('/projects', Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -18,9 +20,13 @@ export class ProjectEndpoint extends Endpoint {
 
     }
 
-    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Project>> {
+    public async getByWorkspace(workspaceId: string, states: State[] | null = null): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects',  Project.parse);
+            const queryString: QueryString = new QueryString();
+            if (states !== null) {
+                queryString.set('state', states);
+            }
+            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects' + queryString.build(), Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
