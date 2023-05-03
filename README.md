@@ -21,7 +21,7 @@ npm install attlaz-client
 Getting Help
 ------------
 
-Check the [Attlaz Documentation](https://attlaz.com/docs).
-
-Please ask usage and debugging questions on [StackOverflow](http://stackoverflow.com/questions/tagged/attlaz) (use the ["attlaz"](http://stackoverflow.com/questions/ask?tags=attlaz) tag).
-(Please do not ask support questions here on Bitbucket.)
+* [Issue Tracker](https://github.com/Attlaz-Platform) for questions, feature requests, bug reports and
+  general discussion related to these packages. Try searching before you create a new issue.
+* Check the [Attlaz Documentation](https://docs.attlaz.com).
+* [Email us](developers@attlaz.com) in Attlaz developer support: `developers@attlaz.com`
