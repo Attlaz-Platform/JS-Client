@@ -60,11 +60,14 @@ export class HttpClient {
         const rawData: string = await response.text();
         if (contentType.type === 'application/json') {
             let jsonData: any | null = null;
-            try {
-                jsonData = JSON.parse(rawData);
-            } catch (e) {
-                console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
+            if(rawData !== ''){
+                try {
+                    jsonData = JSON.parse(rawData);
+                } catch (e) {
+                    console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
+                }
             }
+
             httpResponse.body = jsonData;
         } else {
             httpResponse.body = rawData;
