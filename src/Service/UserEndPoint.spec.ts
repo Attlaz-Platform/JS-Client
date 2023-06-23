@@ -1,8 +1,8 @@
+import * as crypto from 'crypto';
 import {Client} from '../Client.js';
 import {Helper} from '../../e2e/src/helper.js';
 import {State} from '../Model/State.js';
 import {User} from '../Model/User.js';
-import * as crypto from 'crypto';
 
 jest.setTimeout((60) * 1000);
 
@@ -11,10 +11,9 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test registration of user', async () => {
-
     // expect.assertions(3);
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -27,7 +26,4 @@ test('Test registration of user', async () => {
 
     expect(registeredUser.email).toEqual(newUser.email);
     expect(registeredUser.id.length).toBeGreaterThan(5);
-
-
 });
-

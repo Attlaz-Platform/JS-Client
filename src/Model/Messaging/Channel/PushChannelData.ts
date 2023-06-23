@@ -2,7 +2,6 @@ import {ChannelData} from './ChannelData.js';
 import {ChannelType} from './ChannelType.js';
 
 export class PushChannelData extends ChannelData {
-
     public endpoint: string;
     public keys: any;
     public expirationTime: number | null;

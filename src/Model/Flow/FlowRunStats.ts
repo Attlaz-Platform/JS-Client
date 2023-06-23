@@ -1,7 +1,6 @@
 import {Utils} from '../../Utils.js';
 
 export class FlowRunStats {
-
     public flowRunId: string;
 
     public time: Date;
@@ -19,7 +18,6 @@ export class FlowRunStats {
     public fileWrite: number | null = null;
 
     public static parse(raw: any): FlowRunStats {
-
         const flowRunStats: FlowRunStats = new FlowRunStats();
         flowRunStats.flowRunId = raw.flow_run;
         flowRunStats.time = Utils.parseRawDate(raw.time);
@@ -37,6 +35,5 @@ export class FlowRunStats {
         flowRunStats.fileWrite = raw.file_write;
 
         return flowRunStats;
-
     }
 }

@@ -1,6 +1,5 @@
-import {Client, ClientError, OAuthClientToken, User, Utils} from '../../src';
-import {Helper} from './helper';
-import * as Util from 'util';
+import {Client, ClientError, OAuthClientToken, User} from '../../src';
+import {Helper} from './helper.js';
 
 test('Test authentication', async () => {
 

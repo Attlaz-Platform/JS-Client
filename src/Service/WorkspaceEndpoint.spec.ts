@@ -10,18 +10,15 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test workspaces', async () => {
-
     // expect.assertions(3);
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const existingProjectDeploy: CollectionResult<Workspace> = await client.getWorkspaceEndpoint().getAll()
+    const existingProjectDeploy: CollectionResult<Workspace> = await client.getWorkspaceEndpoint().getAll();
     expect(existingProjectDeploy).not.toBeNull();
     expect(existingProjectDeploy.hasMore).toBeFalsy();
     expect(existingProjectDeploy.getData()).toHaveLength(2);
-
 });
-

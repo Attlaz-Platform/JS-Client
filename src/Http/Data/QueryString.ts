@@ -1,9 +1,8 @@
 export class QueryString {
-
     private parameters: { parameter: string; value: string | number | boolean | string[] }[] = [];
 
     public set(parameter: string, value: string | number | boolean | string[]): void {
-        this.parameters.push({parameter, value})
+        this.parameters.push({parameter, value});
     }
 
     public getParameters() {
@@ -16,7 +15,7 @@ export class QueryString {
         }
         const output: string[] = [];
         for (const parameter of this.parameters) {
-            let value = parameter.value;
+            let {value} = parameter;
             if (Array.isArray(value)) {
                 value = value.join(',');
             }

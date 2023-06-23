@@ -34,7 +34,6 @@ import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoi
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
 
 export class Client {
-
     private endpoints: Map<string, any>;
     private readonly httpClient: OAuthClient;
     private Store: any = {
@@ -65,11 +64,10 @@ export class Client {
         FlowRunStatsEndpoint,
         CodeSourceStrategiesEndpoint,
         FirewallEndpoint,
-        SearchEndpoint
+        SearchEndpoint,
     };
 
     constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
-
         const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret, this.getHeaders());
         this.httpClient = new OAuthClient(options);
 
@@ -91,12 +89,12 @@ export class Client {
             version: VERSION,
             language: 'Javascript',
             language_version: '',
-            publisher: 'Attlaz'
-        }
+            publisher: 'Attlaz',
+        };
         return {
             'User-Agent': 'Attlaz Javascript Client/' + VERSION,
-            'X-Attlaz-Client-User-Agent': JSON.stringify(userAgentInfo)
-        }
+            'X-Attlaz-Client-User-Agent': JSON.stringify(userAgentInfo),
+        };
     }
 
     public getHttpClient(): OAuthClient {
@@ -258,8 +256,7 @@ export class Client {
     }
 
     private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
-
-        //const classNameString: string = className.name;
+        // const classNameString: string = className.name;
 
         if (!this.endpoints.has(key)) {
             // if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
@@ -271,9 +268,7 @@ export class Client {
             } catch (e: any) {
                 throw new Error('Unable to initialize ' + key + ' endpoint (' + e.message + ')');
             }
-
         }
         return this.endpoints.get(key);
     }
-
 }

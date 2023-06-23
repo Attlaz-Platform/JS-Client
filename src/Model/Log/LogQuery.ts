@@ -3,7 +3,6 @@ import {LogStreamId} from './LogStreamId.js';
 import {DataValueValue} from '../DataValue.js';
 
 export class LogQuery {
-
     public readonly logStreamId: LogStreamId;
     public message: string | null = null;
     public hidden: boolean | null = null;
@@ -16,5 +15,4 @@ export class LogQuery {
     public constructor(logStreamId: LogStreamId) {
         this.logStreamId = logStreamId;
     }
-
 }

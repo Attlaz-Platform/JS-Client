@@ -1,6 +1,6 @@
 import {ResultError} from './ResultError.js';
 
-/** @deprecated **/
+/** @deprecated * */
 export class DataResult<T> {
     private data: T | null;
     private readonly errors: ResultError[];
@@ -21,7 +21,7 @@ export class DataResult<T> {
             if (rawResponse.errors === undefined || rawResponse.errors === null) {
                 console.error('Unable to parse DataResult: errors defined but invalid value', rawResponse);
             } else {
-                const errors: any[] = rawResponse.errors;
+                const {errors} = rawResponse;
                 for (const error of errors) {
                     result.addError(error);
                 }
@@ -78,5 +78,4 @@ export class DataResult<T> {
     public getOutput(): any {
         return {data: this.data, errors: this.errors};
     }
-
 }

@@ -22,5 +22,4 @@ export class PlatformImage implements StateAware {
         platformImage.state = State.fromString(raw.state);
         return platformImage;
     }
-
 }

@@ -4,5 +4,4 @@ export class ResultError {
     public constructor(message: string) {
         this.message = message;
     }
-
 }

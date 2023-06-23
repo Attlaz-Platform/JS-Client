@@ -4,13 +4,10 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class CodeDeployEndpoint extends Endpoint {
-
     public async getById(deployId: string): Promise<CodeDeploy | null> {
-
         try {
             const rawDeploy: ObjectResult<CodeDeploy> = await this.requestObject('/deploys/' + deployId, null, CodeDeploy.parse);
             return rawDeploy.getData();
-
         } catch (error: any) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load deploy by id', error);
@@ -18,15 +15,12 @@ export class CodeDeployEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getLatestDeploy(codeSourceId: string): Promise<CodeDeploy | null> {
-
         try {
             const rawDeploy: ObjectResult<CodeDeploy> = await this.requestObject('/codesources/' + codeSourceId + '/latestdeploy', null, CodeDeploy.parse);
             return rawDeploy.getData();
-
         } catch (error: any) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load latest deploy by code source', error);
@@ -34,11 +28,9 @@ export class CodeDeployEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getByCodeSource(codeSourceId: string): Promise<CollectionResult<CodeDeploy>> {
-
         try {
             const rawDeploys: CollectionResult<CodeDeploy> = await this.requestCollection('/codesources/' + codeSourceId + '/deploys', CodeDeploy.parse);
 
@@ -50,11 +42,9 @@ export class CodeDeployEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async requestDeploy(codeSourceId: string): Promise<CodeDeploy> {
-
         try {
             const result: ObjectResult<CodeDeploy> = await this.requestObject('/codesources/' + codeSourceId + '/deploys', null, CodeDeploy.parse, 'POST');
             const requestedDeploy: CodeDeploy | null = result.getData();
@@ -62,7 +52,6 @@ export class CodeDeployEndpoint extends Endpoint {
                 throw new Error('Deploy not requested');
             }
             return requestedDeploy;
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to request deploy', error);
@@ -70,7 +59,5 @@ export class CodeDeployEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
-
 }

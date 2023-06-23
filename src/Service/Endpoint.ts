@@ -40,7 +40,6 @@ export abstract class Endpoint {
             return data.jsonSerialize();
         }
         if (typeof data === 'object') {
-
             if (
                 // data instanceof WorkspaceId ||
                 // data instanceof ProjectEnvironmentId ||
@@ -51,8 +50,8 @@ export abstract class Endpoint {
                 // data instanceof UserId ||
                 // data instanceof DataCollectionResult ||
                 // data instanceof SuccessResult ||
-                data instanceof DataValueCollection ||
-                data instanceof LogStreamId
+                data instanceof DataValueCollection
+                || data instanceof LogStreamId
             ) {
                 return this.formatParameters(data.jsonSerialize());
             }
@@ -67,13 +66,11 @@ export abstract class Endpoint {
                 const formattedKey: string = this.formatKey(key);
 
                 result[formattedKey] = this.formatParameters(value);
-
             }
             return result;
         }
 
         return data;
-
     }
 
     private formatKey(key: string): string {
@@ -91,7 +88,6 @@ export abstract class Endpoint {
     }
 
     public async requestCollection<T>(action: string, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
-
         parameters = this.formatParameters(parameters);
         const requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
 
@@ -135,7 +131,6 @@ export abstract class Endpoint {
                 requestResponse = requestResponse.data;
             }
             result.setData(this.parseObject<T>(requestResponse, parser));
-
         } catch (error: any) {
             if (error.code === HttpClient.HTTP_NOTFOUND) {
                 result.setData(null);
@@ -144,7 +139,7 @@ export abstract class Endpoint {
             }
         }
         return result;
-    };
+    }
 
     // public async request<T>(action: string, parameters: any | null = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<DataResult<T>> {
     //     const result: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
@@ -159,12 +154,10 @@ export abstract class Endpoint {
             throw new Error('Invalid data');
         }
         for (const rawDataEntry of rawData) {
-
             data.push(this.parseObject<T>(rawDataEntry, parser));
         }
 
         return data;
-
     }
 
     private parseObject<T>(rawObject: any, parser: (input: any) => T): T {

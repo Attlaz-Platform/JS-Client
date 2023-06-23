@@ -2,7 +2,7 @@
  * npm run build && node dist/src/test.js
  */
 
-import {Client} from "./Client.js";
+import {Client} from './Client.js';
 import {ClientError} from './Model/Error/ClientError.js';
 import {User} from './Model/User.js';
 
@@ -63,25 +63,24 @@ const readableBytes = (bytes: number, si: boolean = true): string => {
     return bytes.toFixed(1) + ' ' + units[u];
 };
 
-let before: number = process.memoryUsage().heapUsed;
+const before: number = process.memoryUsage().heapUsed;
 
 // test2(100);
 // test();
 
 function test() {
-    let endpoint: string = 'http://localhost:5728/';
+    const endpoint: string = 'http://localhost:5728/';
     // endpoint = 'https://galantis.echron.com/';
 
-    let client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
+    const client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
     client.getHttpClient().enableDebug();
-// client.getUserEndpoint().getUser().then((result: User) => {
-//     console.log(result);
-// }, (error: ClientError) => {
-//     console.error(error);
-// });
+    // client.getUserEndpoint().getUser().then((result: User) => {
+    //     console.log(result);
+    // }, (error: ClientError) => {
+    //     console.error(error);
+    // });
 
     client.authenticate().then((success) => {
-
         // console.log('Auth: ' + readableBytes(process.memoryUsage().heapUsed) + ']');
         // //test();
         //
@@ -108,7 +107,7 @@ function test() {
         newUser.state = State.Active;
         client.getUserEndpoint().create(newUser, 'BoyWMpu3N7h47IGt5kKT4FYK').then((result: User) => {
             console.log('Create user result', result);
-        })
+        });
 
         /**
          * We expect an exception!
@@ -117,7 +116,7 @@ function test() {
             console.log('Flow', flowSummary);
         }).catch((error: Error) => {
             console.error(error);
-        })
+        });
         // client.getSystemEndpoint().save(logEntry).then((savedLogEntry: Log) => {
         //     console.log(savedLogEntry);
         // });
@@ -137,7 +136,6 @@ function test() {
         // client.getSubscriberEndpoint().getSubscribersByTask('BEXG88ATH').then((subscribers: Subscriber[]) => {
         //     console.log(subscribers);
         // })
-
     }).catch((error: ClientError) => {
         console.error('Unable to authenticate: ');
         console.error(error);
@@ -159,11 +157,11 @@ async function testHTTPAuth() {
 
 testExpiredToken().then(() => {
 
-})
+});
 
 async function testExpiredToken() {
     try {
-        let attlazClient: Client = new Client('https://api.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
+        const attlazClient: Client = new Client('https://api.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
         await attlazClient.authenticate();
         console.log(await attlazClient.getHttpClient().getToken());
 

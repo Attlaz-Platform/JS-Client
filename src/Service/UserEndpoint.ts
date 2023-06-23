@@ -7,28 +7,24 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Utils} from '../Utils.js';
 
 export class UserEndpoint extends Endpoint {
-
     public async getUser(): Promise<User | null> {
-
-        let cmd: string = '/users';
+        const cmd: string = '/users';
 
         const rawUser: ObjectResult<User> = await this.requestObject(cmd, null, User.parse);
         return rawUser.getData();
-
     }
 
     public async authenticateByAuthProvider(providerType: string, data: { code: string; state: string }): Promise<OAuthClientToken> {
         try {
-
             const parser = (raw: any): OAuthClientToken => {
-                const access_token: string = raw.access_token;
-                const token_type: string = raw.token_type;
-                const refresh_token: string = raw.refresh_token;
-                const scope: string = raw.scope;
+                const {access_token} = raw;
+                const {token_type} = raw;
+                const {refresh_token} = raw;
+                const {scope} = raw;
                 const token: OAuthClientToken = new OAuthClientToken(access_token, token_type, refresh_token, scope);
                 token.expires = Utils.parseRawDate(raw.expires);
                 return token;
-            }
+            };
             const result: ObjectResult<OAuthClientToken> = await this.requestObject('/auth/providers/' + providerType, data, parser, 'POST', false);
 
             const token: OAuthClientToken | null = result.getData();
@@ -37,7 +33,6 @@ export class UserEndpoint extends Endpoint {
                 throw new Error('Unable to authenticate by auth provider: wrong response from API');
             }
             return token;
-
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to perform social auth: ', e);
@@ -48,10 +43,7 @@ export class UserEndpoint extends Endpoint {
 
     public async createAuthProvider(providerType: string, data: { code: string; state: string }): Promise<boolean> {
         try {
-
-            const parser = (raw: any): {} => {
-                return raw;
-            }
+            const parser = (raw: any): {} => raw;
             const result: ObjectResult<{}> = await this.requestObject('/users/auth/providers', {provider_type: providerType, code: data.code, state: data.state}, parser, 'POST');
             // TODO validation
             return true;
@@ -65,9 +57,7 @@ export class UserEndpoint extends Endpoint {
 
     public async removeAuthProvider(providerId: number): Promise<boolean> {
         try {
-            const parser = (raw: any): { deleted: boolean } => {
-                return {deleted: raw.deleted};
-            }
+            const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});
             const result: ObjectResult<{ deleted: boolean }> = await this.requestObject('/users/auth/providers', {provider: providerId}, parser, 'DELETE');
             const re: { deleted: boolean } | null = result.getData();
             if (re === null) {
@@ -84,31 +74,25 @@ export class UserEndpoint extends Endpoint {
     }
 
     public async getAuthProviders(): Promise<CollectionResult<UserAuthProvider>> {
-
-        let cmd: string = '/users/auth/providers';
+        const cmd: string = '/users/auth/providers';
 
         const rawAuthProviders: CollectionResult<UserAuthProvider> = await this.requestCollection<UserAuthProvider>(cmd, UserAuthProvider.parse);
 
         return rawAuthProviders;
-
     }
 
     public async getPermissions(): Promise<CollectionResult<{ key: string; allowed: boolean }>> {
+        const cmd: string = '/permissions';
 
-        let cmd: string = '/permissions';
-
-        const parser = (raw: any): { key: string; allowed: boolean } => {
-            return {key: raw.key, allowed: raw.allowed};
-        }
+        const parser = (raw: any): { key: string; allowed: boolean } => ({key: raw.key, allowed: raw.allowed});
         const data: CollectionResult<{ key: string; allowed: boolean }> = await this.requestCollection<{ key: string; allowed: boolean }>(cmd, parser);
 
         return data;
-
     }
 
     public async update(user: User): Promise<User> {
         try {
-            let url: string = '/users/' + user.id;
+            const url: string = '/users/' + user.id;
             const result: ObjectResult<User> = await this.requestObject(url, user, User.parse, 'POST');
             const updatedUser: User | null = result.getData();
             if (updatedUser === null) {
@@ -125,7 +109,7 @@ export class UserEndpoint extends Endpoint {
 
     public async create(user: User, password: string, invitationCode: string | null = null): Promise<User> {
         try {
-            let url: string = '/users/';
+            const url: string = '/users/';
             const data: any = user;
             data.password = password;
             data.invitation_code = invitationCode;
@@ -147,11 +131,9 @@ export class UserEndpoint extends Endpoint {
 
     public async requestResetPassword(email: string): Promise<boolean> {
         try {
-            let url: string = '/users/resetpassword';
+            const url: string = '/users/resetpassword';
 
-            const parser = (raw: any): { requested: boolean } => {
-                return {requested: raw.requested}
-            };
+            const parser = (raw: any): { requested: boolean } => ({requested: raw.requested});
             const result: ObjectResult<{ requested: boolean }> = await this.requestObject(url, {email}, parser, 'POST', false);
             const re: { requested: boolean } | null = result.getData();
             if (re === null) {
@@ -169,10 +151,8 @@ export class UserEndpoint extends Endpoint {
 
     public async resetPassword(code: string, password: string): Promise<boolean> {
         try {
-            let url: string = '/users/resetpassword/' + code;
-            const parser = (raw: any): { updated: boolean } => {
-                return {updated: raw.updated}
-            };
+            const url: string = '/users/resetpassword/' + code;
+            const parser = (raw: any): { updated: boolean } => ({updated: raw.updated});
             const result: ObjectResult<{ updated: boolean }> = await this.requestObject(url, {password}, parser, 'POST', false);
             const re: { updated: boolean } | null = result.getData();
             if (re === null) {

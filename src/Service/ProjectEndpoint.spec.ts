@@ -11,12 +11,11 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test get project collection', async () => {
-
     const expectedActiveProjects = 3;
     const expectedInactiveProjects = 10;
     expect.assertions(1 + (expectedActiveProjects * 2) + 1 + ((expectedActiveProjects + expectedInactiveProjects) * 2));
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -24,7 +23,7 @@ test('Test get project collection', async () => {
     /**
      * Get project by workspace (default only active)
      */
-    const projects: CollectionResult<Project> = await client.getProjectEndpoint().getByWorkspace('1ord0LYVekWEyIQUDhLsBLJT9u8')
+    const projects: CollectionResult<Project> = await client.getProjectEndpoint().getByWorkspace('1ord0LYVekWEyIQUDhLsBLJT9u8');
     expect(projects.getData()).toHaveLength(expectedActiveProjects);
 
     for (const project of projects.getData()) {
@@ -42,6 +41,4 @@ test('Test get project collection', async () => {
         expect(project2.workspaceId.toString()).toEqual('1ord0LYVekWEyIQUDhLsBLJT9u8');
         expect([State.Active, State.Inactive]).toContain(project2.state);
     }
-
 });
-

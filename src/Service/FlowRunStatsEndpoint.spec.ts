@@ -1,7 +1,7 @@
+import * as crypto from 'crypto';
 import {Client} from '../Client.js';
 import {Helper} from '../../e2e/src/helper.js';
 import {FlowRunStats} from '../Model/Flow/FlowRunStats.js';
-import * as crypto from 'crypto';
 
 jest.setTimeout((60) * 1000);
 
@@ -10,8 +10,7 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Save run stats', async () => {
-
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -36,5 +35,4 @@ test('Save run stats', async () => {
 
     expect(savedFlowRunStats.flowRunId).toEqual(flowRunStats.flowRunId);
     expect(savedFlowRunStats.time).toEqual(flowRunStats.time);
-
 });

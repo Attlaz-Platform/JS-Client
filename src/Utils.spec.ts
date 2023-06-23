@@ -10,7 +10,6 @@ import {Utils} from './Utils.js';
 import {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
 
 test('Test enum parsing', () => {
-
     expect(TriggerType.fromString('webhook')).toBe(TriggerType.Webhook);
     expect(FlowRunStatus.fromString('complete')).toBe(FlowRunStatus.Complete);
     expect(ChannelType.fromString('slack')).toBe(ChannelType.Slack);
@@ -22,13 +21,10 @@ test('Test enum parsing', () => {
     expect(WorkerState.fromString('active')).toBe(WorkerState.Active);
 });
 test('Test base64 encode/decode', () => {
-
     expect(Utils.base64encode('Lorem ipsum')).toBe('TG9yZW0gaXBzdW0=');
     expect(Utils.base64decode('TG9yZW0gaXBzdW0=')).toBe('Lorem ipsum');
-
 });
 test('Test if iterable', async () => {
-
     expect(Utils.isIterable(null)).toBe(false);
     expect(Utils.isIterable('')).toBe(false);
     expect(Utils.isIterable('Lorem')).toBe(false);
@@ -42,5 +38,4 @@ test('Test if iterable', async () => {
 
     expect(Utils.isIterable({})).toBe(false);
     expect(Utils.isIterable({a: 'a', b: 'b'})).toBe(false);
-
 });

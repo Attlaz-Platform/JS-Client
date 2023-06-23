@@ -4,11 +4,9 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class FlowRunStatsEndpoint extends Endpoint {
     public async create(flowRunStats: FlowRunStats): Promise<FlowRunStats> {
-
-        let url: string = '/flowruns/' + flowRunStats.flowRunId + '/stats';
+        const url: string = '/flowruns/' + flowRunStats.flowRunId + '/stats';
 
         try {
-
             const result: ObjectResult<FlowRunStats> = await this.requestObject(url, flowRunStats, FlowRunStats.parse, 'POST');
 
             const createdFlowRunStat: FlowRunStats | null = result.getData();
@@ -23,6 +21,5 @@ export class FlowRunStatsEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 }

@@ -7,7 +7,7 @@ export class FlowRunHistory {
     public status: FlowRunStatus;
 
     public static parse(rawFlowRunHistory: any): FlowRunHistory {
-        let flowRunHistory: FlowRunHistory = new FlowRunHistory();
+        const flowRunHistory: FlowRunHistory = new FlowRunHistory();
         flowRunHistory.id = rawFlowRunHistory.id;
         flowRunHistory.time = Utils.parseRawDate(rawFlowRunHistory.time);
         flowRunHistory.status = FlowRunStatus.fromString(rawFlowRunHistory.status);

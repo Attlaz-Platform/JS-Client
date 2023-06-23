@@ -1,4 +1,4 @@
-import {TriggerData} from "./TriggerData";
+import {TriggerData} from './TriggerData';
 import {State} from '../State.js';
 import {TriggerType} from './TriggerType.js';
 import {ScheduleTriggerData} from './ScheduleTriggerData.js';
@@ -29,10 +29,9 @@ export class Trigger extends MetaDataAware implements StateAware {
     }
 
     public static parse(rawTrigger: any): Trigger {
-
         const type: TriggerType = TriggerType.fromString(rawTrigger.type);
 
-        const data: any = rawTrigger.data;
+        const {data} = rawTrigger;
 
         const flowId: string = rawTrigger.flow;
 
@@ -41,23 +40,23 @@ export class Trigger extends MetaDataAware implements StateAware {
             case TriggerType.Webhook:
                 triggerData = new WebhookTriggerData(data.key);
                 break;
-            case  TriggerType.Schedule:
+            case TriggerType.Schedule:
                 triggerData = new ScheduleTriggerData(data.expression);
                 break;
-            case  TriggerType.Api:
+            case TriggerType.Api:
                 triggerData = new ApiTriggerData();
                 break;
             default:
                 throw new Error('Unknown trigger type "' + type + '"');
         }
 
-        let trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project_environment, flowId, triggerData);
+        const trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project_environment, flowId, triggerData);
 
         trigger.arguments = rawTrigger.arguments;
         trigger.state = State.fromString(rawTrigger.state);
         trigger.metadata = DataValueCollection.fromObject(rawTrigger.metadata);
 
-        return trigger
+        return trigger;
     }
 
     public getData(): TriggerData {

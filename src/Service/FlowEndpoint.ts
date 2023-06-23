@@ -8,14 +8,11 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 
 export class FlowEndpoint extends Endpoint {
-
     public async getByProject(projectId: string): Promise<CollectionResult<Flow>> {
-
         try {
-
-            let url: string = '/projects/' + projectId + '/flows';
+            const url: string = '/projects/' + projectId + '/flows';
             const result: CollectionResult<Flow> = await this.requestCollection(url, Flow.parse);
-            return result
+            return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get projects: ', error);
@@ -25,12 +22,10 @@ export class FlowEndpoint extends Endpoint {
     }
 
     public async getById(flowId: string): Promise<Flow | null> {
-
         try {
             const result: ObjectResult<Flow> = await this.requestObject('/flows/' + flowId, null, Flow.parse);
 
             return result.getData();
-
         } catch (error: any) {
             if (error.code === HttpClient.HTTP_NOTFOUND) {
                 return null;
@@ -41,16 +36,14 @@ export class FlowEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getFlowSummaries(projectId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowSummary>> {
-
         let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }
-        const result: CollectionResult<FlowSummary> = await this.requestCollection('projects/' + projectId + '/flowsummaries', FlowSummary.parse, parameters)
+        const result: CollectionResult<FlowSummary> = await this.requestCollection('projects/' + projectId + '/flowsummaries', FlowSummary.parse, parameters);
         return result;
         //
         //     }).catch((reason: any) => {
@@ -64,7 +57,6 @@ export class FlowEndpoint extends Endpoint {
     }
 
     public async getFlowSummary(flowId: string, projectEnvironmentId: string | null = null): Promise<FlowSummary | null> {
-
         let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
@@ -83,13 +75,11 @@ export class FlowEndpoint extends Endpoint {
 
             throw e;
         }
-
     }
 
     public async save(flow: Flow): Promise<Flow> {
-
         try {
-            let url: string = '/projects/' + flow.projectId + '/flows';
+            const url: string = '/projects/' + flow.projectId + '/flows';
             const result: ObjectResult<Flow> = await this.requestObject(url, flow, Flow.parse, 'POST');
             const updatedFlow: Flow | null = result.getData();
             if (updatedFlow === null) {

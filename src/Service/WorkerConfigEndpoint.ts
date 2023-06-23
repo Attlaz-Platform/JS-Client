@@ -4,16 +4,13 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkerConfigEndpoint extends Endpoint {
-
     public async getByProjectEnvironment(projectEnvironmentId: string): Promise<CollectionResult<WorkerConfig>> {
-
         try {
-            let url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';
+            const url: string = '/projectenvironments/' + projectEnvironmentId + '/workerconfiguration';
 
-            const result: CollectionResult<WorkerConfig> = await this.requestCollection(url,  WorkerConfig.parse);
+            const result: CollectionResult<WorkerConfig> = await this.requestCollection(url, WorkerConfig.parse);
 
             return result;
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load worker config: ', error);
@@ -21,14 +18,11 @@ export class WorkerConfigEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async save(workerConfig: WorkerConfig): Promise<WorkerConfig> {
-
         try {
-
-            let url: string = '/projectenvironments/' + workerConfig.projectEnvironmentId + '/workerconfiguration';
+            const url: string = '/projectenvironments/' + workerConfig.projectEnvironmentId + '/workerconfiguration';
 
             const result: ObjectResult<WorkerConfig> = await this.requestObject(url, workerConfig, WorkerConfig.parse, 'POST');
             const createdWorkerConfig: WorkerConfig | null = result.getData();
@@ -43,7 +37,5 @@ export class WorkerConfigEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
-
 }

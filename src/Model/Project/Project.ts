@@ -16,7 +16,7 @@ export class Project implements StateAware {
     }
 
     public static parse(rawProject: any): Project {
-        let project: Project = new Project(rawProject.id, rawProject.key, rawProject.name);
+        const project: Project = new Project(rawProject.id, rawProject.key, rawProject.name);
         project.workspaceId = rawProject.workspace;
 
         // if (rawProject.default !== null && rawProject.default !== undefined) {

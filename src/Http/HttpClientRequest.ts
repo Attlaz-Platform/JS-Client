@@ -13,7 +13,6 @@ export class HttpClientRequest {
     private urlObj: URL;
 
     public constructor(url: string, method: string = HttpClientRequest.GET) {
-
         this.urlObj = new URL(url);
         this.method = method;
     }
@@ -40,11 +39,10 @@ export class HttpClientRequest {
     }
 
     public getFullUrl(): string {
-
         let result: string = this.urlObj.href;
-        //Remove trailing slash
-        result = result.replace(/\/$/, "");
-        //Remove slash in query
+        // Remove trailing slash
+        result = result.replace(/\/$/, '');
+        // Remove slash in query
         result = result.replace('/?', '?');
         return result;
     }

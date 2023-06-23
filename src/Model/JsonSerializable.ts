@@ -1,6 +1,5 @@
 export abstract class JsonSerializable {
     public static stringify(object: any): string {
-
         const replacer = (key: string, value: any) => {
             // Filtering out properties
             if (value instanceof JsonSerializable && 'jsonSerialize' in value) {
@@ -13,5 +12,4 @@ export abstract class JsonSerializable {
     }
 
     abstract jsonSerialize(): any;
-
 }

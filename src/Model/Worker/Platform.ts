@@ -17,11 +17,10 @@ export class Platform implements StateAware {
         platform.name = raw.name;
         platform.languageId = raw.language;
         platform.released = Utils.parseRawDate(raw.released);
-        platform.endOfSupport = Utils.parseRawDate(raw.end_of_support)
-        platform.endOfLife = Utils.parseRawDate(raw.end_of_life)
+        platform.endOfSupport = Utils.parseRawDate(raw.end_of_support);
+        platform.endOfLife = Utils.parseRawDate(raw.end_of_life);
         platform.state = State.fromString(raw.state);
 
         return platform;
     }
-
 }

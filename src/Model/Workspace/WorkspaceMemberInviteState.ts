@@ -18,7 +18,6 @@ export namespace WorkspaceMemberInviteState {
             throw new Error('Unable to parse WorkspaceMemberInviteState from string: Unknown WorkspaceMemberInviteState "' + input + '"');
         }
         return result;
-
     }
 
 }

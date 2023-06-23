@@ -16,5 +16,3 @@ export namespace State {
         return result;
     }
 }
-
-
