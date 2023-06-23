@@ -3,7 +3,6 @@ import {Utils} from '../Utils.js';
 import {JsonSerializable} from './JsonSerializable.js';
 
 export class DataValueCollection extends JsonSerializable implements Iterable<DataValue> {
-
     private _values: DataValue[] = [];
 
     public get length() {
@@ -25,14 +24,11 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
     }
 
     public set(key: string, value: DataValueValue): void {
-        const existingIndex = this._values.findIndex((tag: DataValue) => {
-            return tag.key === key;
-        });
+        const existingIndex = this._values.findIndex((tag: DataValue) => tag.key === key);
         if (existingIndex !== -1) {
             this._values.splice(existingIndex);
         }
         this._values.push(new DataValue(key, value));
-
     }
 
     public get(key: string): DataValueValue | null {
@@ -45,9 +41,7 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
     }
 
     public unset(key: string): void {
-        this._values = this._values.filter((tag: DataValue) => {
-            return tag.key !== key;
-        });
+        this._values = this._values.filter((tag: DataValue) => tag.key !== key);
     }
 
     public serialize(): string | null {
@@ -65,4 +59,3 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
         return this._values;
     }
 }
-

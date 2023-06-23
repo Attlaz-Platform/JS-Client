@@ -39,13 +39,10 @@ export class SourcesAccountEndpoint extends Endpoint {
         //     sourcesAccounts.push(CodeSourceAccount.parse(rawSourcesAccount));
         // }
         // return sourcesAccounts;
-
     }
 
     public async getCodeSourceById(codeSourceId: string): Promise<CodeSource | null> {
-
         try {
-
             const result: ObjectResult<CodeSource> = await this.requestObject('/codesources/' + codeSourceId, null, CodeSource.parse);
             return result.getData();
         } catch (error: any) {
@@ -58,7 +55,6 @@ export class SourcesAccountEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getRepositories(codeSourceAccountId: string): Promise<CollectionResult<SourcesAccountRepository>> {
@@ -73,9 +69,8 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async saveCodeSource(codeSource: CodeSource): Promise<CodeSource> {
-
         try {
-            let url: string = '/codesources/';
+            const url: string = '/codesources/';
 
             const result: ObjectResult<CodeSource> = await this.requestObject(url, codeSource, CodeSource.parse, 'POST');
 
@@ -90,7 +85,5 @@ export class SourcesAccountEndpoint extends Endpoint {
             }
             throw ex;
         }
-
     }
-
 }

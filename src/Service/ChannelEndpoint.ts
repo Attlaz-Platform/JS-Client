@@ -5,9 +5,7 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class ChannelEndpoint extends Endpoint {
-
     public async getById(channelId: string): Promise<Channel | null> {
-
         try {
             const result: ObjectResult<Channel> = await this.requestObject('/channels/' + channelId + '', null, Channel.parse);
 
@@ -24,11 +22,9 @@ export class ChannelEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 
     public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Channel>> {
-
         try {
             const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels', Channel.parse);
 
@@ -40,11 +36,9 @@ export class ChannelEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 
     public async getByOwner(): Promise<CollectionResult<Channel>> {
-
         try {
             const result: CollectionResult<Channel> = await this.requestCollection('/channels', Channel.parse);
 
@@ -56,11 +50,9 @@ export class ChannelEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 
     public async getMessages(channelId: string): Promise<CollectionResult<ChannelHistory>> {
-
         try {
             const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages', ChannelHistory.parse);
 
@@ -91,13 +83,11 @@ export class ChannelEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 
     public async save(subscriberChannel: Channel): Promise<Channel> {
-
         try {
-            let url: string = '/channels/.js';
+            const url: string = '/channels/.js';
 
             const result: ObjectResult<Channel> = await this.requestObject(url, subscriberChannel, Channel.parse, 'POST');
 
@@ -112,17 +102,13 @@ export class ChannelEndpoint extends Endpoint {
             }
             throw ex;
         }
-
     }
 
     public async testChannel(subscriberChannel: Channel): Promise<boolean> {
-
         try {
-            let url: string = '/channels/' + subscriberChannel.id + '/test';
+            const url: string = '/channels/' + subscriberChannel.id + '/test';
 
-            const parser = (raw: any): { tested: boolean } => {
-                return {tested: raw.tested};
-            }
+            const parser = (raw: any): { tested: boolean } => ({tested: raw.tested});
             const result: ObjectResult<{ tested: boolean }> = await this.requestObject(url, {}, parser, 'POST');
 
             const re: { tested: boolean } | null = result.getData();
@@ -137,6 +123,5 @@ export class ChannelEndpoint extends Endpoint {
             }
             throw ex;
         }
-
     }
 }

@@ -10,7 +10,7 @@ export class Notification {
     public acknowledged: boolean = false;
 
     public static parse(rawNotification: any): Notification {
-        let notification: Notification = new Notification();
+        const notification: Notification = new Notification();
         notification.id = rawNotification.id;
         notification.userId = rawNotification.user;
         notification.type = rawNotification.type;
@@ -19,6 +19,5 @@ export class Notification {
         notification.time = Utils.parseRawDate(rawNotification.time);
         notification.acknowledged = rawNotification.acknowledged === 1;
         return notification;
-
     }
 }

@@ -15,7 +15,7 @@ export class User implements StateAware {
     public state: State = State.Active;
 
     public static parse(rawUser: any): User {
-        let user: User = new User();
+        const user: User = new User();
         user.id = rawUser.id;
         user.name = rawUser.name;
         user.email = rawUser.email;

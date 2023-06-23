@@ -13,7 +13,7 @@ export class PlatformLanguage implements StateAware {
     }
 
     public static parse(rawLanguage: any): PlatformLanguage {
-        let language: PlatformLanguage = new PlatformLanguage(rawLanguage.id, rawLanguage.name);
+        const language: PlatformLanguage = new PlatformLanguage(rawLanguage.id, rawLanguage.name);
         language.description = rawLanguage.description;
         language.state = State.fromString(rawLanguage.state);
         return language;

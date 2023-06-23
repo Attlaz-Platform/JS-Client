@@ -1,7 +1,6 @@
 import {DataValueValue} from '../DataValue.js';
 
 export class WorkerConfig {
-
     public static KEY_STATE: string = 'state';
 
     public static KEY_SCALE: string = 'scale';

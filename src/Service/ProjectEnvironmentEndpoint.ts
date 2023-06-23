@@ -5,9 +5,7 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
-
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
-
         try {
             const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments', ProjectEnvironment.parse);
             return result;
@@ -18,11 +16,9 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getById(id: string): Promise<ProjectEnvironment | null> {
-
         try {
             const rawProjectEnvironment: ObjectResult<ProjectEnvironment> = await this.requestObject('/projectenvironments/' + id + '', null, ProjectEnvironment.parse);
             return rawProjectEnvironment.getData();
@@ -36,11 +32,9 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async save(projectEnvironment: ProjectEnvironment): Promise<ProjectEnvironment> {
-
         try {
             const result: ObjectResult<ProjectEnvironment> = await this.requestObject('projectenvironments/', projectEnvironment, ProjectEnvironment.parse, 'POST');
             const createdProjectEnvironment: ProjectEnvironment | null = result.getData();
@@ -48,7 +42,6 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
                 throw new Error('ProjectEnvironment not created');
             }
             return createdProjectEnvironment;
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save project environment', error, projectEnvironment);

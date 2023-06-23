@@ -11,18 +11,13 @@ import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 
 export class FlowRunEndpoint extends Endpoint {
-
     public async getFlowRuns(flowId: string): Promise<CollectionResult<FlowRun>> {
-
-        const result: CollectionResult<FlowRun> = await this.requestCollection('/flows/' + flowId + '/runs', FlowRun.parse)
+        const result: CollectionResult<FlowRun> = await this.requestCollection('/flows/' + flowId + '/runs', FlowRun.parse);
         return result;
-
     }
 
     public async getFlowRunSummaries(flowId: string, flowRunStatuses: FlowRunStatus[] | null = null, pagination: CursorPagination | null = null, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowRunSummary>> {
-
         try {
-
             const queryString: QueryString = this.buildQuery(pagination);
 
             // if (from !== null && from !== undefined) {
@@ -40,10 +35,9 @@ export class FlowRunEndpoint extends Endpoint {
 
             if (projectEnvironmentId !== null && projectEnvironmentId !== undefined && projectEnvironmentId !== '') {
                 queryString.set('environment', projectEnvironmentId);
-
             }
             if (flowRunStatuses !== null && flowRunStatuses !== undefined && flowRunStatuses.length > 0) {
-                queryString.set('statuses', flowRunStatuses.map(status => status.toString()));
+                queryString.set('statuses', flowRunStatuses.map((status) => status.toString()));
             }
             // if (flowRunStatuses !== null && flowRunStatuses.length > 0) {
             //     if (params === null || params === undefined) {
@@ -55,7 +49,6 @@ export class FlowRunEndpoint extends Endpoint {
             const result: CollectionResult<FlowRunSummary> = await this.requestCollection('/flows/' + flowId + '/runsummaries' + queryString.build(), FlowRunSummary.parse);
 
             return result;
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load flow runs: ' + error);
@@ -63,11 +56,9 @@ export class FlowRunEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getFlowRunSummary(flowRunId: string): Promise<FlowRunSummary | null> {
-
         try {
             const result: ObjectResult<FlowRunSummary | null> = await this.requestObject('/flowruns/' + flowRunId + '/summaries', null, FlowRunSummary.parse);
 
@@ -81,23 +72,19 @@ export class FlowRunEndpoint extends Endpoint {
             }
             throw error;
         }
-
     }
 
     public async getFlowRunHistory(flowRunId: string): Promise<CollectionResult<FlowRunHistory>> {
-
-        const result: CollectionResult<FlowRunHistory> = await this.requestCollection('/flowruns/' + flowRunId + '/history', FlowRunHistory.parse)
+        const result: CollectionResult<FlowRunHistory> = await this.requestCollection('/flowruns/' + flowRunId + '/history', FlowRunHistory.parse);
         return result;
-
     }
 
     public async updateFlowRun(flowRunId: string, status: FlowRunStatus, time: Date | null = null): Promise<FlowRun> {
-
         if (flowRunId.length === 0) {
             throw new Error('Flow run id cannot be empty');
         }
 
-        let params: { status?: FlowRunStatus, time?: Date } = {};
+        const params: { status?: FlowRunStatus, time?: Date } = {};
 
         if (status !== null && status !== undefined) {
             params.status = status;
@@ -113,6 +100,5 @@ export class FlowRunEndpoint extends Endpoint {
             throw new Error('FlowRun not updated');
         }
         return updatedFlowRun;
-
     }
 }

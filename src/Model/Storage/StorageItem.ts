@@ -7,7 +7,7 @@ export class StorageItem {
     public expiration: Date | null;
 
     public static parse(raw: any): StorageItem {
-        let storageItem: StorageItem = new StorageItem();
+        const storageItem: StorageItem = new StorageItem();
         storageItem.key = raw.key;
         storageItem.bytes = raw.bytes;
         storageItem.value = raw.value;

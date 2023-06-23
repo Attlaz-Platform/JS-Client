@@ -1,5 +1,6 @@
-export class DataValue {
+export type DataValueValue = string | number | boolean;
 
+export class DataValue {
     public key: string;
     public value: DataValueValue;
 
@@ -8,5 +9,3 @@ export class DataValue {
         this.value = value;
     }
 }
-
-export type DataValueValue = string | number | boolean;

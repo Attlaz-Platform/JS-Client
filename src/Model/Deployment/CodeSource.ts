@@ -13,7 +13,7 @@ export class CodeSource implements StateAware {
     public state: State = State.Active;
 
     public static parse(rawCodeSource: any): CodeSource {
-        let codeSource: CodeSource = new CodeSource();
+        const codeSource: CodeSource = new CodeSource();
         codeSource.id = rawCodeSource.id;
         codeSource.codeSourceAccountId = rawCodeSource.code_source_account;
         codeSource.repository = rawCodeSource.repository;
@@ -24,6 +24,5 @@ export class CodeSource implements StateAware {
         codeSource.description = rawCodeSource.description;
         codeSource.state = State.fromString(rawCodeSource.state);
         return codeSource;
-
     }
 }

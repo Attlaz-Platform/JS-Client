@@ -27,11 +27,10 @@ export class Subscriber extends MetaDataAware implements StateAware {
 
         this.channelIds = channelIds;
         this.logLevelThreshold = logLevelThreshold;
-
     }
 
     public static parseRaw(rawSubscriber: any): Subscriber {
-        let subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.event_types, rawSubscriber.project_environment, rawSubscriber.flow, rawSubscriber.flow_run, rawSubscriber.channels, rawSubscriber.log_level_threshold);
+        const subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.event_types, rawSubscriber.project_environment, rawSubscriber.flow, rawSubscriber.flow_run, rawSubscriber.channels, rawSubscriber.log_level_threshold);
         subscriber.state = State.fromString(rawSubscriber.state);
         subscriber.metadata = DataValueCollection.fromObject(rawSubscriber.metadata);
         return subscriber;
@@ -44,5 +43,4 @@ export class Subscriber extends MetaDataAware implements StateAware {
     public hasLogLevelThreshold(): boolean {
         return this.logLevelThreshold !== null;
     }
-
 }

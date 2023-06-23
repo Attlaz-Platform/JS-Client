@@ -24,7 +24,7 @@ export class Worker {
 
         const rawInstances = raw.instances;
         worker.instances = [];
-        for (let rawInstance of rawInstances) {
+        for (const rawInstance of rawInstances) {
             const instance: WorkerInstance = new WorkerInstance(rawInstance.id);
             instance.state = WorkerInstanceState.fromString(rawInstance.state);
             worker.instances.push(instance);
@@ -35,4 +35,3 @@ export class Worker {
         return worker;
     }
 }
-

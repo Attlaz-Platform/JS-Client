@@ -6,29 +6,23 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 
 export class SubscriberEndpoint extends Endpoint {
-
     public async getSubscribersByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Subscriber>> {
-
         let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }
 
-        const result: CollectionResult<Subscriber> = await this.requestCollection('/flows/' + flowId + '/subscribers', Subscriber.parseRaw, parameters)
+        const result: CollectionResult<Subscriber> = await this.requestCollection('/flows/' + flowId + '/subscribers', Subscriber.parseRaw, parameters);
         return result;
-
     }
 
     public async getSubscribersByChannel(channelId: string): Promise<CollectionResult<Subscriber>> {
-
-        const result: CollectionResult<Subscriber> = await this.requestCollection('/channels/' + channelId + '/subscribers', Subscriber.parseRaw)
+        const result: CollectionResult<Subscriber> = await this.requestCollection('/channels/' + channelId + '/subscribers', Subscriber.parseRaw);
         return result;
-
     }
 
     public async save(subscriber: Subscriber): Promise<Subscriber> {
-
-        let url: string = '/flows/' + subscriber.flowId + '/subscribers';
+        const url: string = '/flows/' + subscriber.flowId + '/subscribers';
 
         const result: ObjectResult<Subscriber> = await this.requestObject(url, subscriber, Subscriber.parseRaw, 'POST');
         const createdSubscriber: Subscriber | null = result.getData();

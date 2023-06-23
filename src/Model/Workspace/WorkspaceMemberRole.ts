@@ -18,7 +18,6 @@ export namespace WorkspaceMemberRole {
             throw new Error('Unable to parse WorkspaceMemberRole from string: Unknown WorkspaceMemberRole "' + input + '"');
         }
         return result;
-
     }
 
 }

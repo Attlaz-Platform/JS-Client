@@ -8,12 +8,11 @@ export class CodeSourceBuildStrategy implements StateAware {
     public state: State = State.Active;
 
     public static parse(raw: any): CodeSourceBuildStrategy {
-        let codeDeployStrategy: CodeSourceBuildStrategy = new CodeSourceBuildStrategy();
+        const codeDeployStrategy: CodeSourceBuildStrategy = new CodeSourceBuildStrategy();
         codeDeployStrategy.id = raw.id;
         codeDeployStrategy.name = raw.name;
         codeDeployStrategy.description = raw.description;
         codeDeployStrategy.state = State.fromString(raw.state);
         return codeDeployStrategy;
-
     }
 }

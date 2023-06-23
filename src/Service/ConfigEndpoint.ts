@@ -5,9 +5,7 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 
 export class ConfigEndpoint extends Endpoint {
-
     public async getConfigByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
-
         try {
             let parameters: Parameters | null = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
@@ -23,13 +21,11 @@ export class ConfigEndpoint extends Endpoint {
             }
             throw e;
         }
-
     }
 
     public async getByProjectEnvironment(projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
-
         try {
-            const result: CollectionResult<Config> = await this.requestCollection('/projectenvironments/' + projectEnvironmentId + '/configvalues', Config.parse)
+            const result: CollectionResult<Config> = await this.requestCollection('/projectenvironments/' + projectEnvironmentId + '/configvalues', Config.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
@@ -37,13 +33,11 @@ export class ConfigEndpoint extends Endpoint {
             }
             throw e;
         }
-
     }
 
     public async saveConfigs(projectId: string, configs: Config[]): Promise<CollectionResult<Config>> {
-
         try {
-            let url: string = '/configvalues';
+            const url: string = '/configvalues';
             const result: CollectionResult<Config> = await this.requestCollection(url, Config.parse, configs, 'POST');
             return result;
         } catch (e) {
@@ -52,6 +46,5 @@ export class ConfigEndpoint extends Endpoint {
             }
             throw e;
         }
-
     }
 }
