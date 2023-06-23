@@ -46,10 +46,8 @@ export class SearchResult {
                 break;
             default:
                 throw new Error('Unknown search result type "' + rawResult.type + '"');
-
         }
 
         return searchResult;
-
     }
 }

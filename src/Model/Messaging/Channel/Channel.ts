@@ -31,5 +31,4 @@ export class Channel extends MetaDataAware implements StateAware {
         channel.metadata = DataValueCollection.fromObject(rawChannel.metadata);
         return channel;
     }
-
 }

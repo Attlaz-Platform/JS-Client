@@ -1,4 +1,4 @@
-import {LogLevel} from "./LogLevel.js";
+import {LogLevel} from './LogLevel.js';
 import {LogStreamId} from './LogStreamId.js';
 import {LogStatus} from './LogStatus.js';
 import {DataValueCollection} from '../DataValueCollection.js';
@@ -30,7 +30,7 @@ export class Log {
         const date: Date = Utils.parseRawDate(rawLog.date);
         const level: LogLevel = LogLevel.fromString(rawLog.level);
         const logStream: LogStreamId = new LogStreamId(rawLog.log_stream.id);
-        let log: Log = new Log(logStream, rawLog.message, level, date);
+        const log: Log = new Log(logStream, rawLog.message, level, date);
         log.id = rawLog.id;
         log.context = rawLog.context;
 
@@ -43,5 +43,4 @@ export class Log {
         log._version = rawLog._version;
         return log;
     }
-
 }

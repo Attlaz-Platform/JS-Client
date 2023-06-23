@@ -11,7 +11,7 @@ export class Adapter {
     public website: string;
 
     public static parse(rawAdapter: any): Adapter {
-        let adapter: Adapter = new Adapter();
+        const adapter: Adapter = new Adapter();
         adapter.id = rawAdapter.id;
         adapter.name = rawAdapter.name;
         adapter.description = rawAdapter.description;
@@ -24,6 +24,5 @@ export class Adapter {
         adapter.website = rawAdapter.website;
 
         return adapter;
-
     }
 }

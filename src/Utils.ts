@@ -8,7 +8,7 @@ export class Utils {
     }
 
     public static isDate(value: any): boolean {
-        return value !== null && value instanceof Date && !isNaN(value.getTime());
+        return value !== null && value instanceof Date && !Number.isNaN(value.getTime());
     }
 
     public static parseRawDate(input: Date): Date {
@@ -19,7 +19,6 @@ export class Utils {
     }
 
     public static parseEnum<T>(input: string, Enum: any): T | null {
-
         if (this.isNullOrUndefined(input)) {
             return null;
         }
@@ -44,7 +43,7 @@ export class Utils {
     }
 
     public static parseInt(input: string | number | boolean): number {
-        return parseInt(input.toString(), undefined);
+        return parseInt(input.toString(), 10);
     }
 
     public static base64encode(input: string): string {
@@ -55,7 +54,6 @@ export class Utils {
     }
 
     public static base64decode(encodedString: string): string {
-
         if (encodedString === null || encodedString === undefined || encodedString === '') {
             return '';
         }

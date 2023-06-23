@@ -7,10 +7,8 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class StorageEndpoint extends Endpoint {
-
     public async getInformation(projectEnvironmentId: string, storageType: StorageType): Promise<StorageInformation | null> {
-
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType;
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType;
 
         try {
             const parser = (raw: any): StorageInformation => {
@@ -21,7 +19,7 @@ export class StorageEndpoint extends Endpoint {
                 storageInformation.pools = raw.pools;
 
                 return storageInformation;
-            }
+            };
             const result: ObjectResult<StorageInformation> = await this.requestObject(cmd, null, parser, 'GET');
             return result.getData();
         } catch (ex) {
@@ -31,17 +29,13 @@ export class StorageEndpoint extends Endpoint {
 
             throw ex;
         }
-
     }
 
     public async clearPool(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<boolean> {
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey;
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey;
 
         try {
-
-            const parser = (raw: any): { deleted: boolean } => {
-                return raw.deleted;
-            }
+            const parser = (raw: any): { deleted: boolean } => raw.deleted;
             const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
 
             const re: { deleted: boolean } | null = result.getData();
@@ -60,7 +54,7 @@ export class StorageEndpoint extends Endpoint {
     }
 
     public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<CollectionResult<StorageItemInformation>> {
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items';
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items';
 
         try {
             const result: CollectionResult<StorageItemInformation> = await this.requestCollection(cmd, StorageItemInformation.parse, null, 'GET');
@@ -75,13 +69,12 @@ export class StorageEndpoint extends Endpoint {
     }
 
     public async getItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string): Promise<StorageItem | null> {
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
 
         try {
             const result: ObjectResult<StorageItem> = await this.requestObject(cmd, null, StorageItem.parse, 'GET');
 
             return result.getData();
-
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to get storage item', ex);
@@ -92,11 +85,10 @@ export class StorageEndpoint extends Endpoint {
     }
 
     public async setItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItem: StorageItem): Promise<StorageItem> {
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
 
         try {
-
-            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, {'storage_item': storageItem}, StorageItem.parse, 'POST');
+            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, {storage_item: storageItem}, StorageItem.parse, 'POST');
 
             const savedItem: StorageItem | null = result.getData();
             if (savedItem === null) {
@@ -115,12 +107,10 @@ export class StorageEndpoint extends Endpoint {
     }
 
     public async deleteItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string): Promise<boolean> {
-        let cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
 
         try {
-            const parser = (raw: any): { deleted: boolean } => {
-                return {deleted: raw.deleted};
-            }
+            const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});
             const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
             const x: { deleted: boolean } | null = result.getData();
             if (x === null) {
@@ -137,4 +127,3 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 }
-

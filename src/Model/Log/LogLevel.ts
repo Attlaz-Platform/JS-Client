@@ -1,28 +1,28 @@
 import {Utils} from '../../Utils.js';
 
 export enum LogLevel {
-    Debug = "debug",
-    Info = "info",
-    Notice = "notice",
-    Warning = "warning",
-    Error = "error",
-    Critical = "critical",
-    Alert = "alert",
-    Emergency = "emergency",
+    Debug = 'debug',
+    Info = 'info',
+    Notice = 'notice',
+    Warning = 'warning',
+    Error = 'error',
+    Critical = 'critical',
+    Alert = 'alert',
+    Emergency = 'emergency',
 }
 
 export namespace LogLevel {
 
     export function compare(logLevelA: LogLevel, logLevelB: LogLevel): number {
-        let logLevelANumeric: number = LogLevel.toNumeric(logLevelA);
-        let logLevelBNumeric: number = LogLevel.toNumeric(logLevelB);
+        const logLevelANumeric: number = LogLevel.toNumeric(logLevelA);
+        const logLevelBNumeric: number = LogLevel.toNumeric(logLevelB);
         if (logLevelANumeric > logLevelBNumeric) {
             return 1;
         }
         if (logLevelANumeric < logLevelBNumeric) {
             return -1;
         }
-        return 0
+        return 0;
     }
 
     export function toNumeric(logLevel: LogLevel): number {
@@ -55,7 +55,6 @@ export namespace LogLevel {
             throw new Error('Unable to parse LogLevel from string: Unknown LogLevel "' + input + '"');
         }
         return result;
-
     }
 
 }

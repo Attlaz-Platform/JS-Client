@@ -16,7 +16,7 @@ export class OAuthClientToken {
         if (token.expires === null) {
             return false;
         }
-        return token.expires <= new Date()
+        return token.expires <= new Date();
     }
 
     public static serialize(token: OAuthClientToken): string {
@@ -32,5 +32,4 @@ export class OAuthClientToken {
         }
         return token;
     }
-
 }

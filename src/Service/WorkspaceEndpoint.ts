@@ -3,10 +3,9 @@ import {Workspace} from '../Model/Workspace/Workspace.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class WorkspaceEndpoint extends Endpoint {
-
     public async getAll(): Promise<CollectionResult<Workspace>> {
         try {
-            const result: CollectionResult<Workspace> = await this.requestCollection('/workspaces',  Workspace.parse);
+            const result: CollectionResult<Workspace> = await this.requestCollection('/workspaces', Workspace.parse);
 
             return result;
         } catch (e) {
@@ -16,7 +15,5 @@ export class WorkspaceEndpoint extends Endpoint {
 
             throw e;
         }
-
     }
-
 }

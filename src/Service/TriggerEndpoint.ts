@@ -6,9 +6,7 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 
 export class TriggerEndpoint extends Endpoint {
-
     public async getByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Trigger>> {
-
         try {
             let parameters: Parameters = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
@@ -18,22 +16,18 @@ export class TriggerEndpoint extends Endpoint {
             const rawTriggers: CollectionResult<Trigger> = await this.requestCollection('/flows/' + flowId + '/triggers', Trigger.parse, parameters);
 
             return rawTriggers;
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load triggers: ', error);
             }
             throw error;
         }
-
     }
 
     public async getById(id: string): Promise<Trigger | null> {
-
         try {
             const result: ObjectResult<Trigger> = await this.requestObject('/triggers/' + id, null, Trigger.parse);
             return result.getData();
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);
@@ -41,14 +35,11 @@ export class TriggerEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async save(trigger: Trigger): Promise<Trigger> {
-
         try {
-
-            let url: string = '/flows/' + trigger.flowId + '/triggers';
+            const url: string = '/flows/' + trigger.flowId + '/triggers';
 
             const result: ObjectResult<Trigger> = await this.requestObject(url, trigger, Trigger.parse, 'POST');
 
@@ -64,6 +55,5 @@ export class TriggerEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 }

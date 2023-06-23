@@ -31,7 +31,7 @@ export {LogStreamId} from './Model/Log/LogStreamId.js';
 export {LogStreamInformation} from './Model/Log/LogStreamInformation.js';
 
 export {CursorPagination} from './Model/Pagination/CursorPagination.js';
-/** Messaging **/
+/** Messaging * */
 
 export {Channel} from './Model/Messaging/Channel/Channel.js';
 export {ChannelData} from './Model/Messaging/Channel/ChannelData.js';
@@ -45,7 +45,7 @@ export {WebhookChannelData} from './Model/Messaging/Channel/WebhookChannelData.j
 
 export {Subscriber} from './Model/Messaging/Subscriber.js';
 export {ChannelHistory} from './Model/Messaging/ChannelHistory.js';
-/** Project **/
+/** Project * */
 
 export {PlatformLanguage} from './Model/Project/PlatformLanguage.js';
 export {Project} from './Model/Project/Project.js';
@@ -54,10 +54,10 @@ export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit.js';
 export {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment.js';
 
-/** Queue **/
+/** Queue * */
 export {QueueStatus} from './Model/Queue/QueueStatus.js';
 
-/** Result **/
+/** Result * */
 export {CollectionResult} from './Model/Result/CollectionResult.js';
 export {DataResult} from './Model/Result/DataResult.js';
 export {ObjectResult} from './Model/Result/ObjectResult.js';
@@ -68,10 +68,10 @@ export {StorageType} from './Model/Storage/StorageType.js';
 export {StorageItem} from './Model/Storage/StorageItem.js';
 export {StorageItemInformation} from './Model/Storage/StorageItemInformation.js';
 
-/** Queue **/
+/** Queue * */
 export {SearchResult} from './Model/Search/SearchResult.js';
 
-/** Trigger **/
+/** Trigger * */
 export {ApiTrigger} from './Model/Trigger/ApiTrigger.js';
 export {ApiTriggerData} from './Model/Trigger/ApiTriggerData.js';
 export {ScheduleTrigger} from './Model/Trigger/ScheduleTrigger.js';
@@ -81,7 +81,7 @@ export {TriggerData} from './Model/Trigger/TriggerData.js';
 export {TriggerType} from './Model/Trigger/TriggerType.js';
 export {WebhookTrigger} from './Model/Trigger/WebhookTrigger.js';
 export {WebhookTriggerData} from './Model/Trigger/WebhookTriggerData.js';
-/** Worker**/
+/** Worker* */
 export {Platform} from './Model/Worker/Platform.js';
 export {PlatformImage} from './Model/Worker/PlatformImage.js';
 export {Worker} from './Model/Worker/Worker.js';
@@ -91,20 +91,20 @@ export {WorkerInstance} from './Model/Worker/WorkerInstance.js';
 export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState.js';
 export {WorkerState} from './Model/Worker/WorkerState.js';
 
-/** Deployment **/
+/** Deployment * */
 export {CodeSource} from './Model/Deployment/CodeSource.js';
 export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount.js';
 export {SourcesAccountRepository} from './Model/Deployment/SourcesAccountRepository.js';
 export {SourcesAccountRepositoryBranch} from './Model/Deployment/SourcesAccountRepositoryBranch.js';
 
-/** Workspace **/
+/** Workspace * */
 export {Workspace} from './Model/Workspace/Workspace.js';
 export {WorkspaceMember} from './Model/Workspace/WorkspaceMember.js';
 export {WorkspaceMemberInvite} from './Model/Workspace/WorkspaceMemberInvite.js';
 export {WorkspaceMemberInvite2} from './Model/Workspace/WorkspaceMemberInvite2.js';
 export {WorkspaceMemberInviteState} from './Model/Workspace/WorkspaceMemberInviteState.js';
 export {WorkspaceMemberRole} from './Model/Workspace/WorkspaceMemberRole.js';
-/** **/
+/** * */
 
 export {Config} from './Model/Config.js';
 export {DataValue, DataValueValue} from './Model/DataValue.js';
@@ -113,7 +113,7 @@ export {Notification} from './Model/Notification.js';
 
 export {State} from './Model/State.js';
 
-/** Flow **/
+/** Flow * */
 export {Flow} from './Model/Flow/Flow.js';
 export {FlowRun} from './Model/Flow/FlowRun.js';
 export {FlowRunHistory} from './Model/Flow/FlowRunHistory.js';
@@ -157,9 +157,3 @@ export {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
 
 export {Client} from './Client.js';
 export {Utils} from './Utils.js';
-
-
-
-
-
-

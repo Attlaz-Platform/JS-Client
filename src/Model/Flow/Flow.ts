@@ -13,7 +13,7 @@ export class Flow extends MetaDataAware implements StateAware {
     public isDirect: boolean = false;
     public state: State = State.Active;
 
-    /** The maximum number of flows to run at any time (0 = no limit) **/
+    /** The maximum number of flows to run at any time (0 = no limit) * */
     public parallelLimit: number = 0;
 
     public codeSource: string | null = null;
