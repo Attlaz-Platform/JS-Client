@@ -16,7 +16,7 @@ import {StorageEndpoint} from './Service/StorageEndpoint';
 import {QueueEndpoint} from './Service/QueueEndpoint';
 import {NotificationsEndpoint} from './Service/NotificationsEndpoint';
 import {Endpoint} from './Service/Endpoint';
-import {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
+import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint';
 import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
 import {OAuthClientOptions} from './Http/OAuthClientOptions';
 import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint';
@@ -30,7 +30,8 @@ import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint';
 import {FirewallEndpoint} from './Service/FirewallEndpoint';
 import {VERSION} from './version';
 import {Headers} from './Http/Data/Header';
-import {CodeSourceBuildStrategyEndpoint} from './Service/CodeSourceBuildStrategyEndpoint';
+import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint';
+import {SearchEndpoint} from './Service/SearchEndpoint';
 
 export class Client {
 
@@ -41,7 +42,7 @@ export class Client {
         AdapterEndpoint,
         ProjectEndpoint,
         ProjectEnvironmentEndpoint,
-        ProjectDeployEndpoint,
+        CodeDeployEndpoint,
         QueueEndpoint,
         ChannelEndpoint,
         ConfigEndpoint,
@@ -62,8 +63,9 @@ export class Client {
         HealthAlertEndpoint,
         PlatformEndpoint,
         FlowRunStatsEndpoint,
-        CodeSourceBuildStrategyEndpoint,
-        FirewallEndpoint
+        CodeSourceStrategiesEndpoint,
+        FirewallEndpoint,
+        SearchEndpoint
     };
 
     constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
@@ -154,8 +156,8 @@ export class Client {
         return this.getEndpoint('project-environment', this.Store.ProjectEnvironmentEndpoint);
     }
 
-    public getProjectDeployEndpoint(): ProjectDeployEndpoint {
-        return this.getEndpoint('project-deploy', this.Store.ProjectDeployEndpoint);
+    public getCodeDeployEndpoint(): CodeDeployEndpoint {
+        return this.getEndpoint('code-deploy', this.Store.CodeDeployEndpoint);
     }
 
     public getChannelEndpoint(): ChannelEndpoint {
@@ -242,8 +244,12 @@ export class Client {
         return this.getEndpoint('healt-alert', this.Store.HealthAlertEndpoint);
     }
 
-    public getCodeSourceBuildStrategyEndpoint(): CodeSourceBuildStrategyEndpoint {
-        return this.getEndpoint('code-source-deploy-strategy', this.Store.CodeSourceBuildStrategyEndpoint);
+    public getCodeSourceStrategiesEndpoint(): CodeSourceStrategiesEndpoint {
+        return this.getEndpoint('code-source-strategies', this.Store.CodeSourceStrategiesEndpoint);
+    }
+
+    public getSearchEndpoint(): SearchEndpoint {
+        return this.getEndpoint('search', this.Store.SearchEndpoint);
     }
 
     // TODO: this should be in a separate API?

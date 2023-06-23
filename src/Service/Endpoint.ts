@@ -10,6 +10,7 @@ import {Parameters} from '../Http/Data/Parameters';
 import {LogStreamId} from '../Model/Log/LogStreamId';
 import {CursorPagination} from '../Model/Pagination/CursorPagination';
 import {QueryString} from '../Http/Data/QueryString';
+import {LogItemFilter} from '../Model/Log/LogItemFilter';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;
@@ -81,6 +82,10 @@ export abstract class Endpoint {
         formattedKey = formattedKey.split(' ').join('_').toLowerCase();
         if (formattedKey.endsWith('_id')) {
             formattedKey = formattedKey.substring(0, formattedKey.length - '_id'.length);
+        }
+        if (formattedKey.endsWith('_ids')) {
+            // TODO: update this to format correct plurals (for example category_ids should become categories instead of categorys)
+            formattedKey = formattedKey.substring(0, formattedKey.length - '_ids'.length) + 's';
         }
 
         return formattedKey;

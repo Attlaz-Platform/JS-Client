@@ -1,5 +1,4 @@
 import {Endpoint} from './Endpoint';
-import {Utils} from '../Utils';
 import {ClientError} from '../Model/Error/ClientError';
 import {HttpClient} from '../Http/HttpClient';
 import {FlowRun} from '../Model/Flow/FlowRun';
@@ -8,7 +7,6 @@ import {FlowRunSummary} from '../Model/Flow/FlowRunSummary';
 import {FlowRunHistory} from '../Model/Flow/FlowRunHistory';
 import {CollectionResult} from '../Model/Result/CollectionResult';
 import {ObjectResult} from '../Model/Result/ObjectResult';
-import {Parameters} from '../Http/Data/Parameters';
 import {CursorPagination} from '../Model/Pagination/CursorPagination';
 import {QueryString} from '../Http/Data/QueryString';
 
@@ -25,7 +23,7 @@ export class FlowRunEndpoint extends Endpoint {
 
         try {
 
-            const queryString: QueryString = new QueryString();
+            const queryString: QueryString = this.buildQuery(pagination);
 
             // if (from !== null && from !== undefined) {
             //

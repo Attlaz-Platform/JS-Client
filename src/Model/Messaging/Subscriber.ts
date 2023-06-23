@@ -12,12 +12,11 @@ export class Subscriber extends MetaDataAware implements StateAware {
     public projectEnvironmentId: string;
     public flowId: string;
     public flowRunId: string;
-
-    public channels: string[];
+    public channelIds: string[];
     public logLevelThreshold: LogLevel;
     public state: State = State.Active;
 
-    constructor(id: string, eventTypes: EventType[], projectEnvironmentId: string, flowId: string, flowRunId: string, channels: string[], logLevelThreshold: LogLevel = LogLevel.Debug) {
+    constructor(id: string, eventTypes: EventType[], projectEnvironmentId: string, flowId: string, flowRunId: string, channelIds: string[], logLevelThreshold: LogLevel = LogLevel.Debug) {
         super();
         this.id = id;
         this.eventTypes = eventTypes;
@@ -26,7 +25,7 @@ export class Subscriber extends MetaDataAware implements StateAware {
         this.flowId = flowId;
         this.flowRunId = flowRunId;
 
-        this.channels = channels;
+        this.channelIds = channelIds;
         this.logLevelThreshold = logLevelThreshold;
 
     }

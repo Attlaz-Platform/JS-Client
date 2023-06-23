@@ -44,10 +44,10 @@ test('Get log paged log stream entries', async () => {
     let x: string | null = null;
     while (hasMore) {
 
-        const pagination:CursorPagination = new CursorPagination();
+        const pagination: CursorPagination = new CursorPagination();
         pagination.limit = 2;
         pagination.startingAfter = x;
-        const logItems: CollectionResult<Log> = await client.getLogEndPoint().getCursoredLogEntries(new LogStreamId("UTV0OWtsNXBa"), pagination);
+        const logItems: CollectionResult<Log> = await client.getLogEndPoint().getCursoredLogEntries(new LogStreamId("2P78TD9qjsJ2ES86DAtABZeBNbu"), pagination, null);
         hasMore = logItems.hasMore;
 
         const data: any[] = [];

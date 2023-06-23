@@ -36,7 +36,7 @@ test('Run Flow', async () => {
 
     await client.authenticate();
 
-    const flowRunResponse: FlowRunResponse = await client.getFlowRunRequestEndpoint().postFlowRunRequest('BEXG88ATH', {'message': 'test'}, true);
+    const flowRunResponse: FlowRunResponse = await client.getFlowRunRequestEndpoint().requestFlowRun('BEXG88ATH', {'message': 'test'}, true);
 
     expect(flowRunResponse.flowRunRequestId).not.toBeUndefined();
 

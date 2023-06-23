@@ -8,6 +8,6 @@ test('That we get a null and not an error when trying to fetch a non existing ta
     // client.getHttpClient().enableDebug();
     const authenticated: boolean = await client.authenticate();
 
-    const taskExecutionSummary: FlowRunSummary | null = await client.getFlowRunEndpoint().getTaskExecutionSummary('Nonexisting');
+    const taskExecutionSummary: FlowRunSummary | null = await client.getFlowRunEndpoint().getFlowRunSummary('Nonexisting');
     expect(taskExecutionSummary).toBeNull();
 });

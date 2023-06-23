@@ -7,18 +7,17 @@ import {DataValueCollection} from '../../DataValueCollection';
 
 export class Channel extends MetaDataAware implements StateAware {
     public id: string;
-    public owner: string;
+    public ownerId: string;
     public label: string;
     public type: ChannelType;
     public data: any;
     public state: State = State.Active;
-
     public private: boolean = false;
 
-    public constructor(id: string, owner: string, label: string, type: ChannelType, data: any) {
+    public constructor(id: string, ownerId: string, label: string, type: ChannelType, data: any) {
         super();
         this.id = id;
-        this.owner = owner;
+        this.ownerId = ownerId;
         this.label = label;
         this.type = type;
         this.data = data;
