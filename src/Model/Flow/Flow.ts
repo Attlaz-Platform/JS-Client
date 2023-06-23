@@ -1,8 +1,8 @@
-import {State} from '../State';
-import {Utils} from '../../Utils';
-import {StateAware} from '../StateAware';
-import {MetaDataAware} from '../../Core/MetaDataAware';
-import {DataValueCollection} from '../DataValueCollection';
+import {State} from '../State.js';
+import {Utils} from '../../Utils.js';
+import {StateAware} from '../StateAware.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {DataValueCollection} from '../DataValueCollection.js';
 
 export class Flow extends MetaDataAware implements StateAware {
     public id: string;

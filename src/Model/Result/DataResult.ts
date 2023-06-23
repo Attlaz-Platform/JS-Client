@@ -1,4 +1,4 @@
-import {ResultError} from './ResultError';
+import {ResultError} from './ResultError.js';
 
 /** @deprecated **/
 export class DataResult<T> {

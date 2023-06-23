@@ -1,4 +1,4 @@
-import {ChannelType} from './ChannelType';
+import {ChannelType} from './ChannelType.js';
 
 export abstract class ChannelData {
 

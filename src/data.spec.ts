@@ -1,7 +1,7 @@
-import {Client} from './Client';
-import {User} from './Model/User';
-import {Project} from './Model/Project/Project';
-import {Helper} from '../e2e/src/helper';
+import {Client} from './Client.js';
+import {User} from './Model/User.js';
+import {Project} from './Model/Project/Project.js';
+import {Helper} from '../e2e/src/helper.js';
 
 jest.setTimeout((60) * 1000);
 

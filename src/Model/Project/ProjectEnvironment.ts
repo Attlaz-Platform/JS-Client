@@ -1,6 +1,6 @@
-import {State} from '../State';
-import {Utils} from '../../Utils';
-import {StateAware} from '../StateAware';
+import {State} from '../State.js';
+import {Utils} from '../../Utils.js';
+import {StateAware} from '../StateAware.js';
 
 export class ProjectEnvironment implements StateAware {
     public id: string;

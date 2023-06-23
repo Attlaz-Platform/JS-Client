@@ -1,6 +1,6 @@
-import {DataValue, DataValueValue} from './DataValue';
-import {Utils} from '../Utils';
-import {JsonSerializable} from './JsonSerializable';
+import {DataValue, DataValueValue} from './DataValue.js';
+import {Utils} from '../Utils.js';
+import {JsonSerializable} from './JsonSerializable.js';
 
 export class DataValueCollection extends JsonSerializable implements Iterable<DataValue> {
 
@@ -60,6 +60,7 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
     [Symbol.iterator](): Iterator<DataValue> {
         return this._values.values();
     }
+
     public jsonSerialize(): any {
         return this._values;
     }

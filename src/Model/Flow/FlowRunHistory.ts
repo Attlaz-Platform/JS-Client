@@ -1,5 +1,5 @@
-import {FlowRunStatus} from './FlowRunStatus';
-import {Utils} from '../../Utils';
+import {FlowRunStatus} from './FlowRunStatus.js';
+import {Utils} from '../../Utils.js';
 
 export class FlowRunHistory {
     public id: number;

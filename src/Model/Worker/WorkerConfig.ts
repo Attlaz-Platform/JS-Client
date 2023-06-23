@@ -1,4 +1,4 @@
-import {DataValueValue} from '../DataValue';
+import {DataValueValue} from '../DataValue.js';
 
 export class WorkerConfig {
 

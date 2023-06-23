@@ -1,13 +1,6 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {LogQuery} from '../Model/Log/LogQuery';
-import {LogStreamId} from '../Model/Log/LogStreamId';
-import {Log} from '../Model/Log/Log';
-import {LogLevel} from '../Model/Log/LogLevel';
-import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
-import {FlowRunStats} from '../Model/Flow/FlowRunStats';
-import {Utils} from '../Utils';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {FlowRunStats} from '../Model/Flow/FlowRunStats.js';
 import * as crypto from 'crypto';
 
 jest.setTimeout((60) * 1000);

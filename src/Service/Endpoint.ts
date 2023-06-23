@@ -1,16 +1,15 @@
-import {OAuthClient} from '../Http/OAuthClient';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {HttpClient} from '../Http/HttpClient';
-import {Utils} from '../Utils';
-import {ObjectWrapper} from '../Model/Result/ObjectWrapper';
-import {DataValueCollection} from '../Model/DataValueCollection';
-import {JsonSerializable} from '../Model/JsonSerializable';
-import {Parameters} from '../Http/Data/Parameters';
-import {LogStreamId} from '../Model/Log/LogStreamId';
-import {CursorPagination} from '../Model/Pagination/CursorPagination';
-import {QueryString} from '../Http/Data/QueryString';
-import {LogItemFilter} from '../Model/Log/LogItemFilter';
+import {OAuthClient} from '../Http/OAuthClient.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {HttpClient} from '../Http/HttpClient.js';
+import {Utils} from '../Utils.js';
+import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
+import {DataValueCollection} from '../Model/DataValueCollection.js';
+import {JsonSerializable} from '../Model/JsonSerializable.js';
+import {Parameters} from '../Http/Data/Parameters.js';
+import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;

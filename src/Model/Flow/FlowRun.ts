@@ -1,8 +1,8 @@
-import {LogLevel} from '../Log/LogLevel';
-import {Utils} from '../../Utils';
-import {FlowRunPriority} from './FlowRunPriority';
-import {MetaDataAware} from '../../Core/MetaDataAware';
-import {DataValueCollection} from '../DataValueCollection';
+import {LogLevel} from '../Log/LogLevel.js';
+import {Utils} from '../../Utils.js';
+import {FlowRunPriority} from './FlowRunPriority.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {DataValueCollection} from '../DataValueCollection.js';
 
 export class FlowRun extends MetaDataAware {
     public id: string;

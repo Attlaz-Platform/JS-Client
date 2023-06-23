@@ -1,7 +1,6 @@
-import {Endpoint} from './Endpoint';
-import {Utils} from '../Utils';
-import {Worker} from '../Model/Worker/Worker';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {Worker} from '../Model/Worker/Worker.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkerEndpoint extends Endpoint {
 

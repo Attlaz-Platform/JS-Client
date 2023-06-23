@@ -1,13 +1,13 @@
-import {TriggerType} from './Model/Trigger/TriggerType';
-import {ChannelType} from './Model/Messaging/Channel/ChannelType';
-import {CodeDeployStatus} from './Model/Project/CodeDeployStatus';
-import {State} from './Model/State';
-import {LogLevel} from './Model/Log/LogLevel';
-import {StorageType} from './Model/Storage/StorageType';
-import {WorkerInstanceState} from './Model/Worker/WorkerInstanceState';
-import {WorkerState} from './Model/Worker/WorkerState';
-import {Utils} from './Utils';
-import {FlowRunStatus} from './Model/Flow/FlowRunStatus';
+import {TriggerType} from './Model/Trigger/TriggerType.js';
+import {ChannelType} from './Model/Messaging/Channel/ChannelType.js';
+import {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
+import {State} from './Model/State.js';
+import {LogLevel} from './Model/Log/LogLevel.js';
+import {StorageType} from './Model/Storage/StorageType.js';
+import {WorkerInstanceState} from './Model/Worker/WorkerInstanceState.js';
+import {WorkerState} from './Model/Worker/WorkerState.js';
+import {Utils} from './Utils.js';
+import {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
 
 test('Test enum parsing', () => {
 

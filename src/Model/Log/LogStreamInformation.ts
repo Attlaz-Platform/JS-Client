@@ -1,6 +1,6 @@
-import {LogLevel} from './LogLevel';
-import {DataValueValue} from '../DataValue';
-import {LogStreamId} from './LogStreamId';
+import {LogLevel} from './LogLevel.js';
+import {DataValueValue} from '../DataValue.js';
+import {LogStreamId} from './LogStreamId.js';
 
 export class LogStreamInformation {
 
@@ -10,7 +10,9 @@ export class LogStreamInformation {
 
     public static parse(raw: any): LogStreamInformation {
 
-        const rawData: { log_stream: string; log_levels: { log_level: string, count: number }[], tags: any } | null = raw;
+        const rawData: {
+            log_stream: string; log_levels: { log_level: string, count: number }[], tags: any
+        } | null = raw;
         if (rawData === null || rawData === undefined) {
             throw new Error('Invalid response');
         }

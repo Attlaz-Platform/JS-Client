@@ -1,6 +1,6 @@
-import {WorkerState} from './WorkerState';
-import {WorkerInstance} from './WorkerInstance';
-import {WorkerInstanceState} from './WorkerInstanceState';
+import {WorkerState} from './WorkerState.js';
+import {WorkerInstance} from './WorkerInstance.js';
+import {WorkerInstanceState} from './WorkerInstanceState.js';
 
 export class Worker {
     projectEnvironment: string;

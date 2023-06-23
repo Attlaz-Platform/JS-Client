@@ -1,4 +1,4 @@
-import {DataValueCollection} from '../DataValueCollection';
+import {DataValueCollection} from '../DataValueCollection.js';
 
 export class UserAction {
     public id: string;

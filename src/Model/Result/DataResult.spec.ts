@@ -1,4 +1,4 @@
-import {DataResult} from './DataResult';
+import {DataResult} from './DataResult.js';
 
 test('Test parsing', () => {
 

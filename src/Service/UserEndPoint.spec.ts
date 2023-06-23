@@ -1,8 +1,7 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {Trigger} from '../Model/Trigger/Trigger';
-import {State} from '../Model/State';
-import {User} from '../Model/User';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {State} from '../Model/State.js';
+import {User} from '../Model/User.js';
 import * as crypto from 'crypto';
 
 jest.setTimeout((60) * 1000);
@@ -28,7 +27,6 @@ test('Test registration of user', async () => {
 
     expect(registeredUser.email).toEqual(newUser.email);
     expect(registeredUser.id.length).toBeGreaterThan(5);
-
 
 
 });

@@ -1,9 +1,9 @@
-import {State} from '../State';
-import {EventType} from '../Event/EventType';
-import {LogLevel} from '../Log/LogLevel';
-import {StateAware} from '../StateAware';
-import {MetaDataAware} from '../../Core/MetaDataAware';
-import {DataValueCollection} from '../DataValueCollection';
+import {State} from '../State.js';
+import {EventType} from '../Event/EventType.js';
+import {LogLevel} from '../Log/LogLevel.js';
+import {StateAware} from '../StateAware.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {DataValueCollection} from '../DataValueCollection.js';
 
 export class Subscriber extends MetaDataAware implements StateAware {
     public id: string;

@@ -1,5 +1,5 @@
 import {ChannelData} from "./ChannelData";
-import {ChannelType} from './ChannelType';
+import {ChannelType} from './ChannelType.js';
 
 export class EmailChannelData extends ChannelData {
     public email: string;

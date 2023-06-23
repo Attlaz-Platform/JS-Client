@@ -1,12 +1,12 @@
 import {TriggerData} from "./TriggerData";
-import {State} from '../State';
-import {TriggerType} from './TriggerType';
-import {ScheduleTriggerData} from './ScheduleTriggerData';
-import {WebhookTriggerData} from './WebhookTriggerData';
-import {ApiTriggerData} from './ApiTriggerData';
-import {StateAware} from '../StateAware';
-import {MetaDataAware} from '../../Core/MetaDataAware';
-import {DataValueCollection} from '../DataValueCollection';
+import {State} from '../State.js';
+import {TriggerType} from './TriggerType.js';
+import {ScheduleTriggerData} from './ScheduleTriggerData.js';
+import {WebhookTriggerData} from './WebhookTriggerData.js';
+import {ApiTriggerData} from './ApiTriggerData.js';
+import {StateAware} from '../StateAware.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {DataValueCollection} from '../DataValueCollection.js';
 
 export class Trigger extends MetaDataAware implements StateAware {
     public id: string;

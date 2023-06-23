@@ -1,15 +1,15 @@
-import {Endpoint} from './Endpoint';
-import {LogQuery} from '../Model/Log/LogQuery';
-import {Log} from '../Model/Log/Log';
-import {Utils} from '../Utils';
-import {LogStreamId} from '../Model/Log/LogStreamId';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
-import {LogStream} from '../Model/Log/LogStream';
-import {CursorPagination} from '../Model/Pagination/CursorPagination';
-import {QueryString} from '../Http/Data/QueryString';
-import {LogItemFilter} from '../Model/Log/LogItemFilter';
+import {Endpoint} from './Endpoint.js';
+import {LogQuery} from '../Model/Log/LogQuery.js';
+import {Log} from '../Model/Log/Log.js';
+import {Utils} from '../Utils.js';
+import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {LogStreamInformation} from '../Model/Log/LogStreamInformation.js';
+import {LogStream} from '../Model/Log/LogStream.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {LogItemFilter} from '../Model/Log/LogItemFilter.js';
 
 export class LogEndpoint extends Endpoint {
 

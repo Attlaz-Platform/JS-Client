@@ -1,6 +1,5 @@
-import {LogLevel} from './LogLevel';
-import {LogStreamId} from './LogStreamId';
-import {DataValueValue} from '../DataValue';
+import {LogLevel} from './LogLevel.js';
+import {DataValueValue} from '../DataValue.js';
 
 export class LogItemFilter {
     public logLevels: LogLevel[] | null = null;

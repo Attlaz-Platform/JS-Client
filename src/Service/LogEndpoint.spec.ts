@@ -1,12 +1,12 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {LogQuery} from '../Model/Log/LogQuery';
-import {LogStreamId} from '../Model/Log/LogStreamId';
-import {Log} from '../Model/Log/Log';
-import {LogLevel} from '../Model/Log/LogLevel';
-import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
-import {CursorPagination} from '../Model/Pagination/CursorPagination';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {LogQuery} from '../Model/Log/LogQuery.js';
+import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {Log} from '../Model/Log/Log.js';
+import {LogLevel} from '../Model/Log/LogLevel.js';
+import {LogStreamInformation} from '../Model/Log/LogStreamInformation.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 
 jest.setTimeout((60) * 1000);
 

@@ -1,4 +1,4 @@
-import {TriggerData} from './TriggerData';
+import {TriggerData} from './TriggerData.js';
 
 export class ScheduleTriggerData extends TriggerData {
     public expression: string;

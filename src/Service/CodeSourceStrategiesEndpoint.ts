@@ -1,7 +1,7 @@
-import {Endpoint} from './Endpoint';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {CodeSourceBuildStrategy} from '../Model/Deployment/CodeSourceBuildStrategy';
-import {CodeSourceRunStrategy} from '../Model/Deployment/CodeSourceRunStrategy';
+import {Endpoint} from './Endpoint.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {CodeSourceBuildStrategy} from '../Model/Deployment/CodeSourceBuildStrategy.js';
+import {CodeSourceRunStrategy} from '../Model/Deployment/CodeSourceRunStrategy.js';
 
 
 export class CodeSourceStrategiesEndpoint extends Endpoint {

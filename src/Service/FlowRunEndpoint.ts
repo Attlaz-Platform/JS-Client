@@ -1,14 +1,14 @@
-import {Endpoint} from './Endpoint';
-import {ClientError} from '../Model/Error/ClientError';
-import {HttpClient} from '../Http/HttpClient';
-import {FlowRun} from '../Model/Flow/FlowRun';
-import {FlowRunStatus} from '../Model/Flow/FlowRunStatus';
-import {FlowRunSummary} from '../Model/Flow/FlowRunSummary';
-import {FlowRunHistory} from '../Model/Flow/FlowRunHistory';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CursorPagination} from '../Model/Pagination/CursorPagination';
-import {QueryString} from '../Http/Data/QueryString';
+import {Endpoint} from './Endpoint.js';
+import {ClientError} from '../Model/Error/ClientError.js';
+import {HttpClient} from '../Http/HttpClient.js';
+import {FlowRun} from '../Model/Flow/FlowRun.js';
+import {FlowRunStatus} from '../Model/Flow/FlowRunStatus.js';
+import {FlowRunSummary} from '../Model/Flow/FlowRunSummary.js';
+import {FlowRunHistory} from '../Model/Flow/FlowRunHistory.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class FlowRunEndpoint extends Endpoint {
 

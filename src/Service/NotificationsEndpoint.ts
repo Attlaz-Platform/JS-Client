@@ -1,13 +1,13 @@
-import {Endpoint} from './Endpoint';
-import {Notification} from '../Model/Notification';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {Notification} from '../Model/Notification.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class NotificationsEndpoint extends Endpoint {
 
     public async getAll(unacknowledgedOnly: boolean = false): Promise<CollectionResult<Notification>> {
 
-        const result: CollectionResult<Notification> = await this.requestCollection('/notifications?unacknowledgedOnly=' + unacknowledgedOnly,  Notification.parse);
+        const result: CollectionResult<Notification> = await this.requestCollection('/notifications?unacknowledgedOnly=' + unacknowledgedOnly, Notification.parse);
         return result;
 
     }

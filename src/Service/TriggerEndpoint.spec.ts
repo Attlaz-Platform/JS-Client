@@ -1,7 +1,7 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {Trigger} from '../Model/Trigger/Trigger';
-import {State} from '../Model/State';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {Trigger} from '../Model/Trigger/Trigger.js';
+import {State} from '../Model/State.js';
 
 jest.setTimeout((60) * 1000);
 

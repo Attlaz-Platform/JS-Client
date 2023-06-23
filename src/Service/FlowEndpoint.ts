@@ -1,11 +1,11 @@
-import {Endpoint} from './Endpoint';
-import {Utils} from '../Utils';
-import {HttpClient} from '../Http/HttpClient';
-import {Flow} from '../Model/Flow/Flow';
-import {FlowSummary} from '../Model/Flow/FlowSummary';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {Parameters} from '../Http/Data/Parameters';
+import {Endpoint} from './Endpoint.js';
+import {Utils} from '../Utils.js';
+import {HttpClient} from '../Http/HttpClient.js';
+import {Flow} from '../Model/Flow/Flow.js';
+import {FlowSummary} from '../Model/Flow/FlowSummary.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {Parameters} from '../Http/Data/Parameters.js';
 
 export class FlowEndpoint extends Endpoint {
 

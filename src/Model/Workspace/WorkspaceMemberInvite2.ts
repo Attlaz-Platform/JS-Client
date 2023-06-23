@@ -1,4 +1,4 @@
-import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState';
+import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState.js';
 
 export class WorkspaceMemberInvite2 {
     code: string;

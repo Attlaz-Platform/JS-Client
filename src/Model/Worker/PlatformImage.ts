@@ -1,6 +1,6 @@
-import {State} from '../State';
-import {StateAware} from '../StateAware';
-import {Utils} from '../../Utils';
+import {State} from '../State.js';
+import {StateAware} from '../StateAware.js';
+import {Utils} from '../../Utils.js';
 
 export class PlatformImage implements StateAware {
     public id: string;

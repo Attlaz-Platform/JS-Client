@@ -1,15 +1,15 @@
-import {Endpoint} from './Endpoint';
-import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment';
-import {HttpClient} from '../Http/HttpClient';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment.js';
+import {HttpClient} from '../Http/HttpClient.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
 
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
 
         try {
-            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments',  ProjectEnvironment.parse);
+            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments', ProjectEnvironment.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

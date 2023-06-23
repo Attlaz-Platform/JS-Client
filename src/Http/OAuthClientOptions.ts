@@ -1,4 +1,4 @@
-import {Headers} from './Data/Header';
+import {Headers} from './Data/Header.js';
 
 export class OAuthClientOptions {
     public apiEndpoint: string;

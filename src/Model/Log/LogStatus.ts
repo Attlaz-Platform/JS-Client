@@ -1,4 +1,4 @@
-import {Utils} from '../..';
+import {Utils} from '../../Utils.js';
 
 export enum LogStatus {
     Normal = 'normal',
