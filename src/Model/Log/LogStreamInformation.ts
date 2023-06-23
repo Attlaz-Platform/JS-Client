@@ -3,13 +3,11 @@ import {DataValueValue} from '../DataValue.js';
 import {LogStreamId} from './LogStreamId.js';
 
 export class LogStreamInformation {
-
     logStreamId: LogStreamId;
     logLevels: { logLevel: LogLevel; count: number }[];
     tags: { tag: string; values: { value: DataValueValue; count: number }[] }[];
 
     public static parse(raw: any): LogStreamInformation {
-
         const rawData: {
             log_stream: string; log_levels: { log_level: string, count: number }[], tags: any
         } | null = raw;
@@ -37,7 +35,6 @@ export class LogStreamInformation {
                 values.push({value: tagValue.value, count: tagValue.count});
             }
             result.tags.push({tag: tag.tag, values: values});
-
         }
 
         // Object.keys(rawData.level_count).forEach((logLevelKey: string, index) => {
@@ -66,6 +63,5 @@ export class LogStreamInformation {
         // }
         // throw new Error('Need update!');
         return result;
-
     }
 }

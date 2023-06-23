@@ -30,14 +30,14 @@ export class CodeDeploy {
         projectDeploy.started = rawCodeDeploy.started === null ? null : Utils.parseRawDate(rawCodeDeploy.started);
         projectDeploy.finished = rawCodeDeploy.finished === null ? null : Utils.parseRawDate(rawCodeDeploy.finished);
         projectDeploy.status = CodeDeployStatus.fromString(rawCodeDeploy.status);
-        projectDeploy.bytes = rawCodeDeploy.bytes === null ? null : parseInt(rawCodeDeploy.bytes);
+        projectDeploy.bytes = rawCodeDeploy.bytes === null ? null : Utils.parseInt(rawCodeDeploy.bytes);
         projectDeploy.path = rawCodeDeploy.path;
         projectDeploy.commitHash = rawCodeDeploy.commit_hash;
 
         const rawProjectDeployCommits: any[] = rawCodeDeploy.commits;
 
-        for (let rawProjectDeployCommit of rawProjectDeployCommits) {
-            let projectDeployCommit: ProjectDeployCommit = new ProjectDeployCommit();
+        for (const rawProjectDeployCommit of rawProjectDeployCommits) {
+            const projectDeployCommit: ProjectDeployCommit = new ProjectDeployCommit();
             projectDeployCommit.hash = rawProjectDeployCommit.commit_hash;
             projectDeployCommit.date = Utils.parseRawDate(rawProjectDeployCommit.commit_date);
             projectDeployCommit.message = rawProjectDeployCommit.commit_message;

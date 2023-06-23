@@ -9,20 +9,17 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test get project environment by id', async () => {
-
     expect.assertions(3);
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const existingProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('11NqGFf0fh2qCKrm7k28vX5qJ2x')
+    const existingProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('11NqGFf0fh2qCKrm7k28vX5qJ2x');
     expect(existingProjectEnvironment).not.toBeNull();
     expect(existingProjectEnvironment?.id).toBe('11NqGFf0fh2qCKrm7k28vX5qJ2x');
 
-    const nonExistingProjectDeploy: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('random')
+    const nonExistingProjectDeploy: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('random');
     expect(nonExistingProjectDeploy).toBeNull();
-
 });
-

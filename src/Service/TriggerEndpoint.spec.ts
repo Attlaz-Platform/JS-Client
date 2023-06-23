@@ -10,10 +10,9 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test save trigger', async () => {
-
     // expect.assertions(3);
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -43,7 +42,5 @@ test('Test save trigger', async () => {
     savedTrigger.state = oldState;
     const savedTrigger2: Trigger = await client.getTriggerEndpoint().save(savedTrigger);
 
-    expect(savedTrigger2.state).toEqual(oldState)
-
+    expect(savedTrigger2.state).toEqual(oldState);
 });
-

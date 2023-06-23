@@ -7,7 +7,7 @@ export class AdapterConfiguration {
     public description: string;
 
     public static parse(rawAdapter: any): AdapterConfiguration {
-        let configuration: AdapterConfiguration = new AdapterConfiguration();
+        const configuration: AdapterConfiguration = new AdapterConfiguration();
         configuration.id = rawAdapter.id;
         configuration.key = rawAdapter.key;
         configuration.type = rawAdapter.type;
@@ -16,6 +16,5 @@ export class AdapterConfiguration {
         configuration.description = rawAdapter.description;
 
         return configuration;
-
     }
 }

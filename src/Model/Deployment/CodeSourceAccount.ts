@@ -10,7 +10,7 @@ export class CodeSourceAccount {
     // public scopes: string;
 
     public static parse(rawSourcesAccount: any): CodeSourceAccount {
-        let sourcesAccount: CodeSourceAccount = new CodeSourceAccount();
+        const sourcesAccount: CodeSourceAccount = new CodeSourceAccount();
         sourcesAccount.id = rawSourcesAccount.id;
         sourcesAccount.key = rawSourcesAccount.key;
         sourcesAccount.name = rawSourcesAccount.name;
@@ -21,6 +21,5 @@ export class CodeSourceAccount {
         // sourcesAccount.refresh_token = rawSourcesAccount.refresh_token;
         // sourcesAccount.scopes = rawSourcesAccount.scopes;
         return sourcesAccount;
-
     }
 }

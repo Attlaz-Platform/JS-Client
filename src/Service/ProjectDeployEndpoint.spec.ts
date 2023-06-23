@@ -9,20 +9,17 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 test('Test get project deploy', async () => {
-
     expect.assertions(3);
 
-    let client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const existingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('5')
+    const existingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('5');
     expect(existingProjectDeploy).not.toBeNull();
     expect(existingProjectDeploy?.id).toBe('5');
 
-
-    const nonExistingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('test')
+    const nonExistingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('test');
     expect(nonExistingProjectDeploy).toBeNull();
-
 });

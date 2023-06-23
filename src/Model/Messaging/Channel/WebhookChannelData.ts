@@ -2,7 +2,6 @@ import {ChannelData} from './ChannelData.js';
 import {ChannelType} from './ChannelType.js';
 
 export class WebhookChannelData extends ChannelData {
-
     public url: string;
     public method: string;
 
@@ -11,6 +10,5 @@ export class WebhookChannelData extends ChannelData {
 
         this.url = url;
         this.method = method;
-
     }
 }

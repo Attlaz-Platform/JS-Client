@@ -74,7 +74,7 @@ module.exports = {
         "default-param-last": "off",
         "object-shorthand": "off",
 // Allow this for now
-        "@typescript-eslint/unbound-method": ["warn"],
+        "@typescript-eslint/unbound-method": ["off"],
         // "@typescript-eslint/adjacent-overload-signatures": "error",
         // "@typescript-eslint/array-type": [
         //     "error",

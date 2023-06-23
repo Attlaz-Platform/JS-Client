@@ -14,7 +14,7 @@ export class Config {
     public state: State = State.Active;
 
     public static parse(rawConfig: any): Config {
-        let config: Config = new Config();
+        const config: Config = new Config();
         config.id = rawConfig.id;
         config.projectId = rawConfig.project;
         config.projectEnvironmentId = rawConfig.project_environment;

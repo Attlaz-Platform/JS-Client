@@ -5,7 +5,6 @@ export class CollectionResult<T> {
     public constructor(data: T[] | null = null, hasMore: boolean = false) {
         this.data = data === null ? [] : data;
         this.hasMore = hasMore;
-
     }
 
     // public static parse<T>(raw: any): DataResult<T> {
@@ -29,5 +28,4 @@ export class CollectionResult<T> {
     public getData(): T[] {
         return this.data;
     }
-
 }

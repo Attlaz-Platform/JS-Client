@@ -6,15 +6,11 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class AdapterEndpoint extends Endpoint {
-
     public async getAdapters(): Promise<CollectionResult<Adapter>> {
         try {
+            const url: string = '/adapters';
 
-            let url: string = '/adapters';
-
-            const result: CollectionResult<Adapter> = await this.requestCollection(url, Adapter.parse);
-
-            return result
+            return await this.requestCollection(url, Adapter.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapters: ', error);
@@ -22,13 +18,11 @@ export class AdapterEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getAdapter(adapterId: string): Promise<Adapter | null> {
         try {
-
-            let url: string = '/adapters/' + adapterId;
+            const url: string = '/adapters/' + adapterId;
 
             const result: ObjectResult<Adapter> = await this.requestObject(url, null, Adapter.parse);
             return result.getData();
@@ -39,17 +33,13 @@ export class AdapterEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getAdapterConfiguration(adapterId: string): Promise<CollectionResult<AdapterConfiguration>> {
         try {
+            const url: string = '/adapters/' + adapterId + '/configuration';
 
-            let url: string = '/adapters/' + adapterId + '/configuration';
-
-            const result: CollectionResult<AdapterConfiguration> = await this.requestCollection(url, AdapterConfiguration.parse);
-
-            return result
+            return await this.requestCollection(url, AdapterConfiguration.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapter configuration: ', error);
@@ -57,17 +47,13 @@ export class AdapterEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getConnections(projectId: string): Promise<CollectionResult<AdapterConnection>> {
         try {
+            const url: string = '/projects/' + projectId + '/connections';
 
-            let url: string = '/projects/' + projectId + '/connections';
-
-            const result: CollectionResult<AdapterConnection> = await this.requestCollection(url, AdapterConnection.parse);
-
-            return result
+            return await this.requestCollection(url, AdapterConnection.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapters: ', error);
@@ -75,13 +61,11 @@ export class AdapterEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async getConnectionByKey(connectionKey: string): Promise<AdapterConnection | null> {
         try {
-
-            let url: string = '/connections/' + connectionKey;
+            const url: string = '/connections/' + connectionKey;
 
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, null, AdapterConnection.parse);
 
@@ -93,13 +77,11 @@ export class AdapterEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async saveConnection(projectId: string, adapter: AdapterConnection): Promise<AdapterConnection> {
         try {
-
-            let url: string = '/projects/' + projectId + '/connections';
+            const url: string = '/projects/' + projectId + '/connections';
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, adapter, AdapterConnection.parse, 'POST');
             const updatedAdapterConnection: AdapterConnection | null = result.getData();
             if (updatedAdapterConnection === null) {

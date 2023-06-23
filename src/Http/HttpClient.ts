@@ -1,14 +1,13 @@
 import {Response} from 'servie';
-import {fetch} from 'popsicle'
+import {fetch} from 'popsicle';
+import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
+import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
 import {ClientError} from '../Model/Error/ClientError.js';
-import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
-import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
 import {VERSION} from '../version.js';
 
 export class HttpClient {
-
     public static HTTP_BAD_REQUEST: number = 400;
     public static HTTP_UNAUTHORIZED: number = 401;
     public static HTTP_FORBIDDEN: number = 403;
@@ -38,7 +37,6 @@ export class HttpClient {
     // }
 
     public static async request2(request: HttpClientRequest): Promise<HttpClientResponse> {
-
         if (typeof window === 'undefined') {
             // Add user agent when running in Node
             request.headers['User-Agent'] = 'Attlaz Http/' + VERSION;
@@ -48,14 +46,14 @@ export class HttpClient {
             method: request.method,
             headers: request.headers,
             omitDefaultHeaders: true,
-            body: request.body
+            body: request.body,
         } as BrowserRequestOptions | NodeRequestOptions;
 
         const response: Response = await fetch(request.getFullUrl(), rawRequest);
 
         const httpResponse: HttpClientResponse = new HttpClientResponse(response.status, response.statusText);
 
-        let contentType: { type: string, options: string | null } = this.getContentType(response);
+        const contentType: { type: string, options: string | null } = this.getContentType(response);
 
         const rawData: string = await response.text();
         if (contentType.type === 'application/json') {
@@ -64,9 +62,7 @@ export class HttpClient {
                 try {
                     jsonData = JSON.parse(rawData);
                 } catch (e) {
-                    console.error('Unable to parse response data to JSON', {
-                        statusText: httpResponse.statusText, error: e
-                    });
+                    console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
                 }
             }
 
@@ -82,11 +78,9 @@ export class HttpClient {
         }
 
         return httpResponse;
-
     }
 
     private static getContentType(response: Response): { type: string, options: string | null } {
-
         if (response.headers.has('Content-Type')) {
             const rawContentType: string | null = response.headers.get('Content-Type');
             if (rawContentType !== null) {
@@ -99,12 +93,11 @@ export class HttpClient {
     private static formatContentType(input: string): { type: string, options: string | null } {
         const d: string[] = input.split(';');
         if (d.length === 1) {
-            return {type: d[0], options: null}
-        } else if (d.length === 2) {
-            return {type: d[0], options: d[1].trim()}
+            return {type: d[0], options: null};
+        } if (d.length === 2) {
+            return {type: d[0], options: d[1].trim()};
         }
         console.error('Unable to parse content type "' + input + '"');
-        return {type: input, options: null}
-
+        return {type: input, options: null};
     }
 }

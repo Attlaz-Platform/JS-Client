@@ -12,6 +12,4 @@ export class UserAction {
     public time: Date;
     public result: string;
     public data: DataValueCollection;
-
-
 }

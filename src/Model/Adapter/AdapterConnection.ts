@@ -12,7 +12,7 @@ export class AdapterConnection {
     }
 
     public static parse(rawAdapterConnection: any): AdapterConnection {
-        let adapterConnection: AdapterConnection = new AdapterConnection();
+        const adapterConnection: AdapterConnection = new AdapterConnection();
         adapterConnection.id = rawAdapterConnection.id;
         adapterConnection.key = rawAdapterConnection.key;
         adapterConnection.adapter = rawAdapterConnection.adapter;
@@ -27,6 +27,5 @@ export class AdapterConnection {
         // adapter.image = rawAdapter.image;
         // adapter.type = rawAdapter.type;
         // return adapter;
-
     }
 }

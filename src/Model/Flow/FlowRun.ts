@@ -21,7 +21,7 @@ export class FlowRun extends MetaDataAware {
     public logsPurged: boolean = false;
 
     public static parse(rawFlowRun: any): FlowRun {
-        let flowRun: FlowRun = new FlowRun();
+        const flowRun: FlowRun = new FlowRun();
         flowRun.id = rawFlowRun.id;
         flowRun.flowId = rawFlowRun.flow;
         flowRun.arguments = rawFlowRun.arguments;

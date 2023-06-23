@@ -3,16 +3,13 @@ import {Worker} from '../Model/Worker/Worker.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkerEndpoint extends Endpoint {
-
     public async getByProjectEnvironment(projectEnvironmentId: string): Promise<Worker | null> {
-
         try {
-            let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
+            const url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
             const result: ObjectResult<Worker> = await this.requestObject(url, null, Worker.parse);
 
             return result.getData();
-
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load trigger by id: ', error);
@@ -20,18 +17,13 @@ export class WorkerEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 
     public async update(projectEnvironmentId: string): Promise<boolean> {
-
         try {
+            const url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
 
-            let url: string = '/projectenvironments/' + projectEnvironmentId + '/workers';
-
-            const parser = (input: any): { updated: boolean } => {
-                return {updated: input.updated};
-            }
+            const parser = (input: any): { updated: boolean } => ({updated: input.updated});
             const result: ObjectResult<{ updated: boolean }> = await this.requestObject(url, null, parser, 'POST');
 
             const isUpdated: { updated: boolean } | null = result.getData();
@@ -46,6 +38,5 @@ export class WorkerEndpoint extends Endpoint {
 
             throw error;
         }
-
     }
 }

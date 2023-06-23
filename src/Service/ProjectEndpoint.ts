@@ -6,7 +6,6 @@ import {QueryString} from '../Http/Data/QueryString.js';
 import {State} from '../Model/State.js';
 
 export class ProjectEndpoint extends Endpoint {
-
     public async getAll(): Promise<CollectionResult<Project>> {
         try {
             const result: CollectionResult<Project> = await this.requestCollection('/projects', Project.parse);
@@ -17,7 +16,6 @@ export class ProjectEndpoint extends Endpoint {
             }
             throw e;
         }
-
     }
 
     public async getByWorkspace(workspaceId: string, states: State[] | null = null): Promise<CollectionResult<Project>> {
@@ -37,7 +35,6 @@ export class ProjectEndpoint extends Endpoint {
     }
 
     public async getById(projectId: string): Promise<Project | null> {
-
         try {
             const result: ObjectResult<Project> = await this.requestObject('projects/' + projectId + '', null, Project.parse);
             return result.getData();
@@ -47,14 +44,11 @@ export class ProjectEndpoint extends Endpoint {
             }
             throw error;
         }
-
     }
 
     public async save(project: Project): Promise<Project> {
-
         try {
-
-            let url: string = '/projects';
+            const url: string = '/projects';
             const result: ObjectResult<Project> = await this.requestObject(url, project, Project.parse, 'POST');
             const updatedProject: Project | null = result.getData();
             if (updatedProject === null) {
@@ -67,6 +61,5 @@ export class ProjectEndpoint extends Endpoint {
             }
             throw error;
         }
-
     }
 }

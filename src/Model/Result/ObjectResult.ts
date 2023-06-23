@@ -1,9 +1,6 @@
 export class ObjectResult<T> {
     private data: T | null;
 
-    public constructor() {
-
-    }
 
     // public static parse<T>(raw: any): DataResult<T> {
     //     const result: DataResult<T> = new DataResult<T>();
@@ -25,5 +22,4 @@ export class ObjectResult<T> {
     public getData(): T | null {
         return this.data;
     }
-
 }

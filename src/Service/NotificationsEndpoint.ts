@@ -4,12 +4,9 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class NotificationsEndpoint extends Endpoint {
-
     public async getAll(unacknowledgedOnly: boolean = false): Promise<CollectionResult<Notification>> {
-
         const result: CollectionResult<Notification> = await this.requestCollection('/notifications?unacknowledgedOnly=' + unacknowledgedOnly, Notification.parse);
         return result;
-
     }
 
     public async save(notification: Notification): Promise<Notification> {

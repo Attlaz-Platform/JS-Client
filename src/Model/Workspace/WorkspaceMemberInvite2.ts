@@ -15,7 +15,7 @@ export class WorkspaceMemberInvite2 {
             inviterName: rawInvite.inviter_name,
             inviterEmail: rawInvite.inviter_email,
             workspaceName: rawInvite.workspace_name,
-            state: WorkspaceMemberInviteState.fromString(rawInvite.state)
+            state: WorkspaceMemberInviteState.fromString(rawInvite.state),
         };
     }
 }

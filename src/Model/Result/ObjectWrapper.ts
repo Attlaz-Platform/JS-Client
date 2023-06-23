@@ -12,7 +12,7 @@ export class ObjectWrapper {
                 }
                 return value;
             },
-        }
+        };
         const wrapper: any = new Proxy(raw, handler);
         return wrapper;
     }

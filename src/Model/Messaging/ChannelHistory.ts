@@ -20,7 +20,7 @@ export class ChannelHistory {
     //
     // }
     public static parse(rawChannelHistory: any): ChannelHistory {
-        let log: ChannelHistory = new ChannelHistory();
+        const log: ChannelHistory = new ChannelHistory();
         log.id = rawChannelHistory.id;
         log.subscriberId = rawChannelHistory.subscriber;
         log.channelId = rawChannelHistory.channel;
