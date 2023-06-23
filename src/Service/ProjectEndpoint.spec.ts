@@ -1,8 +1,8 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {Project} from '../Model/Project/Project';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {State} from '../Model/State';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {Project} from '../Model/Project/Project.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {State} from '../Model/State.js';
 
 jest.setTimeout((60) * 1000);
 

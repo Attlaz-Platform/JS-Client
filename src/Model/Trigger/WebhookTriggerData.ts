@@ -1,4 +1,4 @@
-import {TriggerData} from './TriggerData';
+import {TriggerData} from './TriggerData.js';
 
 export class WebhookTriggerData extends TriggerData {
     public key: string;

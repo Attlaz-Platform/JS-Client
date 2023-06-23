@@ -1,5 +1,5 @@
-import {Endpoint} from './Endpoint';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class FirewallEndpoint extends Endpoint {
 

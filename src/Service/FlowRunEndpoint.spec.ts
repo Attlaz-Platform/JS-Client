@@ -1,7 +1,7 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {FlowRun} from '../Model/Flow/FlowRun';
-import {FlowRunResponse} from '../Model/Flow/FlowRunResponse';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {FlowRun} from '../Model/Flow/FlowRun.js';
+import {FlowRunResponse} from '../Model/Flow/FlowRunResponse.js';
 
 jest.setTimeout((60) * 1000);
 

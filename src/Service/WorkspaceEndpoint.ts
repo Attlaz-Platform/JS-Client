@@ -1,6 +1,6 @@
-import {Endpoint} from './Endpoint';
-import {Workspace} from '../Model/Workspace/Workspace';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Endpoint} from './Endpoint.js';
+import {Workspace} from '../Model/Workspace/Workspace.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class WorkspaceEndpoint extends Endpoint {
 

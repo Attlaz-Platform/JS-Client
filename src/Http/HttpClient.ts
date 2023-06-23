@@ -1,11 +1,11 @@
 import {Response} from 'servie';
 import {fetch} from 'popsicle'
-import {HttpClientRequest} from './HttpClientRequest';
-import {HttpClientResponse} from './HttpClientResponse';
-import {ClientError} from '../Model/Error/ClientError';
+import {HttpClientRequest} from './HttpClientRequest.js';
+import {HttpClientResponse} from './HttpClientResponse.js';
+import {ClientError} from '../Model/Error/ClientError.js';
 import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
 import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
-import {VERSION} from '../version';
+import {VERSION} from '../version.js';
 
 export class HttpClient {
 
@@ -60,11 +60,13 @@ export class HttpClient {
         const rawData: string = await response.text();
         if (contentType.type === 'application/json') {
             let jsonData: any | null = null;
-            if(rawData !== ''){
+            if (rawData !== '') {
                 try {
                     jsonData = JSON.parse(rawData);
                 } catch (e) {
-                    console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
+                    console.error('Unable to parse response data to JSON', {
+                        statusText: httpResponse.statusText, error: e
+                    });
                 }
             }
 

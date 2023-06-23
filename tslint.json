@@ -1,9 +1,0 @@
-{
-  "rules": {
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "no-any": true
-  }
-}

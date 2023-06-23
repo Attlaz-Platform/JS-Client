@@ -1,15 +1,15 @@
 /**
- * npm run build && node dist/test.js
+ * npm run build && node dist/src/test.js
  */
 
-import {Client} from "./Client";
-import {ClientError} from './Model/Error/ClientError';
-import {User} from './Model/User';
+import {Client} from "./Client.js";
+import {ClientError} from './Model/Error/ClientError.js';
+import {User} from './Model/User.js';
 
-import {HttpClientRequest} from './Http/HttpClientRequest';
-import {HttpClient} from './Http/HttpClient';
-import {State} from './Model/State';
-import {FlowSummary} from './Model/Flow/FlowSummary';
+import {HttpClientRequest} from './Http/HttpClientRequest.js';
+import {HttpClient} from './Http/HttpClient.js';
+import {State} from './Model/State.js';
+import {FlowSummary} from './Model/Flow/FlowSummary.js';
 
 // client.authenticate('admin@attlaz.com', 'admin2').subscribe((success) => {
 //     console.log('Authenticate', success);
@@ -163,7 +163,7 @@ testExpiredToken().then(() => {
 
 async function testExpiredToken() {
     try {
-        let attlazClient: Client = new Client('https://api2.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
+        let attlazClient: Client = new Client('https://api.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
         await attlazClient.authenticate();
         console.log(await attlazClient.getHttpClient().getToken());
 

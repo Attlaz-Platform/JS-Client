@@ -1,5 +1,5 @@
-import {StateAware} from '../StateAware';
-import {State} from '../State';
+import {StateAware} from '../StateAware.js';
+import {State} from '../State.js';
 
 export class CodeSourceBuildStrategy implements StateAware {
     public id: string;

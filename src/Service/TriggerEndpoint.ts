@@ -1,9 +1,9 @@
-import {Endpoint} from './Endpoint';
-import {Trigger} from '../Model/Trigger/Trigger';
-import {Utils} from '../Utils';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {Parameters} from '../Http/Data/Parameters';
+import {Endpoint} from './Endpoint.js';
+import {Trigger} from '../Model/Trigger/Trigger.js';
+import {Utils} from '../Utils.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {Parameters} from '../Http/Data/Parameters.js';
 
 export class TriggerEndpoint extends Endpoint {
 

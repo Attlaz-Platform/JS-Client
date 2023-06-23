@@ -1,5 +1,5 @@
-import {State} from './State';
-import {StateAware} from './StateAware';
+import {State} from './State.js';
+import {StateAware} from './StateAware.js';
 
 export class User implements StateAware {
     public id: string;

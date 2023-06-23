@@ -1,10 +1,10 @@
-import {UserAuthProvider} from '../Model/User/UserAuthProvider';
-import {OAuthClientToken} from '../Http/OAuthClientToken';
-import {Endpoint} from './Endpoint';
-import {User} from '../Model/User';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {Utils} from '../Utils';
+import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
+import {OAuthClientToken} from '../Http/OAuthClientToken.js';
+import {Endpoint} from './Endpoint.js';
+import {User} from '../Model/User.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {Utils} from '../Utils.js';
 
 export class UserEndpoint extends Endpoint {
 

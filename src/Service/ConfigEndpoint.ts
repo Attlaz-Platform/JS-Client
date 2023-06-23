@@ -1,8 +1,8 @@
-import {Endpoint} from './Endpoint';
-import {Utils} from '../Utils';
-import {Config} from '../Model/Config';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {Parameters} from '../Http/Data/Parameters';
+import {Endpoint} from './Endpoint.js';
+import {Utils} from '../Utils.js';
+import {Config} from '../Model/Config.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {Parameters} from '../Http/Data/Parameters.js';
 
 export class ConfigEndpoint extends Endpoint {
 

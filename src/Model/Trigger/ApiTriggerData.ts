@@ -1,4 +1,4 @@
-import {TriggerData} from './TriggerData';
+import {TriggerData} from './TriggerData.js';
 
 export class ApiTriggerData extends TriggerData {
     public constructor() {

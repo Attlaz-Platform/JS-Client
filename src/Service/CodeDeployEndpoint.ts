@@ -1,7 +1,7 @@
-import {Endpoint} from './Endpoint';
-import {CodeDeploy} from '../Model/Project/CodeDeploy';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Endpoint} from './Endpoint.js';
+import {CodeDeploy} from '../Model/Project/CodeDeploy.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class CodeDeployEndpoint extends Endpoint {
 

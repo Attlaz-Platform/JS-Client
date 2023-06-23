@@ -1,17 +1,17 @@
-import {Endpoint} from './Endpoint';
+import {Endpoint} from './Endpoint.js';
 
-import {Utils} from '../Utils';
-import {State} from '../Model/State';
+import {Utils} from '../Utils.js';
+import {State} from '../Model/State.js';
 
-import {UserAction} from '../Model/User/UserAction';
-import {DataValueCollection} from '../Model/DataValueCollection';
-import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember';
-import {WorkspaceMemberRole} from '../Model/Workspace/WorkspaceMemberRole';
-import {WorkspaceMemberInviteState} from '../Model/Workspace/WorkspaceMemberInviteState';
-import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite';
-import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {UserAction} from '../Model/User/UserAction.js';
+import {DataValueCollection} from '../Model/DataValueCollection.js';
+import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember.js';
+import {WorkspaceMemberRole} from '../Model/Workspace/WorkspaceMemberRole.js';
+import {WorkspaceMemberInviteState} from '../Model/Workspace/WorkspaceMemberInviteState.js';
+import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite.js';
+import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkspaceMemberEndpoint extends Endpoint {
 

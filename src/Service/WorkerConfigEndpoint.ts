@@ -1,7 +1,7 @@
-import {Endpoint} from './Endpoint';
-import {WorkerConfig} from '../Model/Worker/WorkerConfig';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {WorkerConfig} from '../Model/Worker/WorkerConfig.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkerConfigEndpoint extends Endpoint {
 

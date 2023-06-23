@@ -1,9 +1,9 @@
-import {Endpoint} from './Endpoint';
-import {Adapter} from '../Model/Adapter/Adapter';
-import {AdapterConnection} from '../Model/Adapter/AdapterConnection';
-import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Endpoint} from './Endpoint.js';
+import {Adapter} from '../Model/Adapter/Adapter.js';
+import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
+import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class AdapterEndpoint extends Endpoint {
 
@@ -12,7 +12,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/adapters';
 
-            const result: CollectionResult<Adapter> = await this.requestCollection(url,  Adapter.parse);
+            const result: CollectionResult<Adapter> = await this.requestCollection(url, Adapter.parse);
 
             return result
         } catch (error) {
@@ -47,7 +47,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/adapters/' + adapterId + '/configuration';
 
-            const result: CollectionResult<AdapterConfiguration> = await this.requestCollection(url,  AdapterConfiguration.parse);
+            const result: CollectionResult<AdapterConfiguration> = await this.requestCollection(url, AdapterConfiguration.parse);
 
             return result
         } catch (error) {
@@ -65,7 +65,7 @@ export class AdapterEndpoint extends Endpoint {
 
             let url: string = '/projects/' + projectId + '/connections';
 
-            const result: CollectionResult<AdapterConnection> = await this.requestCollection(url,  AdapterConnection.parse);
+            const result: CollectionResult<AdapterConnection> = await this.requestCollection(url, AdapterConnection.parse);
 
             return result
         } catch (error) {

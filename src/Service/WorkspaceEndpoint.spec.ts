@@ -1,7 +1,7 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {Workspace} from '../Model/Workspace/Workspace';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {Workspace} from '../Model/Workspace/Workspace.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 jest.setTimeout((60) * 1000);
 

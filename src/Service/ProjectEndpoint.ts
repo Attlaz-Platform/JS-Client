@@ -1,9 +1,9 @@
-import {Endpoint} from './Endpoint';
-import {Project} from '../Model/Project/Project';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {QueryString} from '../Http/Data/QueryString';
-import {State} from '../Model/State';
+import {Endpoint} from './Endpoint.js';
+import {Project} from '../Model/Project/Project.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {State} from '../Model/State.js';
 
 export class ProjectEndpoint extends Endpoint {
 

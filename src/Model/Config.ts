@@ -1,5 +1,5 @@
-import {State} from './State';
-import {Utils} from '../Utils';
+import {State} from './State.js';
+import {Utils} from '../Utils.js';
 
 export class Config {
     public id: number;

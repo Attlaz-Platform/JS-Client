@@ -1,9 +1,9 @@
-import {Client} from '../Client';
-import {Helper} from '../../e2e/src/helper';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {Utils} from '../Utils';
-import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch';
-import {CodeSource} from '../Model/Deployment/CodeSource';
+import {Client} from '../Client.js';
+import {Helper} from '../../e2e/src/helper.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {Utils} from '../Utils.js';
+import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch.js';
+import {CodeSource} from '../Model/Deployment/CodeSource.js';
 
 jest.setTimeout((60) * 1000);
 
@@ -20,7 +20,7 @@ test('Test Get Repositories', async () => {
 
     await client.authenticate();
 
-    const codeSourceAccountId: string = '555abec5-9921-4d4c-939d-0784f9bfa88d';
+    const codeSourceAccountId: string = '555abec5-9921-4d4c-939d-0784f9bfa88d.js';
     const repositoryKey: string = Utils.base64decode('YXR0bGF6L2F0dGxhei1wcm9qZWN0LXN5c3RlbQ==');
     const branchesResult: CollectionResult<SourcesAccountRepositoryBranch> = await client.getSourcesAccountEndpoint().getRepositoryBranches(codeSourceAccountId, repositoryKey);
 
@@ -37,11 +37,11 @@ test('Test Save code source', async () => {
     await client.authenticate();
 
     const codeSource: CodeSource = new CodeSource();
-    codeSource.codeSourceAccountId = '0';
-    codeSource.platformId = '0';
-    codeSource.repository = 'bla';
-    codeSource.branch = 'master';
-    codeSource.buildStrategyId = '';
+    codeSource.codeSourceAccountId = '0.js';
+    codeSource.platformId = '0.js';
+    codeSource.repository = 'bla.js';
+    codeSource.branch = 'master.js';
+    codeSource.buildStrategyId = '.js';
 
     const savedCodeSource: CodeSource = await client.getSourcesAccountEndpoint().saveCodeSource(codeSource);
 

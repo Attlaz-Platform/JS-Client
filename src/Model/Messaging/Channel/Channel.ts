@@ -1,9 +1,9 @@
-import {ChannelType} from './ChannelType';
-import {State} from '../../State';
-import {Utils} from '../../../Utils';
-import {StateAware} from '../../StateAware';
-import {MetaDataAware} from '../../../Core/MetaDataAware';
-import {DataValueCollection} from '../../DataValueCollection';
+import {ChannelType} from './ChannelType.js';
+import {State} from '../../State.js';
+import {Utils} from '../../../Utils.js';
+import {StateAware} from '../../StateAware.js';
+import {MetaDataAware} from '../../../Core/MetaDataAware.js';
+import {DataValueCollection} from '../../DataValueCollection.js';
 
 export class Channel extends MetaDataAware implements StateAware {
     public id: string;

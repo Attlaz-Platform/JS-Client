@@ -1,4 +1,4 @@
-import {WorkerInstanceState} from './WorkerInstanceState';
+import {WorkerInstanceState} from './WorkerInstanceState.js';
 
 export class WorkerInstance {
 

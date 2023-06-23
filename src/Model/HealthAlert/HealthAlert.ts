@@ -1,7 +1,7 @@
-import {HealthTestType} from './HealthTestType';
-import {HealthAlertStatus} from './HealthAlertStatus';
-import {DataValue, DataValueValue} from '../DataValue';
-import {Utils} from '../../Utils';
+import {HealthTestType} from './HealthTestType.js';
+import {HealthAlertStatus} from './HealthAlertStatus.js';
+import {DataValue, DataValueValue} from '../DataValue.js';
+import {Utils} from '../../Utils.js';
 
 export class HealthAlert {
     public id: number;

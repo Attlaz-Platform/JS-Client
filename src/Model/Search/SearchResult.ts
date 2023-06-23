@@ -1,10 +1,10 @@
-import {Workspace} from '../Workspace/Workspace';
-import {Project} from '../Project/Project';
-import {ProjectEnvironment} from '../Project/ProjectEnvironment';
-import {Flow} from '../Flow/Flow';
-import {FlowRun} from '../Flow/FlowRun';
-import {Channel} from '../Messaging/Channel/Channel';
-import {Adapter} from '../Adapter/Adapter';
+import {Workspace} from '../Workspace/Workspace.js';
+import {Project} from '../Project/Project.js';
+import {ProjectEnvironment} from '../Project/ProjectEnvironment.js';
+import {Flow} from '../Flow/Flow.js';
+import {FlowRun} from '../Flow/FlowRun.js';
+import {Channel} from '../Messaging/Channel/Channel.js';
+import {Adapter} from '../Adapter/Adapter.js';
 
 export class SearchResult {
     public type: string;

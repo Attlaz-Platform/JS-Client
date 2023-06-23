@@ -1,6 +1,6 @@
-import {Trigger} from './Trigger';
-import {TriggerType} from './TriggerType';
-import {ApiTriggerData} from './ApiTriggerData';
+import {Trigger} from './Trigger.js';
+import {TriggerType} from './TriggerType.js';
+import {ApiTriggerData} from './ApiTriggerData.js';
 
 export class ApiTrigger extends Trigger {
     constructor(id: string, projectEnvironmentId: string, flowId: string, data: ApiTriggerData) {

@@ -1,5 +1,5 @@
-import {WorkspaceMemberRole} from './WorkspaceMemberRole';
-import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState';
+import {WorkspaceMemberRole} from './WorkspaceMemberRole.js';
+import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState.js';
 
 export class WorkspaceMemberInvite {
     public id: string;

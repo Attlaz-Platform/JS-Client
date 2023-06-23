@@ -1,8 +1,8 @@
-import {LogLevel} from "./LogLevel";
-import {LogStreamId} from './LogStreamId';
-import {LogStatus} from './LogStatus';
-import {DataValueCollection} from '../DataValueCollection';
-import {Utils} from '../../Utils';
+import {LogLevel} from "./LogLevel.js";
+import {LogStreamId} from './LogStreamId.js';
+import {LogStatus} from './LogStatus.js';
+import {DataValueCollection} from '../DataValueCollection.js';
+import {Utils} from '../../Utils.js';
 
 export class Log {
     public id: string | null = null;

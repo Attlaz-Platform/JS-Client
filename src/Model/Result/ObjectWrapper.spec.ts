@@ -1,5 +1,5 @@
-import {User} from '../User';
-import {ObjectWrapper} from './ObjectWrapper';
+import {User} from '../User.js';
+import {ObjectWrapper} from './ObjectWrapper.js';
 
 describe('Test Object wrapping', () => {
     test('Test get properties that exist', () => {

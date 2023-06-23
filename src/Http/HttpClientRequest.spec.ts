@@ -1,4 +1,4 @@
-import {HttpClientRequest} from './HttpClientRequest';
+import {HttpClientRequest} from './HttpClientRequest.js';
 
 test('Test query string', async () => {
 

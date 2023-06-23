@@ -1,5 +1,5 @@
-import {OAuthClient} from './OAuthClient';
-import {OAuthClientOptions} from './OAuthClientOptions';
+import {OAuthClient} from './OAuthClient.js';
+import {OAuthClientOptions} from './OAuthClientOptions.js';
 
 test('Test enum parsing', async () => {
 

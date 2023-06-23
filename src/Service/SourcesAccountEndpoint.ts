@@ -1,13 +1,12 @@
-import {Endpoint} from './Endpoint';
-
-import {Utils} from '../Utils';
-import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount';
-import {CodeSource} from '../Model/Deployment/CodeSource';
-import {HttpClient} from '../Http/HttpClient';
-import {CollectionResult} from '../Model/Result/CollectionResult';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {SourcesAccountRepository} from '../Model/Deployment/SourcesAccountRepository';
-import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch';
+import {Endpoint} from './Endpoint.js';
+import {Utils} from '../Utils.js';
+import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount.js';
+import {CodeSource} from '../Model/Deployment/CodeSource.js';
+import {HttpClient} from '../Http/HttpClient.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {SourcesAccountRepository} from '../Model/Deployment/SourcesAccountRepository.js';
+import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch.js';
 
 export class SourcesAccountEndpoint extends Endpoint {
     public async getAllCodeSources(workspaceId: string): Promise<CollectionResult<CodeSource>> {
@@ -16,7 +15,7 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getAllCodeSourceAccounts(workspaceId: string): Promise<CollectionResult<CodeSourceAccount>> {
-        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts',  CodeSourceAccount.parse);
+        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts', CodeSourceAccount.parse);
         return result;
     }
 
@@ -63,7 +62,7 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getRepositories(codeSourceAccountId: string): Promise<CollectionResult<SourcesAccountRepository>> {
-        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories',  SourcesAccountRepository.parse);
+        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories', SourcesAccountRepository.parse);
         return rawSourcesAccountRepositories;
     }
 

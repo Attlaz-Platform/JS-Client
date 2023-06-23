@@ -1,12 +1,12 @@
-import {OAuthClientOptions} from './OAuthClientOptions';
-import {ClientError} from '../Model/Error/ClientError';
-import {HttpClient} from './HttpClient';
-import {HttpClientRequest} from './HttpClientRequest';
-import {HttpClientResponse} from './HttpClientResponse';
-import {OAuthClientToken} from './OAuthClientToken';
+import {OAuthClientOptions} from './OAuthClientOptions.js';
+import {ClientError} from '../Model/Error/ClientError.js';
+import {HttpClient} from './HttpClient.js';
+import {HttpClientRequest} from './HttpClientRequest.js';
+import {HttpClientResponse} from './HttpClientResponse.js';
+import {OAuthClientToken} from './OAuthClientToken.js';
 import ClientOAuth2, {Token} from 'client-oauth2';
-import {JsonSerializable} from '../Model/JsonSerializable';
-import {Parameters} from './Data/Parameters';
+import {JsonSerializable} from '../Model/JsonSerializable.js';
+import {Parameters} from './Data/Parameters.js';
 
 export class OAuthClient {
 

@@ -1,10 +1,10 @@
-import {Endpoint} from './Endpoint';
-import {StorageType} from '../Model/Storage/StorageType';
-import {StorageInformation} from '../Model/Storage/StorageInformation';
-import {StorageItem} from '../Model/Storage/StorageItem';
-import {StorageItemInformation} from '../Model/Storage/StorageItemInformation';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Endpoint} from './Endpoint.js';
+import {StorageType} from '../Model/Storage/StorageType.js';
+import {StorageInformation} from '../Model/Storage/StorageInformation.js';
+import {StorageItem} from '../Model/Storage/StorageItem.js';
+import {StorageItemInformation} from '../Model/Storage/StorageItemInformation.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class StorageEndpoint extends Endpoint {
 

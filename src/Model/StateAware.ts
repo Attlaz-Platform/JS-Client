@@ -1,5 +1,5 @@
-import {State} from './State';
+import {State} from './State.js';
 
 export interface StateAware {
-     state: State;
+    state: State;
 }

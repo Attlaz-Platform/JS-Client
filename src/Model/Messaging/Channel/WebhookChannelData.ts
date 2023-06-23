@@ -1,5 +1,5 @@
-import {ChannelData} from './ChannelData';
-import {ChannelType} from './ChannelType';
+import {ChannelData} from './ChannelData.js';
+import {ChannelType} from './ChannelType.js';
 
 export class WebhookChannelData extends ChannelData {
 

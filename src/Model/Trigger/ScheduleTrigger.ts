@@ -1,6 +1,6 @@
-import {ScheduleTriggerData} from './ScheduleTriggerData';
-import {Trigger} from './Trigger';
-import {TriggerType} from './TriggerType';
+import {ScheduleTriggerData} from './ScheduleTriggerData.js';
+import {Trigger} from './Trigger.js';
+import {TriggerType} from './TriggerType.js';
 
 export class ScheduleTrigger extends Trigger {
     constructor(id: string, projectEnvironmentId: string, flowId: string, data: ScheduleTriggerData) {

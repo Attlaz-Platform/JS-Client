@@ -1,5 +1,5 @@
-import {Utils} from '../Utils';
-import {JsonSerializable} from '../Model/JsonSerializable';
+import {Utils} from '../Utils.js';
+import {JsonSerializable} from '../Model/JsonSerializable.js';
 
 export class HttpClientRequest {
     static readonly GET = 'GET';

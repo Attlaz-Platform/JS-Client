@@ -1,6 +1,6 @@
-import {FlowRunStatus} from "./FlowRunStatus";
-import {FlowRun} from './FlowRun';
-import {Utils} from '../../Utils';
+import {FlowRunStatus} from "./FlowRunStatus.js";
+import {FlowRun} from './FlowRun.js';
+import {Utils} from '../../Utils.js';
 
 export class FlowRunSummary extends FlowRun {
 

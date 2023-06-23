@@ -1,7 +1,6 @@
-import {Endpoint} from './Endpoint';
-import {FlowRunStats} from '../Model/Flow/FlowRunStats';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {Utils} from '../Utils';
+import {Endpoint} from './Endpoint.js';
+import {FlowRunStats} from '../Model/Flow/FlowRunStats.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class FlowRunStatsEndpoint extends Endpoint {
     public async create(flowRunStats: FlowRunStats): Promise<FlowRunStats> {

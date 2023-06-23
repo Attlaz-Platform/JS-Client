@@ -1,8 +1,8 @@
-import {Client} from './Client';
-import {User} from './Model/User';
-import {OAuthClientToken} from './Http/OAuthClientToken';
-import {Utils} from './Utils';
-import {HttpClient} from './Http/HttpClient';
+import {Client} from './Client.js';
+import {User} from './Model/User.js';
+import {OAuthClientToken} from './Http/OAuthClientToken.js';
+import {Utils} from './Utils.js';
+import {HttpClient} from './Http/HttpClient.js';
 
 jest.setTimeout((60) * 1000);
 

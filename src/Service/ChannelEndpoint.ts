@@ -1,8 +1,8 @@
-import {Endpoint} from './Endpoint';
-import {Channel} from '../Model/Messaging/Channel/Channel';
-import {ChannelHistory} from '../Model/Messaging/ChannelHistory';
-import {ObjectResult} from '../Model/Result/ObjectResult';
-import {CollectionResult} from '../Model/Result/CollectionResult';
+import {Endpoint} from './Endpoint.js';
+import {Channel} from '../Model/Messaging/Channel/Channel.js';
+import {ChannelHistory} from '../Model/Messaging/ChannelHistory.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class ChannelEndpoint extends Endpoint {
 
@@ -30,7 +30,7 @@ export class ChannelEndpoint extends Endpoint {
     public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Channel>> {
 
         try {
-            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels',  Channel.parse);
+            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels', Channel.parse);
 
             return result;
         } catch (ex) {
@@ -62,7 +62,7 @@ export class ChannelEndpoint extends Endpoint {
     public async getMessages(channelId: string): Promise<CollectionResult<ChannelHistory>> {
 
         try {
-            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages',  ChannelHistory.parse);
+            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages', ChannelHistory.parse);
 
             return result;
             // const data: ChannelHistory[] = [];
@@ -97,7 +97,7 @@ export class ChannelEndpoint extends Endpoint {
     public async save(subscriberChannel: Channel): Promise<Channel> {
 
         try {
-            let url: string = '/channels/';
+            let url: string = '/channels/.js';
 
             const result: ObjectResult<Channel> = await this.requestObject(url, subscriberChannel, Channel.parse, 'POST');
 

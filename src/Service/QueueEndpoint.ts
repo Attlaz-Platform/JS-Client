@@ -1,6 +1,6 @@
-import {Endpoint} from './Endpoint';
-import {QueueStatus} from '../Model/Queue/QueueStatus';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {Endpoint} from './Endpoint.js';
+import {QueueStatus} from '../Model/Queue/QueueStatus.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class QueueEndpoint extends Endpoint {
 
