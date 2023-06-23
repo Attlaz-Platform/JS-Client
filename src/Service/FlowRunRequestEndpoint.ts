@@ -4,12 +4,13 @@ import {ObjectResult} from '../Model/Result/ObjectResult';
 import {Parameters} from '../Http/Data/Parameters';
 
 export class FlowRunRequestEndpoint extends Endpoint {
-    public async postFlowRunRequest(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
+    public async requestFlowRun(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
 
         let url: string = '/flows/' + flowId + '/flowrunrequests';
         if (wait) {
             url = url + "?wait=true";
         }
+
 
         try {
 

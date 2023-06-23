@@ -1,5 +1,5 @@
 import {Client} from '../Client';
-import {ProjectDeploy} from '../Model/Project/ProjectDeploy';
+import {CodeDeploy} from '../Model/Project/CodeDeploy';
 import {Helper} from '../../e2e/src/helper';
 
 jest.setTimeout((60) * 1000);
@@ -17,13 +17,13 @@ test('Test get project deploy', async () => {
 
     await client.authenticate();
 
-    const existingProjectDeploy: ProjectDeploy | null = await client.getProjectDeployEndpoint().getById('5')
+    const existingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('5')
     expect(existingProjectDeploy).not.toBeNull();
     expect(existingProjectDeploy?.id).toBe('5');
 
 
 
-    const nonExistingProjectDeploy: ProjectDeploy | null = await client.getProjectDeployEndpoint().getById('test')
+    const nonExistingProjectDeploy: CodeDeploy | null = await client.getCodeDeployEndpoint().getById('test')
     expect(nonExistingProjectDeploy).toBeNull();
 
 });

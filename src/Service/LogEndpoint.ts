@@ -9,6 +9,7 @@ import {LogStreamInformation} from '../Model/Log/LogStreamInformation';
 import {LogStream} from '../Model/Log/LogStream';
 import {CursorPagination} from '../Model/Pagination/CursorPagination';
 import {QueryString} from '../Http/Data/QueryString';
+import {LogItemFilter} from '../Model/Log/LogItemFilter';
 
 export class LogEndpoint extends Endpoint {
 
@@ -55,9 +56,28 @@ export class LogEndpoint extends Endpoint {
         return result;
     }
 
-    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null): Promise<CollectionResult<Log>> {
+    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: LogItemFilter | null): Promise<CollectionResult<Log>> {
 
         const queryString: QueryString = this.buildQuery(pagination);
+
+        if (filter !== null && filter !== undefined) {
+            if (filter.tags !== null && filter.tags.length > 0) {
+
+                const arrTags: string[] = [];
+
+                //TODO: map this
+                for (const tag of filter.tags) {
+                    arrTags.push(tag.key + ':' + tag.values.join('||'));
+                }
+                const strTags: string = arrTags.join('|||');
+
+                //filter_tags=color:gree OR color:blue
+                queryString.set('filter_tags', strTags);
+            }
+            if (filter.logLevels !== null && filter.logLevels.length > 0) {
+                queryString.set('filter_log_levels', filter.logLevels.join(','));
+            }
+        }
 
         let cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs' + queryString.build()
 

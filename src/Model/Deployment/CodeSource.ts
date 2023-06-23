@@ -8,6 +8,7 @@ export class CodeSource implements StateAware {
     public branch: string;
     public platformId: string;
     public buildStrategyId: string;
+    public runStrategyId: string;
     public description: string;
     public state: State = State.Active;
 
@@ -19,6 +20,7 @@ export class CodeSource implements StateAware {
         codeSource.branch = rawCodeSource.branch;
         codeSource.platformId = rawCodeSource.platform;
         codeSource.buildStrategyId = rawCodeSource.build_strategy;
+        codeSource.runStrategyId = rawCodeSource.run_strategy;
         codeSource.description = rawCodeSource.description;
         codeSource.state = State.fromString(rawCodeSource.state);
         return codeSource;

@@ -1,6 +1,6 @@
 import {TriggerType} from './Model/Trigger/TriggerType';
 import {ChannelType} from './Model/Messaging/Channel/ChannelType';
-import {ProjectDeployStatus} from './Model/Project/ProjectDeployStatus';
+import {CodeDeployStatus} from './Model/Project/CodeDeployStatus';
 import {State} from './Model/State';
 import {LogLevel} from './Model/Log/LogLevel';
 import {StorageType} from './Model/Storage/StorageType';
@@ -15,7 +15,7 @@ test('Test enum parsing', () => {
     expect(FlowRunStatus.fromString('complete')).toBe(FlowRunStatus.Complete);
     expect(ChannelType.fromString('slack')).toBe(ChannelType.Slack);
     expect(LogLevel.fromString('debug')).toBe(LogLevel.Debug);
-    expect(ProjectDeployStatus.fromString('complete')).toBe(ProjectDeployStatus.Complete);
+    expect(CodeDeployStatus.fromString('complete')).toBe(CodeDeployStatus.Complete);
     expect(StorageType.fromString('cache')).toBe(StorageType.Cache);
     expect(State.fromString('active')).toBe(State.Active);
     expect(WorkerInstanceState.fromString('started')).toBe(WorkerInstanceState.Started);

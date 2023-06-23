@@ -29,6 +29,8 @@ export {LogStatus} from './Model/Log/LogStatus';
 export {LogStream} from './Model/Log/LogStream';
 export {LogStreamId} from './Model/Log/LogStreamId';
 export {LogStreamInformation} from './Model/Log/LogStreamInformation';
+
+export {CursorPagination} from './Model/Pagination/CursorPagination';
 /** Messaging **/
 
 export {Channel} from './Model/Messaging/Channel/Channel';
@@ -47,9 +49,9 @@ export {ChannelHistory} from './Model/Messaging/ChannelHistory';
 
 export {PlatformLanguage} from './Model/Project/PlatformLanguage';
 export {Project} from './Model/Project/Project';
-export {ProjectDeploy} from './Model/Project/ProjectDeploy';
+export {CodeDeploy} from './Model/Project/CodeDeploy';
 export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit';
-export {ProjectDeployStatus} from './Model/Project/ProjectDeployStatus';
+export {CodeDeployStatus} from './Model/Project/CodeDeployStatus';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment';
 
 /** Queue **/
@@ -65,6 +67,10 @@ export {StorageInformation} from './Model/Storage/StorageInformation';
 export {StorageType} from './Model/Storage/StorageType';
 export {StorageItem} from './Model/Storage/StorageItem';
 export {StorageItemInformation} from './Model/Storage/StorageItemInformation';
+
+/** Queue **/
+export {SearchResult} from './Model/Search/SearchResult';
+
 /** Trigger **/
 export {ApiTrigger} from './Model/Trigger/ApiTrigger';
 export {ApiTriggerData} from './Model/Trigger/ApiTriggerData';
@@ -131,9 +137,10 @@ export {LogEndpoint} from './Service/LogEndpoint';
 export {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint';
 export {NotificationsEndpoint} from './Service/NotificationsEndpoint';
 export {PlatformEndpoint} from './Service/PlatformEndpoint';
-export {ProjectDeployEndpoint} from './Service/ProjectDeployEndpoint';
+export {CodeDeployEndpoint} from './Service/CodeDeployEndpoint';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint';
 export {QueueEndpoint} from './Service/QueueEndpoint';
+export {SearchEndpoint} from './Service/SearchEndpoint';
 export {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint';
 export {StorageEndpoint} from './Service/StorageEndpoint';
 export {SubscriberEndpoint} from './Service/SubscriberEndpoint';
