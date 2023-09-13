@@ -101,6 +101,9 @@ export abstract class Endpoint {
         /**
          * Parse data
          */
+        if (requestResponse === null || requestResponse === undefined) {
+            throw new Error('Unable to parse collection: response is empty');
+        }
         if (!requestResponse.hasOwnProperty('data') || requestResponse.data === undefined) {
             throw new Error('Unable to parse collection: data is not defined');
         }
@@ -126,6 +129,9 @@ export abstract class Endpoint {
              * Parse errors
              */
             // TODO: temporary check until we know the API is fully upgraded
+            if (requestResponse === null || requestResponse === undefined) {
+                throw new Error('Unable to parse object: response is empty');
+            }
             if ((requestResponse.hasOwnProperty('data') && !requestResponse.hasOwnProperty('id')) && requestResponse.data !== undefined) {
                 console.error('Response for object "' + action + '" seem to still use old "data" property', {requestResponse});
                 requestResponse = requestResponse.data;
