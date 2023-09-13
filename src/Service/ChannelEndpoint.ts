@@ -87,7 +87,7 @@ export class ChannelEndpoint extends Endpoint {
 
     public async save(subscriberChannel: Channel): Promise<Channel> {
         try {
-            const url: string = '/channels/.js';
+            const url: string = '/channels/';
 
             const result: ObjectResult<Channel> = await this.requestObject(url, subscriberChannel, Channel.parse, 'POST');
 
