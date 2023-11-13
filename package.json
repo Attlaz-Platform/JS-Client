@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "1.10.8",
+  "version": "1.10.9",
   "description": "Javascript Client to access Attlaz API",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",
-    "@types/node": "^18.16.18",
+    "@types/node": "^20.9.0",
     "dotenv": "^16.3.1",
     "jest": "^29.5.0",
     "rimraf": "^5.0.1",
