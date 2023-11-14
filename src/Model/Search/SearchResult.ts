@@ -5,13 +5,14 @@ import {Flow} from '../Flow/Flow.js';
 import {FlowRun} from '../Flow/FlowRun.js';
 import {Channel} from '../Messaging/Channel/Channel.js';
 import {Adapter} from '../Adapter/Adapter.js';
+import {AdapterConnection} from '../Adapter/AdapterConnection.js';
 
 export class SearchResult {
     public type: string;
     public label: string;
 
     public description: string;
-    public object: Workspace | Project | ProjectEnvironment | Flow | FlowRun | Channel | Adapter;
+    public object: Workspace | Project | ProjectEnvironment | Flow | FlowRun | Channel | Adapter | AdapterConnection;
 
     public static parse(rawResult: any): SearchResult {
         const searchResult: SearchResult = new SearchResult();
@@ -22,7 +23,7 @@ export class SearchResult {
         switch (rawResult.type) {
             case 'workspace':
                 searchResult.object = Workspace.parse(rawResult.object);
-
+                searchResult.label = searchResult.object.name;
                 break;
             case 'project':
                 searchResult.object = Project.parse(rawResult.object);
@@ -43,6 +44,10 @@ export class SearchResult {
             case 'adapter':
                 searchResult.object = Adapter.parse(rawResult.object);
                 searchResult.label = searchResult.object.id;
+                break;
+            case 'adapter-connection':
+                searchResult.object = AdapterConnection.parse(rawResult.object);
+                searchResult.label = searchResult.object.name;
                 break;
             default:
                 throw new Error('Unknown search result type "' + rawResult.type + '"');
