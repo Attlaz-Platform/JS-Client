@@ -1,4 +1,4 @@
-import {TriggerData} from './TriggerData';
+import {TriggerData} from './TriggerData.js';
 import {State} from '../State.js';
 import {TriggerType} from './TriggerType.js';
 import {ScheduleTriggerData} from './ScheduleTriggerData.js';
