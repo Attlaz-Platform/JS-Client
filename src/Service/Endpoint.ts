@@ -160,17 +160,24 @@ export abstract class Endpoint {
             throw new Error('Invalid data');
         }
         for (const rawDataEntry of rawData) {
-            data.push(this.parseObject<T>(rawDataEntry, parser));
+            const parsedObject: T | null = this.parseObject<T>(rawDataEntry, parser);
+            if (parsedObject !== null) {
+                data.push(parsedObject);
+            }
         }
 
         return data;
     }
 
-    private parseObject<T>(rawObject: any, parser: (input: any) => T): T {
+    private parseObject<T>(rawObject: any, parser: (input: any) => T): T | null {
         // TODO: is it interesting to keep this wrapper, or only in develop mode?
         const wrappedData: any = ObjectWrapper.wrap(rawObject);
-        const parsedData: T = parser(wrappedData);
-        return parsedData;
+        try {
+            return parser(wrappedData);
+        } catch (e: any) {
+            console.error('Unable to parse: ' + e.message);
+        }
+        return null;
     }
 
     protected buildQuery(pagination: CursorPagination | null): QueryString {
