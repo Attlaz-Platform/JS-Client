@@ -1,10 +1,11 @@
 import {DataValueCollection} from '../DataValueCollection.js';
 
 export class AdapterConnection {
-    id: number;
+    id: string;
     key: string;
     adapter: string;
     name: string;
+    projectId: string;
     configuration: DataValueCollection;
 
     public constructor() {
@@ -17,6 +18,7 @@ export class AdapterConnection {
         adapterConnection.key = rawAdapterConnection.key;
         adapterConnection.adapter = rawAdapterConnection.adapter;
         adapterConnection.name = rawAdapterConnection.name;
+        adapterConnection.projectId = rawAdapterConnection.project;
         adapterConnection.configuration = DataValueCollection.fromObject(rawAdapterConnection.configuration);
 
         return adapterConnection;
