@@ -20,7 +20,7 @@ export class WorkspaceEndpoint extends Endpoint {
 
     public async save(workspace: Workspace): Promise<Workspace> {
         try {
-            const url: string = '/workspace';
+            const url: string = '/workspaces';
             const result: ObjectResult<Workspace> = await this.requestObject(url, workspace, Workspace.parse, 'POST');
             const updatedWorkspace: Workspace | null = result.getData();
             if (updatedWorkspace === null) {
