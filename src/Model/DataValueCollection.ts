@@ -31,6 +31,15 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
         this._values.push(new DataValue(key, value));
     }
 
+    public has(key: string): boolean {
+        for (const tag of this._values) {
+            if (tag.key === key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public get(key: string): DataValueValue | null {
         for (const tag of this._values) {
             if (tag.key === key) {
