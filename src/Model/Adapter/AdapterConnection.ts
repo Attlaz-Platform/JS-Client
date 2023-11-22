@@ -1,15 +1,13 @@
-import {DataValueCollection} from '../DataValueCollection.js';
-
 export class AdapterConnection {
     id: string;
     key: string;
     adapter: string;
     name: string;
     projectId: string;
-    configuration: DataValueCollection;
+
+    // configuration: DataValueCollection;
 
     public constructor() {
-        this.configuration = new DataValueCollection();
     }
 
     public static parse(rawAdapterConnection: any): AdapterConnection {
@@ -19,7 +17,7 @@ export class AdapterConnection {
         adapterConnection.adapter = rawAdapterConnection.adapter;
         adapterConnection.name = rawAdapterConnection.name;
         adapterConnection.projectId = rawAdapterConnection.project;
-        adapterConnection.configuration = DataValueCollection.fromObject(rawAdapterConnection.configuration);
+        // adapterConnection.configuration = DataValueCollection.fromObject(rawAdapterConnection.configuration);
 
         return adapterConnection;
         // adapter.id = rawAdapter.id;
