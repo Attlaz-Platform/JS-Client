@@ -4,7 +4,8 @@ import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
 import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {DataValueCollection} from '../Model/DataValueCollection';
+import {DataValueCollection} from '../Model/DataValueCollection.js';
+import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue';
 
 export class AdapterEndpoint extends Endpoint {
     public async getAdapters(): Promise<CollectionResult<Adapter>> {
@@ -64,9 +65,9 @@ export class AdapterEndpoint extends Endpoint {
         }
     }
 
-    public async getConnectionByKey(connectionKey: string): Promise<AdapterConnection | null> {
+    public async getConnectionById(connectionId: string): Promise<AdapterConnection | null> {
         try {
-            const url: string = '/connections/' + connectionKey;
+            const url: string = '/connections/' + connectionId;
 
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, null, AdapterConnection.parse);
 
@@ -80,18 +81,31 @@ export class AdapterEndpoint extends Endpoint {
         }
     }
 
-    public async getConnectionConfiguration(connectionId: string): Promise<DataValueCollection | null> {
+    public async getConnectionByKey(projectId: string, connectionKey: string): Promise<AdapterConnection | null> {
+        try {
+            const url: string = '/projects/' + projectId + '/connections/' + connectionKey;
+
+            const result: ObjectResult<AdapterConnection> = await this.requestObject(url, null, AdapterConnection.parse);
+
+            return result.getData();
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load connection: ', error);
+            }
+
+            throw error;
+        }
+    }
+
+    public async getConnectionConfiguration(connectionId: string): Promise<CollectionResult<AdapterConnectionConfigurationValue>> {
         try {
             const url: string = '/connections/' + connectionId + '/configuration';
 
-            const parser = (raw: any): DataValueCollection => (DataValueCollection.fromObject(raw.configuration));
-            const result: ObjectResult<DataValueCollection> = await this.requestObject(url, null, parser);
+            const parser = (raw: any): AdapterConnectionConfigurationValue => ({
+                id: raw.id, config_id: raw.config, config_key: raw.config_key, value: raw.value,
+            });
 
-            const configuration: DataValueCollection | null = result.getData();
-            if (configuration === null) {
-                throw new Error('Adapter configuration loaded');
-            }
-            return configuration;
+            return this.requestCollection(url, parser);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load connection: ', error);
