@@ -14,7 +14,7 @@ import {FlowEndpoint} from './Service/FlowEndpoint.js';
 import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
 import {StorageEndpoint} from './Service/StorageEndpoint.js';
 import {QueueEndpoint} from './Service/QueueEndpoint.js';
-import {NotificationsEndpoint} from './Service/NotificationsEndpoint.js';
+import {InboxEndpoint} from './Service/InboxEndpoint';
 import {Endpoint} from './Service/Endpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint.js';
@@ -45,7 +45,7 @@ export class Client {
         QueueEndpoint,
         ChannelEndpoint,
         ConfigEndpoint,
-        NotificationsEndpoint,
+        InboxEndpoint,
         SubscriberEndpoint,
         LogEndpoint,
         FlowEndpoint,
@@ -166,8 +166,8 @@ export class Client {
         return this.getEndpoint('config', this.Store.ConfigEndpoint);
     }
 
-    public getNotificationsEndpoint(): NotificationsEndpoint {
-        return this.getEndpoint('notification', this.Store.NotificationsEndpoint);
+    public getInboxEndpoint(): InboxEndpoint {
+        return this.getEndpoint('inbox', this.Store.InboxEndpoint);
     }
 
     public getPlatformEndpoint(): PlatformEndpoint {
