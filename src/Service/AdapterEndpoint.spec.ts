@@ -4,7 +4,6 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Adapter} from '../Model/Adapter/Adapter.js';
 import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
 import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue';
-import {DataValueCollection} from '../Model/DataValueCollection';
 
 jest.setTimeout((60) * 1000);
 
@@ -31,6 +30,11 @@ test('Test get connection', async () => {
     await client.authenticate();
 
     const adapterCollectionResult: AdapterConnection | null = await client.getAdapterEndpoint().getConnectionByKey('1dCxPOug1npDYEPY7W719a9CszW', 'magento_ssh');
+
+    if (adapterCollectionResult !== null) {
+        console.log(adapterCollectionResult.status);
+    }
+
 });
 test('Test get connection configuration', async () => {
     // expect.assertions(3);
@@ -52,7 +56,8 @@ test('Test save connection configuration', async () => {
 
     await client.authenticate();
 
-    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> | null = await client.getAdapterEndpoint().getConnectionConfiguration('2YWwEb5bZ0ajWfhiP1oyqMVXSif');
+    const connectionId: string = '2Yad2eW1CbgY2ZuoeYsgnZfM0ka';
+    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> | null = await client.getAdapterEndpoint().getConnectionConfiguration(connectionId);
 
 
     expect(adapterCollectionResult).not.toBeNull();
@@ -61,18 +66,38 @@ test('Test save connection configuration', async () => {
     if (adapterCollectionResult !== null) {
         const randomUserName: string = 'Username ' + Math.random();
 
-        const config1: DataValueCollection = AdapterConnectionConfigurationValue.toDataValueCollection(adapterCollectionResult.getData());
-        expect(config1.get('username')).not.toEqual(randomUserName);
-        config1.set('username', randomUserName);
+        const config1: AdapterConnectionConfigurationValue | undefined = adapterCollectionResult.getData().find((value: AdapterConnectionConfigurationValue) => {
+            return value.configurationId === '1';
+        });
+        if (config1 === undefined) {
+            throw new Error('Username not found');
+        }
 
+        expect(config1.value).not.toEqual(randomUserName);
 
-        await client.getAdapterEndpoint().saveConnectionConfiguration('2YWwEb5bZ0ajWfhiP1oyqMVXSif', config1);
+        // config1.set('username', randomUserName);
 
-        const adapterCollectionResult2: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration('2YWwEb5bZ0ajWfhiP1oyqMVXSif');
-        const config2: DataValueCollection = AdapterConnectionConfigurationValue.toDataValueCollection(adapterCollectionResult2.getData());
-        expect(config2).not.toBeNull();
+        const newConfiguration: AdapterConnectionConfigurationValue = new AdapterConnectionConfigurationValue();
+        newConfiguration.configurationId = '1';
+        newConfiguration.adapterConnectionId = connectionId;
+        newConfiguration.value = randomUserName;
 
-        expect(config2?.get('username')).toEqual(randomUserName);
+        await client.getAdapterEndpoint().saveConnectionConfiguration(connectionId, [newConfiguration]);
+
+        const adapterCollectionResult2: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration(connectionId);
+
+        const config12: AdapterConnectionConfigurationValue | undefined = adapterCollectionResult2.getData().find((value: AdapterConnectionConfigurationValue) => {
+            return value.configurationId === '1';
+        });
+        if (config12 === undefined) {
+            throw new Error('Username not found');
+        }
+
+        expect(config12.value).toEqual(randomUserName);
+        // const config2: DataValueCollection = AdapterConnectionConfigurationValue.toDataValueCollection(adapterCollectionResult2.getData());
+        // expect(config2).not.toBeNull();
+
+        // expect(config2?.get('username')).toEqual(randomUserName);
     }
 
 });
