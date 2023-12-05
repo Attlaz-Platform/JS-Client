@@ -4,8 +4,7 @@ import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
 import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {DataValueCollection} from '../Model/DataValueCollection.js';
-import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue';
+import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue.js';
 
 export class AdapterEndpoint extends Endpoint {
     public async getAdapters(): Promise<CollectionResult<Adapter>> {
@@ -102,7 +101,10 @@ export class AdapterEndpoint extends Endpoint {
             const url: string = '/connections/' + connectionId + '/configuration';
 
             const parser = (raw: any): AdapterConnectionConfigurationValue => ({
-                id: raw.id, config_id: raw.config, config_key: raw.config_key, value: raw.value,
+                id: raw.id,
+                adapterConnectionId: raw.adapter_connection,
+                configurationId: raw.configuration,
+                value: raw.value,
             });
 
             return this.requestCollection(url, parser);
@@ -132,7 +134,7 @@ export class AdapterEndpoint extends Endpoint {
         }
     }
 
-    public async saveConnectionConfiguration(connectionId: string, configuration: DataValueCollection): Promise<boolean> {
+    public async saveConnectionConfiguration(connectionId: string, configuration: AdapterConnectionConfigurationValue[]): Promise<boolean> {
         try {
             const url: string = '/connections/' + connectionId + '/configuration';
 

@@ -4,8 +4,7 @@ export class AdapterConnection {
     adapter: string;
     name: string;
     projectId: string;
-
-    // configuration: DataValueCollection;
+    status: string;
 
     public constructor() {
     }
@@ -17,15 +16,7 @@ export class AdapterConnection {
         adapterConnection.adapter = rawAdapterConnection.adapter;
         adapterConnection.name = rawAdapterConnection.name;
         adapterConnection.projectId = rawAdapterConnection.project;
-        // adapterConnection.configuration = DataValueCollection.fromObject(rawAdapterConnection.configuration);
-
+        adapterConnection.status = rawAdapterConnection.status;
         return adapterConnection;
-        // adapter.id = rawAdapter.id;
-        // adapter.name = rawAdapter.name;
-        // adapter.description = rawAdapter.description;
-        // adapter.vendor = rawAdapter.vendor;
-        // adapter.image = rawAdapter.image;
-        // adapter.type = rawAdapter.type;
-        // return adapter;
     }
 }
