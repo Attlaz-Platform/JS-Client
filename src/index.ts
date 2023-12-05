@@ -109,7 +109,7 @@ export {WorkspaceMemberRole} from './Model/Workspace/WorkspaceMemberRole.js';
 export {Config} from './Model/Config.js';
 export {DataValue, DataValueValue} from './Model/DataValue.js';
 
-export {Notification} from './Model/Notification.js';
+export {InboxMessage} from './Model/Inbox/InboxMessage.js';
 
 export {State} from './Model/State.js';
 
@@ -135,7 +135,7 @@ export {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 export {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
 export {LogEndpoint} from './Service/LogEndpoint.js';
 export {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
-export {NotificationsEndpoint} from './Service/NotificationsEndpoint.js';
+export {InboxEndpoint} from './Service/InboxEndpoint';
 export {PlatformEndpoint} from './Service/PlatformEndpoint.js';
 export {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
