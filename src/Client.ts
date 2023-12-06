@@ -14,7 +14,7 @@ import {FlowEndpoint} from './Service/FlowEndpoint.js';
 import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
 import {StorageEndpoint} from './Service/StorageEndpoint.js';
 import {QueueEndpoint} from './Service/QueueEndpoint.js';
-import {InboxEndpoint} from './Service/InboxEndpoint';
+import {InboxEndpoint} from './Service/InboxEndpoint.js';
 import {Endpoint} from './Service/Endpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint.js';

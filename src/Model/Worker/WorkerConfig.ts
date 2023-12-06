@@ -9,6 +9,7 @@ export class WorkerConfig {
     public static KEY_CPU_LIMIT: string = 'cpu_limit';
 
     public static KEY_RUNNER_IMAGE: string = 'runner_image';
+    public static KEY_API_ENDPOINT_WORKER: string = 'api_endpoint_worker';
 
     public static KEY_API_ENDPOINT: string = 'api_endpoint';
     public static KEY_API_CLIENT_ID: string = 'api_client_id';
