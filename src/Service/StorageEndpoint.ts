@@ -88,7 +88,7 @@ export class StorageEndpoint extends Endpoint {
         const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
 
         try {
-            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, {storage_item: storageItem}, StorageItem.parse, 'POST');
+            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, storageItem, StorageItem.parse, 'POST');
 
             const savedItem: StorageItem | null = result.getData();
             if (savedItem === null) {

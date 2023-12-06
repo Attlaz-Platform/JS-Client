@@ -21,7 +21,7 @@ test('Test Storage Endpoint', async () => {
     storageItem.key = 'Some random key';
     storageItem.value = 'Some random value';
 
-    const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('62', StorageType.Cache, 'default', storageItem);
+    const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem);
 
     expect(savedStorageItem.key).toEqual(storageItem.key);
     expect(savedStorageItem.value).toEqual(storageItem.value);
