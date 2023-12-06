@@ -3,6 +3,7 @@ import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment.js';
 import {HttpClient} from '../Http/HttpClient.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {ProjectEnvironmentConfiguration} from '../Model/Project/ProjectEnvironmentConfiguration.js';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
@@ -45,6 +46,30 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save project environment', error, projectEnvironment);
+            }
+
+            throw error;
+        }
+    }
+
+    public async getConfigByKey(projectEnvironmentId: string, configKey: string): Promise<ProjectEnvironmentConfiguration | null> {
+        try {
+            const parser = (raw: any): ProjectEnvironmentConfiguration => {
+                const value: ProjectEnvironmentConfiguration = new ProjectEnvironmentConfiguration();
+                value.id = raw.id;
+                value.key = raw.key;
+                value.environment = raw.environment;
+                value.value = raw.value;
+                return value;
+            }
+            const rawProjectEnvironment: ObjectResult<ProjectEnvironmentConfiguration> = await this.requestObject('/projectenvironments/' + projectEnvironmentId + '/configurations/' + configKey, null, parser);
+            return rawProjectEnvironment.getData();
+        } catch (error: any) {
+            if (error.code === HttpClient.HTTP_NOTFOUND) {
+                return null;
+            }
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load project environment configuration', error);
             }
 
             throw error;

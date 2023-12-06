@@ -53,6 +53,7 @@ export {CodeDeploy} from './Model/Project/CodeDeploy.js';
 export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit.js';
 export {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment.js';
+export {ProjectEnvironmentConfiguration} from './Model/Project/ProjectEnvironmentConfiguration.js';
 
 /** Queue * */
 export {QueueStatus} from './Model/Queue/QueueStatus.js';
@@ -135,7 +136,7 @@ export {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 export {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
 export {LogEndpoint} from './Service/LogEndpoint.js';
 export {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
-export {InboxEndpoint} from './Service/InboxEndpoint';
+export {InboxEndpoint} from './Service/InboxEndpoint.js';
 export {PlatformEndpoint} from './Service/PlatformEndpoint.js';
 export {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';

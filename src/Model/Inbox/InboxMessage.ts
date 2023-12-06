@@ -1,4 +1,4 @@
-import {Utils} from '../../Utils';
+import {Utils} from '../../Utils.js';
 
 export class InboxMessage {
     public id: string;

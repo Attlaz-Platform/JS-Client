@@ -1,7 +1,7 @@
 import {Endpoint} from './Endpoint.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {InboxMessage} from '../Model/Inbox/InboxMessage';
+import {InboxMessage} from '../Model/Inbox/InboxMessage.js';
 
 export class InboxEndpoint extends Endpoint {
     public async getAll(unacknowledgedOnly: boolean = false): Promise<CollectionResult<InboxMessage>> {
