@@ -102,13 +102,13 @@ export abstract class Endpoint {
          * Parse data
          */
         if (requestResponse === null || requestResponse === undefined) {
-            throw new Error('Unable to parse collection: response is empty');
+            throw new Error('Unable to parse collection: response is empty for action `[' + method + '] ' + action + '`');
         }
         if (!requestResponse.hasOwnProperty('data') || requestResponse.data === undefined) {
-            throw new Error('Unable to parse collection: data is not defined');
+            throw new Error('Unable to parse collection: data is not defined in response from action `[' + method + '] ' + action + '`');
         }
         if (!requestResponse.hasOwnProperty('has_more') || requestResponse.has_more === undefined) {
-            throw new Error('Unable to parse collection: hasMore is not defined');
+            throw new Error('Unable to parse collection: hasMore is not defined in response from action `[' + method + '] ' + action + '`');
         }
 
         const hasMore: boolean = Utils.isTrue(requestResponse.has_more);
@@ -130,7 +130,7 @@ export abstract class Endpoint {
              */
             // TODO: temporary check until we know the API is fully upgraded
             if (requestResponse === null || requestResponse === undefined) {
-                throw new Error('Unable to parse object: response is empty');
+                throw new Error('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`');
             }
             if ((requestResponse.hasOwnProperty('data') && !requestResponse.hasOwnProperty('id')) && requestResponse.data !== undefined) {
                 console.error('Response for object "' + action + '" seem to still use old "data" property', {requestResponse});
