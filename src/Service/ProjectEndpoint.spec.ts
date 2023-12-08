@@ -15,7 +15,8 @@ test('Test get project collection', async () => {
     const expectedInactiveProjects = 10;
     expect.assertions(1 + (expectedActiveProjects * 2) + 1 + ((expectedActiveProjects + expectedInactiveProjects) * 2));
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();

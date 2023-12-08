@@ -12,7 +12,8 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test workspaces', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -21,4 +22,22 @@ test('Test workspaces', async () => {
     expect(existingProjectDeploy).not.toBeNull();
     expect(existingProjectDeploy.hasMore).toBeFalsy();
     expect(existingProjectDeploy.getData()).toHaveLength(2);
+});
+test('Test workspace by id', async () => {
+    // expect.assertions(3);
+
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate();
+
+    const workspace: Workspace | null = await client.getWorkspaceEndpoint().getById('1FOkgYfRVyTuOWYfGniNrNOFqTZ');
+    if (workspace === null) {
+        throw new Error('workspace is null');
+    }
+    // console.log('User', user);
+
+    expect(workspace.id).toBe('1FOkgYfRVyTuOWYfGniNrNOFqTZ');
+    expect(workspace.key).toBe('attlaz');
 });

@@ -12,7 +12,8 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test get user', async () => {
     expect.assertions(1);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -24,19 +25,21 @@ test('Test get user', async () => {
     }
     expect(user.email).toBe('demo@attlaz.com');
 });
+
 test('Test get project', async () => {
     expect.assertions(1);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const project: Project | null = await client.getProjectEndpoint().getById('8B5C14EBB');
+    const project: Project | null = await client.getProjectEndpoint().getById('0x8gdXYki3pWNsWfREzlEQYv0w0');
     if (project === null) {
         throw new Error('Project is null');
     }
     // console.log('User', user);
 
-    expect(project.id).toBe('8B5C14EBB');
+    expect(project.id).toBe('0x8gdXYki3pWNsWfREzlEQYv0w0');
 });

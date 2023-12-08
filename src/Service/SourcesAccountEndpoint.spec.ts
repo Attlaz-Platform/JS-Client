@@ -14,12 +14,13 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test Get Repositories', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const codeSourceAccountId: string = '555abec5-9921-4d4c-939d-0784f9bfa88d.js';
+    const codeSourceAccountId: string = '1RZpJSaBaO6lALC9lmYUk7h8fVr';
     const repositoryKey: string = Utils.base64decode('YXR0bGF6L2F0dGxhei1wcm9qZWN0LXN5c3RlbQ==');
     const branchesResult: CollectionResult<SourcesAccountRepositoryBranch> = await client.getSourcesAccountEndpoint().getRepositoryBranches(codeSourceAccountId, repositoryKey);
 
@@ -29,7 +30,8 @@ test('Test Get Repositories', async () => {
 test('Test Save code source', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();

@@ -12,7 +12,8 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test save trigger', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();

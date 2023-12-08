@@ -18,6 +18,22 @@ export class WorkspaceEndpoint extends Endpoint {
         }
     }
 
+    public async getById(workspaceId: string): Promise<Workspace | null> {
+        try {
+            const url: string = '/workspaces/' + workspaceId + '';
+
+            const result: ObjectResult<Workspace> = await this.requestObject(url, null, Workspace.parse);
+
+            return result.getData();
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load workspace by id: ', error);
+            }
+
+            throw error;
+        }
+    }
+
     public async save(workspace: Workspace): Promise<Workspace> {
         try {
             const url: string = '/workspaces';
