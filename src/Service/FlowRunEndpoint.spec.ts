@@ -12,28 +12,30 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test get flow run', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const flowRun: FlowRun | null = await client.getFlowRunEndpoint().getFlowRunSummary('ymdyvYbkz');
+    const flowRun: FlowRun | null = await client.getFlowRunEndpoint().getFlowRunSummary('2ZEmbPqheMUMcMfBWeMRtXhkgJk');
 
     if (flowRun === null) {
         throw new Error('Flow run not found');
     }
-    expect(flowRun.id).toEqual('ymdyvYbkz');
+    expect(flowRun.id).toEqual('2ZEmbPqheMUMcMfBWeMRtXhkgJk');
 });
 
 test('Run Flow', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const flowRunResponse: FlowRunResponse = await client.getFlowRunRequestEndpoint().requestFlowRun('BEXG88ATH', {message: 'test'}, true);
+    const flowRunResponse: FlowRunResponse = await client.getFlowRunRequestEndpoint().requestFlowRun('0vTAI5XDy5pM5W9ExxnsvNDBKiz', {message: 'test'}, true);
 
     expect(flowRunResponse.flowRunRequestId).not.toBeUndefined();
 });

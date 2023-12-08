@@ -4,8 +4,9 @@ import {Helper} from './helper.js';
 test('Test authentication', async () => {
 
     expect.assertions(1);
-    const client: Client = new Client(Helper.getEnvValue('apiEndpoint'), Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
-    // client.getHttpClient().enableDebug();
+    const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+    client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
+    client.getHttpClient().enableDebug();
     const authenticated: boolean = await client.authenticate();
 
     const user: User | null = await client.getUserEndpoint().getUser();
@@ -15,7 +16,8 @@ test('Test authentication', async () => {
 test('Handle request with invalid or expired token', async () => {
 
     expect.assertions(1);
-    const client: Client = new Client(Helper.getEnvValue('apiEndpoint'), Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
+    const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+    client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
     client.getHttpClient().enableDebug();
 
     const token: OAuthClientToken = new OAuthClientToken("txVbCqJRHqqI03asKHGzUrsvkwI6KcmIDFbGKDVJ", 'Bearer', "hPpMiU9yxOMD0DreRTrMz2UXa2Vk6bUYc0oIXyMe", "all")
@@ -31,7 +33,10 @@ test('Handle request with invalid or expired token', async () => {
 test('Handle refresh token', async () => {
 
     expect.assertions(1);
-    const client: Client = new Client(Helper.getEnvValue('apiEndpoint'), Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
+
+
+    const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+    client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
     client.getHttpClient().enableDebug();
 
     const token: OAuthClientToken = new OAuthClientToken("txVbCqJRHqqI03asKHGzUrsvkwI6KcmIDFbGKDVJ", 'Bearer', "hPpMiU9yxOMD0DreRTrMz2UXa2Vk6bUYc0oIXyMe", "all")
@@ -47,8 +52,10 @@ test('Handle refresh token', async () => {
 test('Handle multiple refresh tokens at the same time', async () => {
 
     expect.assertions(10);
-    const client: Client = new Client(Helper.getEnvValue('apiEndpoint'), Helper.getEnvValue('passwordFlowClientId'), Helper.getEnvValue('passwordFlowClientSecret'));
+    const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+    client.setClientCredentials(Helper.getEnvValue('passwordFlowClientId'), Helper.getEnvValue('passwordFlowClientSecret'));
     client.getHttpClient().enableDebug();
+
 
     await client.authenticate(Helper.getEnvValue('passwordFlowEmail'), Helper.getEnvValue('passwordFlowPassword'));
     /**

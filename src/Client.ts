@@ -35,7 +35,7 @@ import {SearchEndpoint} from './Service/SearchEndpoint.js';
 
 export class Client {
     private endpoints: Map<string, any>;
-    private readonly httpClient: OAuthClient;
+    private httpClient: OAuthClient;
     private Store: any = {
         WorkerEndpoint,
         AdapterEndpoint,
@@ -67,22 +67,37 @@ export class Client {
         SearchEndpoint,
     };
 
-    constructor(private readonly apiEndpoint: string, private readonly clientId: string, private readonly clientSecret: string) {
-        const options: OAuthClientOptions = new OAuthClientOptions(apiEndpoint, clientId, clientSecret, this.getHeaders());
+    private apiEndpoint: string = 'https://api.attlaz.com';
+
+    private parseConfig(config: Record<string, unknown>): { apiEndpoint: string | undefined } {
+        return config as any;
+    }
+
+    constructor(token: string | null = null, config: Record<string, unknown> = {}) {
+
+        const parsedConfig = this.parseConfig(config);
+
+        if (parsedConfig.apiEndpoint !== undefined) {
+            this.apiEndpoint = parsedConfig.apiEndpoint;
+        }
+
+
+        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, null, null, this.getHeaders());
         this.httpClient = new OAuthClient(options);
+        if (token !== null) {
+            const clientToken: OAuthClientToken = new OAuthClientToken(token, 'Bearer', '', '');
+            this.httpClient.setToken(clientToken);
+        }
+
 
         this.endpoints = new Map<string, any>();
-
-        // this.test = new Map<string, any>();
-        //
-        // this.test.set('WorkerEndpoint', WorkerEndpoint);
-
-        // this.socketService = socketIo(this.apiEndpoint);
-        //
-        // this.socketService.on('message', (data: any) => {
-        //     console.log('Incoming:', data);
-        // });
     }
+
+    public setClientCredentials(clientId: string, clientSecret: string = ''): void {
+        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret, this.getHeaders());
+        this.httpClient = new OAuthClient(options);
+    }
+
 
     private getHeaders(): Headers {
         const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
@@ -103,11 +118,11 @@ export class Client {
 
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string, password: string): Promise<boolean>;
-
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         if (username === null || password === null) {
             return this.httpClient.authenticate();
         }
+        // TODO: this is only possible when clientId and clientSecret are defined
         return this.httpClient.authenticate(username, password);
     }
 
@@ -119,10 +134,7 @@ export class Client {
         return this.httpClient.getToken();
     }
 
-    // public getAccessToken(): string {
-    //     return this.httpClient.getAccessToken();
-    // }
-    //
+
     public setToken(token: OAuthClientToken): void {
         this.httpClient.setToken(token);
     }

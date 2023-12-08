@@ -19,7 +19,8 @@ const tokenExpirationInSeconds: number = 5;
 test('Test client credentials flow', async () => {
     expect.assertions(2);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -61,7 +62,8 @@ test('Test client credentials flow', async () => {
 test('Test password authentication - valid', async () => {
     expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate(passwordFlowUsername, passwordFlowPassword);
@@ -95,7 +97,8 @@ test('Test password authentication - valid', async () => {
 test('Test password authentication - invalid', async () => {
     expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await expect(client.authenticate(passwordFlowUsername, 'wrongpassword'))
@@ -113,7 +116,8 @@ test('Test password authentication - invalid', async () => {
 test('Test set access token + JSON encode', async () => {
     expect.assertions(4);
 
-    const client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(passwordFlowClientId, passwordFlowClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate(passwordFlowUsername, passwordFlowPassword);
@@ -138,7 +142,8 @@ test('Test set access token + JSON encode', async () => {
     }
     expect(user.email).toBe(passwordFlowUsername);
 
-    const client2: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    const client2: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client2.setClientCredentials(passwordFlowClientId, passwordFlowClientSecret);
     client2.getHttpClient().enableDebug();
 
     console.log(decodedToken);
@@ -173,7 +178,8 @@ test('Test set access token + JSON encode', async () => {
 test('Test set expired tokens', async () => {
     expect.assertions(4);
 
-    const client: Client = new Client(apiEndpoint, passwordFlowClientId, passwordFlowClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     const encodedToken: string = Utils.base64decode('eyJhY2Nlc3NfdG9rZW4iOiJvZVZpYXVhdk9wTkNpekNLRmxXUGpuaEI5aHNSdFViMFFTTVJlQWFuIiwidG9rZW5fdHlwZSI6ImJlYXJlciIsInJlZnJlc2hfdG9rZW4iOiJ4N0pINTVaR3U5OGFPN3VQaGlmS2RZME8yc3BYS0IzN296bElDUGtJIiwiZXhwaXJlcyI6IjIwMjEtMDMtMTlUMjE6MTQ6MTkuNzkyWiIsInNjb3BlIjoiYWxsIn0=');
@@ -223,4 +229,22 @@ test('Test set expired tokens', async () => {
     // await expect(client.authenticate('wrongusername', 'wrongpassword'))
     //     .rejects
     //     .toHaveProperty('code', 'EAUTH');
+});
+test('Test token authentication', async () => {
+    expect.assertions(1);
+
+    const client: Client = new Client('150010bda69ea9e0906230e6bba439d7b61d203756b51e5c903bff989a44de21', {apiEndpoint: apiEndpoint});
+    client.getHttpClient().enableDebug();
+
+    // await client.authenticate();
+
+    const user: User | null = await client.getUserEndpoint().getUser();
+    if (user === null) {
+        throw new Error('User is null');
+    }
+    // console.log('User', user);
+
+    expect(user.email).toBe('info@attlaz.com');
+
+
 });

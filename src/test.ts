@@ -72,7 +72,8 @@ function test() {
     const endpoint: string = 'http://localhost:5728/';
     // endpoint = 'https://galantis.echron.com/';
 
-    const client: Client = new Client(endpoint, '6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
+    const client: Client = new Client('', {apiEndpoint: endpoint});
+    client.setClientCredentials('6as&01LW!iVe!wO7Guv%5#MlfZ2SJgSG', '#zqtn*4IKcx7iNM4bNvc$XU@H27prch8');
     client.getHttpClient().enableDebug();
     // client.getUserEndpoint().getUser().then((result: User) => {
     //     console.log(result);
@@ -161,9 +162,10 @@ testExpiredToken().then(() => {
 
 async function testExpiredToken() {
     try {
-        const attlazClient: Client = new Client('https://api.attlaz.com', 'echron_client_id', 'f5jM!OBzcWzS*EpE');
+        const attlazClient: Client = new Client('', {apiEndpoint: 'https://api.attlaz.com'});
+        attlazClient.setClientCredentials('echron_client_id', 'f5jM!OBzcWzS*EpE');
         await attlazClient.authenticate();
-        console.log(await attlazClient.getHttpClient().getToken());
+        console.log(attlazClient.getHttpClient().getToken());
 
         // client.setToken('c2bb0b9c8e870486a2adae9f350193fc9414318d');
         //

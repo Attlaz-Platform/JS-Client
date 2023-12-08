@@ -18,8 +18,8 @@ export class OAuthClient {
 
     constructor(private readonly options: OAuthClientOptions) {
         this.oauthClient = new ClientOAuth2({
-            clientId: options.clientId,
-            clientSecret: options.clientSecret,
+            clientId: options.clientId === null ? undefined : options.clientId,
+            clientSecret: options.clientSecret === null ? undefined : options.clientSecret,
             accessTokenUri: this.getUri(options.accessTokenUri),
             authorizationUri: this.getUri(options.authorizationUri),
             redirectUri: options.redirectUri,
@@ -40,7 +40,10 @@ export class OAuthClient {
                 accessToken = await this.oauthClient.owner.getToken(username, password);
             } else {
                 // Client credentials flow
+
                 accessToken = await this.oauthClient.credentials.getToken();
+
+
             }
             this.oauthToken = accessToken;
             this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
@@ -112,12 +115,17 @@ export class OAuthClient {
                 //     console.info('[Client response] ', {body: response.body});
                 // }
                 return response.body;
-            } catch (error) {
-                const clientError: Error = ClientError.fromError(error);
-                if (this.debug) {
-                    console.error('[Client] Error:', {error, clientError});
+            } catch (error: any) {
+                if (!(error instanceof ClientError)) {
+
+                    const clientError: Error = ClientError.fromError(error);
+                    if (this.debug) {
+                        console.error('[Client] Error:', {error, clientError});
+                    }
+                    throw clientError;
                 }
-                throw clientError;
+                throw error;
+
             }
         }
     }

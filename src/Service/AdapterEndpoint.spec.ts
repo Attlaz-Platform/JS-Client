@@ -14,44 +14,57 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test get connections', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
     const adapterCollectionResult: CollectionResult<Adapter> = await client.getAdapterEndpoint().getAdapters();
+
+    expect(adapterCollectionResult.getData().length).toBeGreaterThan(0);
 });
 test('Test get connection', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
     const adapterCollectionResult: AdapterConnection | null = await client.getAdapterEndpoint().getConnectionByKey('1dCxPOug1npDYEPY7W719a9CszW', 'magento_ssh');
 
-    if (adapterCollectionResult !== null) {
-        console.log(adapterCollectionResult.status);
+    if (adapterCollectionResult === null) {
+        throw new Error('Connection not found');
     }
-
+    expect(adapterCollectionResult.key).toEqual('magento_ssh');
+    expect(adapterCollectionResult.id).toEqual('2Yad2OyWcSrJg3TngkaK8pjHOzi');
 });
 test('Test get connection configuration', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
 
-    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration('2YWwEb5bZ0ajWfhiP1oyqMVXSif');
+    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration('2Yad2eW1CbgY2ZuoeYsgnZfM0ka');
 
-    console.log(adapterCollectionResult);
+    const configurationValues: AdapterConnectionConfigurationValue[] = adapterCollectionResult.getData();
+
+    expect(configurationValues.length).toBeGreaterThan(0);
+
+    for (const configurationValue of configurationValues) {
+        expect(configurationValue.adapterConnectionId).toEqual('2Yad2eW1CbgY2ZuoeYsgnZfM0ka')
+    }
 });
 test('Test save connection configuration', async () => {
     // expect.assertions(3);
 
-    const client: Client = new Client(apiEndpoint, clientCredentialClientId, clientCredentialClientSecret);
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
     await client.authenticate();
@@ -62,6 +75,7 @@ test('Test save connection configuration', async () => {
 
     expect(adapterCollectionResult).not.toBeNull();
 
+    expect(adapterCollectionResult.getData().length).toBeGreaterThan(0);
 
     if (adapterCollectionResult !== null) {
         const randomUserName: string = 'Username ' + Math.random();

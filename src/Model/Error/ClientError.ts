@@ -1,18 +1,21 @@
 import {HttpClient} from '../../Http/HttpClient.js';
 
 export class ClientError implements Error {
-    message: string;
-    name: string;
     code: number | null;
-    stack: string;
-    body: string | null = null;
+    name: string;
+    message: string;
+    // description: string | null;
+    // stack: string;
+    // body: string | null = null;
 
-    constructor(message: string, code: number | null = null) {
-        this.message = message;
+    constructor(name: string, code: number | null = null) {
+        this.name = name;
+        this.message = name;
         this.code = code;
     }
 
     public static fromError(error: Error | any): ClientError {
+        console.log(error);
         if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
             error = error.body.error;
         }
@@ -41,15 +44,15 @@ export class ClientError implements Error {
             if (error.code === 'EAUTH') {
                 clientError.code = HttpClient.HTTP_UNAUTHORIZED;
             }
-            // if (error.code === 'ESTATUS' && error.message === 'HTTP status 503') {
-            //     clientError.code = HttpClient.HTTP_UNAVAILABLE;
+                // if (error.code === 'ESTATUS' && error.message === 'HTTP status 503') {
+                //     clientError.code = HttpClient.HTTP_UNAVAILABLE;
             // }
             else {
                 clientError.code = error.code;
             }
         }
         clientError.name = error.name;
-        clientError.stack = error.stack;
+        // clientError.stack = error.stack;
 
         return clientError;
     }

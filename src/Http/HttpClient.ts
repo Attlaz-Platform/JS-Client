@@ -57,12 +57,14 @@ export class HttpClient {
 
         const rawData: string = await response.text();
         if (contentType.type === 'application/json') {
-            let jsonData: any | null = null;
+            let jsonData: object | null = null;
             if (rawData !== '') {
                 try {
                     jsonData = JSON.parse(rawData);
                 } catch (e) {
-                    console.error('Unable to parse response data to JSON', {statusText: httpResponse.statusText, error: e});
+                    console.error('Unable to parse response data to JSON', {
+                        statusText: httpResponse.statusText, error: e,
+                    });
                 }
             }
 
@@ -71,9 +73,10 @@ export class HttpClient {
             httpResponse.body = rawData;
         }
 
+
         const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
         if (error !== null && error !== undefined) {
-            error.body = httpResponse.body;
+            error.message = httpResponse.body.error.message;
             throw error;
         }
 
@@ -94,7 +97,8 @@ export class HttpClient {
         const d: string[] = input.split(';');
         if (d.length === 1) {
             return {type: d[0], options: null};
-        } if (d.length === 2) {
+        }
+        if (d.length === 2) {
             return {type: d[0], options: d[1].trim()};
         }
         console.error('Unable to parse content type "' + input + '"');
