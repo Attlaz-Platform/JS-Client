@@ -8,7 +8,6 @@ import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
-import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 
 export abstract class Endpoint {
@@ -87,8 +86,13 @@ export abstract class Endpoint {
         return formattedKey;
     }
 
-    public async requestCollection<T>(action: string, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
+    public async requestCollection<T>(action: string | QueryString, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
         parameters = this.formatParameters(parameters);
+
+        if (action instanceof QueryString) {
+            action = action.build();
+        }
+
         const requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
 
         const result: CollectionResult<T> = new CollectionResult<T>();
@@ -178,22 +182,5 @@ export abstract class Endpoint {
             console.error('Unable to parse: ' + e.message);
         }
         return null;
-    }
-
-    protected buildQuery(pagination: CursorPagination | null): QueryString {
-        const queryString: QueryString = new QueryString();
-
-        if (pagination !== null && pagination !== undefined) {
-            if (pagination.limit !== null && pagination.limit !== undefined) {
-                queryString.set('limit', pagination.limit);
-            }
-            if (pagination.startingAfter !== null && pagination.startingAfter !== undefined && pagination.startingAfter !== '') {
-                queryString.set('starting_after', pagination.startingAfter);
-            }
-            if (pagination.endingBefore !== null && pagination.endingBefore !== undefined && pagination.endingBefore !== '') {
-                queryString.set('ending_before', pagination.endingBefore);
-            }
-        }
-        return queryString;
     }
 }

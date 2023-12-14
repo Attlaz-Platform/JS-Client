@@ -3,7 +3,7 @@ import {Helper} from '../../e2e/src/helper.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Adapter} from '../Model/Adapter/Adapter.js';
 import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
-import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue';
+import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue.js';
 
 jest.setTimeout((60) * 1000);
 

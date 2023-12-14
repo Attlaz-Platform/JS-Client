@@ -15,7 +15,7 @@ test('Test get project collection', async () => {
     const expectedInactiveProjects = 10;
     expect.assertions(1 + (expectedActiveProjects * 2) + 1 + ((expectedActiveProjects + expectedInactiveProjects) * 2));
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -35,7 +35,7 @@ test('Test get project collection', async () => {
     /**
      * Get project by workspace (including inactive)
      */
-    const projects2: CollectionResult<Project> = await client.getProjectEndpoint().getByWorkspace('1ord0LYVekWEyIQUDhLsBLJT9u8', [State.Active, State.Inactive]);
+    const projects2: CollectionResult<Project> = await client.getProjectEndpoint().getByWorkspace('1ord0LYVekWEyIQUDhLsBLJT9u8', null, [State.Active, State.Inactive]);
     expect(projects2.getData()).toHaveLength(expectedActiveProjects + expectedInactiveProjects);
 
     for (const project2 of projects2.getData()) {

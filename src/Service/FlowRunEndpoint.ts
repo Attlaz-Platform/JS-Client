@@ -18,7 +18,9 @@ export class FlowRunEndpoint extends Endpoint {
 
     public async getFlowRunSummaries(flowId: string, flowRunStatuses: FlowRunStatus[] | null = null, pagination: CursorPagination | null = null, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowRunSummary>> {
         try {
-            const queryString: QueryString = this.buildQuery(pagination);
+            const queryString: QueryString = new QueryString('/flows/' + flowId + '/runsummaries');
+            queryString.addPagination(pagination);
+
 
             // if (from !== null && from !== undefined) {
             //
@@ -46,7 +48,7 @@ export class FlowRunEndpoint extends Endpoint {
             //     params.statuses = flowRunStatuses;
             // }
 
-            const result: CollectionResult<FlowRunSummary> = await this.requestCollection('/flows/' + flowId + '/runsummaries' + queryString.build(), FlowRunSummary.parse);
+            const result: CollectionResult<FlowRunSummary> = await this.requestCollection(queryString.build(), FlowRunSummary.parse);
 
             return result;
         } catch (error) {

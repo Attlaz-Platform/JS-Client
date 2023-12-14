@@ -1,7 +1,7 @@
 import {Utils} from '../../Utils.js';
 
 export class StorageItemInformation {
-    public id: string;
+    // public id: string | null = null;
     public key: string;
     public bytes: number;
     public created: Date | null;
@@ -10,11 +10,11 @@ export class StorageItemInformation {
 
     public static parse(raw: any): StorageItemInformation {
         const storageItemInformation: StorageItemInformation = new StorageItemInformation();
-        storageItemInformation.id = raw.id;
+        // storageItemInformation.id = raw.id;
         storageItemInformation.key = raw.key;
         storageItemInformation.bytes = raw.bytes;
-        storageItemInformation.created = raw.expiration === null ? null : Utils.parseRawDate(raw.created);
-        storageItemInformation.updated = raw.expiration === null ? null : Utils.parseRawDate(raw.updated);
+        storageItemInformation.created = raw.created === null ? null : Utils.parseRawDate(raw.created);
+        storageItemInformation.updated = raw.updated === null ? null : Utils.parseRawDate(raw.updated);
         storageItemInformation.expiration = raw.expiration === null ? null : Utils.parseRawDate(raw.expiration);
         return storageItemInformation;
     }

@@ -54,8 +54,8 @@ export class LogEndpoint extends Endpoint {
     }
 
     public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: LogItemFilter | null): Promise<CollectionResult<Log>> {
-        const queryString: QueryString = this.buildQuery(pagination);
-
+        const queryString: QueryString = new QueryString('/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs');
+        queryString.addPagination(pagination);
         if (filter !== null && filter !== undefined) {
             if (filter.tags !== null && filter.tags.length > 0) {
                 const arrTags: string[] = [];
@@ -74,9 +74,8 @@ export class LogEndpoint extends Endpoint {
             }
         }
 
-        const cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs' + queryString.build();
 
-        const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
+        const result: CollectionResult<Log> = await this.requestCollection(queryString, Log.parse);
         return result;
     }
 

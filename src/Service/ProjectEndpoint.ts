@@ -4,6 +4,7 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {State} from '../Model/State.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 
 export class ProjectEndpoint extends Endpoint {
     public async getAll(): Promise<CollectionResult<Project>> {
@@ -18,13 +19,13 @@ export class ProjectEndpoint extends Endpoint {
         }
     }
 
-    public async getByWorkspace(workspaceId: string, states: State[] | null = null): Promise<CollectionResult<Project>> {
+    public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null, states: State[] | null = null): Promise<CollectionResult<Project>> {
         try {
-            const queryString: QueryString = new QueryString();
-            if (states !== null) {
-                queryString.set('state', states);
-            }
-            const result: CollectionResult<Project> = await this.requestCollection('workspaces/' + workspaceId + '/projects' + queryString.build(), Project.parse);
+            const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/projects');
+            queryString.addPagination(pagination);
+            queryString.addStateFilter(states);
+
+            const result: CollectionResult<Project> = await this.requestCollection(queryString, Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {

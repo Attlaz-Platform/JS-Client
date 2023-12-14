@@ -1,8 +1,34 @@
+import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
+import {State} from '../../Model/State.js';
+
 export class QueryString {
     private parameters: { parameter: string; value: string | number | boolean | string[] }[] = [];
 
+    public constructor(private readonly command: string) {
+    }
+
     public set(parameter: string, value: string | number | boolean | string[]): void {
         this.parameters.push({parameter, value});
+    }
+
+    public addPagination(pagination: CursorPagination | null): void {
+        if (pagination !== null && pagination !== undefined) {
+            if (pagination.limit !== null && pagination.limit !== undefined) {
+                this.set('limit', pagination.limit);
+            }
+            if (pagination.startingAfter !== null && pagination.startingAfter !== undefined && pagination.startingAfter !== '') {
+                this.set('starting_after', pagination.startingAfter);
+            }
+            if (pagination.endingBefore !== null && pagination.endingBefore !== undefined && pagination.endingBefore !== '') {
+                this.set('ending_before', pagination.endingBefore);
+            }
+        }
+    }
+
+    public addStateFilter(states: State[] | null): void {
+        if (states !== null) {
+            this.set('state', states);
+        }
     }
 
     public getParameters() {
@@ -11,7 +37,7 @@ export class QueryString {
 
     public build(): string {
         if (this.parameters.length === 0) {
-            return '';
+            return this.command;
         }
         const output: string[] = [];
         for (const parameter of this.parameters) {
@@ -21,6 +47,6 @@ export class QueryString {
             }
             output.push(parameter.parameter + '=' + value);
         }
-        return '?' + output.join('&');
+        return this.command + '?' + output.join('&');
     }
 }

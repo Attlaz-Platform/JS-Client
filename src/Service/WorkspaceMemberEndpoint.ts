@@ -12,10 +12,14 @@ import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite.js
 import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class WorkspaceMemberEndpoint extends Endpoint {
-    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<WorkspaceMember>> {
-        const cmd: string = '/workspaces/' + workspaceId + '/members';
+    public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<WorkspaceMember>> {
+        const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/members');
+        queryString.addPagination(pagination);
+
 
         const parser = (rawMember: any): WorkspaceMember => {
             const member: WorkspaceMember = new WorkspaceMember();
@@ -35,7 +39,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
             }
             return member;
         };
-        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(cmd, parser);
+        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(queryString, parser);
 
         return result;
     }
