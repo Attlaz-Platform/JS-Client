@@ -3,6 +3,8 @@ import {Channel} from '../Model/Messaging/Channel/Channel.js';
 import {ChannelHistory} from '../Model/Messaging/ChannelHistory.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class ChannelEndpoint extends Endpoint {
     public async getById(channelId: string): Promise<Channel | null> {
@@ -24,9 +26,11 @@ export class ChannelEndpoint extends Endpoint {
         }
     }
 
-    public async getByWorkspace(workspaceId: string): Promise<CollectionResult<Channel>> {
+    public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<Channel>> {
         try {
-            const result: CollectionResult<Channel> = await this.requestCollection('/workspaces/' + workspaceId + '/channels', Channel.parse);
+            const queryString: QueryString = new QueryString('/workspaces/' + workspaceId + '/channels');
+            queryString.addPagination(pagination);
+            const result: CollectionResult<Channel> = await this.requestCollection(queryString, Channel.parse);
 
             return result;
         } catch (ex) {
@@ -38,9 +42,11 @@ export class ChannelEndpoint extends Endpoint {
         }
     }
 
-    public async getByOwner(): Promise<CollectionResult<Channel>> {
+    public async getByOwner(pagination: CursorPagination | null = null): Promise<CollectionResult<Channel>> {
         try {
-            const result: CollectionResult<Channel> = await this.requestCollection('/channels', Channel.parse);
+            const queryString: QueryString = new QueryString('channels');
+            queryString.addPagination(pagination);
+            const result: CollectionResult<Channel> = await this.requestCollection(queryString, Channel.parse);
 
             return result;
         } catch (ex) {
@@ -52,30 +58,13 @@ export class ChannelEndpoint extends Endpoint {
         }
     }
 
-    public async getMessages(channelId: string): Promise<CollectionResult<ChannelHistory>> {
+    public async getMessages(channelId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<ChannelHistory>> {
         try {
-            const result: CollectionResult<ChannelHistory> = await this.requestCollection('/channels/' + channelId + '/messages', ChannelHistory.parse);
+            const querystring: QueryString = new QueryString('/channels/' + channelId + '/messages');
+            querystring.addPagination(pagination);
+            const result: CollectionResult<ChannelHistory> = await this.requestCollection(querystring, ChannelHistory.parse);
 
             return result;
-            // const data: ChannelHistory[] = [];
-            //
-            // const resultData: any | null = rawChannelHistory.getData();
-            // if (resultData !== null) {
-            //     const orig: ChannelHistory[] = resultData;
-            //
-            //     for (const rawChannelMessage of orig) {
-            //         data.push(ChannelHistory.parse(rawChannelMessage));
-            //     }
-            // }
-            //
-            // rawChannelHistory.setData(data);
-            //
-            // return rawChannelHistory;
-            // let subscriberChannels: Channel[] = [];
-            // for (let rawChannel of rawChannels) {
-            //     subscriberChannels.push(Channel.parse(rawChannel));
-            // }
-            // return subscriberChannels;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load channels history: ', ex);

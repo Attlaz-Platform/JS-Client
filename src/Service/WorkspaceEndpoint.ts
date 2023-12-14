@@ -1,7 +1,7 @@
 import {Endpoint} from './Endpoint.js';
 import {Workspace} from '../Model/Workspace/Workspace.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {ObjectResult} from '../Model/Result/ObjectResult';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 
 export class WorkspaceEndpoint extends Endpoint {
     public async getAll(): Promise<CollectionResult<Workspace>> {

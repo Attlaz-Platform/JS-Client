@@ -7,15 +7,22 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {SourcesAccountRepository} from '../Model/Deployment/SourcesAccountRepository.js';
 import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class SourcesAccountEndpoint extends Endpoint {
-    public async getAllCodeSources(workspaceId: string): Promise<CollectionResult<CodeSource>> {
-        const result: CollectionResult<CodeSource> = await this.requestCollection('workspaces/' + workspaceId + '/codesources', CodeSource.parse);
+    public async getAllCodeSources(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CodeSource>> {
+        const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/codesources');
+        queryString.addPagination(pagination);
+        const result: CollectionResult<CodeSource> = await this.requestCollection(queryString, CodeSource.parse);
         return result;
     }
 
-    public async getAllCodeSourceAccounts(workspaceId: string): Promise<CollectionResult<CodeSourceAccount>> {
-        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection('workspaces/' + workspaceId + '/codesourceaccounts', CodeSourceAccount.parse);
+    public async getAllCodeSourceAccounts(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CodeSourceAccount>> {
+        const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/codesourceaccounts');
+        queryString.addPagination(pagination);
+        const result: CollectionResult<CodeSourceAccount> = await this.requestCollection(queryString, CodeSourceAccount.parse);
+
         return result;
     }
 
@@ -57,14 +64,18 @@ export class SourcesAccountEndpoint extends Endpoint {
         }
     }
 
-    public async getRepositories(codeSourceAccountId: string): Promise<CollectionResult<SourcesAccountRepository>> {
-        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories', SourcesAccountRepository.parse);
+    public async getRepositories(codeSourceAccountId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<SourcesAccountRepository>> {
+        const queryString: QueryString = new QueryString('codesourceaccounts/' + codeSourceAccountId + '/repositories');
+        queryString.addPagination(pagination);
+        const rawSourcesAccountRepositories: CollectionResult<SourcesAccountRepository> = await this.requestCollection(queryString, SourcesAccountRepository.parse);
         return rawSourcesAccountRepositories;
     }
 
-    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
+    public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
+        const queryString: QueryString = new QueryString('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches');
+        queryString.addPagination(pagination);
         repositoryKey = Utils.base64encode(repositoryKey);
-        const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches', SourcesAccountRepositoryBranch.parse);
+        const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection(queryString, SourcesAccountRepositoryBranch.parse);
         return rawBranches;
     }
 

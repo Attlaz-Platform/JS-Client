@@ -1,7 +1,7 @@
 import {Response} from 'servie';
 import {fetch} from 'popsicle';
-import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser';
-import {RequestOptions as NodeRequestOptions} from 'servie/dist/node';
+import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser.js';
+import {RequestOptions as NodeRequestOptions} from 'servie/dist/node.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
 import {ClientError} from '../Model/Error/ClientError.js';
