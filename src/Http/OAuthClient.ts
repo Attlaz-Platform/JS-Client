@@ -1,6 +1,6 @@
 import ClientOAuth2, {Token} from 'client-oauth2';
 import {OAuthClientOptions} from './OAuthClientOptions.js';
-import {ClientError} from '../Model/Error/ClientError.js';
+import {ClientError} from './ClientError.js';
 import {HttpClient} from './HttpClient.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
@@ -125,7 +125,6 @@ export class OAuthClient {
                     throw clientError;
                 }
                 throw error;
-
             }
         }
     }

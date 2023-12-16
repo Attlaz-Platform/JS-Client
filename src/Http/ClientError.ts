@@ -1,4 +1,4 @@
-import {HttpClient} from '../../Http/HttpClient.js';
+import {HttpClient} from './HttpClient.js';
 
 export class ClientError implements Error {
     code: number | null;
@@ -15,7 +15,8 @@ export class ClientError implements Error {
     }
 
     public static fromError(error: Error | any): ClientError {
-        console.log(error);
+
+
         if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
             error = error.body.error;
         }
@@ -38,17 +39,22 @@ export class ClientError implements Error {
                 clientError = clientErrorByStatus;
             }
         } else if (error.code !== null && error.code !== undefined) {
-            if (error.code === 'EUNAVAILABLE') {
-                clientError.code = HttpClient.HTTP_UNAVAILABLE;
-            }
-            if (error.code === 'EAUTH') {
-                clientError.code = HttpClient.HTTP_UNAUTHORIZED;
-            }
-                // if (error.code === 'ESTATUS' && error.message === 'HTTP status 503') {
-                //     clientError.code = HttpClient.HTTP_UNAVAILABLE;
-            // }
-            else {
-                clientError.code = error.code;
+
+            switch (error.code) {
+                case 'EUNAVAILABLE':
+                    clientError.code = HttpClient.HTTP_UNAVAILABLE;
+                    break;
+                case 'EAUTH':
+                    clientError.code = HttpClient.HTTP_UNAUTHORIZED;
+                    break;
+                case 'ESTATUS':
+                    if (error.message === 'HTTP status 503') {
+                        clientError.code = HttpClient.HTTP_UNAVAILABLE;
+                    }
+                    break;
+                default:
+                    console.warn('[Client error] Error code `' + error.code + '` not recognised');
+                    clientError.code = error.code;
             }
         }
         clientError.name = error.name;
