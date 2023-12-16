@@ -3,7 +3,7 @@
  */
 
 import {Client} from './Client.js';
-import {ClientError} from './Model/Error/ClientError.js';
+import {ClientError} from './Http/ClientError.js';
 import {User} from './Model/User.js';
 
 import {HttpClientRequest} from './Http/HttpClientRequest.js';

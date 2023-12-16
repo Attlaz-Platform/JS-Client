@@ -7,6 +7,7 @@ export {HttpClientResponse} from './Http/HttpClientResponse.js';
 export {OAuthClient} from './Http/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
+export {ClientError} from './Http/ClientError.js';
 /**
  * Models
  */
@@ -14,7 +15,6 @@ export {Adapter} from './Model/Adapter/Adapter.js';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration.js';
 export {AdapterConnection} from './Model/Adapter/AdapterConnection.js';
 
-export {ClientError} from './Model/Error/ClientError.js';
 
 export {EventType} from './Model/Event/EventType.js';
 

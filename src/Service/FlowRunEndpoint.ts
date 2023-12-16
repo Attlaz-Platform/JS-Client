@@ -1,6 +1,4 @@
 import {Endpoint} from './Endpoint.js';
-import {ClientError} from '../Model/Error/ClientError.js';
-import {HttpClient} from '../Http/HttpClient.js';
 import {FlowRun} from '../Model/Flow/FlowRun.js';
 import {FlowRunStatus} from '../Model/Flow/FlowRunStatus.js';
 import {FlowRunSummary} from '../Model/Flow/FlowRunSummary.js';
@@ -66,9 +64,6 @@ export class FlowRunEndpoint extends Endpoint {
 
             return result.getData();
         } catch (error: any) {
-            if (error instanceof ClientError && error.code === HttpClient.HTTP_NOTFOUND) {
-                return null;
-            }
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load flow runs: ' + error);
             }

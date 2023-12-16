@@ -1,10 +1,11 @@
-import {Client, LogStreamId} from '../../../src';
-import {Helper} from '../helper';
+import {Client, LogStreamId} from '../../../src/index.js';
+import {Helper} from '../helper.js';
 
 test('That we can fetch log stream information', async () => {
 
     expect.assertions(1);
-    const client: Client = new Client(Helper.getEnvValue('apiEndpoint'), Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
+    const client: Client = new Client('', {apiEndpoint: Helper.getEnvValue('apiEndpoint')});
+    client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
     // client.getHttpClient().enableDebug();
     const authenticated: boolean = await client.authenticate();
 

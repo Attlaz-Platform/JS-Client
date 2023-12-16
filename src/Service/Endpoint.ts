@@ -183,4 +183,8 @@ export abstract class Endpoint {
         }
         return null;
     }
+
+    // public static getAll(): CollectionResult<T> {
+    //
+    // }
 }

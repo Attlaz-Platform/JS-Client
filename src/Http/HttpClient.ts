@@ -4,8 +4,8 @@ import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser.js';
 import {RequestOptions as NodeRequestOptions} from 'servie/dist/node.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
-import {ClientError} from '../Model/Error/ClientError.js';
 import {VERSION} from '../version.js';
+import {ClientError} from './ClientError.js';
 
 export class HttpClient {
     public static HTTP_BAD_REQUEST: number = 400;

@@ -1,5 +1,6 @@
-import {Client, ClientError, OAuthClientToken, User} from '../../src';
 import {Helper} from './helper.js';
+import {Client, ClientError, HttpClient, OAuthClientToken, User} from '../../src/index.js';
+
 
 test('Test authentication', async () => {
 
@@ -15,7 +16,7 @@ test('Test authentication', async () => {
 
 test('Handle request with invalid or expired token', async () => {
 
-    expect.assertions(1);
+    expect.assertions(2);
     const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
     client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
     client.getHttpClient().enableDebug();
@@ -26,13 +27,13 @@ test('Handle request with invalid or expired token', async () => {
     return client.getUserEndpoint().getUser().then((result: User | null) => {
         fail('Should not be able to authenticate');
     }, (error) => {
-        console.log(error);
-        expect(error.message).toBe('Unauthorized');
+        expect(error.code).toBe(HttpClient.HTTP_UNAUTHORIZED);
+        expect(error.name).toBe('Unauthorized');
     });
 });
 test('Handle refresh token', async () => {
 
-    expect.assertions(1);
+    expect.assertions(2);
 
 
     const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
@@ -46,7 +47,8 @@ test('Handle refresh token', async () => {
     return client.getUserEndpoint().getUser().then((result: User | null) => {
         fail('Should not be able to authenticate');
     }, (error: ClientError) => {
-        expect(error.message).toBe('unauthorized_client');
+        expect(error.code).toBe(HttpClient.HTTP_UNAUTHORIZED);
+        expect(error.name).toBe('Unauthorized');
     });
 });
 test('Handle multiple refresh tokens at the same time', async () => {
