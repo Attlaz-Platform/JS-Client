@@ -28,8 +28,6 @@ import {TriggerEndpoint} from './Service/TriggerEndpoint.js';
 import {PlatformEndpoint} from './Service/PlatformEndpoint.js';
 import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
 import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
-import {VERSION} from './version.js';
-import {Headers} from './Http/Data/Header.js';
 import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
 
@@ -82,7 +80,7 @@ export class Client {
         }
 
 
-        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, null, null, this.getHeaders());
+        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint);
         this.httpClient = new OAuthClient(options);
         if (token !== null) {
             const clientToken: OAuthClientToken = new OAuthClientToken(token, 'Bearer', '', '');
@@ -94,23 +92,10 @@ export class Client {
     }
 
     public setClientCredentials(clientId: string, clientSecret: string = ''): void {
-        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret, this.getHeaders());
+        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret);
         this.httpClient = new OAuthClient(options);
     }
 
-
-    private getHeaders(): Headers {
-        const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
-            version: VERSION,
-            language: 'Javascript',
-            language_version: '',
-            publisher: 'Attlaz',
-        };
-        return {
-            'User-Agent': 'Attlaz Javascript Client/' + VERSION,
-            'X-Attlaz-Client-User-Agent': JSON.stringify(userAgentInfo),
-        };
-    }
 
     public getHttpClient(): OAuthClient {
         return this.httpClient;
@@ -138,11 +123,6 @@ export class Client {
     public setToken(token: OAuthClientToken): void {
         this.httpClient.setToken(token);
     }
-
-    //
-    // public x(accessToken: string, refreshToken: string): Promise<Token> {
-    //     return this.httpClient.refreshToken(accessToken, refreshToken);
-    // }
 
     public unsetAccessToken(): void {
         this.httpClient.unsetToken();

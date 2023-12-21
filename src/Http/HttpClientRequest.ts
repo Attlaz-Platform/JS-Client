@@ -1,13 +1,14 @@
 import {Utils} from '../Utils.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
+import {Headers} from './Data/Header.js';
 
 export class HttpClientRequest {
-    static readonly GET = 'GET';
-    static readonly POST = 'POST';
-    static readonly PUT = 'PUT';
+    static readonly GET: string = 'GET';
+    static readonly POST: string = 'POST';
+    static readonly PUT: string = 'PUT';
 
     public method: string;
-    public headers: any = {};
+    public headers: Headers = {};
     public body: any = null;
 
     private urlObj: URL;

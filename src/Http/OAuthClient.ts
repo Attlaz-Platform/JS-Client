@@ -7,6 +7,8 @@ import {HttpClientResponse} from './HttpClientResponse.js';
 import {OAuthClientToken} from './OAuthClientToken.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {Parameters} from './Data/Parameters.js';
+import {VERSION} from '../version.js';
+import {Headers} from './Data/Header.js';
 
 export class OAuthClient {
     private debug: boolean = false;
@@ -15,6 +17,7 @@ export class OAuthClient {
 
     private oauthToken: Token | null = null;
     private oathClientToken: OAuthClientToken | null = null;
+    private refreshTokenPromise: Promise<void> | null = null;
 
     constructor(private readonly options: OAuthClientOptions) {
         this.oauthClient = new ClientOAuth2({
@@ -25,12 +28,14 @@ export class OAuthClient {
             redirectUri: options.redirectUri,
             scopes: options.scopes,
             state: options.state,
-            headers: options.headers,
+            headers: this.getDefaultHeaders(),
         });
     }
 
     public async authenticate(username: string, password: string): Promise<boolean>;
+
     public async authenticate(): Promise<boolean>;
+
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         // TODO: should we encrypt the password in the client (or is https save enough)?
         try {
@@ -55,8 +60,6 @@ export class OAuthClient {
             throw ClientError.fromError(e);
         }
     }
-
-    private refreshTokenPromise: Promise<void> | null = null;
 
     public async refreshToken(): Promise<void> {
         if (this.debug) {
@@ -105,11 +108,12 @@ export class OAuthClient {
 
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
 
+
             if (this.debug) {
                 console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
             }
             try {
-                const response: HttpClientResponse = await HttpClient.request2(requestData);
+                const response: HttpClientResponse = await HttpClient.request(requestData);
 
                 // if (this.debug) {
                 //     console.info('[Client response] ', {body: response.body});
@@ -184,6 +188,25 @@ export class OAuthClient {
         return this.oauthClient.token.getUri(options === null ? undefined : options);
     }
 
+    public getDefaultHeaders(): Headers {
+        const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
+            version: VERSION,
+            language: 'Javascript',
+            language_version: '',
+            publisher: 'Attlaz',
+        };
+
+        const headers: Headers = {'X-Attlaz-Client': JSON.stringify(userAgentInfo)};
+        if (this.isNodeEnvironment()) {
+            headers['User-Agent'] = 'Attlaz Http/' + VERSION;
+        }
+        return headers;
+    }
+
+    private isNodeEnvironment(): boolean {
+        return typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+    }
+
     private tokenToOauthClientToken(oauthToken: Token): OAuthClientToken {
         const token: OAuthClientToken = new OAuthClientToken(oauthToken.accessToken, oauthToken.tokenType, oauthToken.refreshToken, oauthToken.data.scopes);
 
@@ -205,7 +228,7 @@ export class OAuthClient {
         const url: string = this.getUri(action);
 
         let requestData: HttpClientRequest = new HttpClientRequest(url, method);
-
+        requestData.headers = this.getDefaultHeaders();
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
                 requestData.body = JsonSerializable.stringify(parameters);
