@@ -1,5 +1,3 @@
-import {Headers} from './Data/Header.js';
-
 export class OAuthClientOptions {
     public accessTokenUri: string = 'oauth/token';
     public authorizationUri: string = 'oauth/authorize';
@@ -7,7 +5,7 @@ export class OAuthClientOptions {
     public scopes: string[] = ['all'];
     public state: string = 'xyz';
 
-    constructor(public apiEndpoint: string, public readonly clientId: string | null, public readonly clientSecret: string | null, public headers: Headers) {
+    constructor(public apiEndpoint: string, public readonly clientId: string | null = null, public readonly clientSecret: string | null = null) {
 
     }
 }

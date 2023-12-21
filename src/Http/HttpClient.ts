@@ -4,7 +4,6 @@ import {RequestOptions as BrowserRequestOptions} from 'servie/dist/browser.js';
 import {RequestOptions as NodeRequestOptions} from 'servie/dist/node.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
-import {VERSION} from '../version.js';
 import {ClientError} from './ClientError.js';
 
 export class HttpClient {
@@ -20,27 +19,8 @@ export class HttpClient {
     public static HTTP_UNAVAILABLE: number = 503;
     public static HTTP_TIMEOUT: number = 504;
 
-    // public static async get(url: string, requestData: any = {}): Promise<any> {
-    //     if (Utils.isNullOrUndefined(requestData)) {
-    //         requestData = {};
-    //     }
-    //     const response: Response = await fetch(url, requestData);
-    //
-    //     //TODO: validate status
-    //     const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
-    //     if (!Utils.isNullOrUndefined(error)) {
-    //         throw error;
-    //     }
-    //
-    //     // TODO: make it possible to do request without parsing the json
-    //     return await response.json();
-    // }
 
-    public static async request2(request: HttpClientRequest): Promise<HttpClientResponse> {
-        if (typeof window === 'undefined') {
-            // Add user agent when running in Node
-            request.headers['User-Agent'] = 'Attlaz Http/' + VERSION;
-        }
+    public static async request(request: HttpClientRequest): Promise<HttpClientResponse> {
         const rawRequest: any = {
             url: request.getFullUrl(),
             method: request.method,
