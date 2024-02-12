@@ -73,15 +73,7 @@ export {StorageItemInformation} from './Model/Storage/StorageItemInformation.js'
 export {SearchResult} from './Model/Search/SearchResult.js';
 
 /** Trigger * */
-export {ApiTrigger} from './Model/Trigger/ApiTrigger.js';
-export {ApiTriggerData} from './Model/Trigger/ApiTriggerData.js';
-export {ScheduleTrigger} from './Model/Trigger/ScheduleTrigger.js';
-export {ScheduleTriggerData} from './Model/Trigger/ScheduleTriggerData.js';
 export {Trigger} from './Model/Trigger/Trigger.js';
-export {TriggerData} from './Model/Trigger/TriggerData.js';
-export {TriggerType} from './Model/Trigger/TriggerType.js';
-export {WebhookTrigger} from './Model/Trigger/WebhookTrigger.js';
-export {WebhookTriggerData} from './Model/Trigger/WebhookTriggerData.js';
 /** Worker* */
 export {Platform} from './Model/Worker/Platform.js';
 export {PlatformImage} from './Model/Worker/PlatformImage.js';
