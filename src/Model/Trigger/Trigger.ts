@@ -1,23 +1,18 @@
-import {TriggerData} from './TriggerData.js';
 import {State} from '../State.js';
-import {TriggerType} from './TriggerType.js';
-import {ScheduleTriggerData} from './ScheduleTriggerData.js';
-import {WebhookTriggerData} from './WebhookTriggerData.js';
-import {ApiTriggerData} from './ApiTriggerData.js';
 import {StateAware} from '../StateAware.js';
 import {MetaDataAware} from '../../Core/MetaDataAware.js';
 import {DataValueCollection} from '../DataValueCollection.js';
 
 export class Trigger extends MetaDataAware implements StateAware {
     public id: string;
-    public type: TriggerType;
+    public type: string;
     public projectEnvironmentId: string;
     public flowId: string;
     public arguments: {};
-    public data: TriggerData;
+    public data: DataValueCollection;
     public state: State = State.Active;
 
-    public constructor(id: string, type: TriggerType, projectEnvironmentId: string, flowId: string, data: TriggerData) {
+    public constructor(id: string, type: string, projectEnvironmentId: string, flowId: string, data: DataValueCollection) {
         super();
         this.id = id;
         this.type = type;
@@ -29,28 +24,11 @@ export class Trigger extends MetaDataAware implements StateAware {
     }
 
     public static parse(rawTrigger: any): Trigger {
-        const type: TriggerType = TriggerType.fromString(rawTrigger.type);
-
-        const {data} = rawTrigger;
-
         const flowId: string = rawTrigger.flow;
 
-        let triggerData: TriggerData;
-        switch (type) {
-            case TriggerType.Webhook:
-                triggerData = new WebhookTriggerData(data.key);
-                break;
-            case TriggerType.Schedule:
-                triggerData = new ScheduleTriggerData(data.expression);
-                break;
-            case TriggerType.Api:
-                triggerData = new ApiTriggerData();
-                break;
-            default:
-                throw new Error('Unknown trigger type "' + type + '"');
-        }
+        const parsedData: DataValueCollection = DataValueCollection.fromObject(rawTrigger.data);
 
-        const trigger: Trigger = new Trigger(rawTrigger.id, type, rawTrigger.project_environment, flowId, triggerData);
+        const trigger: Trigger = new Trigger(rawTrigger.id, rawTrigger.type, rawTrigger.project_environment, flowId, parsedData);
 
         trigger.arguments = rawTrigger.arguments;
         trigger.state = State.fromString(rawTrigger.state);
@@ -59,7 +37,7 @@ export class Trigger extends MetaDataAware implements StateAware {
         return trigger;
     }
 
-    public getData(): TriggerData {
+    public getData(): DataValueCollection {
         return this.data;
     }
 }
