@@ -13,6 +13,9 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
         if (Utils.isNullOrUndefined(rawValues)) {
             return new DataValueCollection();
         }
+        if (!Utils.isIterable(rawValues)) {
+            throw new Error('Raw values is not iterable: ' + JSON.stringify(rawValues));
+        }
 
         const result: DataValueCollection = new DataValueCollection();
         for (const rawValue of rawValues) {
