@@ -72,9 +72,10 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
+        repositoryKey = Utils.base64encode(repositoryKey);
         const queryString: QueryString = new QueryString('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches');
         queryString.addPagination(pagination);
-        repositoryKey = Utils.base64encode(repositoryKey);
+
         const rawBranches: CollectionResult<SourcesAccountRepositoryBranch> = await this.requestCollection(queryString, SourcesAccountRepositoryBranch.parse);
         return rawBranches;
     }
