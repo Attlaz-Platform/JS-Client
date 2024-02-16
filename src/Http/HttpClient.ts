@@ -56,7 +56,11 @@ export class HttpClient {
 
         const error: ClientError | null = ClientError.byStatus(response.status, response.statusText);
         if (error !== null && error !== undefined) {
-            error.message = httpResponse.body.error.message;
+            if (httpResponse.body !== null && httpResponse.body !== undefined && httpResponse.body.error !== null && httpResponse.body.error !== undefined && httpResponse.body.error.message !== null && httpResponse.body.error.message !== undefined
+            ) {
+                error.message = httpResponse.body.error.message;
+            }
+
             throw error;
         }
 
