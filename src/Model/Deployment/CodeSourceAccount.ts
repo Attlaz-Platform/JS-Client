@@ -1,4 +1,7 @@
-export class CodeSourceAccount {
+import {State} from '../State.js';
+import {StateAware} from '../StateAware.js';
+
+export class CodeSourceAccount implements StateAware {
     public id: string;
     public key: string;
     public name: string;
@@ -8,6 +11,7 @@ export class CodeSourceAccount {
     // public access_token: string;
     // public refresh_token: string;
     // public scopes: string;
+    public state: State;
 
     public static parse(rawSourcesAccount: any): CodeSourceAccount {
         const sourcesAccount: CodeSourceAccount = new CodeSourceAccount();
@@ -20,6 +24,7 @@ export class CodeSourceAccount {
         // sourcesAccount.access_token = rawSourcesAccount.access_token;
         // sourcesAccount.refresh_token = rawSourcesAccount.refresh_token;
         // sourcesAccount.scopes = rawSourcesAccount.scopes;
+        sourcesAccount.state = State.fromString(rawSourcesAccount.state);
         return sourcesAccount;
     }
 }
