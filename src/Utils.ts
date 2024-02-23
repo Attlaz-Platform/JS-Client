@@ -50,7 +50,7 @@ export class Utils {
         if (input === null || input === undefined || input === '') {
             return '';
         }
-        return Buffer.from(input).toString('base64');
+        return Buffer.from(input.toString()).toString('base64');
     }
 
     public static base64decode(encodedString: string): string {
