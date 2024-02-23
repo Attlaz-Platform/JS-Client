@@ -45,10 +45,7 @@ export class OAuthClient {
                 accessToken = await this.oauthClient.owner.getToken(username, password);
             } else {
                 // Client credentials flow
-
                 accessToken = await this.oauthClient.credentials.getToken();
-
-
             }
             this.oauthToken = accessToken;
             this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
@@ -121,7 +118,6 @@ export class OAuthClient {
                 return response.body;
             } catch (error: any) {
                 if (!(error instanceof ClientError)) {
-
                     const clientError: Error = ClientError.fromError(error);
                     if (this.debug) {
                         console.error('[Client] Error:', {error, clientError});
@@ -208,7 +204,14 @@ export class OAuthClient {
     }
 
     private tokenToOauthClientToken(oauthToken: Token): OAuthClientToken {
-        const token: OAuthClientToken = new OAuthClientToken(oauthToken.accessToken, oauthToken.tokenType, oauthToken.refreshToken, oauthToken.data.scopes);
+
+        let scopes: string = '';
+        if (Object.prototype.hasOwnProperty.call(oauthToken.data, 'scopes')) {
+            scopes = oauthToken.data.scopes;
+        } else if (Object.prototype.hasOwnProperty.call(oauthToken.data, 'scope')) {
+            scopes = oauthToken.data.scope;
+        }
+        const token: OAuthClientToken = new OAuthClientToken(oauthToken.accessToken, oauthToken.tokenType, oauthToken.refreshToken, scopes);
 
         const rawTokenExpires = (oauthToken as any as { expires: Date }).expires;
         if (rawTokenExpires !== null && rawTokenExpires !== undefined) {
