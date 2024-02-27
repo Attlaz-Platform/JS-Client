@@ -32,7 +32,9 @@ export class Subscriber extends MetaDataAware implements StateAware {
     public static parseRaw(rawSubscriber: any): Subscriber {
         const subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.event_types, rawSubscriber.project_environment, rawSubscriber.flow, rawSubscriber.flow_run, rawSubscriber.channels, rawSubscriber.log_level_threshold);
         subscriber.state = State.fromString(rawSubscriber.state);
-        subscriber.metadata = DataValueCollection.fromObject(rawSubscriber.metadata);
+        if (Object.prototype.hasOwnProperty.call(rawSubscriber, 'metadata')) {
+            subscriber.metadata = DataValueCollection.fromObject(rawSubscriber.metadata);
+        }
         return subscriber;
     }
 

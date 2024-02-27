@@ -31,7 +31,9 @@ export class FlowRun extends MetaDataAware {
         flowRun.deployId = rawFlowRun.deploy;
         flowRun.logLevelCount = rawFlowRun.log_level_count;
         flowRun.logsPurged = Utils.isTrue(rawFlowRun.logs_purged);
-        flowRun.metadata = DataValueCollection.fromObject(rawFlowRun.metadata);
+        if (Object.prototype.hasOwnProperty.call(rawFlowRun, 'metadata')) {
+            flowRun.metadata = DataValueCollection.fromObject(rawFlowRun.metadata);
+        }
         return flowRun;
     }
 }

@@ -13,7 +13,7 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test Storage Endpoint', async () => {
     // expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -31,7 +31,7 @@ test('Test Storage Endpoint', async () => {
 test('Test Storage Endpoint - file', async () => {
     expect.assertions(5);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -42,6 +42,43 @@ test('Test Storage Endpoint - file', async () => {
 
     const value: string = readFileSync('deploy-2ZBUljba0j0tKMKimJVe8hnvzAr.zip', {encoding: 'binary'}).toString();
     storageItem.value = value;
+
+    const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem);
+
+    expect(savedStorageItem.key).toEqual(storageItem.key);
+    expect(savedStorageItem.value).toEqual(storageItem.value);
+
+    const savedValue: StorageItem | null = await client.getStorageEndpoint().getItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem.key);
+    if (savedValue === null) {
+        throw new Error('Saved value not found');
+    }
+    expect(savedValue.value.toString()).toStrictEqual(storageItem.value.toString());
+    expect(savedValue.value.toString()).toStrictEqual(value.toString());
+
+    expect(savedValue.value.length).toStrictEqual(value.length);
+
+
+    writeFileSync('x.zip', savedValue.value, {encoding: 'binary'});
+
+
+});
+test('Test Storage Endpoint - big file', async () => {
+    expect.assertions(5);
+
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate();
+
+    const storageItem: StorageItem = new StorageItem();
+    storageItem.key = 'client-storage-test-' + Math.random();
+
+    const value: string = readFileSync('e2e/test-274mb.zip', {encoding: 'binary'}).toString();
+    storageItem.value = value;
+
+    const x: number = value.length;
+    console.log(x + ' bytes');
 
     const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem);
 

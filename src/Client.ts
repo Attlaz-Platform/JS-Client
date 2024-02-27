@@ -30,6 +30,7 @@ import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
 import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
 import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
+import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
 
 export class Client {
     private endpoints: Map<string, any>;
@@ -63,11 +64,14 @@ export class Client {
         CodeSourceStrategiesEndpoint,
         FirewallEndpoint,
         SearchEndpoint,
+        UserActionEndpoint,
     };
 
     private apiEndpoint: string = 'https://api.attlaz.com';
 
     private parseConfig(config: Record<string, unknown>): { apiEndpoint: string | undefined } {
+        // TODO: go over other records in config and warn if any unknown ones
+
         return config as any;
     }
 
@@ -240,6 +244,10 @@ export class Client {
 
     public getSearchEndpoint(): SearchEndpoint {
         return this.getEndpoint('search', this.Store.SearchEndpoint);
+    }
+
+    public getUserActionEndpoint(): UserActionEndpoint {
+        return this.getEndpoint('useraction', this.Store.UserActionEndpoint);
     }
 
     // TODO: this should be in a separate API?

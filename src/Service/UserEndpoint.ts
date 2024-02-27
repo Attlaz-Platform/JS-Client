@@ -1,10 +1,8 @@
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
-import {OAuthClientToken} from '../Http/OAuthClientToken.js';
 import {Endpoint} from './Endpoint.js';
 import {User} from '../Model/User.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {Utils} from '../Utils.js';
 
 export class UserEndpoint extends Endpoint {
     public async getUser(): Promise<User | null> {
@@ -14,56 +12,8 @@ export class UserEndpoint extends Endpoint {
         return rawUser.getData();
     }
 
-    public async authenticateByAuthProvider(providerType: string, data: {
-        code: string; state: string
-    }): Promise<OAuthClientToken> {
-        try {
-            const parser = (raw: any): OAuthClientToken => {
-                const {access_token} = raw;
-                const {token_type} = raw;
-                const {refresh_token} = raw;
-                const {scope} = raw;
-                const token: OAuthClientToken = new OAuthClientToken(access_token, token_type, refresh_token, scope);
-                token.expires = Utils.parseRawDate(raw.expires);
-                return token;
-            };
-            const result: ObjectResult<OAuthClientToken> = await this.requestObject('/auth/providers/' + providerType, data, parser, 'POST', false);
 
-            const token: OAuthClientToken | null = result.getData();
-            if (token === null) {
-                console.log('auth by auth provider wrong data', {result, parsed: token});
-                throw new Error('Unable to authenticate by auth provider: wrong response from API');
-            }
-            return token;
-        } catch (e) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to perform social auth: ', e);
-            }
-            throw e;
-        }
-    }
 
-    public async createAuthProvider(providerType: string, data: { code: string; state: string }): Promise<boolean> {
-        try {
-            const parser = (raw: any): { created: boolean } => raw;
-            const result: ObjectResult<{
-                created: boolean
-            }> = await this.requestObject('/users/auth/providers', {
-                provider_type: providerType, code: data.code, state: data.state
-            }, parser, 'POST');
-            const re: { created: boolean } | null = result.getData();
-            if (re === null) {
-                console.log('create auth provider wrong data', {result, parsed: re});
-                throw new Error('Unable to create auth provider: wrong response from API');
-            }
-            return re.created;
-        } catch (e) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to assign auth provider: ', e);
-            }
-            throw e;
-        }
-    }
 
     public async removeAuthProvider(providerId: number): Promise<boolean> {
         try {
