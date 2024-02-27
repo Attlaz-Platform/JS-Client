@@ -1,1 +1,1 @@
-export type Headers = { [key: string]: string | string[] | null };
+export type Headers = { [key: string]: string | string[] };

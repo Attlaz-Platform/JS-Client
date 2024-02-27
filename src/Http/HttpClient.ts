@@ -55,7 +55,8 @@ export class HttpClient {
 
 
         for (const header of response.headers.keys()) {
-            httpResponse.headers[header] = response.headers.get(header);
+            const headerValue: string | null = response.headers.get(header);
+            httpResponse.headers[header] = headerValue === null ? '' : headerValue;
         }
 
 
@@ -82,7 +83,7 @@ export class HttpClient {
         return {type: 'application/json', options: null};
     }
 
-    private static formatContentType(input: string): { type: string, options: string | null } {
+    public static formatContentType(input: string): { type: string, options: string | null } {
         const d: string[] = input.split(';');
         if (d.length === 1) {
             return {type: d[0], options: null};

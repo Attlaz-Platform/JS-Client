@@ -104,8 +104,6 @@ export class OAuthClient {
             }
 
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
-
-
             if (this.debug) {
                 console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
             }
