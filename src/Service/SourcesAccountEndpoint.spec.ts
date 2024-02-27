@@ -4,6 +4,7 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Utils} from '../Utils.js';
 import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch.js';
 import {CodeSource} from '../Model/Deployment/CodeSource.js';
+import {State} from '../Model/State.js';
 
 jest.setTimeout((60) * 1000);
 
@@ -14,7 +15,7 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test Get Repositories', async () => {
     // expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -30,7 +31,7 @@ test('Test Get Repositories', async () => {
 test('Test Save code source', async () => {
     // expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -39,9 +40,10 @@ test('Test Save code source', async () => {
     const codeSource: CodeSource = new CodeSource();
     codeSource.codeSourceAccountId = '0.js';
     codeSource.platformId = '0.js';
-    codeSource.repository = 'bla.js';
+    codeSource.repository = {name: 'bla.js', key: 'bla.js', url: ''};
     codeSource.branch = 'master.js';
     codeSource.buildStrategyId = '.js';
+    codeSource.state = State.Removed;
 
     const savedCodeSource: CodeSource = await client.getSourcesAccountEndpoint().saveCodeSource(codeSource);
 

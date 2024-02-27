@@ -28,7 +28,9 @@ export class Channel extends MetaDataAware implements StateAware {
         const channel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, type, rawChannel.data);
         channel.state = State.fromString(rawChannel.state);
         channel.private = Utils.isTrue(rawChannel.private);
-        channel.metadata = DataValueCollection.fromObject(rawChannel.metadata);
+        if (Object.prototype.hasOwnProperty.call(rawChannel, 'metadata')) {
+            channel.metadata = DataValueCollection.fromObject(rawChannel.metadata);
+        }
         return channel;
     }
 }

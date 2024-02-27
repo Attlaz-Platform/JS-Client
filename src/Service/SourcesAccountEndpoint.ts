@@ -1,5 +1,4 @@
 import {Endpoint} from './Endpoint.js';
-import {Utils} from '../Utils.js';
 import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount.js';
 import {CodeSource} from '../Model/Deployment/CodeSource.js';
 import {HttpClient} from '../Http/HttpClient.js';
@@ -72,7 +71,6 @@ export class SourcesAccountEndpoint extends Endpoint {
     }
 
     public async getRepositoryBranches(codeSourceAccountId: string, repositoryKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<SourcesAccountRepositoryBranch>> {
-        repositoryKey = Utils.base64encode(repositoryKey);
         const queryString: QueryString = new QueryString('codesourceaccounts/' + codeSourceAccountId + '/repositories/' + repositoryKey + '/branches');
         queryString.addPagination(pagination);
 

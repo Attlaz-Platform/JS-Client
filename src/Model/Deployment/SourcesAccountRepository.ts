@@ -1,11 +1,15 @@
 export class SourcesAccountRepository {
     public key: string;
     public name: string;
+    public url: string;
+    public description: string;
 
     public static parse(rawSourcesAccountRepository: any): SourcesAccountRepository {
         const sourcesAccountRepository: SourcesAccountRepository = new SourcesAccountRepository();
         sourcesAccountRepository.key = rawSourcesAccountRepository.key;
         sourcesAccountRepository.name = rawSourcesAccountRepository.name;
+        sourcesAccountRepository.url = rawSourcesAccountRepository.url;
+        sourcesAccountRepository.description = rawSourcesAccountRepository.description;
 
         return sourcesAccountRepository;
     }

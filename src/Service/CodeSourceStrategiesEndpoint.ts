@@ -4,8 +4,8 @@ import {CodeSourceBuildStrategy} from '../Model/Deployment/CodeSourceBuildStrate
 import {CodeSourceRunStrategy} from '../Model/Deployment/CodeSourceRunStrategy.js';
 
 export class CodeSourceStrategiesEndpoint extends Endpoint {
-    public async getAllDeployStrategies(workspaceId: string): Promise<CollectionResult<CodeSourceBuildStrategy>> {
-        const cmd: string = '/workspaces/' + workspaceId + '/codesources/deploystrategies';
+    public async getAllBuildStrategies(workspaceId: string): Promise<CollectionResult<CodeSourceBuildStrategy>> {
+        const cmd: string = '/workspaces/' + workspaceId + '/codesources/buildstrategies';
         return await this.requestCollection(cmd, CodeSourceBuildStrategy.parse);
     }
 

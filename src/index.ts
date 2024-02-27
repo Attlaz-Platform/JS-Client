@@ -89,6 +89,7 @@ export {CodeSource} from './Model/Deployment/CodeSource.js';
 export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount.js';
 export {SourcesAccountRepository} from './Model/Deployment/SourcesAccountRepository.js';
 export {SourcesAccountRepositoryBranch} from './Model/Deployment/SourcesAccountRepositoryBranch.js';
+export {CodeSourceBuildStrategy} from './Model/Deployment/CodeSourceBuildStrategy.js';
 
 /** Workspace * */
 export {Workspace} from './Model/Workspace/Workspace.js';

@@ -32,7 +32,9 @@ export class Trigger extends MetaDataAware implements StateAware {
 
         trigger.arguments = rawTrigger.arguments;
         trigger.state = State.fromString(rawTrigger.state);
-        trigger.metadata = DataValueCollection.fromObject(rawTrigger.metadata);
+        if (Object.prototype.hasOwnProperty.call(rawTrigger, 'metadata')) {
+            trigger.metadata = DataValueCollection.fromObject(rawTrigger.metadata);
+        }
 
         return trigger;
     }

@@ -4,7 +4,7 @@ import {State} from '../State.js';
 export class CodeSource implements StateAware {
     public id: string;
     public codeSourceAccountId: string;
-    public repository: string;
+    public repository: { key: string; name: string; url: string };
     public branch: string;
     public platformId: string;
     public buildStrategyId: string;

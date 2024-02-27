@@ -31,7 +31,9 @@ export class Flow extends MetaDataAware implements StateAware {
         flow.parallelLimit = Utils.parseInt(rawFlow.parallel_limit);
         flow.codeSource = rawFlow.code_source;
         flow.runCommand = rawFlow.run_command;
-        flow.metadata = DataValueCollection.fromObject(rawFlow.metadata);
+        if (Object.prototype.hasOwnProperty.call(rawFlow, 'metadata')) {
+            flow.metadata = DataValueCollection.fromObject(rawFlow.metadata);
+        }
         return flow;
     }
 }

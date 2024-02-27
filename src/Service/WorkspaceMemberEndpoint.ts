@@ -2,9 +2,6 @@ import {Endpoint} from './Endpoint.js';
 
 import {Utils} from '../Utils.js';
 import {State} from '../Model/State.js';
-
-import {UserAction} from '../Model/User/UserAction.js';
-import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember.js';
 import {WorkspaceMemberRole} from '../Model/Workspace/WorkspaceMemberRole.js';
 import {WorkspaceMemberInviteState} from '../Model/Workspace/WorkspaceMemberInviteState.js';
@@ -84,38 +81,5 @@ export class WorkspaceMemberEndpoint extends Endpoint {
         }
 
         return null;
-    }
-
-    public async getWorkspaceMemberEvents(workspaceId: string, memberId: string): Promise<CollectionResult<UserAction>> {
-        try {
-            const url: string = '/workspaces/' + workspaceId + '/members/' + memberId + '/events';
-
-            const result: CollectionResult<UserAction> = await this.requestCollection(url, WorkspaceMemberEndpoint.parse, null, 'GET');
-
-            return result;
-        } catch (error) {
-            if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load adapter configuration: ', error);
-            }
-            throw error;
-        }
-    }
-
-    private static parse(rawUserEvent: any): UserAction {
-        const userAction: UserAction = new UserAction();
-
-        userAction.id = rawUserEvent.id;
-        userAction.userId = rawUserEvent.user;
-        userAction.workspaceId = rawUserEvent.workspace;
-        userAction.action = rawUserEvent.action;
-        userAction.resourceId = rawUserEvent.resource;
-        userAction.resourceType = rawUserEvent.resource_type;
-        userAction.description = rawUserEvent.description;
-        userAction.ip = rawUserEvent.ip;
-        userAction.time = Utils.parseRawDate(rawUserEvent.time);
-        userAction.result = rawUserEvent.result;
-        userAction.data = DataValueCollection.fromObject(rawUserEvent.data);
-
-        return userAction;
     }
 }
