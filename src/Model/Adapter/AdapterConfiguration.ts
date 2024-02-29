@@ -1,3 +1,5 @@
+import {DataValueValue} from '../DataValue.js';
+
 export class AdapterConfiguration {
     public id: string;
     public key: string;
@@ -5,16 +7,19 @@ export class AdapterConfiguration {
     public adapter: string;
     public name: string;
     public description: string;
+    public default: DataValueValue | null;
+    public validation: string | null = null;
 
-    public static parse(rawAdapter: any): AdapterConfiguration {
+    public static parse(rawAdapterConfiguration: any): AdapterConfiguration {
         const configuration: AdapterConfiguration = new AdapterConfiguration();
-        configuration.id = rawAdapter.id;
-        configuration.key = rawAdapter.key;
-        configuration.type = rawAdapter.type;
-        configuration.adapter = rawAdapter.adapter;
-        configuration.name = rawAdapter.name;
-        configuration.description = rawAdapter.description;
-
+        configuration.id = rawAdapterConfiguration.id;
+        configuration.key = rawAdapterConfiguration.key;
+        configuration.type = rawAdapterConfiguration.type;
+        configuration.adapter = rawAdapterConfiguration.adapter;
+        configuration.name = rawAdapterConfiguration.name;
+        configuration.description = rawAdapterConfiguration.description;
+        configuration.default = rawAdapterConfiguration.default;
+        configuration.validation = rawAdapterConfiguration.validation;
         return configuration;
     }
 }
