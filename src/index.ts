@@ -14,7 +14,7 @@ export {ClientError} from './Http/ClientError.js';
 export {Adapter} from './Model/Adapter/Adapter.js';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration.js';
 export {AdapterConnection} from './Model/Adapter/AdapterConnection.js';
-
+export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 
 export {EventType} from './Model/Event/EventType.js';
 

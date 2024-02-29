@@ -5,13 +5,18 @@ import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {AdapterCategory} from '../Model/Adapter/AdapterCategory.js';
 
 export class AdapterEndpoint extends Endpoint {
-    public async getAdapters(): Promise<CollectionResult<Adapter>> {
+    public async getAdapters(pagination: CursorPagination | null = null): Promise<CollectionResult<Adapter>> {
         try {
-            const url: string = '/adapters';
+            const queryString: QueryString = new QueryString('/adapters');
+            queryString.addPagination(pagination);
 
-            return await this.requestCollection(url, Adapter.parse);
+
+            return await this.requestCollection(queryString, Adapter.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapters: ', error);
@@ -50,11 +55,13 @@ export class AdapterEndpoint extends Endpoint {
         }
     }
 
-    public async getConnections(projectId: string): Promise<CollectionResult<AdapterConnection>> {
+    public async getConnections(projectId: string, pagination: CursorPagination): Promise<CollectionResult<AdapterConnection>> {
         try {
-            const url: string = '/projects/' + projectId + '/connections';
+            const queryString: QueryString = new QueryString('/projects/' + projectId + '/connections');
+            queryString.addPagination(pagination);
 
-            return await this.requestCollection(url, AdapterConnection.parse);
+
+            return await this.requestCollection(queryString, AdapterConnection.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapters: ', error);
@@ -151,6 +158,22 @@ export class AdapterEndpoint extends Endpoint {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save connection: ', error);
             }
+            throw error;
+        }
+    }
+
+    public async getAdapterCategories(pagination: CursorPagination): Promise<CollectionResult<AdapterCategory>> {
+        try {
+            const queryString: QueryString = new QueryString('/adapter-categories');
+            queryString.addPagination(pagination);
+
+
+            return await this.requestCollection(queryString, AdapterCategory.parse);
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load adapter categories: ', error);
+            }
+
             throw error;
         }
     }
