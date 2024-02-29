@@ -1,4 +1,3 @@
-import {WorkspaceMemberRole} from './WorkspaceMemberRole.js';
 import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState.js';
 
 export class WorkspaceMemberInvite {
@@ -6,7 +5,7 @@ export class WorkspaceMemberInvite {
     public code: string;
     public workspaceId: string;
     public email: string;
-    public role: WorkspaceMemberRole;
+    public role: string;
     public date: Date;
     public expiration: Date;
     public inviterId: string;

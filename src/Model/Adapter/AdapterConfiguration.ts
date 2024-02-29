@@ -8,7 +8,7 @@ export class AdapterConfiguration {
     public name: string;
     public description: string;
     public default: DataValueValue | null;
-    public validation: string | null = null;
+    public validation: string[];
 
     public static parse(rawAdapterConfiguration: any): AdapterConfiguration {
         const configuration: AdapterConfiguration = new AdapterConfiguration();
