@@ -8,7 +8,7 @@ import {OAuthClientToken} from './OAuthClientToken.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {Parameters} from './Data/Parameters.js';
 import {VERSION} from '../version.js';
-import {Headers} from './Data/Header.js';
+import {Headers} from './Data/Headers.js';
 
 export class OAuthClient {
     private debug: boolean = false;

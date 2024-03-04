@@ -1,4 +1,4 @@
-import {User} from '../User.js';
+import {User} from '../User/User.js';
 import {ObjectWrapper} from './ObjectWrapper.js';
 
 describe('Test Object wrapping', () => {

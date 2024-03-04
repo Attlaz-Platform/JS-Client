@@ -1,6 +1,6 @@
 import {Utils} from '../Utils.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
-import {Headers} from './Data/Header.js';
+import {Headers} from './Data/Headers.js';
 
 export class HttpClientRequest {
     static readonly GET: string = 'GET';

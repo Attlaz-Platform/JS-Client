@@ -1,5 +1,5 @@
 import {Client} from './Client.js';
-import {User} from './Model/User.js';
+import {User} from './Model/User/User.js';
 import {Project} from './Model/Project/Project.js';
 import {Helper} from '../e2e/src/helper.js';
 

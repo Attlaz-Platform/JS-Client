@@ -1,6 +1,9 @@
 /**
  * Http
  */
+export {Headers} from './Http/Data/Headers.js';
+export {Parameters} from './Http/Data/Parameters.js';
+export {QueryString} from './Http/Data/QueryString.js';
 export {HttpClient} from './Http/HttpClient.js';
 export {HttpClientRequest} from './Http/HttpClientRequest.js';
 export {HttpClientResponse} from './Http/HttpClientResponse.js';
@@ -8,13 +11,17 @@ export {OAuthClient} from './Http/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';
+
 /**
  * Models
  */
+export {UserAccessToken} from './Model/AccessToken/UserAccessToken.js';
+
 export {Adapter} from './Model/Adapter/Adapter.js';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration.js';
 export {AdapterConnection} from './Model/Adapter/AdapterConnection.js';
 export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
+export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
 
 export {EventType} from './Model/Event/EventType.js';
 
@@ -29,7 +36,7 @@ export {LogStatus} from './Model/Log/LogStatus.js';
 export {LogStream} from './Model/Log/LogStream.js';
 export {LogStreamId} from './Model/Log/LogStreamId.js';
 export {LogStreamInformation} from './Model/Log/LogStreamInformation.js';
-
+export {LogItemFilter} from './Model/Log/LogItemFilter.js';
 export {CursorPagination} from './Model/Pagination/CursorPagination.js';
 /** Messaging * */
 
@@ -90,7 +97,7 @@ export {CodeSourceAccount} from './Model/Deployment/CodeSourceAccount.js';
 export {SourcesAccountRepository} from './Model/Deployment/SourcesAccountRepository.js';
 export {SourcesAccountRepositoryBranch} from './Model/Deployment/SourcesAccountRepositoryBranch.js';
 export {CodeSourceBuildStrategy} from './Model/Deployment/CodeSourceBuildStrategy.js';
-
+export {CodeSourceRunStrategy} from './Model/Deployment/CodeSourceRunStrategy.js';
 /** Workspace * */
 export {Workspace} from './Model/Workspace/Workspace.js';
 export {WorkspaceMember} from './Model/Workspace/WorkspaceMember.js';
@@ -102,7 +109,8 @@ export {WorkspaceMemberRole} from './Model/Workspace/WorkspaceMemberRole.js';
 
 export {Config} from './Model/Config.js';
 export {DataValue, DataValueValue} from './Model/DataValue.js';
-
+export {DataValueCollection} from './Model/DataValueCollection.js';
+export {EntityType} from './Model/EntityType.js';
 export {InboxMessage} from './Model/Inbox/InboxMessage.js';
 
 export {State} from './Model/State.js';
@@ -117,7 +125,10 @@ export {FlowRunSummary} from './Model/Flow/FlowRunSummary.js';
 export {FlowRunStats} from './Model/Flow/FlowRunStats.js';
 export {FlowSummary} from './Model/Flow/FlowSummary.js';
 
-export {User} from './Model/User.js';
+export {User} from './Model/User/User.js';
+export {UserAuthProvider} from './Model/User/UserAuthProvider.js';
+export {UserAction} from './Model/User/UserAction.js';
+export {RunnerImage} from './Model/Runner/RunnerImage.js';
 
 export {Endpoint} from './Service/Endpoint.js';
 

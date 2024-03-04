@@ -1,9 +1,5 @@
 import {Endpoint} from './Endpoint.js';
-
-import {Utils} from '../Utils.js';
-import {State} from '../Model/State.js';
 import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember.js';
-import {WorkspaceMemberInviteState} from '../Model/Workspace/WorkspaceMemberInviteState.js';
 import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite.js';
 import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -17,26 +13,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
         const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/members');
         queryString.addPagination(pagination);
 
-
-        const parser = (rawMember: any): WorkspaceMember => {
-            const member: WorkspaceMember = new WorkspaceMember();
-            member.id = rawMember.id;
-            member.email = rawMember.email;
-            member.invite = Utils.isTrue(rawMember.invite);
-            if (rawMember.last_login !== null && rawMember.last_login !== undefined) {
-                member.last_login = Utils.parseRawDate(rawMember.last_login);
-            }
-            member.name = rawMember.name;
-            member.role = rawMember.role;
-
-            if (member.invite) {
-                member.state = WorkspaceMemberInviteState.fromString(rawMember.state);
-            } else {
-                member.state = State.fromString(rawMember.state);
-            }
-            return member;
-        };
-        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(queryString, parser);
+        const result: CollectionResult<WorkspaceMember> = await this.requestCollection(queryString, WorkspaceMember.parse);
 
         return result;
     }

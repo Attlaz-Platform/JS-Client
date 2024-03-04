@@ -1,4 +1,4 @@
-import {Headers} from './Data/Header.js';
+import {Headers} from './Data/Headers.js';
 import {HttpClient} from './HttpClient.js';
 
 export class HttpClientResponse {

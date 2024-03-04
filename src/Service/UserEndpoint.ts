@@ -1,6 +1,6 @@
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
 import {Endpoint} from './Endpoint.js';
-import {User} from '../Model/User.js';
+import {User} from '../Model/User/User.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
@@ -11,8 +11,6 @@ export class UserEndpoint extends Endpoint {
         const rawUser: ObjectResult<User> = await this.requestObject(cmd, null, User.parse);
         return rawUser.getData();
     }
-
-
 
 
     public async removeAuthProvider(providerId: number): Promise<boolean> {

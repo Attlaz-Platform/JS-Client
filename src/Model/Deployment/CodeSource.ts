@@ -11,6 +11,8 @@ export class CodeSource implements StateAware {
     public runStrategyId: string;
     public description: string;
     public state: State = State.Active;
+    public usage: { flows: number; environments: number } | null = null;
+    public deploys: number | null = null;
 
     public static parse(rawCodeSource: any): CodeSource {
         const codeSource: CodeSource = new CodeSource();
@@ -23,6 +25,14 @@ export class CodeSource implements StateAware {
         codeSource.runStrategyId = rawCodeSource.run_strategy;
         codeSource.description = rawCodeSource.description;
         codeSource.state = State.fromString(rawCodeSource.state);
+        if (Object.prototype.hasOwnProperty.call(rawCodeSource, 'usage')) {
+            codeSource.usage = rawCodeSource.usage;
+        }
+        if (Object.prototype.hasOwnProperty.call(rawCodeSource, 'deploys')) {
+            codeSource.deploys = rawCodeSource.deploys;
+        }
+
+
         return codeSource;
     }
 }

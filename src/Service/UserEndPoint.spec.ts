@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import {Client} from '../Client.js';
 import {Helper} from '../../e2e/src/helper.js';
 import {State} from '../Model/State.js';
-import {User} from '../Model/User.js';
+import {User} from '../Model/User/User.js';
 
 jest.setTimeout((60) * 1000);
 
