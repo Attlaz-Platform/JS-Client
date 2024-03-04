@@ -6,48 +6,58 @@ import {FlowRun} from '../Flow/FlowRun.js';
 import {Channel} from '../Messaging/Channel/Channel.js';
 import {Adapter} from '../Adapter/Adapter.js';
 import {AdapterConnection} from '../Adapter/AdapterConnection.js';
+import {EntityType} from '../EntityType.js';
+import {WorkspaceMember} from '../Workspace/WorkspaceMember.js';
+import {Trigger} from '../Trigger/Trigger.js';
+import {Subscriber} from '../Messaging/Subscriber.js';
 
 export class SearchResult {
-    public type: string;
+    public type: EntityType;
     public label: string;
-
     public description: string;
-    public object: Workspace | Project | ProjectEnvironment | Flow | FlowRun | Channel | Adapter | AdapterConnection;
+    public object: Workspace | WorkspaceMember | Project | ProjectEnvironment | Flow | FlowRun | Trigger | Channel | Subscriber | Adapter | AdapterConnection;
 
     public static parse(rawResult: any): SearchResult {
+
         const searchResult: SearchResult = new SearchResult();
-        searchResult.type = rawResult.type;
+        searchResult.type = EntityType.fromString(rawResult.type);
         searchResult.object = rawResult.object;
-        searchResult.label = 'result';
+        searchResult.label = rawResult.label;
         searchResult.description = rawResult.description;
+
         switch (rawResult.type) {
-            case 'workspace':
+            case EntityType.Workspace:
                 searchResult.object = Workspace.parse(rawResult.object);
-                searchResult.label = searchResult.object.name;
                 break;
-            case 'project':
+            case EntityType.Project:
                 searchResult.object = Project.parse(rawResult.object);
-                searchResult.label = searchResult.object.name;
                 break;
-            case 'projectenvironment':
+            case EntityType.ProjectEnvironment:
                 searchResult.object = ProjectEnvironment.parse(rawResult.object);
-                searchResult.label = searchResult.object.name;
                 break;
-            case 'flow':
+            case EntityType.Flow:
                 searchResult.object = Flow.parse(rawResult.object);
-                searchResult.label = searchResult.object.name;
                 break;
-            case 'flowrun':
+            case EntityType.FlowRun:
                 searchResult.object = FlowRun.parse(rawResult.object);
-                searchResult.label = searchResult.object.id;
                 break;
-            case 'adapter':
+            case EntityType.WorkspaceMember:
+                searchResult.object = WorkspaceMember.parse(rawResult.object);
+                break;
+            case EntityType.Adapter:
                 searchResult.object = Adapter.parse(rawResult.object);
-                searchResult.label = searchResult.object.id;
                 break;
-            case 'adapter-connection':
+            case EntityType.AdapterConnection:
                 searchResult.object = AdapterConnection.parse(rawResult.object);
-                searchResult.label = searchResult.object.name;
+                break;
+            case EntityType.Channel:
+                searchResult.object = Channel.parse(rawResult.object);
+                break;
+            case EntityType.ChannelSubscriber:
+                searchResult.object = Subscriber.parseRaw(rawResult.object);
+                break;
+            case EntityType.Trigger:
+                searchResult.object = Trigger.parse(rawResult.object);
                 break;
             default:
                 throw new Error('Unknown search result type "' + rawResult.type + '"');
