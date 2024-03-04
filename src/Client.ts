@@ -31,6 +31,7 @@ import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
 import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
 import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
+import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 
 export class Client {
     private endpoints: Map<string, any>;
@@ -65,6 +66,7 @@ export class Client {
         FirewallEndpoint,
         SearchEndpoint,
         UserActionEndpoint,
+        AccessTokenEndpoint,
     };
 
     private apiEndpoint: string = 'https://api.attlaz.com';
@@ -248,6 +250,10 @@ export class Client {
 
     public getUserActionEndpoint(): UserActionEndpoint {
         return this.getEndpoint('useraction', this.Store.UserActionEndpoint);
+    }
+
+    public getAccessTokenEndpoint(): AccessTokenEndpoint {
+        return this.getEndpoint('accesstoken', this.Store.AccessTokenEndpoint);
     }
 
     // TODO: this should be in a separate API?
