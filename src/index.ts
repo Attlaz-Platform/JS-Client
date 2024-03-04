@@ -114,7 +114,7 @@ export {EntityType} from './Model/EntityType.js';
 export {InboxMessage} from './Model/Inbox/InboxMessage.js';
 
 export {State} from './Model/State.js';
-
+export {StateAware} from './Model/StateAware.js';
 /** Flow * */
 export {Flow} from './Model/Flow/Flow.js';
 export {FlowRun} from './Model/Flow/FlowRun.js';
