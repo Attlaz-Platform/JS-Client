@@ -10,10 +10,13 @@ import {QueryString} from '../Http/Data/QueryString.js';
 import {AdapterCategory} from '../Model/Adapter/AdapterCategory.js';
 
 export class AdapterEndpoint extends Endpoint {
-    public async getAdapters(pagination: CursorPagination | null = null): Promise<CollectionResult<Adapter>> {
+    public async getAdapters(pagination: CursorPagination | null = null, withMedia: boolean = false): Promise<CollectionResult<Adapter>> {
         try {
             const queryString: QueryString = new QueryString('/adapters');
             queryString.addPagination(pagination);
+            if (withMedia) {
+                queryString.set('with-media', true);
+            }
 
 
             return await this.requestCollection(queryString, Adapter.parse);
@@ -26,11 +29,14 @@ export class AdapterEndpoint extends Endpoint {
         }
     }
 
-    public async getAdapter(adapterId: string): Promise<Adapter | null> {
+    public async getAdapter(adapterId: string, withMedia: boolean = false): Promise<Adapter | null> {
         try {
-            const url: string = '/adapters/' + adapterId;
+            const queryString: QueryString = new QueryString('/adapters/' + adapterId);
+            if (withMedia) {
+                queryString.set('with-media', true);
+            }
 
-            const result: ObjectResult<Adapter> = await this.requestObject(url, null, Adapter.parse);
+            const result: ObjectResult<Adapter> = await this.requestObject(queryString, null, Adapter.parse);
             return result.getData();
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
