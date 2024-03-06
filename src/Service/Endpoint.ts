@@ -108,10 +108,10 @@ export abstract class Endpoint {
         if (requestResponse === null || requestResponse === undefined) {
             throw new Error('Unable to parse collection: response is empty for action `[' + method + '] ' + action + '`');
         }
-        if (!requestResponse.hasOwnProperty('data') || requestResponse.data === undefined) {
+        if (!Object.prototype.hasOwnProperty.call(requestResponse, 'data') || requestResponse.data === undefined) {
             throw new Error('Unable to parse collection: data is not defined in response from action `[' + method + '] ' + action + '`');
         }
-        if (!requestResponse.hasOwnProperty('has_more') || requestResponse.has_more === undefined) {
+        if (!Object.prototype.hasOwnProperty.call(requestResponse, 'has_more') || requestResponse.has_more === undefined) {
             throw new Error('Unable to parse collection: hasMore is not defined in response from action `[' + method + '] ' + action + '`');
         }
 
@@ -122,8 +122,11 @@ export abstract class Endpoint {
         return result;
     }
 
-    public async requestObject<T>(action: string, parameters: Parameters = null, parser: (input: any) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
+    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: any) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
         parameters = this.formatParameters(parameters);
+        if (action instanceof QueryString) {
+            action = action.build();
+        }
         const result: ObjectResult<T> = new ObjectResult<T>();
         try {
             let requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
@@ -136,7 +139,7 @@ export abstract class Endpoint {
             if (requestResponse === null || requestResponse === undefined) {
                 throw new Error('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`');
             }
-            if ((requestResponse.hasOwnProperty('data') && !requestResponse.hasOwnProperty('id')) && requestResponse.data !== undefined) {
+            if ((Object.prototype.hasOwnProperty.call(requestResponse, 'data') && !Object.prototype.hasOwnProperty.call(requestResponse, 'id')) && requestResponse.data !== undefined) {
                 console.error('Response for object "' + action + '" seem to still use old "data" property', {requestResponse});
                 requestResponse = requestResponse.data;
             }
