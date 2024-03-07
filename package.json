@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "1.13.37",
+  "version": "1.13.38",
   "description": "Javascript Client to access Attlaz API",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -33,6 +33,7 @@
     "prepare": "npm run clean && tsc --project tsconfig.production.json",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
+    "scan": "docker run -v .:/path zricethezav/gitleaks:latest detect --source=\"/path\" ",
     "test": "jest"
   },
   "publishConfig": {
