@@ -45,6 +45,7 @@ export class ClientError implements Error {
                     clientError.code = HttpClient.HTTP_UNAVAILABLE;
                     break;
                 case 'EAUTH':
+                case 401:
                     clientError.code = HttpClient.HTTP_UNAUTHORIZED;
                     break;
                 case 'ESTATUS':

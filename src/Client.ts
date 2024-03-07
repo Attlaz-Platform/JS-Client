@@ -99,6 +99,8 @@ export class Client {
 
     public setClientCredentials(clientId: string, clientSecret: string = ''): void {
         const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret);
+        // TODO: how to know these scopes?
+        options.scopes = ['all'];
         this.httpClient = new OAuthClient(options);
     }
 
@@ -110,6 +112,7 @@ export class Client {
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
+
         if (username === null || password === null) {
             return this.httpClient.authenticate();
         }
