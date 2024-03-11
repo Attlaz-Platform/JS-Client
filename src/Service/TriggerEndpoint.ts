@@ -4,16 +4,40 @@ import {Utils} from '../Utils.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class TriggerEndpoint extends Endpoint {
-    public async getByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Trigger>> {
+    public async getByFlow(flowId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<Trigger>> {
         try {
+
+            const queryString: QueryString = new QueryString('/triggers/rfr/' + flowId + '');
+            queryString.addPagination(pagination);
+
             let parameters: Parameters = null;
             if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection('/flows/' + flowId + '/triggers', Trigger.parse, parameters);
+            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection(queryString, Trigger.parse, parameters);
+
+            return rawTriggers;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load triggers: ', error);
+            }
+            throw error;
+        }
+    }
+
+    public async getByCodeSource(codeSourceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<Trigger>> {
+        try {
+
+            const queryString: QueryString = new QueryString('/triggers/csd/' + codeSourceId + '');
+            queryString.addPagination(pagination);
+
+
+            const rawTriggers: CollectionResult<Trigger> = await this.requestCollection(queryString, Trigger.parse, null);
 
             return rawTriggers;
         } catch (error) {
