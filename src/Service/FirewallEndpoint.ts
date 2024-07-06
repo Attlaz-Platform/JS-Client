@@ -1,21 +1,38 @@
 import {Endpoint} from './Endpoint.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {Utils} from '../Utils.js';
+
+export type BlockedIp = { ip: string; from: Date; to: Date; reason: string };
+export type FlaggedIp = { ip: string; date: Date; reason: string };
+export type IpRule = { ip: string; action: string; description: string };
+export type FirewallInfo = { blockedIps: BlockedIp[], flaggedIps: FlaggedIp[], ipRules: IpRule[] };
 
 export class FirewallEndpoint extends Endpoint {
-    public async getInformation(): Promise<{ blocked_ips: any[], flagged_ips: any[], ip_rules: [] } | null> {
+    public async getInformation(): Promise<FirewallInfo | null> {
         const cmd: string = '/system/firewall/';
 
         try {
-            const parser = (raw: any): { blocked_ips: any[], flagged_ips: any[], ip_rules: [] } => {
-                const info: { blocked_ips: any[], flagged_ips: any[], ip_rules: [] } = {
-                    blocked_ips: raw.blocked_ips,
-                    flagged_ips: raw.flagged_ips,
-                    ip_rules: raw.ip_rules,
+            const parser = (raw: any): FirewallInfo => {
+                const info: FirewallInfo = {
+                    blockedIps: [],
+                    flaggedIps: [],
+                    ipRules: [],
                 };
-
+                for (const blockedIp of raw.blocked_ips) {
+                    blockedIp.from = Utils.parseRawDate(blockedIp.from);
+                    blockedIp.to = Utils.parseRawDate(blockedIp.to);
+                    info.blockedIps.push(blockedIp);
+                }
+                for (const flaggedIp of raw.flagged_ips) {
+                    flaggedIp.date = Utils.parseRawDate(flaggedIp.date);
+                    info.flaggedIps.push(flaggedIp);
+                }
+                for (const ipRule of raw.ip_rules) {
+                    info.ipRules.push(ipRule);
+                }
                 return info;
             };
-            const result: ObjectResult<{ blocked_ips: any[], flagged_ips: any[], ip_rules: [] }> = await this.requestObject(cmd, null, parser, 'GET');
+            const result: ObjectResult<FirewallInfo> = await this.requestObject(cmd, null, parser, 'GET');
 
             return result.getData();
         } catch (ex) {

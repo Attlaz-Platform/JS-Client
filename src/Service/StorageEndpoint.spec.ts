@@ -57,10 +57,7 @@ test('Test Storage Endpoint - file', async () => {
 
     expect(savedValue.value.length).toStrictEqual(value.length);
 
-
     writeFileSync('x.zip', savedValue.value, {encoding: 'binary'});
-
-
 });
 test('Test Storage Endpoint - big file', async () => {
     expect.assertions(5);
@@ -94,8 +91,5 @@ test('Test Storage Endpoint - big file', async () => {
 
     expect(savedValue.value.length).toStrictEqual(value.length);
 
-
     writeFileSync('x.zip', savedValue.value, {encoding: 'binary'});
-
-
 });

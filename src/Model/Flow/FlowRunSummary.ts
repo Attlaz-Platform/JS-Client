@@ -3,7 +3,6 @@ import {FlowRun} from './FlowRun.js';
 import {Utils} from '../../Utils.js';
 
 export class FlowRunSummary extends FlowRun {
-
     public time: Date;
     public runDuration: number;
     public pendingDuration: number;
@@ -21,7 +20,6 @@ export class FlowRunSummary extends FlowRun {
 
     public memoryAverage: number | null = null;
     public memoryMaximum: number | null = null;
-
 
     public static parse(rawFlowRunSummary: any): FlowRunSummary {
         const flowRunSummary: FlowRunSummary = FlowRun.parse(rawFlowRunSummary) as FlowRunSummary;

@@ -12,7 +12,6 @@ export class WorkspaceMember {
     state: State | WorkspaceMemberInviteState;
 
     public static parse(rawMember: any): WorkspaceMember {
-
         const member: WorkspaceMember = new WorkspaceMember();
         member.id = rawMember.id;
         member.email = rawMember.email;
@@ -29,6 +28,5 @@ export class WorkspaceMember {
             member.state = State.fromString(rawMember.state);
         }
         return member;
-
     }
 }

@@ -9,8 +9,6 @@ import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 
 export class UserActionEndpoint extends Endpoint {
-
-
     public async getWorkspaceMemberActions(workspaceId: string, memberId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
         try {
             const queryString: QueryString = new QueryString('/workspaces/' + workspaceId + '/members/' + memberId + '/actions');

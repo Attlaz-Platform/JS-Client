@@ -13,8 +13,8 @@ export class HttpClientResponse {
     }
 
     public getContentType(): string | null {
+        // TODO: content-type or Content-Type or both...?
         let contentType: string | string[] | null | undefined = this.headers['content-type'];
-
 
         if (contentType === null || contentType === undefined) {
             return null;
@@ -27,7 +27,5 @@ export class HttpClientResponse {
         }
         const parsedContentType: { type: string, options: string | null } = HttpClient.formatContentType(contentType);
         return parsedContentType.type;
-
-
     }
 }

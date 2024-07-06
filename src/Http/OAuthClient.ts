@@ -65,15 +65,15 @@ export class OAuthClient {
         if (this.oauthToken === null) {
             throw new Error('unable to refresh token, auth token not set');
         }
-        if (this.oauthToken.refreshToken !== undefined && this.oauthToken.refreshToken !== null && this.oauthToken.refreshToken !== '') {
-            try {
-                this.oauthToken = await this.oauthToken.refresh();
-                this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
-            } catch (e) {
-                throw ClientError.fromError(e);
-            }
-        } else {
-            await this.authenticate();
+        if (this.oauthToken.refreshToken === undefined || this.oauthToken.refreshToken === null || this.oauthToken.refreshToken === '') {
+            throw new Error('unable to refresh token, refresh token not set');
+        }
+
+        try {
+            this.oauthToken = await this.oauthToken.refresh();
+            this.oathClientToken = this.tokenToOauthClientToken(this.oauthToken);
+        } catch (e) {
+            throw ClientError.fromError(e);
         }
     }
 
@@ -202,7 +202,6 @@ export class OAuthClient {
     }
 
     private tokenToOauthClientToken(oauthToken: Token): OAuthClientToken {
-
         let scopes: string = '';
         if (Object.prototype.hasOwnProperty.call(oauthToken.data, 'scopes')) {
             scopes = oauthToken.data.scopes;
@@ -211,7 +210,7 @@ export class OAuthClient {
         }
         const token: OAuthClientToken = new OAuthClientToken(oauthToken.accessToken, oauthToken.tokenType, oauthToken.refreshToken, scopes);
 
-        const rawTokenExpires = (oauthToken as any as { expires: Date }).expires;
+        const rawTokenExpires: Date = (oauthToken as any as { expires: Date }).expires;
         if (rawTokenExpires !== null && rawTokenExpires !== undefined) {
             token.expires = rawTokenExpires;
         }

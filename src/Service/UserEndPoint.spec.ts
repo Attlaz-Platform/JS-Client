@@ -28,3 +28,13 @@ test('Test registration of user', async () => {
     expect(registeredUser.email).toEqual(newUser.email);
     expect(registeredUser.id.length).toBeGreaterThan(5);
 });
+test('Get user', async () => {
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+    client.getHttpClient().enableDebug();
+    await client.authenticate();
+
+    const user: User | null = await client.getUserEndpoint().getUser();
+
+    console.log(user);
+});

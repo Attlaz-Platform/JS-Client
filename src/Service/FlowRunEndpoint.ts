@@ -19,7 +19,6 @@ export class FlowRunEndpoint extends Endpoint {
             const queryString: QueryString = new QueryString('/flows/' + flowId + '/runsummaries');
             queryString.addPagination(pagination);
 
-
             // if (from !== null && from !== undefined) {
             //
             //     params = {};

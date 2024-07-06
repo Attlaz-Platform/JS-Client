@@ -122,7 +122,9 @@ export abstract class Endpoint {
         return result;
     }
 
-    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: any) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
+    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: {
+        [k: string]: any
+    }) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
         parameters = this.formatParameters(parameters);
         if (action instanceof QueryString) {
             action = action.build();

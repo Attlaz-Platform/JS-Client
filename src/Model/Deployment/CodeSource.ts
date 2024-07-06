@@ -32,7 +32,6 @@ export class CodeSource implements StateAware {
             codeSource.deploys = rawCodeSource.deploys;
         }
 
-
         return codeSource;
     }
 }

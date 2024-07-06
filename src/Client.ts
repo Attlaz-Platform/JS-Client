@@ -78,13 +78,11 @@ export class Client {
     }
 
     constructor(token: string | null = null, config: Record<string, unknown> = {}) {
-
         const parsedConfig = this.parseConfig(config);
 
         if (parsedConfig.apiEndpoint !== undefined) {
             this.apiEndpoint = parsedConfig.apiEndpoint;
         }
-
 
         const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint);
         this.httpClient = new OAuthClient(options);
@@ -92,7 +90,6 @@ export class Client {
             const clientToken: OAuthClientToken = new OAuthClientToken(token, 'Bearer', '', '');
             this.httpClient.setToken(clientToken);
         }
-
 
         this.endpoints = new Map<string, any>();
     }
@@ -104,7 +101,6 @@ export class Client {
         this.httpClient = new OAuthClient(options);
     }
 
-
     public getHttpClient(): OAuthClient {
         return this.httpClient;
     }
@@ -112,7 +108,6 @@ export class Client {
     public async authenticate(): Promise<boolean>;
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
-
         if (username === null || password === null) {
             return this.httpClient.authenticate();
         }
@@ -127,7 +122,6 @@ export class Client {
     public getToken(): OAuthClientToken | null {
         return this.httpClient.getToken();
     }
-
 
     public setToken(token: OAuthClientToken): void {
         this.httpClient.setToken(token);

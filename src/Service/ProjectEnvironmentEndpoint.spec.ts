@@ -12,7 +12,7 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test get project environment by id', async () => {
     expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -28,7 +28,7 @@ test('Test get project environment by id', async () => {
 test('Test get project environment configuration', async () => {
     expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -40,5 +40,4 @@ test('Test get project environment configuration', async () => {
     expect(configuration?.value).toBe('flowrun.audiosense.staging');
 
     console.log(configuration);
-
 });

@@ -18,7 +18,6 @@ export class SearchResult {
     public object: Workspace | WorkspaceMember | Project | ProjectEnvironment | Flow | FlowRun | Trigger | Channel | Subscriber | Adapter | AdapterConnection;
 
     public static parse(rawResult: any): SearchResult {
-
         const searchResult: SearchResult = new SearchResult();
         searchResult.type = EntityType.fromString(rawResult.type);
         searchResult.object = rawResult.object;

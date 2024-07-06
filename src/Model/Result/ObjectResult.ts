@@ -1,7 +1,6 @@
 export class ObjectResult<T> {
     private data: T | null;
 
-
     // public static parse<T>(raw: any): DataResult<T> {
     //     const result: DataResult<T> = new DataResult<T>();
     //     const data: any = raw.data;

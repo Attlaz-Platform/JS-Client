@@ -12,7 +12,7 @@ const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentia
 test('Test get flow run', async () => {
     // expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -29,7 +29,7 @@ test('Test get flow run', async () => {
 test('Run Flow', async () => {
     // expect.assertions(3);
 
-     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 

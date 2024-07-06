@@ -17,9 +17,9 @@ export class User implements StateAware {
 
     public locale: string;
 
-    public date_format: string;
-    public time_format: string;
-    public number_format: string;
+    public date_format: string | null = null;
+    public time_format: string | null = null;
+    public number_format: string | null = null;
 
     public picture: string;
 

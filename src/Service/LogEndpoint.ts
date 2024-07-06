@@ -74,7 +74,6 @@ export class LogEndpoint extends Endpoint {
             }
         }
 
-
         const result: CollectionResult<Log> = await this.requestCollection(queryString, Log.parse);
         return result;
     }

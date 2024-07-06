@@ -124,6 +124,7 @@ export {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
 export {FlowRunSummary} from './Model/Flow/FlowRunSummary.js';
 export {FlowRunStats} from './Model/Flow/FlowRunStats.js';
 export {FlowSummary} from './Model/Flow/FlowSummary.js';
+export {FlowTemplate} from './Model/Flow/FlowTemplate.js';
 
 export {User} from './Model/User/User.js';
 export {UserAuthProvider} from './Model/User/UserAuthProvider.js';

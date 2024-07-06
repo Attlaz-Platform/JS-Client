@@ -10,7 +10,7 @@ export class Adapter {
     public docs: string;
     public website: string;
 
-    public static parse(rawAdapter: any): Adapter {
+    public static parse(rawAdapter: { [k: string]: any }): Adapter {
         const adapter: Adapter = new Adapter();
         adapter.id = rawAdapter.id;
         adapter.name = rawAdapter.name;

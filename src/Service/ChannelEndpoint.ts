@@ -10,12 +10,6 @@ export class ChannelEndpoint extends Endpoint {
     public async getById(channelId: string): Promise<Channel | null> {
         try {
             const result: ObjectResult<Channel> = await this.requestObject('/channels/' + channelId + '', null, Channel.parse);
-
-            // if (Utils.isNullOrUndefined(result)) {
-            //
-            // } else {
-            //     result.setData(Channel.parse(result.getData()));
-            // }
             return result.getData();
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {

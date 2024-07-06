@@ -11,7 +11,6 @@ export class StorageItem {
 
     public value: string | number | boolean | null | any;
 
-
     public static parse(raw: any): StorageItem {
         const storageItem: StorageItem = new StorageItem();
         // storageItem.id = raw.id === null || raw.id === undefined ? null : raw.id;

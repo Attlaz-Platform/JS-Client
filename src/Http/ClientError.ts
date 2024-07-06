@@ -1,11 +1,12 @@
 import {HttpClient} from './HttpClient.js';
 
 export class ClientError implements Error {
-    code: number | null;
-    name: string;
-    message: string;
+    public code: number | null;
+    public name: string;
+    public message: string;
     // description: string | null;
-    // stack: string;
+    public stack?: string = undefined;
+
     // body: string | null = null;
 
     constructor(name: string, code: number | null = null) {
@@ -15,8 +16,6 @@ export class ClientError implements Error {
     }
 
     public static fromError(error: Error | any): ClientError {
-
-
         if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
             error = error.body.error;
         }
@@ -39,7 +38,6 @@ export class ClientError implements Error {
                 clientError = clientErrorByStatus;
             }
         } else if (error.code !== null && error.code !== undefined) {
-
             switch (error.code) {
                 case 'EUNAVAILABLE':
                     clientError.code = HttpClient.HTTP_UNAVAILABLE;
@@ -59,7 +57,9 @@ export class ClientError implements Error {
             }
         }
         clientError.name = error.name;
-        // clientError.stack = error.stack;
+
+        // TODO: only in debug mode
+        clientError.stack = error.stack;
 
         return clientError;
     }

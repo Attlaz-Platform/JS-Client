@@ -6,9 +6,6 @@ export class AdapterConnection {
     projectId: string;
     status: string;
 
-    public constructor() {
-    }
-
     public static parse(rawAdapterConnection: any): AdapterConnection {
         const adapterConnection: AdapterConnection = new AdapterConnection();
         adapterConnection.id = rawAdapterConnection.id;

@@ -12,7 +12,9 @@ export class Channel extends MetaDataAware implements StateAware {
     public type: ChannelType;
     public data: any;
     public state: State = State.Active;
-    public private: boolean = false;
+    public workspaces: string[] = [];
+    public isPrivate: boolean = false;
+    public singleUse: boolean = false;
 
     public constructor(id: string, ownerId: string, label: string, type: ChannelType, data: any) {
         super();
@@ -27,7 +29,9 @@ export class Channel extends MetaDataAware implements StateAware {
         const type: ChannelType = ChannelType.fromString(rawChannel.type);
         const channel: Channel = new Channel(rawChannel.id, rawChannel.owner, rawChannel.label, type, rawChannel.data);
         channel.state = State.fromString(rawChannel.state);
-        channel.private = Utils.isTrue(rawChannel.private);
+        channel.isPrivate = Utils.isTrue(rawChannel.is_private);
+        channel.singleUse = Utils.isTrue(rawChannel.single_use);
+        channel.workspaces = rawChannel.workspaces;
         if (Object.prototype.hasOwnProperty.call(rawChannel, 'metadata')) {
             channel.metadata = DataValueCollection.fromObject(rawChannel.metadata);
         }

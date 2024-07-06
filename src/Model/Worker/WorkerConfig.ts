@@ -15,7 +15,6 @@ export class WorkerConfig {
     public static KEY_API_CLIENT_ID: string = 'api_client_id';
     public static KEY_API_CLIENT_SECRET: string = 'api_client_secret';
 
-
     constructor(public readonly projectEnvironmentId: string, public readonly key: string, public readonly value: DataValueValue | null) {
 
     }

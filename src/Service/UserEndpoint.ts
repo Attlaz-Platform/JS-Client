@@ -12,7 +12,6 @@ export class UserEndpoint extends Endpoint {
         return rawUser.getData();
     }
 
-
     public async removeAuthProvider(providerId: number): Promise<boolean> {
         try {
             const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});
@@ -129,6 +128,28 @@ export class UserEndpoint extends Endpoint {
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to save user: ', e);
+            }
+            throw e;
+        }
+    }
+
+    public async createWebPush(subscription: any, session: string): Promise<boolean> {
+        try {
+            const url: string = '/webpush';
+
+            const parser = (raw: any): { created: boolean } => ({created: raw.created});
+            const result: ObjectResult<{
+                created: boolean
+            }> = await this.requestObject(url, {subscription, session}, parser, 'POST', true);
+            const re: { created: boolean } | null = result.getData();
+            if (re === null) {
+                console.log('created web push wrong data', {result, parsed: re});
+                throw new Error('Unable to request web push: wrong response from API');
+            }
+            return re.created;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to create web push: ', e);
             }
             throw e;
         }

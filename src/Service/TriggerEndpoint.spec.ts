@@ -11,8 +11,6 @@ const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialCli
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
 describe('Trigger endpoint', () => {
-
-
     test('Get flow run triggers', async () => {
         const client: Client = new Client('', {apiEndpoint: apiEndpoint});
         client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);

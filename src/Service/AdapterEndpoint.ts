@@ -18,7 +18,6 @@ export class AdapterEndpoint extends Endpoint {
                 queryString.set('with-media', true);
             }
 
-
             return await this.requestCollection(queryString, Adapter.parse);
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -65,7 +64,6 @@ export class AdapterEndpoint extends Endpoint {
         try {
             const queryString: QueryString = new QueryString('/projects/' + projectId + '/connections');
             queryString.addPagination(pagination);
-
 
             return await this.requestCollection(queryString, AdapterConnection.parse);
         } catch (error) {
@@ -172,7 +170,6 @@ export class AdapterEndpoint extends Endpoint {
         try {
             const queryString: QueryString = new QueryString('/adapter-categories');
             queryString.addPagination(pagination);
-
 
             return await this.requestCollection(queryString, AdapterCategory.parse);
         } catch (error) {

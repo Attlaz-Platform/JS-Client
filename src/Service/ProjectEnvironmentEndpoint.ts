@@ -61,7 +61,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
                 value.environment = raw.environment;
                 value.value = raw.value;
                 return value;
-            }
+            };
             const rawProjectEnvironment: ObjectResult<ProjectEnvironmentConfiguration> = await this.requestObject('/projectenvironments/' + projectEnvironmentId + '/configurations/' + configKey, null, parser);
             return rawProjectEnvironment.getData();
         } catch (error: any) {

@@ -10,7 +10,6 @@ import {QueryString} from '../Http/Data/QueryString.js';
 export class TriggerEndpoint extends Endpoint {
     public async getByFlow(flowId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<Trigger>> {
         try {
-
             const queryString: QueryString = new QueryString('/triggers/rfr/' + flowId + '');
             queryString.addPagination(pagination);
 
@@ -32,10 +31,8 @@ export class TriggerEndpoint extends Endpoint {
 
     public async getByCodeSource(codeSourceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<Trigger>> {
         try {
-
             const queryString: QueryString = new QueryString('/triggers/csd/' + codeSourceId + '');
             queryString.addPagination(pagination);
-
 
             const rawTriggers: CollectionResult<Trigger> = await this.requestCollection(queryString, Trigger.parse, null);
 
