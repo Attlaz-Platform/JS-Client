@@ -8,6 +8,8 @@ export class HealthAlert {
     public healthTestType: HealthTestType;
     public status: HealthAlertStatus;
     public date: Date;
+    public updated: Date;
+
     public data: DataValue[] = [];
 
     public constructor(healthTestType: HealthTestType, status: HealthAlertStatus) {
@@ -21,6 +23,7 @@ export class HealthAlert {
         const healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.health_test_type), HealthAlertStatus.fromString(raw.status));
         healthAlert.id = raw.id;
         healthAlert.date = Utils.parseRawDate(raw.date);
+        healthAlert.updated = Utils.parseRawDate(raw.updated);
         healthAlert.data = raw.data;
         return healthAlert;
     }
