@@ -142,7 +142,7 @@ export abstract class Endpoint {
                 throw new Error('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`');
             }
             if ((Object.prototype.hasOwnProperty.call(requestResponse, 'data') && !Object.prototype.hasOwnProperty.call(requestResponse, 'id')) && requestResponse.data !== undefined) {
-                console.error('Response for object "' + action + '" seem to still use old "data" property', {requestResponse});
+                console.error('Response for object "' + action + '" seem to still use old "data" property (this property is only used for collection requests)', {requestResponse});
                 requestResponse = requestResponse.data;
             }
             result.setData(this.parseObject<T>(requestResponse, parser));
