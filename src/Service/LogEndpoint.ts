@@ -47,14 +47,14 @@ export class LogEndpoint extends Endpoint {
             arrQuery.push('tags=' + strTags);
         }
 
-        const cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.id) + '/logs/?' + arrQuery.join('&');
+        const cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.toString()) + '/logs/?' + arrQuery.join('&');
 
         const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
         return result;
     }
 
     public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: LogItemFilter | null): Promise<CollectionResult<Log>> {
-        const queryString: QueryString = new QueryString('/logstreams/' + Utils.base64encode(logStreamId.id) + '/logs');
+        const queryString: QueryString = new QueryString('/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/logs');
         queryString.addPagination(pagination);
         if (filter !== null && filter !== undefined) {
             if (filter.tags !== null && filter.tags.length > 0) {
@@ -80,7 +80,7 @@ export class LogEndpoint extends Endpoint {
 
     public async save(log: Log): Promise<Log> {
         try {
-            const cmd: string = '/logstreams/' + Utils.base64encode(log.logStream.id) + '/logs';
+            const cmd: string = '/logstreams/' + Utils.base64encode(log.logStream.toString()) + '/logs';
 
             const result: ObjectResult<Log> = await this.requestObject(cmd, log, Log.parse, 'POST');
             const updatedLogEntry: Log | null = result.getData();
@@ -120,7 +120,7 @@ export class LogEndpoint extends Endpoint {
     }
 
     public async clear(logStreamId: LogStreamId): Promise<boolean> {
-        const cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/clear';
+        const cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/clear';
 
         try {
             const parser = (raw: any): { cleared: boolean } => ({cleared: raw.cleared});
@@ -141,7 +141,7 @@ export class LogEndpoint extends Endpoint {
 
     public async getInformation(logStreamId: LogStreamId): Promise<LogStreamInformation | null> {
         try {
-            const url: string = '/logstreams/' + Utils.base64encode(logStreamId.id) + '/info';
+            const url: string = '/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/info';
 
             const result: ObjectResult<LogStreamInformation> = await this.requestObject(url, null, LogStreamInformation.parse);
 

@@ -1,9 +1,7 @@
-export class LogStreamId {
-    public readonly id: string;
+import {EntityId} from '../EntityId.js';
 
-    public constructor(id: string) {
-        this.id = id;
-    }
+export class LogStreamId extends EntityId {
+    protected readonly TYPE: string = 'logStreamId';
 
     public jsonSerialize(): string {
         return this.id;
