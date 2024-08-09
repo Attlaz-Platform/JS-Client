@@ -4,8 +4,7 @@ export enum HealthTestType {
     PROJECT_ENVIRONMENT_HAS_WORKERS = 'project_environment_has_workers',
     QUEUE_FLOW_IS_HEALTHY = 'queue_flow_is_healthy',
     WORKER_IS_UP_TO_DATE = 'worker_is_up_to_date',
-    /** @deprecated * */
-    TASK_EXECUTIONS_ARE_SUCCESSFUL = 'task_executions_are_successful',
+    ADAPTER_CONNECTION_IS_HEALTHY = 'adapter_connection_is_healthy',
     FLOW_RUNS_ARE_SUCCESSFUL = 'flow_runs_are_successful',
 }
 

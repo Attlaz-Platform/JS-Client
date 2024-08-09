@@ -2,7 +2,7 @@ import {FlowRunStatus} from './FlowRunStatus.js';
 import {Utils} from '../../Utils.js';
 
 export class FlowRunHistory {
-    public id: number;
+    public id: string;
     public time: Date;
     public status: FlowRunStatus;
 

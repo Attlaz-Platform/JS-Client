@@ -1,9 +1,9 @@
 import {Utils} from '../../Utils.js';
 
 export class ChannelHistory {
-    public id: number;
+    public id: string;
     public subscriberId: string;
-    public channelId: number;
+    public channelId: string;
     public time: Date;
     public message: any;
     public success: boolean;

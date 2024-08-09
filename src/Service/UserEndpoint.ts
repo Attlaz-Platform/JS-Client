@@ -12,7 +12,7 @@ export class UserEndpoint extends Endpoint {
         return rawUser.getData();
     }
 
-    public async removeAuthProvider(providerId: number): Promise<boolean> {
+    public async removeAuthProvider(providerId: string): Promise<boolean> {
         try {
             const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});
             const result: ObjectResult<{

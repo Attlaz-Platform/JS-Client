@@ -89,5 +89,5 @@ test('Get information', async () => {
         throw new Error('Log stream not found');
     }
 
-    expect(logStreamInformation.logStreamId.id).toEqual('UTV0OWtsNXBa');
+    expect(logStreamInformation.logStreamId.toString()).toEqual('UTV0OWtsNXBa');
 });

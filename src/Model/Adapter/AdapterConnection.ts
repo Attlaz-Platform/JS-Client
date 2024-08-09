@@ -1,10 +1,12 @@
+import {AdapterConnectionStatus} from './AdapterConnectionStatus.js';
+
 export class AdapterConnection {
     id: string;
     key: string;
     adapter: string;
     name: string;
     projectId: string;
-    status: string;
+    status: AdapterConnectionStatus;
 
     public static parse(rawAdapterConnection: any): AdapterConnection {
         const adapterConnection: AdapterConnection = new AdapterConnection();
@@ -13,7 +15,8 @@ export class AdapterConnection {
         adapterConnection.adapter = rawAdapterConnection.adapter;
         adapterConnection.name = rawAdapterConnection.name;
         adapterConnection.projectId = rawAdapterConnection.project;
-        adapterConnection.status = rawAdapterConnection.status;
+
+        adapterConnection.status = AdapterConnectionStatus.fromString(rawAdapterConnection.status);
         return adapterConnection;
     }
 }
