@@ -22,7 +22,7 @@ export class Utils {
         if (this.isNullOrUndefined(input)) {
             return null;
         }
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const property in Enum) {
             // noinspection JSUnfilteredForInLoop
             const enumMember = Enum[property];
@@ -35,6 +35,7 @@ export class Utils {
                     }
                     return res;
                 }
+                // eslint-disable-next-line no-dupe-else-if
             } else if (typeof enumMember === 'string') {
                 console.error('Unable to parse enum type: ' + typeof enumMember + ' for enum ', Enum);
             }
@@ -50,14 +51,18 @@ export class Utils {
         if (input === null || input === undefined || input === '') {
             return '';
         }
-        return Buffer.from(input.toString()).toString('base64');
+        // Use btoa as we want this package to work both in Node and Browser
+        return btoa(input);
+        // return Buffer.from(input.toString()).toString('base64');
     }
 
     public static base64decode(encodedString: string): string {
         if (encodedString === null || encodedString === undefined || encodedString === '') {
             return '';
         }
-        return Buffer.from(encodedString, 'base64').toString();
+        // Use atob as we want this package to work both in Node and Browser
+        return atob(encodedString);
+        // return Buffer.from(encodedString, 'base64').toString();
     }
 
     public static isIterable(variable: any): boolean {
