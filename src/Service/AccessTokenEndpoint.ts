@@ -20,11 +20,15 @@ export class AccessTokenEndpoint extends Endpoint {
         }
     }
 
-    public async create(name: string, scopes: string[]): Promise<UserAccessToken> {
+    public async create(name: string, scopes: string[], expiresAt: Date): Promise<UserAccessToken> {
         try {
             const url: string = '/access-tokens';
-
-            const result: ObjectResult<UserAccessToken> = await this.requestObject(url, {name, scopes}, UserAccessToken.parse, 'POST');
+            const data = {
+                name,
+                scopes,
+                expires_at: expiresAt,
+            };
+            const result: ObjectResult<UserAccessToken> = await this.requestObject(url, data, UserAccessToken.parse, 'POST');
 
             const createdToken: UserAccessToken | null = result.getData();
             if (createdToken === null) {
@@ -43,7 +47,9 @@ export class AccessTokenEndpoint extends Endpoint {
         try {
             const url: string = '/access-tokens/' + tokenId;
 
-            const result: ObjectResult<UserAccessToken> = await this.requestObject(url, {name, scopes}, UserAccessToken.parse, 'POST');
+            const result: ObjectResult<UserAccessToken> = await this.requestObject(url, {
+                name, scopes,
+            }, UserAccessToken.parse, 'POST');
 
             const updatedToken: UserAccessToken | null = result.getData();
             if (updatedToken === null) {
