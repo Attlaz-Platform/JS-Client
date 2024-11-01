@@ -13,7 +13,7 @@ export namespace AdapterConnectionStatus {
         if (input === 'pass') {
             return AdapterConnectionStatus.Healthy;
         }
-        if (input === 'skip') {
+        if (input === null || input === 'skip') {
             return AdapterConnectionStatus.Unknown;
         }
         if (input === 'fail') {
