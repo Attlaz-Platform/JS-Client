@@ -2,9 +2,14 @@ import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {State} from '../../Model/State.js';
 
 export class QueryString {
+
     private parameters: { parameter: string; value: string | number | boolean | string[] }[] = [];
 
-    public constructor(private readonly command: string) {
+    public constructor(private command: string = '') {
+    }
+
+    public setCommand(command: string): void {
+        this.command = command;
     }
 
     public set(parameter: string, value: string | number | boolean | string[]): void {
@@ -46,6 +51,10 @@ export class QueryString {
                 value = value.join(',');
             }
             output.push(parameter.parameter + '=' + value);
+        }
+
+        if (this.command.includes('?')) {
+            return this.command + '&' + output.join('&');
         }
         return this.command + '?' + output.join('&');
     }

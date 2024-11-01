@@ -5,7 +5,7 @@ export class OAuthClientToken {
     public expires: Date | null = null;
     public scope: string = '';
 
-    public constructor(access_token: string, token_type: string, refresh_token: string, scope: string) {
+    public constructor(access_token: string, token_type: string, refresh_token: string | null, scope: string) {
         this.access_token = access_token;
         this.token_type = token_type;
         this.refresh_token = refresh_token;

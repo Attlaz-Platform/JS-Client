@@ -1,17 +1,13 @@
 import {HttpClient} from './HttpClient.js';
 
-export class ClientError implements Error {
+export class ClientError extends Error {
     public code: number | null;
     public name: string;
-    public message: string;
-    // description: string | null;
     public stack?: string = undefined;
 
-    // body: string | null = null;
-
     constructor(name: string, code: number | null = null) {
+        super(name);
         this.name = name;
-        this.message = name;
         this.code = code;
     }
 
@@ -50,6 +46,9 @@ export class ClientError implements Error {
                     if (error.message === 'HTTP status 503') {
                         clientError.code = HttpClient.HTTP_UNAVAILABLE;
                     }
+                    break;
+                case 500:
+                    clientError.code = HttpClient.HTTP_INTERNAL_SERVER_ERROR;
                     break;
                 default:
                     console.warn('[Client error] Error code `' + error.code + '` not recognised');
