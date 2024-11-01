@@ -17,7 +17,7 @@ export class InboxMessage {
         inboxMessage.subject = rawNotification.subject;
         inboxMessage.body = rawNotification.body;
         inboxMessage.time = Utils.parseRawDate(rawNotification.time);
-        inboxMessage.acknowledged = rawNotification.acknowledged === 1;
+        inboxMessage.acknowledged = Utils.isTrue(rawNotification.acknowledged);
         return inboxMessage;
     }
 }
