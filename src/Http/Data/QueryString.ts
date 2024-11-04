@@ -13,6 +13,10 @@ export class QueryString {
     }
 
     public set(parameter: string, value: string | number | boolean | string[]): void {
+        const existingParam = this.parameters.find((param) => param.parameter === parameter);
+        if (existingParam !== undefined) {
+            throw new Error('Param already defined');
+        }
         this.parameters.push({parameter, value});
     }
 
@@ -50,7 +54,7 @@ export class QueryString {
             if (Array.isArray(value)) {
                 value = value.join(',');
             }
-            output.push(parameter.parameter + '=' + value);
+            output.push(parameter.parameter + '=' + encodeURIComponent(value));
         }
 
         if (this.command.includes('?')) {
