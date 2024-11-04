@@ -1,4 +1,4 @@
-import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
 import {ClientError} from './ClientError.js';
@@ -32,26 +32,49 @@ export class HttpClient {
     }
 
     private static async axiosRequest(request: HttpClientRequest): Promise<HttpClientResponse> {
+
+
         const requestConfig: AxiosRequestConfig = {
             url: request.getFullUrl(),
             method: request.method,
             headers: request.headers,
-            data: request.body,
         };
+        if (request.body !== null && request.body !== undefined) {
+            requestConfig.data = request.body;
+        }
+
         // TODO: should we share this instance between requests?
         const axiosInstance: AxiosInstance = axios.create();
 
-        const rawResponse: AxiosResponse = await axiosInstance.request(requestConfig);
+        // TODo: should we catch axios error sand make them into ClientErrors?
+        try {
+            const rawResponse: AxiosResponse = await axiosInstance.request(requestConfig);
+            const httpResponse: HttpClientResponse = new HttpClientResponse(rawResponse.status, rawResponse.statusText);
+
+            Object.keys(rawResponse.headers).forEach((header: string) => {
+                const headerValue: any | null = rawResponse.headers[header];
+                httpResponse.headers[header] = headerValue === null ? '' : headerValue;
+            });
+            httpResponse.body = await rawResponse.data;
+            return httpResponse;
+        } catch (e) {
+            if (e instanceof AxiosError) {
+                const status: number = e.status === undefined ? 500 : e.status;
+                const statusCode: string = e.code === undefined ? 'Error' : e.code;
+
+                const response: HttpClientResponse = new HttpClientResponse(status, statusCode);
+                if (e.response !== undefined) {
+                    response.body = e.response.data;
+                }
+                return response;
+            }
+            console.error('Unable to perform request', {error: e});
 
 
-        const httpResponse: HttpClientResponse = new HttpClientResponse(rawResponse.status, rawResponse.statusText);
+            const response: HttpClientResponse = new HttpClientResponse(500, '');
+            return response;
+        }
 
-        Object.keys(rawResponse.headers).forEach((header: string) => {
-            const headerValue: any | null = rawResponse.headers[header];
-            httpResponse.headers[header] = headerValue === null ? '' : headerValue;
-        });
-        httpResponse.body = await rawResponse.data;
-        return httpResponse;
     }
 
     private static isJson(response: HttpClientResponse): boolean {
