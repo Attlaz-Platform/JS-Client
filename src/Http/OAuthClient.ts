@@ -194,22 +194,22 @@ export class OAuthClient {
     }
 
     private tokenToOauthClientToken(oauthToken: {
-        access_token: string,
-        token_type: string,
-        refresh_token: string | undefined,
-        expires_in: number,
-        scope: string
+        access_token: string;
+        token_type: string;
+        refresh_token: string | undefined;
+        expires_in: number;
+        scope: string | undefined;
+        scopes: string | undefined;
     }): OAuthClientToken {
-        // console.log('Auth token', oauthToken);
-        // let scopes: string = '';
-        // if (Object.prototype.hasOwnProperty.call(oauthToken.data, 'scopes')) {
-        //     scopes = oauthToken.data.scopes;
-        // } else if (Object.prototype.hasOwnProperty.call(oauthToken.data, 'scope')) {
-        //     scopes = oauthToken.data.scope;
-        // }
+        let scopes: string = '';
+        if (Object.prototype.hasOwnProperty.call(oauthToken, 'scopes') && oauthToken.scopes !== undefined) {
+            scopes = oauthToken.scopes;
+        } else if (Object.prototype.hasOwnProperty.call(oauthToken, 'scope') && oauthToken.scope !== undefined) {
+            scopes = oauthToken.scope;
+        }
         const refreshToken: string | null = oauthToken.refresh_token === undefined || oauthToken.refresh_token === null ? null : oauthToken.refresh_token;
 
-        const token: OAuthClientToken = new OAuthClientToken(oauthToken.access_token, oauthToken.token_type, refreshToken, oauthToken.scope);
+        const token: OAuthClientToken = new OAuthClientToken(oauthToken.access_token, oauthToken.token_type, refreshToken, scopes);
 
         const t: Date = new Date();
         t.setSeconds(t.getSeconds() + oauthToken.expires_in);
