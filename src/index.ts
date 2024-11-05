@@ -62,7 +62,7 @@ export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit.js';
 export {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment.js';
 export {ProjectEnvironmentConfiguration} from './Model/Project/ProjectEnvironmentConfiguration.js';
-
+export {ProjectEnvironmentType} from './Model/Project/ProjectEnvironmentType.js';
 /** Queue * */
 export {QueueStatus} from './Model/Queue/QueueStatus.js';
 

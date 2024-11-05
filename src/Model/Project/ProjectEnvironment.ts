@@ -1,6 +1,6 @@
 import {State} from '../State.js';
-import {Utils} from '../../Utils.js';
 import {StateAware} from '../StateAware.js';
+import {ProjectEnvironmentType} from './ProjectEnvironmentType.js';
 
 export class ProjectEnvironment implements StateAware {
     public id: string;
@@ -9,7 +9,7 @@ export class ProjectEnvironment implements StateAware {
     public name: string;
     public codeSourceId: string | null = null;
     public parentId: string | null = null;
-    public isLocal: boolean = false;
+    public type: ProjectEnvironmentType = ProjectEnvironmentType.Production;
     public state: State = State.Active;
 
     public static parse(rawProjectEnvironment: any): ProjectEnvironment {
@@ -20,7 +20,7 @@ export class ProjectEnvironment implements StateAware {
         projectEnvironment.name = rawProjectEnvironment.name;
         projectEnvironment.codeSourceId = rawProjectEnvironment.code_source;
         projectEnvironment.parentId = rawProjectEnvironment.parent;
-        projectEnvironment.isLocal = Utils.isTrue(rawProjectEnvironment.is_local);
+        projectEnvironment.type = ProjectEnvironmentType.fromString(rawProjectEnvironment.type);
         projectEnvironment.state = State.fromString(rawProjectEnvironment.state);
         return projectEnvironment;
     }
