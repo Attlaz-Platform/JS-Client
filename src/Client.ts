@@ -34,9 +34,9 @@ import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 
 export class Client {
-    private endpoints: Map<string, any>;
+    private readonly endpoints: Map<string, any>;
     private httpClient: OAuthClient;
-    private Store: any = {
+    private readonly Store: any = {
         WorkerEndpoint,
         AdapterEndpoint,
         ProjectEndpoint,
@@ -109,10 +109,10 @@ export class Client {
     public async authenticate(username: string, password: string): Promise<boolean>;
     public async authenticate(username: string | null = null, password: string | null = null): Promise<boolean> {
         if (username === null || password === null) {
-            return this.httpClient.authenticate();
+            return await this.httpClient.authenticate();
         }
         // TODO: this is only possible when clientId and clientSecret are defined
-        return this.httpClient.authenticate(username, password);
+        return await this.httpClient.authenticate(username, password);
     }
 
     public isAuthenticated(): boolean {
@@ -258,7 +258,7 @@ export class Client {
         return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
     }
 
-    private getEndpoint<T extends Endpoint>(key: string, className: { new(x: OAuthClient): T; }): T {
+    private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: OAuthClient): T; }): T {
         // const classNameString: string = className.name;
 
         if (!this.endpoints.has(key)) {
@@ -266,10 +266,10 @@ export class Client {
             //     throw new Error(`Class type of \'${classNameString}\' is not in the store`);
             // }
             try {
-                const endpoint: Endpoint = new className(this.httpClient);
+                const endpoint: Endpoint = new ClassName(this.httpClient);
                 this.endpoints.set(key, endpoint);
-            } catch (e: any) {
-                throw new Error('Unable to initialize ' + key + ' endpoint (' + e.message + ')');
+            } catch (error: any) {
+                throw new Error('Unable to initialize ' + key + ' endpoint (' + error.message + ')');
             }
         }
         return this.endpoints.get(key);

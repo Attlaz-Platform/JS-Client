@@ -1,23 +1,28 @@
 import {Endpoint} from './Endpoint.js';
 import {Subscriber} from '../Model/Messaging/Subscriber.js';
-import {Utils} from '../Utils.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {Parameters} from '../Http/Data/Parameters.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class SubscriberEndpoint extends Endpoint {
-    public async getSubscribersByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Subscriber>> {
-        let parameters: Parameters = null;
-        if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
-            parameters = {environment: projectEnvironmentId};
+    public async getSubscribersByFlow(flowId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<Subscriber>> {
+        const qu: QueryString = new QueryString('/flows/' + flowId + '/subscribers');
+        if (projectEnvironmentId !== null && projectEnvironmentId !== undefined) {
+            qu.set('environment', projectEnvironmentId);
         }
+        qu.addPagination(pagination);
 
-        const result: CollectionResult<Subscriber> = await this.requestCollection('/flows/' + flowId + '/subscribers', Subscriber.parseRaw, parameters);
+        const result: CollectionResult<Subscriber> = await this.requestCollection(qu, Subscriber.parseRaw);
         return result;
     }
 
-    public async getSubscribersByChannel(channelId: string): Promise<CollectionResult<Subscriber>> {
-        const result: CollectionResult<Subscriber> = await this.requestCollection('/channels/' + channelId + '/subscribers', Subscriber.parseRaw);
+    public async getSubscribersByChannel(channelId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<Subscriber>> {
+
+        const qu: QueryString = new QueryString('/channels/' + channelId + '/subscribers');
+        qu.addPagination(pagination);
+
+        const result: CollectionResult<Subscriber> = await this.requestCollection(qu, Subscriber.parseRaw);
         return result;
     }
 
