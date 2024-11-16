@@ -1,58 +1,133 @@
-import {HttpClient} from './HttpClient.js';
+import {AxiosError} from 'axios';
+import {HttpStatus} from './HttpStatus.js';
 
 export class ClientError extends Error {
-    public code: number | null;
-    public name: string;
-    public stack?: string = undefined;
+    public httpStatus: number | null = null;
 
-    constructor(name: string, code: number | null = null) {
-        super(name);
-        this.name = name;
+    public type: string;
+    public code: string;
+    // public message: string;
+
+    public param?: string | undefined = undefined;
+
+    public stack?: string;
+
+    constructor(code: string, httpErrorCode: number | null = null) {
+        super(code);
         this.code = code;
+        this.httpStatus = httpErrorCode;
     }
 
-    public static fromError(error: Error | any): ClientError {
-        if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
-            error = error.body.error;
+    public static fromError(error: Error | AxiosError): ClientError {
+
+        let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
+
+
+        if (error instanceof AxiosError) {
+
+            if (error.status !== undefined) {
+                clientError.httpStatus = error.status;
+            }
+            // console.log('Status', clientError.httpStatus);
+            // if(clientError.httpStatus === HttpStatusCode.Ref)
+            clientError.message = error.message;
+            if (error.code !== undefined) {
+                clientError.code = error.code;
+            }
+
+
+            if (error.response === undefined) {
+                if (error.code === 'ECONNREFUSED') {
+                    clientError.message = 'Connection refused';
+                } else {
+                    console.error('Unable to parse AxiosError response', {error, x: error.status, y: error.code});
+                }
+            } else {
+
+
+                //   console.debug('Parse response', {error: error, data: error.response.data});
+
+
+                switch (error.response.status) {
+                    case 404:
+                        clientError.code = 'Not found';
+                        break;
+                    default:
+                }
+
+
+                const errorData: {
+                    error: {
+                        type: string | undefined;
+                        code: string | undefined;
+                        message: string | undefined;
+                        param?: string | undefined
+                    } | undefined
+                } = error.response.data;
+
+                if (errorData.error !== undefined) {
+                    // console.debug('Error data', errorData);
+                    if (errorData.error.type !== undefined) {
+                        clientError.type = errorData.error.type;
+                    }
+                    if (errorData.error.code !== undefined) {
+                        clientError.code = errorData.error.code;
+                    }
+                    if (errorData.error.message !== undefined) {
+                        clientError.message = errorData.error.message;
+                    }
+                    if (errorData.error.param !== undefined) {
+                        clientError.param = errorData.error.param;
+                    }
+                }
+
+
+            }
+
+            return clientError;
         }
 
-        let message: string = error;
-        if (error.message !== undefined && error.message !== null) {
-            message = error.message;
-        }
+        // if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
+        //     error = error.body.error;
+        // }
 
-        let clientError: ClientError = new ClientError(message);
+        // let message: string = error;
+        // if (error.message !== undefined && error.message !== null) {
+        //     message = error.message;
+        // }
+        //
 
         // console.error(error);
 
-        if (error.status !== null && error.status !== undefined) {
-            const statusCode: number = error.status;
-            const {body} = error;
+        const xError = error as any as { status: number; code: number | string; body: string };
+        if (xError.status !== null && xError.status !== undefined) {
+            const statusCode: number = xError.status;
+            const {body} = xError;
 
             const clientErrorByStatus: ClientError | null = this.byStatus(statusCode, body);
             if (clientErrorByStatus !== null) {
                 clientError = clientErrorByStatus;
             }
-        } else if (error.code !== null && error.code !== undefined) {
-            switch (error.code) {
+        } else if (xError.code !== null && xError.code !== undefined) {
+            switch (xError.code) {
                 case 'EUNAVAILABLE':
-                    clientError.code = HttpClient.HTTP_UNAVAILABLE;
+                    clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
                     break;
                 case 'EAUTH':
                 case 401:
-                    clientError.code = HttpClient.HTTP_UNAUTHORIZED;
+                    clientError.httpStatus = HttpStatus.HTTP_UNAUTHORIZED;
                     break;
                 case 'ESTATUS':
                     if (error.message === 'HTTP status 503') {
-                        clientError.code = HttpClient.HTTP_UNAVAILABLE;
+                        clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
                     }
                     break;
                 case 500:
-                    clientError.code = HttpClient.HTTP_INTERNAL_SERVER_ERROR;
+                    clientError.httpStatus = HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
                     break;
                 default:
-                    console.warn('[Client error] Error code `' + error.code + '` not recognised');
-                    clientError.code = error.code;
+                    console.warn('[Client error] Error code `' + xError.code + '` not recognised');
+                    clientError.httpStatus = HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
             }
         }
         clientError.name = error.name;
@@ -70,29 +145,28 @@ export class ClientError extends Error {
             case 202:
                 return null;
             case 400:
-                return new ClientError('Bad Request', HttpClient.HTTP_BAD_REQUEST);
+                return new ClientError('Bad Request', HttpStatus.HTTP_BAD_REQUEST);
             case 401:
-                return new ClientError('Unauthorized', HttpClient.HTTP_UNAUTHORIZED);
+                return new ClientError('Unauthorized', HttpStatus.HTTP_UNAUTHORIZED);
             case 403:
-                return new ClientError('Forbidden', HttpClient.HTTP_FORBIDDEN);
+                return new ClientError('Forbidden', HttpStatus.HTTP_FORBIDDEN);
             case 404:
-                return new ClientError('Not Found', HttpClient.HTTP_NOTFOUND);
+                return new ClientError('Not Found', HttpStatus.HTTP_NOTFOUND);
             case 405:
-                return new ClientError('Not allowed', HttpClient.HTTP_NOT_ALLOWED);
+                return new ClientError('Not allowed', HttpStatus.HTTP_NOT_ALLOWED);
             case 422:
-                return new ClientError('Unprocessable Entity', HttpClient.HTTP_UNPROCESSABLE_ENTITY);
+                return new ClientError('Unprocessable Entity', HttpStatus.HTTP_UNPROCESSABLE_ENTITY);
             case 500:
-                return new ClientError('Internal Server Error', HttpClient.HTTP_INTERNAL_SERVER_ERROR);
+                return new ClientError('Internal Server Error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
             case 502:
-                return new ClientError('Bad gateway', HttpClient.HTTP_BAD_GATEWAY);
+                return new ClientError('Bad gateway', HttpStatus.HTTP_BAD_GATEWAY);
             case 503:
-                return new ClientError('Service not available', HttpClient.HTTP_UNAVAILABLE);
+                return new ClientError('Service not available', HttpStatus.HTTP_UNAVAILABLE);
             case 504:
-                return new ClientError('Gateway Time-out', HttpClient.HTTP_TIMEOUT);
+                return new ClientError('Gateway Time-out', HttpStatus.HTTP_TIMEOUT);
             default:
                 console.error('Unknown status code "' + statusCode + '"', {code: statusCode, text: statusText});
                 return new ClientError('Status code ' + statusCode + ': ' + statusText, statusCode);
         }
-        return null;
     }
 }
