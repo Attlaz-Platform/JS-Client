@@ -36,8 +36,11 @@ export class OAuthClient {
                     this.options.clientId === null ? undefined : this.options.clientId,
                     this.options.clientSecret === null ? undefined : this.options.clientSecret,
                 );
+
                 const rawAuthToken = await getOwnerCredentials(username, password, this.options.scopes.join(' '));
                 this.oathClientToken = this.tokenToOauthClientToken(rawAuthToken);
+
+
                 return true;
             }
             // Client credentials flow
@@ -48,13 +51,23 @@ export class OAuthClient {
                 this.options.clientSecret === null ? undefined : this.options.clientSecret,
             );
             const rawAuthToken = await getClientCredentials(this.options.scopes.join(' '));
+            // console.log('Raw token', rawAuthToken);
             this.oathClientToken = this.tokenToOauthClientToken(rawAuthToken);
+
+            // const getRefreshToken = refreshToken(
+            //     this.getAxiosInstance(),
+            //     this.getApiEndpointUrl(this.options.accessTokenUri),
+            //     this.options.clientId === null ? undefined : this.options.clientId,
+            //     this.options.clientSecret === null ? undefined : this.options.clientSecret,
+            // );
+            // const auth = await getRefreshToken(this.oathClientToken.access_token, this.options.scopes.join(' '))
+            // console.log('Refresh token', auth);
             return true;
-        } catch (e) {
+        } catch (requestError: any) {
             if (this.debug) {
-                console.debug('[Client] Error during authentication', e);
+                console.debug('[Client] Error during authentication', requestError);
             }
-            throw ClientError.fromError(e);
+            throw ClientError.fromError(requestError);
         }
     }
 
@@ -78,7 +91,7 @@ export class OAuthClient {
             );
             const auth = await getRefreshToken(this.oathClientToken.refresh_token, this.options.scopes.join(' '));
             this.oathClientToken = this.tokenToOauthClientToken(auth);
-        } catch (e) {
+        } catch (e: any) {
             throw ClientError.fromError(e);
         }
     }
@@ -139,6 +152,9 @@ export class OAuthClient {
                         console.error('[Client] Error:', {error, clientError});
                     }
                     throw clientError;
+                }
+                if (this.debug) {
+                    console.error('[Client] Error:', {error});
                 }
                 throw error;
             }

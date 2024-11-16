@@ -1,5 +1,5 @@
 import {Headers} from './Data/Headers.js';
-import {HttpClient} from './HttpClient.js';
+import {ContentTypeHelper} from './ContentTypeHelper.js';
 
 export class HttpClientResponse {
     public status: number;
@@ -25,7 +25,13 @@ export class HttpClientResponse {
         if (contentType === null || contentType === undefined) {
             return null;
         }
-        const parsedContentType: { type: string, options: string | null } = HttpClient.formatContentType(contentType);
+        const parsedContentType: {
+            type: string, options: string | null
+        } = ContentTypeHelper.formatContentType(contentType);
         return parsedContentType.type;
+    }
+
+    public isJson(): boolean {
+        return this.getContentType() === 'application/json';
     }
 }
