@@ -8,6 +8,9 @@ export class Trigger extends MetaDataAware implements StateAware {
     public type: string;
     public projectEnvironmentId: string;
     public flowId: string;
+    public name: string;
+    public description: string;
+    public target: string;
     public arguments: {};
     public data: DataValueCollection;
     public state: State = State.Active;
@@ -29,7 +32,9 @@ export class Trigger extends MetaDataAware implements StateAware {
         const parsedData: DataValueCollection = DataValueCollection.fromObject(rawTrigger.data);
 
         const trigger: Trigger = new Trigger(rawTrigger.id, rawTrigger.type, rawTrigger.project_environment, flowId, parsedData);
-
+        trigger.name = rawTrigger.name;
+        trigger.description = rawTrigger.description;
+        trigger.target = rawTrigger.target;
         trigger.arguments = rawTrigger.arguments;
         trigger.state = State.fromString(rawTrigger.state);
         if (Object.prototype.hasOwnProperty.call(rawTrigger, 'metadata')) {
