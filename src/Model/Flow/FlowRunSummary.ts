@@ -1,6 +1,6 @@
+import {Utils} from '../../Utils.js';
 import {FlowRunStatus} from './FlowRunStatus.js';
 import {FlowRun} from './FlowRun.js';
-import {Utils} from '../../Utils.js';
 
 export class FlowRunSummary extends FlowRun {
     public time: Date;

@@ -1,6 +1,6 @@
+import {Utils} from '../../Utils.js';
 import {CodeDeployStatus} from './CodeDeployStatus.js';
 import {ProjectDeployCommit} from './ProjectDeployCommit.js';
-import {Utils} from '../../Utils.js';
 
 export class CodeDeploy {
     public id: string;

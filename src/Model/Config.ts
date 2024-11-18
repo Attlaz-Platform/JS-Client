@@ -1,5 +1,5 @@
-import {State} from './State.js';
 import {Utils} from '../Utils.js';
+import {State} from './State.js';
 
 export class Config {
     public id: number;
@@ -13,7 +13,7 @@ export class Config {
     public sensitive: boolean = true;
     public state: State = State.Active;
 
-    public static parse(rawConfig: { [k: string]: any }): Config {
+    public static parse(rawConfig: Record<string, any>): Config {
         const config: Config = new Config();
         config.id = rawConfig.id;
         config.projectId = rawConfig.project;

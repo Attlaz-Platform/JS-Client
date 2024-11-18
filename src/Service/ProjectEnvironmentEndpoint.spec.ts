@@ -5,7 +5,7 @@ import {ProjectEnvironmentConfiguration} from '../Model/Project/ProjectEnvironme
 
 jest.setTimeout((60) * 1000);
 
-const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
+const apiEndpoint: string = Helper.getApiEndpoint('beta')
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
@@ -38,6 +38,21 @@ test('Test get project environment configuration', async () => {
     expect(configuration).not.toBeNull();
     expect(configuration?.id).toBe('2Z340crbywJW8P5jHIohggdsIwC');
     expect(configuration?.value).toBe('flowrun.audiosense.staging');
+
+    console.log(configuration);
+});
+test('Test get non existing project environment configuration', async () => {
+    expect.assertions(1);
+
+    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+    client.getHttpClient().enableDebug();
+
+    await client.authenticate();
+
+    const configuration: ProjectEnvironmentConfiguration | null = await client.getProjectEnvironmentEndpoint().getConfigByKey('1tWWv6mQiG8dGwpPH7CdAnsxSfi', 'som_non_existing_key');
+    expect(configuration).toBeNull();
+
 
     console.log(configuration);
 });

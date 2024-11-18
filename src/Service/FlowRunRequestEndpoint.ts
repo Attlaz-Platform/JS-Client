@@ -1,7 +1,7 @@
-import {Endpoint} from './Endpoint.js';
 import {FlowRunResponse} from '../Model/Flow/FlowRunResponse.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
+import {Endpoint} from './Endpoint.js';
 
 export class FlowRunRequestEndpoint extends Endpoint {
     public async requestFlowRun(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {

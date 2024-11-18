@@ -11,7 +11,7 @@ export enum CodeDeployStatus {
 }
 
 export namespace CodeDeployStatus {
-    export function fromString(input: string): CodeDeployStatus {
+    export const fromString = (input: string): CodeDeployStatus => {
         const result: CodeDeployStatus | null = Utils.parseEnum<CodeDeployStatus>(input, CodeDeployStatus);
         if (result === null) {
             throw new Error('Unable to parse CodeDeployStatus from string: Unknown CodeDeployStatus "' + input + '"');

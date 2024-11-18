@@ -13,7 +13,7 @@ export enum LogLevel {
 
 export namespace LogLevel {
 
-    export function compare(logLevelA: LogLevel, logLevelB: LogLevel): number {
+    export const compare = (logLevelA: LogLevel, logLevelB: LogLevel): number => {
         const logLevelANumeric: number = LogLevel.toNumeric(logLevelA);
         const logLevelBNumeric: number = LogLevel.toNumeric(logLevelB);
         if (logLevelANumeric > logLevelBNumeric) {
@@ -25,7 +25,7 @@ export namespace LogLevel {
         return 0;
     }
 
-    export function toNumeric(logLevel: LogLevel): number {
+    export const toNumeric = (logLevel: LogLevel): number => {
         switch (logLevel) {
             case LogLevel.Debug:
                 return 100;
@@ -49,7 +49,7 @@ export namespace LogLevel {
         }
     }
 
-    export function fromString(input: string): LogLevel {
+    export const fromString = (input: string): LogLevel => {
         const result: LogLevel | null = Utils.parseEnum<LogLevel>(input, LogLevel);
         if (result === null) {
             throw new Error('Unable to parse LogLevel from string: Unknown LogLevel "' + input + '"');

@@ -1,7 +1,6 @@
 import {OAuthClient} from '../Http/OAuthClient.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {HttpClient} from '../Http/HttpClient.js';
 import {Utils} from '../Utils.js';
 import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
 import {DataValueCollection} from '../Model/DataValueCollection.js';
@@ -9,6 +8,7 @@ import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;
@@ -122,9 +122,7 @@ export abstract class Endpoint {
         return result;
     }
 
-    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: {
-        [k: string]: any
-    }) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
+    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: Record<string, any>) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
         parameters = this.formatParameters(parameters);
         if (action instanceof QueryString) {
             action = action.build();
@@ -147,7 +145,7 @@ export abstract class Endpoint {
             }
             result.setData(this.parseObject<T>(requestResponse, parser));
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 result.setData(null);
             } else {
                 throw error;
@@ -183,8 +181,8 @@ export abstract class Endpoint {
         const wrappedData: any = ObjectWrapper.wrap(rawObject);
         try {
             return parser(wrappedData);
-        } catch (e: any) {
-            console.error('Unable to parse: ' + e.message);
+        } catch (error: any) {
+            console.error('Unable to parse: ' + error.message);
         }
         return null;
     }

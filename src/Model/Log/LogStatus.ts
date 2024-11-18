@@ -8,7 +8,7 @@ export enum LogStatus {
 
 export namespace LogStatus {
 
-    export function fromString(input: string): LogStatus {
+    export const fromString = (input: string): LogStatus => {
         const result: LogStatus | null = Utils.parseEnum<LogStatus>(input, LogStatus);
         if (result === null) {
             throw new Error('Unable to parse LogStatus from string: Unknown LogStatus "' + input + '"');

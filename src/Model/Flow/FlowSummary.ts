@@ -1,6 +1,6 @@
+import {Utils} from '../../Utils.js';
 import {FlowRunStatus} from './FlowRunStatus.js';
 import {Flow} from './Flow.js';
-import {Utils} from '../../Utils.js';
 
 export class FlowSummary extends Flow {
     public status: FlowRunStatus = FlowRunStatus.Unknown;

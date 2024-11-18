@@ -11,6 +11,8 @@ export {OAuthClient} from './Http/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';
+export {HttpStatus} from './Http/HttpStatus.js';
+export {ContentTypeHelper} from './Http/ContentTypeHelper.js';
 
 /**
  * Models
@@ -23,6 +25,7 @@ export {AdapterConnection} from './Model/Adapter/AdapterConnection.js';
 export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 export {AdapterConnectionStatus} from './Model/Adapter/AdapterConnectionStatus.js';
 export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
+export {AdapterConnectionEvent} from './Model/Adapter/AdapterConnectionEvent.js';
 
 export {EventType} from './Model/Event/EventType.js';
 
@@ -68,7 +71,6 @@ export {QueueStatus} from './Model/Queue/QueueStatus.js';
 
 /** Result * */
 export {CollectionResult} from './Model/Result/CollectionResult.js';
-export {DataResult} from './Model/Result/DataResult.js';
 export {ObjectResult} from './Model/Result/ObjectResult.js';
 export {ResultError} from './Model/Result/ResultError.js';
 
@@ -137,6 +139,7 @@ export {Endpoint} from './Service/Endpoint.js';
 
 /* Endpoints */
 export {AdapterEndpoint} from './Service/AdapterEndpoint.js';
+export {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 export {ChannelEndpoint} from './Service/ChannelEndpoint.js';
 export {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 export {ConfigEndpoint} from './Service/ConfigEndpoint.js';

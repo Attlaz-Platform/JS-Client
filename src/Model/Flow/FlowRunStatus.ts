@@ -12,7 +12,7 @@ export enum FlowRunStatus {
 }
 
 export namespace FlowRunStatus {
-    export function fromString(input: string): FlowRunStatus {
+    export const fromString = (input: string): FlowRunStatus => {
         const result: FlowRunStatus | null = Utils.parseEnum<FlowRunStatus>(input, FlowRunStatus);
         if (result === null) {
             throw new Error('Unable to parse FlowRunStatus from string: Unknown FlowRunStatus "' + input + '"');

@@ -12,17 +12,17 @@ export class SlackChannelData extends ChannelData {
     public team_id: string;
     public team_name: string;
 
-    public constructor(access_token: string, webhook: string, channel_id: string, channel_name: string, team_id: string, team_name: string) {
+    public constructor(accessToken: string, webhook: string, channelId: string, channelName: string, teamId: string, teamName: string) {
         super(ChannelType.Slack);
 
-        this.access_token = access_token;
+        this.access_token = accessToken;
 
         this.webhook = webhook;
 
-        this.channel_id = channel_id;
-        this.channel_name = channel_name;
+        this.channel_id = channelId;
+        this.channel_name = channelName;
 
-        this.team_id = team_id;
-        this.team_name = team_name;
+        this.team_id = teamId;
+        this.team_name = teamName;
     }
 }

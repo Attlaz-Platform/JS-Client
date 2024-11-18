@@ -1,4 +1,3 @@
-import {Endpoint} from './Endpoint.js';
 
 import {Utils} from '../Utils.js';
 
@@ -7,6 +6,7 @@ import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {Endpoint} from './Endpoint.js';
 
 export class UserActionEndpoint extends Endpoint {
     public async getWorkspaceMemberActions(workspaceId: string, memberId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {

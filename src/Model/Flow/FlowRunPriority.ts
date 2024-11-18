@@ -9,7 +9,7 @@ export enum FlowRunPriority {
 }
 
 export namespace FlowRunPriority {
-    export function fromString(input: string): FlowRunPriority {
+    export const fromString = (input: string): FlowRunPriority => {
         const result: FlowRunPriority | null = Utils.parseEnum<FlowRunPriority>(input, FlowRunPriority);
         if (result === null) {
             throw new Error('Unable to parse FlowRunPriority from string: Unknown FlowRunPriority "' + input + '"');

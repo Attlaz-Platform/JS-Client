@@ -1,6 +1,6 @@
-import {Endpoint} from './Endpoint.js';
 import {QueueStatus} from '../Model/Queue/QueueStatus.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {Endpoint} from './Endpoint.js';
 
 export class QueueEndpoint extends Endpoint {
     public async getByProjectEnvironment(projectEnvironmentId: string): Promise<QueueStatus | null> {

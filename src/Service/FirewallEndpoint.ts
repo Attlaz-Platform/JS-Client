@@ -1,9 +1,9 @@
-import {Endpoint} from './Endpoint.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Utils} from '../Utils.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {Endpoint} from './Endpoint.js';
 
 export type BlockedIp = { id: string; ip: string; from: Date; to: Date; reason: string };
 export type FlaggedIp = { id: string; ip: string; date: Date; reason: string };

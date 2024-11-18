@@ -7,7 +7,7 @@ export enum WorkerInstanceState {
 }
 
 export namespace WorkerInstanceState {
-    export function fromString(input: string): WorkerInstanceState {
+    export const fromString = (input: string): WorkerInstanceState => {
         const result: WorkerInstanceState | null = Utils.parseEnum<WorkerInstanceState>(input, WorkerInstanceState);
         if (result === null) {
             throw new Error('Unable to parse WorkerInstanceState from string: Unknown WorkerInstanceState "' + input + '"');

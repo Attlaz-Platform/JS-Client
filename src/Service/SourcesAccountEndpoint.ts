@@ -1,13 +1,13 @@
-import {Endpoint} from './Endpoint.js';
 import {CodeSourceAccount} from '../Model/Deployment/CodeSourceAccount.js';
 import {CodeSource} from '../Model/Deployment/CodeSource.js';
-import {HttpClient} from '../Http/HttpClient.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {SourcesAccountRepository} from '../Model/Deployment/SourcesAccountRepository.js';
 import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccountRepositoryBranch.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
+import {Endpoint} from './Endpoint.js';
 
 export class SourcesAccountEndpoint extends Endpoint {
     public async getAllCodeSources(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CodeSource>> {
@@ -31,7 +31,7 @@ export class SourcesAccountEndpoint extends Endpoint {
 
             return rawSourcesAccounts.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 return null;
             }
             if (this.httpClient.isDebugEnabled()) {
@@ -52,7 +52,7 @@ export class SourcesAccountEndpoint extends Endpoint {
             const result: ObjectResult<CodeSource> = await this.requestObject('/codesources/' + codeSourceId, null, CodeSource.parse);
             return result.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 return null;
             }
             if (this.httpClient.isDebugEnabled()) {

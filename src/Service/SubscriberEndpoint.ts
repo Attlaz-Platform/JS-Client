@@ -1,9 +1,9 @@
-import {Endpoint} from './Endpoint.js';
 import {Subscriber} from '../Model/Messaging/Subscriber.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {Endpoint} from './Endpoint.js';
 
 export class SubscriberEndpoint extends Endpoint {
     public async getSubscribersByFlow(flowId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<Subscriber>> {

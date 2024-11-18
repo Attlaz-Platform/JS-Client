@@ -1,8 +1,8 @@
-import {Endpoint} from './Endpoint.js';
 import {Utils} from '../Utils.js';
 import {Config} from '../Model/Config.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
+import {Endpoint} from './Endpoint.js';
 
 export class ConfigEndpoint extends Endpoint {
     public async getConfigByFlow(flowId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
@@ -15,11 +15,11 @@ export class ConfigEndpoint extends Endpoint {
             const result: CollectionResult<Config> = await this.requestCollection('/flows/' + flowId + '/configvalues', Config.parse, parameters);
 
             return result;
-        } catch (e) {
+        } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Unable to load flow configuration', e);
+                console.error('Unable to load flow configuration', error);
             }
-            throw e;
+            throw error;
         }
     }
 
@@ -27,11 +27,11 @@ export class ConfigEndpoint extends Endpoint {
         try {
             const result: CollectionResult<Config> = await this.requestCollection('/projectenvironments/' + projectEnvironmentId + '/configvalues', Config.parse);
             return result;
-        } catch (e) {
+        } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Unable to load project configuration', e);
+                console.error('Unable to load project configuration', error);
             }
-            throw e;
+            throw error;
         }
     }
 
@@ -40,11 +40,11 @@ export class ConfigEndpoint extends Endpoint {
             const url: string = '/configvalues';
             const result: CollectionResult<Config> = await this.requestCollection(url, Config.parse, configs, 'POST');
             return result;
-        } catch (e) {
+        } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
-                console.error('Failed to load config: ', e);
+                console.error('Failed to load config: ', error);
             }
-            throw e;
+            throw error;
         }
     }
 }

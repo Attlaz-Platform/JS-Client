@@ -1,3 +1,4 @@
+import {Utils} from '../../Utils.js';
 import {AdapterConnectionStatus} from './AdapterConnectionStatus.js';
 
 export class AdapterConnection {
@@ -7,6 +8,7 @@ export class AdapterConnection {
     name: string;
     projectId: string;
     status: AdapterConnectionStatus;
+    lastUsed: Date | null = null;
 
     public static parse(rawAdapterConnection: any): AdapterConnection {
         const adapterConnection: AdapterConnection = new AdapterConnection();
@@ -17,6 +19,7 @@ export class AdapterConnection {
         adapterConnection.projectId = rawAdapterConnection.project;
 
         adapterConnection.status = AdapterConnectionStatus.fromString(rawAdapterConnection.status);
+        adapterConnection.lastUsed = rawAdapterConnection.last_used === null ? null : Utils.parseRawDate(rawAdapterConnection.last_used);
         return adapterConnection;
     }
 }

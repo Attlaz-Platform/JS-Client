@@ -12,7 +12,7 @@ export enum WorkspaceMemberInviteState {
 
 export namespace WorkspaceMemberInviteState {
 
-    export function fromString(input: string): WorkspaceMemberInviteState {
+    export const fromString = (input: string): WorkspaceMemberInviteState => {
         const result: WorkspaceMemberInviteState | null = Utils.parseEnum<WorkspaceMemberInviteState>(input, WorkspaceMemberInviteState);
         if (result === null) {
             throw new Error('Unable to parse WorkspaceMemberInviteState from string: Unknown WorkspaceMemberInviteState "' + input + '"');

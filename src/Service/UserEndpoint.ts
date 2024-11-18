@@ -1,8 +1,8 @@
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
-import {Endpoint} from './Endpoint.js';
 import {User} from '../Model/User/User.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {Endpoint} from './Endpoint.js';
 
 export class UserEndpoint extends Endpoint {
     public async getUser(): Promise<User | null> {

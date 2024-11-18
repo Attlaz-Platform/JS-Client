@@ -1,10 +1,10 @@
-import {Endpoint} from './Endpoint.js';
 import {Channel} from '../Model/Messaging/Channel/Channel.js';
 import {ChannelHistory} from '../Model/Messaging/ChannelHistory.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {Endpoint} from './Endpoint.js';
 
 export class ChannelEndpoint extends Endpoint {
     public async getById(channelId: string): Promise<Channel | null> {

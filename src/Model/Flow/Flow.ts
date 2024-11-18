@@ -17,7 +17,7 @@ export class Flow extends MetaDataAware implements StateAware {
     public parallelLimit: number = 0;
 
     public codeSource: string | null = null;
-    public runCommand: string | null = null;
+    public runStrategy: string | null = null;
 
     public static parse(rawFlow: any): Flow {
         const flow: Flow = new Flow();
@@ -30,7 +30,7 @@ export class Flow extends MetaDataAware implements StateAware {
         flow.state = State.fromString(rawFlow.state);
         flow.parallelLimit = Utils.parseInt(rawFlow.parallel_limit);
         flow.codeSource = rawFlow.code_source;
-        flow.runCommand = rawFlow.run_command;
+        flow.runStrategy = rawFlow.run_strategy;
         if (Object.prototype.hasOwnProperty.call(rawFlow, 'metadata')) {
             flow.metadata = DataValueCollection.fromObject(rawFlow.metadata);
         }

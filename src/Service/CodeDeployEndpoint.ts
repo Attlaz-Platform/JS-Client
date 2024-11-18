@@ -1,7 +1,7 @@
-import {Endpoint} from './Endpoint.js';
 import {CodeDeploy} from '../Model/Project/CodeDeploy.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {Endpoint} from './Endpoint.js';
 
 export class CodeDeployEndpoint extends Endpoint {
     public async getById(deployId: string): Promise<CodeDeploy | null> {

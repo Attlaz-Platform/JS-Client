@@ -1,14 +1,14 @@
-import {Endpoint} from './Endpoint.js';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment.js';
-import {HttpClient} from '../Http/HttpClient.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {ProjectEnvironmentConfiguration} from '../Model/Project/ProjectEnvironmentConfiguration.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
+import {Endpoint} from './Endpoint.js';
 
 export class ProjectEnvironmentEndpoint extends Endpoint {
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
         try {
-            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection('/projects/' + id + '/environments', ProjectEnvironment.parse);
+            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection<ProjectEnvironment>('/projects/' + id + '/environments', ProjectEnvironment.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -21,10 +21,10 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     public async getById(id: string): Promise<ProjectEnvironment | null> {
         try {
-            const rawProjectEnvironment: ObjectResult<ProjectEnvironment> = await this.requestObject('/projectenvironments/' + id + '', null, ProjectEnvironment.parse);
+            const rawProjectEnvironment: ObjectResult<ProjectEnvironment> = await this.requestObject<ProjectEnvironment>('/projectenvironments/' + id + '', null, ProjectEnvironment.parse);
             return rawProjectEnvironment.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 return null;
             }
             if (this.httpClient.isDebugEnabled()) {
@@ -37,7 +37,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     public async save(projectEnvironment: ProjectEnvironment): Promise<ProjectEnvironment> {
         try {
-            const result: ObjectResult<ProjectEnvironment> = await this.requestObject('projectenvironments/', projectEnvironment, ProjectEnvironment.parse, 'POST');
+            const result: ObjectResult<ProjectEnvironment> = await this.requestObject<ProjectEnvironment>('projectenvironments/', projectEnvironment, ProjectEnvironment.parse, 'POST');
             const createdProjectEnvironment: ProjectEnvironment | null = result.getData();
             if (createdProjectEnvironment === null) {
                 throw new Error('ProjectEnvironment not created');
@@ -65,7 +65,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
             const rawProjectEnvironment: ObjectResult<ProjectEnvironmentConfiguration> = await this.requestObject('/projectenvironments/' + projectEnvironmentId + '/configurations/' + configKey, null, parser);
             return rawProjectEnvironment.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 return null;
             }
             if (this.httpClient.isDebugEnabled()) {

@@ -1,16 +1,19 @@
 import {Helper} from './helper.js';
-import {Client, ClientError, HttpClient, OAuthClientToken, User} from '../../src/index.js';
+import {Client, ClientError, HttpStatus, OAuthClientToken, User} from '../../src/index.js';
 
+const useApiVersion: string = 'local';
 describe('Client', () => {
 
 
     test('Test client credentials authentication', async () => {
 
-        expect.assertions(1);
-        const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+        expect.assertions(2);
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
         const authenticated: boolean = await client.authenticate();
+
+        console.log(client.getToken()?.refresh_token);
 
         const user: User | null = await client.getUserEndpoint().getUser();
         expect(user).not.toBeNull();
@@ -21,20 +24,21 @@ describe('Client', () => {
     });
     test('Test token authentication', async () => {
 
-        expect.assertions(1);
-        const client: Client = new Client(Helper.getEnvValue('workingAccessTokenForAuthentication'), {endpoint: Helper.getEnvValue('apiEndpoint')});
+        expect.assertions(3);
+        const client: Client = new Client(Helper.getEnvValue('workingAccessTokenForAuthentication'), {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
         client.getHttpClient().enableDebug();
 
+        expect(client.getToken()?.refresh_token).toStrictEqual('');
         // const authenticated: boolean = await client.authenticate();
 
         const user: User | null = await client.getUserEndpoint().getUser();
         expect(user).not.toBeNull();
-        console.log(user);
+        expect(user?.email).toStrictEqual('admin@attlaz.com');
     });
     test('Handle request with invalid or expired token', async () => {
 
         expect.assertions(2);
-        const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
 
@@ -44,7 +48,7 @@ describe('Client', () => {
         return client.getUserEndpoint().getUser().then((result: User | null) => {
             fail('Should not be able to authenticate');
         }, (error) => {
-            expect(error.code).toBe(HttpClient.HTTP_UNAUTHORIZED);
+            expect(error.code).toBe(HttpStatus.HTTP_UNAUTHORIZED);
             expect(error.name).toBe('Unauthorized');
         });
     });
@@ -53,7 +57,7 @@ describe('Client', () => {
         expect.assertions(2);
 
 
-        const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
 
@@ -64,14 +68,14 @@ describe('Client', () => {
         return client.getUserEndpoint().getUser().then((result: User | null) => {
             fail('Should not be able to authenticate');
         }, (error: ClientError) => {
-            expect(error.code).toBe(HttpClient.HTTP_UNAUTHORIZED);
+            expect(error.code).toBe(HttpStatus.HTTP_UNAUTHORIZED);
             expect(error.name).toBe('Unauthorized');
         });
     });
     test('Handle multiple refresh tokens at the same time', async () => {
 
         expect.assertions(10);
-        const client: Client = new Client('', {endpoint: Helper.getEnvValue('apiEndpoint')});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
         client.setClientCredentials(Helper.getEnvValue('passwordFlowClientId'), Helper.getEnvValue('passwordFlowClientSecret'));
         client.getHttpClient().enableDebug();
 

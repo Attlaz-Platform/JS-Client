@@ -1,11 +1,11 @@
-import {Endpoint} from './Endpoint.js';
 import {Utils} from '../Utils.js';
-import {HttpClient} from '../Http/HttpClient.js';
 import {Flow} from '../Model/Flow/Flow.js';
 import {FlowSummary} from '../Model/Flow/FlowSummary.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
+import {Endpoint} from './Endpoint.js';
 
 export class FlowEndpoint extends Endpoint {
     public async getByProject(projectId: string): Promise<CollectionResult<Flow>> {
@@ -27,7 +27,7 @@ export class FlowEndpoint extends Endpoint {
 
             return result.getData();
         } catch (error: any) {
-            if (error.code === HttpClient.HTTP_NOTFOUND) {
+            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 return null;
             }
             if (this.httpClient.isDebugEnabled()) {

@@ -9,7 +9,7 @@ export enum AdapterConnectionStatus {
 
 export namespace AdapterConnectionStatus {
 
-    export function fromString(input: string): AdapterConnectionStatus {
+    export const fromString = (input: string): AdapterConnectionStatus => {
         if (input === 'pass') {
             return AdapterConnectionStatus.Healthy;
         }

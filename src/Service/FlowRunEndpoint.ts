@@ -1,4 +1,3 @@
-import {Endpoint} from './Endpoint.js';
 import {FlowRun} from '../Model/Flow/FlowRun.js';
 import {FlowRunStatus} from '../Model/Flow/FlowRunStatus.js';
 import {FlowRunSummary} from '../Model/Flow/FlowRunSummary.js';
@@ -7,6 +6,7 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {Endpoint} from './Endpoint.js';
 
 export class FlowRunEndpoint extends Endpoint {
     public async getFlowRuns(flowId: string): Promise<CollectionResult<FlowRun>> {

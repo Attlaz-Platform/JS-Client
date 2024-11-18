@@ -1,11 +1,11 @@
-import {DataValue, DataValueValue} from './DataValue.js';
 import {Utils} from '../Utils.js';
+import {DataValue, DataValueValue} from './DataValue.js';
 import {JsonSerializable} from './JsonSerializable.js';
 
 export class DataValueCollection extends JsonSerializable implements Iterable<DataValue> {
     private _values: DataValue[] = [];
 
-    public get length() {
+    public get length(): number {
         return this._values.length;
     }
 

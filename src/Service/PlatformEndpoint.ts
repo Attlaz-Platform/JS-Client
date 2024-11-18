@@ -4,14 +4,15 @@ import {PlatformImage} from '../Model/Worker/PlatformImage.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 export class PlatformEndpoint extends Endpoint {
-    public async getAll(workspaceId: string): Promise<CollectionResult<Platform>> {
-        const cmd: string = '/workspaces/' + workspaceId + '/platforms';
+    public async getAll(workspaceId: string | null): Promise<CollectionResult<Platform>> {
+
+        const cmd: string = '/workspaces/' + (workspaceId === null ? 'all' : workspaceId) + '/platforms';
         const result: CollectionResult<Platform> = await this.requestCollection(cmd, Platform.parse);
         return result;
     }
 
-    public async getPlatformImages(workspaceId: string, platformId: string): Promise<CollectionResult<PlatformImage>> {
-        const cmd: string = '/workspaces/' + workspaceId + '/platforms/' + platformId + '/images';
+    public async getPlatformImages(workspaceId: string | null, platformId: string): Promise<CollectionResult<PlatformImage>> {
+        const cmd: string = '/workspaces/' + (workspaceId === null ? 'all' : workspaceId) + '/platforms/' + platformId + '/images';
         const result: CollectionResult<PlatformImage> = await this.requestCollection(cmd, PlatformImage.parse);
         return result;
     }

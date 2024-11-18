@@ -32,44 +32,46 @@ import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoi
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
 import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
+import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 
 export class Client {
     private readonly endpoints: Map<string, any>;
     private httpClient: OAuthClient;
     private readonly Store: any = {
-        WorkerEndpoint,
+        AccessTokenEndpoint,
+        AdapterConnectionEndpoint,
         AdapterEndpoint,
-        ProjectEndpoint,
-        ProjectEnvironmentEndpoint,
-        CodeDeployEndpoint,
-        QueueEndpoint,
         ChannelEndpoint,
+        CodeDeployEndpoint,
+        CodeSourceStrategiesEndpoint,
         ConfigEndpoint,
-        InboxEndpoint,
-        SubscriberEndpoint,
-        LogEndpoint,
+        FirewallEndpoint,
         FlowEndpoint,
         FlowRunEndpoint,
         FlowRunRequestEndpoint,
-        WorkspaceEndpoint,
-        TriggerEndpoint,
-        UserEndpoint,
-        WorkspaceMemberEndpoint,
-        SourcesAccountEndpoint,
-        PlatformLanguageEndpoint,
-        StorageEndpoint,
-        WorkerConfigEndpoint,
-        HealthAlertEndpoint,
-        PlatformEndpoint,
         FlowRunStatsEndpoint,
-        CodeSourceStrategiesEndpoint,
-        FirewallEndpoint,
+        HealthAlertEndpoint,
+        InboxEndpoint,
+        LogEndpoint,
+        PlatformEndpoint,
+        PlatformLanguageEndpoint,
+        ProjectEndpoint,
+        ProjectEnvironmentEndpoint,
+        QueueEndpoint,
         SearchEndpoint,
+        SourcesAccountEndpoint,
+        StorageEndpoint,
+        SubscriberEndpoint,
+        TriggerEndpoint,
         UserActionEndpoint,
-        AccessTokenEndpoint,
+        UserEndpoint,
+        WorkerConfigEndpoint,
+        WorkerEndpoint,
+        WorkspaceEndpoint,
+        WorkspaceMemberEndpoint,
     };
 
-    private apiEndpoint: string = 'https://api.attlaz.com';
+    private readonly apiEndpoint: string = 'https://api.attlaz.com';
 
     private parseConfig(config: Record<string, unknown>): { apiEndpoint: string | undefined } {
         // TODO: go over other records in config and warn if any unknown ones
@@ -77,7 +79,7 @@ export class Client {
         return config as any;
     }
 
-    constructor(token: string | null = null, config: Record<string, unknown> = {}) {
+    constructor(token: string | null = null, config: { apiEndpoint: string | undefined } = {apiEndpoint: undefined}) {
         const parsedConfig = this.parseConfig(config);
 
         if (parsedConfig.apiEndpoint !== undefined) {
@@ -139,6 +141,10 @@ export class Client {
     /* Endpoints */
     public getAdapterEndpoint(): AdapterEndpoint {
         return this.getEndpoint('adapter', this.Store.AdapterEndpoint);
+    }
+
+    public getAdapterConnectionEndpoint(): AdapterConnectionEndpoint {
+        return this.getEndpoint('adapter-connection', this.Store.AdapterConnectionEndpoint);
     }
 
     public getProjectEndpoint(): ProjectEndpoint {

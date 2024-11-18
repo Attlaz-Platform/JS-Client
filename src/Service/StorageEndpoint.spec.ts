@@ -6,7 +6,7 @@ import {StorageItem} from '../Model/Storage/StorageItem.js';
 
 jest.setTimeout((60) * 1000);
 
-const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
+const apiEndpoint: string = Helper.getApiEndpoint('ngrok');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
@@ -40,7 +40,7 @@ test('Test Storage Endpoint - file', async () => {
     const storageItem: StorageItem = new StorageItem();
     storageItem.key = 'client-storage-test-' + Math.random();
 
-    const value: string = readFileSync('deploy-2ZBUljba0j0tKMKimJVe8hnvzAr.zip', {encoding: 'binary'}).toString();
+    const value: string = readFileSync('e2e/test-49mb.zip', {encoding: 'binary'}).toString();
     storageItem.value = value;
 
     const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem);
@@ -74,8 +74,8 @@ test('Test Storage Endpoint - big file', async () => {
     const value: string = readFileSync('e2e/test-274mb.zip', {encoding: 'binary'}).toString();
     storageItem.value = value;
 
-    const x: number = value.length;
-    console.log(x + ' bytes');
+    const length: number = value.length;
+    console.log(length + ' bytes');
 
     const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem('1bJQR6fjfUeydXt9jpLhMryRjZm', StorageType.Cache, 'default', storageItem);
 

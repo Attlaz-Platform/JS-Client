@@ -20,7 +20,7 @@ export enum EntityType {
 }
 
 export namespace EntityType {
-    export function fromString(input: string): EntityType {
+    export const fromString = (input: string): EntityType => {
         const result: EntityType | null = Utils.parseEnum<EntityType>(input, EntityType);
         if (result === null) {
             throw new Error('Unable to parse EntityType from string: Unknown EntityType "' + input + '"');

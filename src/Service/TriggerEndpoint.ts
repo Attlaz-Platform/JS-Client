@@ -1,4 +1,3 @@
-import {Endpoint} from './Endpoint.js';
 import {Trigger} from '../Model/Trigger/Trigger.js';
 import {Utils} from '../Utils.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -6,6 +5,7 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {QueryString} from '../Http/Data/QueryString.js';
+import {Endpoint} from './Endpoint.js';
 
 export class TriggerEndpoint extends Endpoint {
     public async getByFlow(flowId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<Trigger>> {
