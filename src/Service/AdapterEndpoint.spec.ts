@@ -33,7 +33,7 @@ test('Test get connection', async () => {
 
     await client.authenticate();
 
-    const adapterCollectionResult: AdapterConnection | null = await client.getAdapterEndpoint().getConnectionByKey('1dCxPOug1npDYEPY7W719a9CszW', 'magento_ssh');
+    const adapterCollectionResult: AdapterConnection | null = await client.getAdapterConnectionEndpoint().getConnectionByKey('1dCxPOug1npDYEPY7W719a9CszW', 'magento_ssh');
 
     if (adapterCollectionResult === null) {
         throw new Error('Connection not found');
@@ -50,7 +50,7 @@ test('Test get connection configuration', async () => {
 
     await client.authenticate();
 
-    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration('2Yad2eW1CbgY2ZuoeYsgnZfM0ka');
+    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterConnectionEndpoint().getConnectionConfiguration('2Yad2eW1CbgY2ZuoeYsgnZfM0ka');
 
     const configurationValues: AdapterConnectionConfigurationValue[] = adapterCollectionResult.getData();
 
@@ -70,7 +70,7 @@ test('Test save connection configuration', async () => {
     await client.authenticate();
 
     const connectionId: string = '2Yad2eW1CbgY2ZuoeYsgnZfM0ka';
-    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> | null = await client.getAdapterEndpoint().getConnectionConfiguration(connectionId);
+    const adapterCollectionResult: CollectionResult<AdapterConnectionConfigurationValue> | null = await client.getAdapterConnectionEndpoint().getConnectionConfiguration(connectionId);
 
     expect(adapterCollectionResult).not.toBeNull();
 
@@ -92,9 +92,9 @@ test('Test save connection configuration', async () => {
     newConfiguration.adapterConnectionId = connectionId;
     newConfiguration.value = randomUserName;
 
-    await client.getAdapterEndpoint().saveConnectionConfiguration(connectionId, [newConfiguration]);
+    await client.getAdapterConnectionEndpoint().saveConnectionConfiguration(connectionId, [newConfiguration]);
 
-    const adapterCollectionResult2: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterEndpoint().getConnectionConfiguration(connectionId);
+    const adapterCollectionResult2: CollectionResult<AdapterConnectionConfigurationValue> = await client.getAdapterConnectionEndpoint().getConnectionConfiguration(connectionId);
 
     const config12: AdapterConnectionConfigurationValue | undefined = adapterCollectionResult2.getData().find((value: AdapterConnectionConfigurationValue) => value.configurationId === '1');
     if (config12 === undefined) {
