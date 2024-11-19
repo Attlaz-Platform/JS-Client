@@ -3,7 +3,6 @@ import {State} from '../State.js';
 
 export class User implements StateAware {
     public id: string;
-    public newId: string;
 
     public name: string;
 
@@ -28,7 +27,6 @@ export class User implements StateAware {
     public static parse(rawUser: any): User {
         const user: User = new User();
         user.id = rawUser.id;
-        user.newId = rawUser.new;
         user.name = rawUser.name;
         user.email = rawUser.email;
         user.emailIsVerified = rawUser.email_is_verified;
