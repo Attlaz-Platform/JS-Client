@@ -71,4 +71,21 @@ export class WorkspaceMemberEndpoint extends Endpoint {
         };
         return await this.requestCollection<WorkspaceMemberRole>(cmd, parser);
     }
+
+    public async saveMember(member: WorkspaceMember): Promise<WorkspaceMember> {
+        try {
+            const url: string = '/workspaces/' + member.workspaceId + '/members/' + member.id;
+            const result: ObjectResult<WorkspaceMember> = await this.requestObject(url, member, WorkspaceMember.parse, 'POST');
+            const updatedWorkspaceMember: WorkspaceMember | null = result.getData();
+            if (updatedWorkspaceMember === null) {
+                throw new Error('WorkspaceMember not updated');
+            }
+            return updatedWorkspaceMember;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to save workspace members: ', error);
+            }
+            throw error;
+        }
+    }
 }
