@@ -22,11 +22,17 @@ export class ClientError extends Error {
 
         let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
 
-
         if (error instanceof AxiosError) {
-
+            if (error.code === 'ECONNREFUSED') {
+                clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
+                clientError.code = 'Service not available';
+                return clientError;
+            }
             if (error.status !== undefined) {
+
                 clientError.httpStatus = error.status;
+
+
             }
             // console.log('Status', clientError.httpStatus);
             // if(clientError.httpStatus === HttpStatusCode.Ref)
@@ -40,7 +46,9 @@ export class ClientError extends Error {
                 if (error.code === 'ECONNREFUSED') {
                     clientError.message = 'Connection refused';
                 } else {
-                    console.error('Unable to parse AxiosError response', {error, x: error.status, y: error.code});
+                    console.error('Unable to parse AxiosError response', {
+                        error, status: error.status, code: error.code,
+                    });
                 }
             } else {
 
@@ -83,7 +91,6 @@ export class ClientError extends Error {
 
 
             }
-
             return clientError;
         }
 
@@ -111,6 +118,8 @@ export class ClientError extends Error {
         } else if (xError.code !== null && xError.code !== undefined) {
             switch (xError.code) {
                 case 'EUNAVAILABLE':
+                case 'ECONNREFUSED':
+                case 'HTTP_UNAVAILABLE':
                     clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
                     break;
                 case 'EAUTH':

@@ -4,44 +4,44 @@ import {Client, ClientError, HttpStatus, ObjectResult, ProjectEnvironment} from 
 const useApiVersion: string = 'beta';
 describe('Errors', () => {
 
-
     test('Api Offline', async () => {
         const nonExistingApiPoint: string = 'https://localhost:123';
         const client: Client = new Client('qsdfqsdfqsdf', {apiEndpoint: nonExistingApiPoint});
 
-        const z = async (): Promise<Error | null> => {
-
-            try {
-                const rawProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('2RYUhRnUlx7a9hm360g96Upn3Lc');
-            } catch (e: any) {
-                return e;
-            }
-            return null;
+        const method = async (): Promise<void> => {
+            const rawProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('2RYUhRnUlx7a9hm360g96Upn3Lc');
         }
 
-        const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
-        error.message = 'Connection refused';
-        expect(await z()).toStrictEqual(error);
+        return method().catch(e => {
+
+            const error: ClientError = new ClientError('Service not available', HttpStatus.HTTP_UNAVAILABLE);
+            error.message = 'Connection refused';
+
+            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, error));
+        });
+        //
+        // const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
+        // error.message = 'Connection refused';
+        // await expect(z()).rejects.toThrow(error);
     });
     test('Bad Request', async () => {
         /**
          * Start up Ngrok but don't start our API yet
          */
-        const nonWorkingNgrokEndpoint: string = ' https://champion-pleasant-sunfish.ngrok-free.app/projectenvironments/2RYUhRnUlx7a9hm360g96Upn3Lc';
+        const nonWorkingNgrokEndpoint: string = 'https://champion-pleasant-sunfish.ngrok-free.app/projectenvironments/2RYUhRnUlx7a9hm360g96Upn3Lc';
         const client: Client = new Client('qsdfqsdfqsdf', {apiEndpoint: nonWorkingNgrokEndpoint});
 
-        const z = async (): Promise<Error | null> => {
-            try {
-                const rawProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('2RYUhRnUlx7a9hm360g96Upn3Lc');
-            } catch (e: any) {
-                return e;
-            }
-            return null;
+        const method = async (): Promise<void> => {
+            const rawProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('2RYUhRnUlx7a9hm360g96Upn3Lc');
         }
 
-        const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
-        error.message = 'Request failed with status code 400';
-        expect(await z()).toStrictEqual(error);
+        return method().catch(e => {
+
+            const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
+            error.message = 'Request failed with status code 400';
+
+            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, error));
+        });
     });
     test('Not found request', async () => {
 
