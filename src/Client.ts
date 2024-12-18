@@ -33,6 +33,8 @@ import {SearchEndpoint} from './Service/SearchEndpoint.js';
 import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
+import {VERSION} from './version.js';
+import {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
 
 export class Client {
     private readonly endpoints: Map<string, any>;
@@ -69,6 +71,7 @@ export class Client {
         WorkerEndpoint,
         WorkspaceEndpoint,
         WorkspaceMemberEndpoint,
+        CollectionsEndpoint,
     };
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
@@ -100,6 +103,7 @@ export class Client {
         const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret);
         // TODO: how to know these scopes?
         options.scopes = ['all'];
+        // TODO: do we need to create a new oauth client, or can we update with these credentials?
         this.httpClient = new OAuthClient(options);
     }
 
@@ -134,7 +138,12 @@ export class Client {
     }
 
     public async getApiInformation(): Promise<{ version: string }> {
-        const result: { version: string } = await this.httpClient.request('/system/health', null, 'GET', false);
+        const result: {
+            version: string | undefined
+        } = await this.httpClient.request('/system/health', null, 'GET', false);
+        if (result.version === undefined) {
+            throw new Error('Unable to get API information: invalid response');
+        }
         return {version: result.version};
     }
 
@@ -259,6 +268,10 @@ export class Client {
         return this.getEndpoint('accesstoken', this.Store.AccessTokenEndpoint);
     }
 
+    public getCollectionsEndpoint(): CollectionsEndpoint {
+        return this.getEndpoint('collections', this.Store.CollectionsEndpoint);
+    }
+
     // TODO: this should be in a separate API?
     public getFirewallEndpoint(): FirewallEndpoint {
         return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
@@ -279,5 +292,9 @@ export class Client {
             }
         }
         return this.endpoints.get(key);
+    }
+
+    public getVersion(): string {
+        return VERSION;
     }
 }

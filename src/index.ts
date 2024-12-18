@@ -13,7 +13,10 @@ export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';
 export {HttpStatus} from './Http/HttpStatus.js';
 export {ContentTypeHelper} from './Http/ContentTypeHelper.js';
-
+/**
+ * Helpers
+ */
+export {LoadAllHelper} from './Helper/LoadAllHelper.js';
 /**
  * Models
  */
@@ -26,6 +29,10 @@ export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 export {AdapterConnectionStatus} from './Model/Adapter/AdapterConnectionStatus.js';
 export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
 export {AdapterConnectionEvent} from './Model/Adapter/AdapterConnectionEvent.js';
+
+
+export {Collection} from './Model/Collections/Collection.js';
+export {CollectionRecord} from './Model/Collections/CollectionRecord.js';
 
 export {EventType} from './Model/Event/EventType.js';
 
@@ -165,6 +172,7 @@ export {UserEndpoint} from './Service/UserEndpoint.js';
 export {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint.js';
 export {WorkerEndpoint} from './Service/WorkerEndpoint.js';
 export {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
+export {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
 
 export {Client} from './Client.js';
 export {Utils} from './Utils.js';
