@@ -7,7 +7,7 @@ export class ObjectWrapper {
                     if (strict) {
                         throw new Error('Property "' + property + '" does not exist');
                     } else {
-                        console.error('Property "' + property + '" does not exist', {object: raw});
+                        console.warn('Unable to get property on object.', {property: property, object: raw});
                     }
                 }
                 return value;
