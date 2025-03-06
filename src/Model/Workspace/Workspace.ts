@@ -1,18 +1,18 @@
 import {State} from '../State.js';
 import {StateAware} from '../StateAware.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {ApiRecord} from '../ApiRecord.js';
 
-export class Workspace implements StateAware {
+export class Workspace extends MetaDataAware implements StateAware {
     id: string;
-    name: string;
     key: string;
     state: State;
 
-    public static parse(raw: any): Workspace {
-        const workspace: Workspace = new Workspace();
-        workspace.id = raw.id;
-        workspace.name = raw.name;
-        workspace.key = raw.key;
-        workspace.state = State.fromString(raw.state);
+    public static parse(raw: ApiRecord): Workspace {
+        const workspace: Workspace = MetaDataAware.parseMetaData(new Workspace(), raw);
+        workspace.id = raw.id as string;
+        workspace.key = raw.key as string;
+        workspace.state = State.fromString(raw.state as string);
 
         return workspace;
     }

@@ -5,9 +5,9 @@ export class ChannelHistory {
     public subscriberId: string;
     public channelId: string;
     public time: Date;
-    public message: any;
-    public success: boolean;
-    public result: string;
+    public message: unknown;
+    public result: unknown;
+    public status: string;
 
     // public constructor(id: number, subscriber: string, channel: number, time: Date, message: string = '', success: boolean = true, result: string = '') {
     //     this.id = id;
@@ -19,15 +19,15 @@ export class ChannelHistory {
     //     this.result = result;
     //
     // }
-    public static parse(rawChannelHistory: any): ChannelHistory {
+    public static parse(rawChannelHistory: Record<string, unknown>): ChannelHistory {
         const log: ChannelHistory = new ChannelHistory();
-        log.id = rawChannelHistory.id;
-        log.subscriberId = rawChannelHistory.subscriber;
-        log.channelId = rawChannelHistory.channel;
-        log.time = Utils.parseRawDate(rawChannelHistory.time);
+        log.id = rawChannelHistory.id as string;
+        log.subscriberId = rawChannelHistory.subscriber as string;
+        log.channelId = rawChannelHistory.channel as string;
+        log.time = Utils.parseRawDate(rawChannelHistory.time as Date);
         log.message = rawChannelHistory.message;
-        log.success = Utils.isTrue(rawChannelHistory.success);
         log.result = rawChannelHistory.result;
+        log.status = rawChannelHistory.status as string;
         return log;
     }
 }

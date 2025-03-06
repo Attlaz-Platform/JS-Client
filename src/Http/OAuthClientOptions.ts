@@ -5,7 +5,11 @@ export class OAuthClientOptions {
     public scopes: string[] = [];
     public state: string = '';
 
-    constructor(public apiEndpoint: string, public readonly clientId: string | null = null, public readonly clientSecret: string | null = null) {
+    constructor(
+        public apiEndpoint: string,
+        public readonly clientId: string | null = null,
+        public readonly clientSecret: string | null = null,
+    ) {
 
     }
 }

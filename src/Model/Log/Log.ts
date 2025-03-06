@@ -1,11 +1,11 @@
+import {DataValueCollection} from '../DataValueCollection.js';
+import {Utils} from '../../Utils.js';
 import {LogLevel} from './LogLevel.js';
 import {LogStreamId} from './LogStreamId.js';
 import {LogStatus} from './LogStatus.js';
-import {DataValueCollection} from '../DataValueCollection.js';
-import {Utils} from '../../Utils.js';
 
 export class Log {
-    public id: string | null = null;
+    public id: string;
     public readonly logStream: LogStreamId;
     public readonly date: Date;
     public readonly level: LogLevel;

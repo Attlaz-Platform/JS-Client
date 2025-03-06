@@ -3,6 +3,7 @@ import {StateAware} from '../StateAware.js';
 
 export class PlatformLanguage implements StateAware {
     public id: string;
+    public key: string;
     public name: string;
     public description: string = '';
     public state: State = State.Active;
@@ -12,10 +13,11 @@ export class PlatformLanguage implements StateAware {
         this.name = name;
     }
 
-    public static parse(rawLanguage: any): PlatformLanguage {
-        const language: PlatformLanguage = new PlatformLanguage(rawLanguage.id, rawLanguage.name);
-        language.description = rawLanguage.description;
-        language.state = State.fromString(rawLanguage.state);
+    public static parse(rawLanguage: Record<string, unknown>): PlatformLanguage {
+        const language: PlatformLanguage = new PlatformLanguage(rawLanguage.id as string, rawLanguage.name as string);
+        language.key = rawLanguage.key as string;
+        language.description = rawLanguage.description as string;
+        language.state = State.fromString(rawLanguage.state as string);
         return language;
     }
 }

@@ -5,8 +5,8 @@ export class UserAction {
     public userId: string;
     public workspaceId: string;
     public action: string;
-    public resourceId: string;
-    public resourceType: string;
+    public entityId: string;
+    public entityType: string;
     public description: string;
     public ip: string;
     public time: Date;

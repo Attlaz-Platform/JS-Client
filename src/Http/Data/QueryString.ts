@@ -1,9 +1,11 @@
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {State} from '../../Model/State.js';
+import {Filters} from '../../Model/Pagination/Filters.js';
 
 export class QueryString {
 
     private parameters: { parameter: string; value: string | number | boolean | string[] }[] = [];
+
 
     public constructor(private command: string = '') {
     }
@@ -31,6 +33,14 @@ export class QueryString {
             if (pagination.endingBefore !== null && pagination.endingBefore !== undefined && pagination.endingBefore !== '') {
                 this.set('ending_before', pagination.endingBefore);
             }
+        }
+    }
+
+
+    public addFilters(filters: Filters): void {
+        for (const filter of filters.toArray()) {
+            const strMethod: string = filter.method === 'eq' ? '' : '[' + filter.method + ']';
+            this.set(filter.field + strMethod, filter.value);
         }
     }
 

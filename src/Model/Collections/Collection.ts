@@ -1,3 +1,5 @@
+import {ApiRecord} from '../ApiRecord.js';
+
 export class Collection {
     id: string;
     project: string;
@@ -12,7 +14,7 @@ export class Collection {
 
     // records: CollectionRecord[];
 
-    public static parse(raw: Record<string, unknown>): Collection {
+    public static parse(raw: ApiRecord): Collection {
         const collection: Collection = new Collection();
         collection.id = raw.id as string;
         collection.project = raw.project as string;

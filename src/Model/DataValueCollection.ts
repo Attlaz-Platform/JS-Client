@@ -9,8 +9,8 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
         return this._values.length;
     }
 
-    public static fromObject(rawValues: { key: string, value: DataValueValue }[]): DataValueCollection {
-        if (Utils.isNullOrUndefined(rawValues)) {
+    public static fromObject(rawValues: { key: string, value: DataValueValue }[] | null): DataValueCollection {
+        if (rawValues === null || rawValues === undefined) {
             return new DataValueCollection();
         }
         if (!Utils.isIterable(rawValues)) {

@@ -29,7 +29,7 @@ export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 export {AdapterConnectionStatus} from './Model/Adapter/AdapterConnectionStatus.js';
 export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
 export {AdapterConnectionEvent} from './Model/Adapter/AdapterConnectionEvent.js';
-
+export {BlockedIp, FlaggedIp, IpRule} from './Service/FirewallEndpoint.js';
 
 export {Collection} from './Model/Collections/Collection.js';
 export {CollectionRecord} from './Model/Collections/CollectionRecord.js';

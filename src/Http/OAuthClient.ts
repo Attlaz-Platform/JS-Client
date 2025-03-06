@@ -1,14 +1,14 @@
 import {clientCredentials, ownerCredentials, refreshToken} from 'axios-oauth-client';
 import axios, {AxiosInstance} from 'axios';
+import {VERSION} from '../version.js';
+import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {OAuthClientOptions} from './OAuthClientOptions.js';
 import {ClientError} from './ClientError.js';
 import {HttpClient} from './HttpClient.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
 import {OAuthClientToken} from './OAuthClientToken.js';
-import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {Parameters} from './Data/Parameters.js';
-import {VERSION} from '../version.js';
 import {Headers} from './Data/Headers.js';
 
 export class OAuthClient {
@@ -19,6 +19,7 @@ export class OAuthClient {
     private refreshTokenPromise: Promise<void> | null = null;
 
     constructor(private readonly options: OAuthClientOptions) {
+        this.initDefaultHeaders();
     }
 
     public async authenticate(username: string, password: string): Promise<boolean>;
@@ -99,11 +100,14 @@ export class OAuthClient {
 
     private getAxiosInstance(): AxiosInstance {
         if (this.axiosInstance === null) {
-            this.axiosInstance = axios.create({
+
+            const config:{} = {
                 // httpsAgent: new https.Agent({
                 //     rejectUnauthorized: false,
                 // }),
-            });
+            };
+
+            this.axiosInstance = axios.create(config);
         }
         return this.axiosInstance;
     }
@@ -136,7 +140,7 @@ export class OAuthClient {
 
             const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
             if (this.debug) {
-                console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl());
+                console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl(), {headers: requestData.headers});
             }
             try {
                 const response: HttpClientResponse = await HttpClient.request(requestData);
@@ -190,7 +194,13 @@ export class OAuthClient {
         return this.debug;
     }
 
+    private defaultHeaders: Headers = {};
+
     public getDefaultHeaders(): Headers {
+        return this.defaultHeaders;
+    }
+
+    private initDefaultHeaders(): void {
         const userAgentInfo: { version: string; language: string; language_version: string; publisher: string } = {
             version: VERSION,
             language: 'Javascript',
@@ -202,7 +212,11 @@ export class OAuthClient {
         if (this.isNodeEnvironment()) {
             headers['User-Agent'] = 'Attlaz Http/' + VERSION;
         }
-        return headers;
+        this.defaultHeaders = headers;
+    }
+
+    public addDefaultHeader(header: string, value: string): void {
+        this.defaultHeaders[header] = value;
     }
 
     private isNodeEnvironment(): boolean {

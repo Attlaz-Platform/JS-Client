@@ -2,14 +2,11 @@ import {State} from '../../State.js';
 import {Utils} from '../../../Utils.js';
 import {StateAware} from '../../StateAware.js';
 import {MetaDataAware} from '../../../Core/MetaDataAware.js';
-import {DataValueCollection} from '../../DataValueCollection.js';
-import {DataValueValue} from '../../DataValue.js';
 import {ChannelType} from './ChannelType.js';
 
 export class Channel extends MetaDataAware implements StateAware {
     public id: string;
     public ownerId: string;
-    public name: string;
     public type: ChannelType;
     public data: any;
     public state: State = State.Active;
@@ -33,11 +30,7 @@ export class Channel extends MetaDataAware implements StateAware {
         channel.isPrivate = Utils.isTrue(rawChannel.is_private as boolean);
         channel.singleUse = Utils.isTrue(rawChannel.single_use as boolean);
         channel.workspaces = rawChannel.workspaces as any;
-        if (Object.prototype.hasOwnProperty.call(rawChannel, 'metadata')) {
-            channel.metadata = DataValueCollection.fromObject(rawChannel.metadata as {
-                key: string, value: DataValueValue
-            }[] | null);
-        }
+
         return channel;
     }
 }

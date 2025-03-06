@@ -2,14 +2,13 @@ import {State} from '../State.js';
 import {StateAware} from '../StateAware.js';
 import {MetaDataAware} from '../../Core/MetaDataAware.js';
 import {DataValueCollection} from '../DataValueCollection.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class Trigger extends MetaDataAware implements StateAware {
     public id: string;
     public type: string;
     public projectEnvironmentId: string;
     public flowId: string;
-    public name: string;
-    public description: string;
     public target: string;
     public arguments: {};
     public data: DataValueCollection;
@@ -26,20 +25,16 @@ export class Trigger extends MetaDataAware implements StateAware {
         this.arguments = {};
     }
 
-    public static parse(rawTrigger: any): Trigger {
-        const flowId: string = rawTrigger.flow;
+    public static parse(rawTrigger: ApiRecord): Trigger {
+        const flowId: string = rawTrigger.flow as string;
 
-        const parsedData: DataValueCollection = DataValueCollection.fromObject(rawTrigger.data);
+        const parsedData: DataValueCollection = DataValueCollection.fromObject(rawTrigger.data as any);
 
-        const trigger: Trigger = new Trigger(rawTrigger.id, rawTrigger.type, rawTrigger.project_environment, flowId, parsedData);
-        trigger.name = rawTrigger.name;
-        trigger.description = rawTrigger.description;
-        trigger.target = rawTrigger.target;
-        trigger.arguments = rawTrigger.arguments;
-        trigger.state = State.fromString(rawTrigger.state);
-        if (Object.prototype.hasOwnProperty.call(rawTrigger, 'metadata')) {
-            trigger.metadata = DataValueCollection.fromObject(rawTrigger.metadata);
-        }
+        const trigger: Trigger = new Trigger(rawTrigger.id as string, rawTrigger.type as string, rawTrigger.project_environment as string, flowId, parsedData);
+        trigger.target = rawTrigger.target as string;
+        trigger.arguments = rawTrigger.arguments as any
+        trigger.state = State.fromString(rawTrigger.state as string);
+
 
         return trigger;
     }

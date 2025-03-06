@@ -4,6 +4,8 @@ import {StorageItem} from '../Model/Storage/StorageItem.js';
 import {StorageItemInformation} from '../Model/Storage/StorageItemInformation.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {Endpoint} from './Endpoint.js';
 
 export class StorageEndpoint extends Endpoint {
@@ -11,12 +13,12 @@ export class StorageEndpoint extends Endpoint {
         const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType;
 
         try {
-            const parser = (raw: any): StorageInformation => {
+            const parser = (raw: Record<string, unknown>): StorageInformation => {
                 const storageInformation: StorageInformation = new StorageInformation();
-                storageInformation.bytes = raw.bytes;
-                storageInformation.bytes_limit = raw.bytes_limit;
-                storageInformation.items = raw.items;
-                storageInformation.pools = raw.pools;
+                storageInformation.bytes = raw.bytes as number;
+                storageInformation.bytes_limit = raw.bytes_limit as number;
+                storageInformation.items = raw.items as number;
+                storageInformation.pools = raw.pools as any;
 
                 return storageInformation;
             };
@@ -53,11 +55,13 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<CollectionResult<StorageItemInformation>> {
-        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items';
+    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<StorageItemInformation>> {
+        const qs: QueryString = new QueryString('/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items');
+        qs.addPagination(pagination);
+
 
         try {
-            const result: CollectionResult<StorageItemInformation> = await this.requestCollection(cmd, StorageItemInformation.parse, null, 'GET');
+            const result: CollectionResult<StorageItemInformation> = await this.requestCollection(qs, StorageItemInformation.parse, null, 'GET');
             return result;
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {

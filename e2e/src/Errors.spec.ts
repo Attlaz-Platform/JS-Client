@@ -1,5 +1,6 @@
 import {Helper} from './helper.js';
-import {Client, ClientError, HttpStatus, ObjectResult, ProjectEnvironment} from '../../src/index.js';
+import {Client, ClientError, HttpClient, HttpClientRequest, HttpClientResponse, HttpStatus, ObjectResult, ProjectEnvironment} from '../../src/index.js';
+import {ApiError} from '../../src/Model/Error/ApiError.ts';
 
 const useApiVersion: string = 'beta';
 describe('Errors', () => {
@@ -14,15 +15,12 @@ describe('Errors', () => {
 
         return method().catch(e => {
 
-            const error: ClientError = new ClientError('Service not available', HttpStatus.HTTP_UNAVAILABLE);
-            error.message = 'Connection refused';
+            const expectedError: ApiError = new ApiError('Service not available', HttpStatus.HTTP_UNAVAILABLE);
+            expectedError.message = 'Service not available';
 
-            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, error));
+            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, expectedError));
         });
-        //
-        // const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
-        // error.message = 'Connection refused';
-        // await expect(z()).rejects.toThrow(error);
+
     });
     test('Bad Request', async () => {
         /**
@@ -37,10 +35,10 @@ describe('Errors', () => {
 
         return method().catch(e => {
 
-            const error: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
-            error.message = 'Request failed with status code 400';
+            const expectedError: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_BAD_REQUEST);
+            expectedError.message = 'Request failed with status code 400';
 
-            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, error));
+            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, expectedError));
         });
     });
     test('Not found request', async () => {
@@ -58,5 +56,24 @@ describe('Errors', () => {
         expect(rawProjectEnvironment.getData()).toBeNull();
 
     });
+    test('Unauthorized', async () => {
+        const method = async (): Promise<void> => {
+            const userRequest: HttpClientRequest = new HttpClientRequest('https://www.strava.com/api/v3/athlete', 'GET');
+            userRequest.setHeader('Authorization', 'Bearer ' + 'hmmz');
+            // userRequest.setHeader('Accept', 'application/json');
+            userRequest.setJsonHeader();
+
+
+            const userResponse: HttpClientResponse = await HttpClient.request(userRequest);
+        }
+        return method().catch(e => {
+
+            const expectedError: ClientError = new ClientError('ERR_BAD_REQUEST', HttpStatus.HTTP_UNAUTHORIZED);
+            expectedError.message = 'Unauthorized';
+
+            console.log(Object.assign({}, expectedError));
+            expect(Object.assign({}, e)).toStrictEqual(Object.assign({}, expectedError));
+        });
+    })
 
 });

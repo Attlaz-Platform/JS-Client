@@ -1,4 +1,3 @@
-
 import {Utils} from '../Utils.js';
 
 import {UserAction} from '../Model/User/UserAction.js';
@@ -13,9 +12,7 @@ export class UserActionEndpoint extends Endpoint {
         try {
             const queryString: QueryString = new QueryString('/workspaces/' + workspaceId + '/members/' + memberId + '/actions');
             queryString.addPagination(pagination);
-            const result: CollectionResult<UserAction> = await this.requestCollection(queryString, UserActionEndpoint.parse, null, 'GET');
-
-            return result;
+            return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapter configuration: ', error);
@@ -28,9 +25,7 @@ export class UserActionEndpoint extends Endpoint {
         try {
             const queryString: QueryString = new QueryString('/users/' + userId + '/actions');
             queryString.addPagination(pagination);
-            const result: CollectionResult<UserAction> = await this.requestCollection(queryString, UserActionEndpoint.parse, null, 'GET');
-
-            return result;
+            return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapter configuration: ', error);
@@ -43,9 +38,7 @@ export class UserActionEndpoint extends Endpoint {
         try {
             const queryString: QueryString = new QueryString('/resources/' + resourceType + '/' + resourceId + '/actions');
             queryString.addPagination(pagination);
-            const result: CollectionResult<UserAction> = await this.requestCollection(queryString, UserActionEndpoint.parse, null, 'GET');
-
-            return result;
+            return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
                 console.error('Failed to load adapter configuration: ', error);
@@ -54,20 +47,26 @@ export class UserActionEndpoint extends Endpoint {
         }
     }
 
-    private static parse(rawUserEvent: any): UserAction {
+    public async getAll(pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
+        const queryString: QueryString = new QueryString('/audit-logs');
+        queryString.addPagination(pagination);
+        return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
+    }
+
+    private static parse(rawUserEvent: Record<string, unknown>): UserAction {
         const userAction: UserAction = new UserAction();
 
-        userAction.id = rawUserEvent.id;
-        userAction.userId = rawUserEvent.user;
-        userAction.workspaceId = rawUserEvent.workspace;
-        userAction.action = rawUserEvent.action;
-        userAction.resourceId = rawUserEvent.resource;
-        userAction.resourceType = rawUserEvent.resource_type;
-        userAction.description = rawUserEvent.description;
-        userAction.ip = rawUserEvent.ip;
-        userAction.time = Utils.parseRawDate(rawUserEvent.time);
-        userAction.result = rawUserEvent.result;
-        userAction.data = DataValueCollection.fromObject(rawUserEvent.data);
+        userAction.id = rawUserEvent.id as string;
+        userAction.userId = rawUserEvent.user as string;
+        userAction.workspaceId = rawUserEvent.workspace as string;
+        userAction.action = rawUserEvent.action as string;
+        userAction.entityId = rawUserEvent.entity as string;
+        userAction.entityType = rawUserEvent.entity_type as string;
+        userAction.description = rawUserEvent.description as string;
+        userAction.ip = rawUserEvent.ip as string;
+        userAction.time = Utils.parseRawDate(rawUserEvent.time as Date);
+        userAction.result = rawUserEvent.result as string;
+        userAction.data = DataValueCollection.fromObject(rawUserEvent.data as any);
 
         return userAction;
     }

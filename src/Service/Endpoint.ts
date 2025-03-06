@@ -9,6 +9,8 @@ import {Parameters} from '../Http/Data/Parameters.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {HttpStatus} from '../Http/HttpStatus.js';
+import {ApiError} from '../Model/Error/ApiError.js';
+import {ClientError} from '../Http/ClientError.js';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;
@@ -92,8 +94,13 @@ export abstract class Endpoint {
         if (action instanceof QueryString) {
             action = action.build();
         }
+        let requestResponse: any;
+        try {
+            requestResponse = await this.httpClient.request(action, parameters, method, signWithOauthToken);
 
-        const requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
+        } catch (error) {
+            throw this.toApiError(error);
+        }
 
         const result: CollectionResult<T> = new CollectionResult<T>();
 
@@ -148,10 +155,52 @@ export abstract class Endpoint {
             if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 result.setData(null);
             } else {
-                throw error;
+                throw this.toApiError(error);
             }
         }
         return result;
+    }
+
+    private toApiError(error: any): ApiError {
+        if (error instanceof ClientError) {
+            const apiError: ApiError = new ApiError(error.message, error.httpStatus);
+
+            if (error.response !== null && error.response !== undefined) {
+                const response: {
+                    data: {
+                        error: {
+                            type: string | undefined;
+                            code: string | undefined;
+                            message: string | undefined;
+                            param?: string | undefined
+                        } | undefined
+                    }
+                } = error.response as any;
+
+
+                if (response.data.error !== undefined) {
+                    // console.debug('Error data', errorData);
+                    if (response.data.error.type !== undefined) {
+                        apiError.type = response.data.error.type;
+                    }
+                    if (response.data.error.code !== undefined) {
+                        apiError.code = response.data.error.code;
+                    }
+                    if (response.data.error.message !== undefined) {
+                        apiError.message = response.data.error.message;
+                    }
+                    if (response.data.error.param !== undefined) {
+                        apiError.param = response.data.error.param;
+                    }
+                }
+
+
+            }
+
+
+            return apiError;
+        }
+        return new ApiError('Unknown Error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
     }
 
     // public async request<T>(action: string, parameters: any | null = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<DataResult<T>> {

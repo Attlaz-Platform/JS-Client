@@ -10,56 +10,87 @@ import {EntityType} from '../EntityType.js';
 import {WorkspaceMember} from '../Workspace/WorkspaceMember.js';
 import {Trigger} from '../Trigger/Trigger.js';
 import {Subscriber} from '../Messaging/Subscriber.js';
+import {CodeSourceAccount} from '../Deployment/CodeSourceAccount.js';
+import {CodeSource} from '../Deployment/CodeSource.js';
+import {CodeDeploy} from '../Project/CodeDeploy.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class SearchResult {
     public type: EntityType;
     public label: string;
     public description: string;
-    public object: Workspace | WorkspaceMember | Project | ProjectEnvironment | Flow | FlowRun | Trigger | Channel | Subscriber | Adapter | AdapterConnection;
+    public entity: Workspace | WorkspaceMember | Project | ProjectEnvironment | Flow | FlowRun | Trigger | Channel | Subscriber | Adapter | AdapterConnection | CodeSourceAccount | CodeSource | CodeDeploy;
+    public score: number;
 
-    public static parse(rawResult: any): SearchResult {
+    public static parse(rawResult: Record<string, unknown>): SearchResult {
         const searchResult: SearchResult = new SearchResult();
-        searchResult.type = EntityType.fromString(rawResult.type);
-        searchResult.object = rawResult.object;
-        searchResult.label = rawResult.label;
-        searchResult.description = rawResult.description;
+        searchResult.type = EntityType.fromString(rawResult.entity_type as string);
+        // searchResult.entity = rawResult.entity;
+        searchResult.label = rawResult.label as string;
+        searchResult.description = rawResult.description as string;
+        searchResult.score = rawResult.score as number;
 
-        switch (rawResult.type) {
+        const rawEntity: ApiRecord = rawResult.entity as ApiRecord;
+        switch (searchResult.type) {
+            case EntityType.Organisation:
+                // TODO: implement
+                searchResult.entity = rawEntity as any;
+                break;
             case EntityType.Workspace:
-                searchResult.object = Workspace.parse(rawResult.object);
+                searchResult.entity = Workspace.parse(rawEntity);
                 break;
             case EntityType.Project:
-                searchResult.object = Project.parse(rawResult.object);
+                searchResult.entity = Project.parse(rawEntity);
                 break;
             case EntityType.ProjectEnvironment:
-                searchResult.object = ProjectEnvironment.parse(rawResult.object);
+                searchResult.entity = ProjectEnvironment.parse(rawEntity);
                 break;
             case EntityType.Flow:
-                searchResult.object = Flow.parse(rawResult.object);
+                searchResult.entity = Flow.parse(rawEntity);
                 break;
             case EntityType.FlowRun:
-                searchResult.object = FlowRun.parse(rawResult.object);
+                searchResult.entity = FlowRun.parse(rawEntity);
                 break;
             case EntityType.WorkspaceMember:
-                searchResult.object = WorkspaceMember.parse(rawResult.object);
+                searchResult.entity = WorkspaceMember.parse(rawEntity);
                 break;
+
             case EntityType.Adapter:
-                searchResult.object = Adapter.parse(rawResult.object);
+                searchResult.entity = Adapter.parse(rawEntity);
                 break;
             case EntityType.AdapterConnection:
-                searchResult.object = AdapterConnection.parse(rawResult.object);
+                searchResult.entity = AdapterConnection.parse(rawEntity);
                 break;
+
             case EntityType.Channel:
-                searchResult.object = Channel.parse(rawResult.object);
+                searchResult.entity = Channel.parse(rawEntity);
                 break;
             case EntityType.ChannelSubscriber:
-                searchResult.object = Subscriber.parseRaw(rawResult.object);
+                searchResult.entity = Subscriber.parseRaw(rawEntity);
                 break;
             case EntityType.Trigger:
-                searchResult.object = Trigger.parse(rawResult.object);
+                searchResult.entity = Trigger.parse(rawEntity);
+                break;
+
+            case EntityType.CodeSourceAccount:
+                searchResult.entity = CodeSourceAccount.parse(rawEntity);
+                break;
+            case EntityType.CodeSource:
+                searchResult.entity = CodeSource.parse(rawEntity);
+                break;
+            case EntityType.CodeSourceDeploy:
+                searchResult.entity = CodeDeploy.parse(rawEntity);
+                break;
+            case EntityType.StorageBucket:
+                // TODO: implement
+                searchResult.entity = rawEntity as any;
+                break;
+            case EntityType.LogStream:
+                // TODO: implement
+                searchResult.entity = rawEntity as any;
                 break;
             default:
-                throw new Error('Unknown search result type "' + rawResult.type + '"');
+                throw new Error('Unknown search result type "' + searchResult.type + '"');
         }
 
         return searchResult;

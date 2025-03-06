@@ -1,27 +1,28 @@
-export class Adapter {
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {ApiRecord} from '../ApiRecord.js';
+
+export class Adapter extends MetaDataAware {
     public id: string;
-    public name: string;
-    public description: string;
     public vendor: string;
-    public icon: string;
     public logo: string;
     public type: string;
     public categoryIds: string[];
-    public docs: string;
-    public website: string;
+    public docs: string | null;
+    public website: string | null;
 
-    public static parse(rawAdapter: Record<string, any>): Adapter {
-        const adapter: Adapter = new Adapter();
-        adapter.id = rawAdapter.id;
-        adapter.name = rawAdapter.name;
-        adapter.description = rawAdapter.description;
-        adapter.vendor = rawAdapter.vendor;
-        adapter.icon = rawAdapter.icon;
-        adapter.logo = rawAdapter.logo;
-        adapter.type = rawAdapter.type;
-        adapter.categoryIds = rawAdapter.categories;
-        adapter.docs = rawAdapter.docs;
-        adapter.website = rawAdapter.website;
+    public static parse(rawAdapter: ApiRecord): Adapter {
+        const adapter: Adapter = MetaDataAware.parseMetaData(new Adapter(), rawAdapter);
+
+        adapter.id = rawAdapter.id as string;
+        adapter.name = rawAdapter.name as string;
+        adapter.description = rawAdapter.description as string;
+        adapter.vendor = rawAdapter.vendor as string;
+        adapter.icon = rawAdapter.icon as string;
+        adapter.logo = rawAdapter.logo as string;
+        adapter.type = rawAdapter.type as string;
+        adapter.categoryIds = rawAdapter.categories as unknown as string[];
+        adapter.docs = rawAdapter.docs as string | null;
+        adapter.website = rawAdapter.website as string | null;
 
         return adapter;
     }

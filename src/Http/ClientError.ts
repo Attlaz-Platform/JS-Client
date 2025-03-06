@@ -3,18 +3,12 @@ import {HttpStatus} from './HttpStatus.js';
 
 export class ClientError extends Error {
     public httpStatus: number | null = null;
+    public message: string;
+    public response: unknown;
 
-    public type: string;
-    public code: string;
-    // public message: string;
-
-    public param?: string | undefined = undefined;
-
-    public stack?: string;
-
-    constructor(code: string, httpErrorCode: number | null = null) {
-        super(code);
-        this.code = code;
+    constructor(message: string, httpErrorCode: number | null = null) {
+        super(message);
+        this.message = message;
         this.httpStatus = httpErrorCode;
     }
 
@@ -22,13 +16,16 @@ export class ClientError extends Error {
 
         let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
 
+
         if (error instanceof AxiosError) {
-            if (error.code === 'ECONNREFUSED') {
+            if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
                 clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
-                clientError.code = 'Service not available';
+                // clientError.code = 'Service not available';
+                clientError.message = 'Service not available';
                 return clientError;
             }
-            if (error.status !== undefined) {
+
+            if (error.status !== undefined && error.status !== null) {
 
                 clientError.httpStatus = error.status;
 
@@ -36,60 +33,25 @@ export class ClientError extends Error {
             }
             // console.log('Status', clientError.httpStatus);
             // if(clientError.httpStatus === HttpStatusCode.Ref)
-            clientError.message = error.message;
+            // clientError.message = error.message;
             if (error.code !== undefined) {
-                clientError.code = error.code;
+                //  clientError.code = error.code;
             }
 
 
             if (error.response === undefined) {
-                if (error.code === 'ECONNREFUSED') {
-                    clientError.message = 'Connection refused';
-                } else {
-                    console.error('Unable to parse AxiosError response', {
-                        error, status: error.status, code: error.code,
-                    });
-                }
+
+                console.error('Unknown AxiosError error', {
+                    error, status: error.status, code: error.code,
+                });
+
             } else {
 
+                const response: { status: number; statusText: string } = error.response;
+                //  console.log('Response', response);
+                clientError.message = response.statusText;
 
-                //   console.debug('Parse response', {error: error, data: error.response.data});
-
-
-                switch (error.response.status) {
-                    case 404:
-                        clientError.code = 'Not found';
-                        break;
-                    default:
-                }
-
-
-                const errorData: {
-                    error: {
-                        type: string | undefined;
-                        code: string | undefined;
-                        message: string | undefined;
-                        param?: string | undefined
-                    } | undefined
-                } = error.response.data;
-
-                if (errorData.error !== undefined) {
-                    // console.debug('Error data', errorData);
-                    if (errorData.error.type !== undefined) {
-                        clientError.type = errorData.error.type;
-                    }
-                    if (errorData.error.code !== undefined) {
-                        clientError.code = errorData.error.code;
-                    }
-                    if (errorData.error.message !== undefined) {
-                        clientError.message = errorData.error.message;
-                    }
-                    if (errorData.error.param !== undefined) {
-                        clientError.param = errorData.error.param;
-                    }
-                }
-
-
+                clientError.response = response;
             }
             return clientError;
         }
@@ -104,7 +66,7 @@ export class ClientError extends Error {
         // }
         //
 
-        // console.error(error);
+        //    console.error(error);
 
         const xError = error as any as { status: number; code: number | string; body: string };
         if (xError.status !== null && xError.status !== undefined) {

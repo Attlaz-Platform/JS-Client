@@ -3,6 +3,10 @@ import {User} from '../Model/User/User.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Endpoint} from './Endpoint.js';
+import {UserNotificationSession} from '../Model/User/UserNotificationSession.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {State} from '../Model/State.js';
 
 export class UserEndpoint extends Endpoint {
     public async getUser(): Promise<User | null> {
@@ -133,14 +137,22 @@ export class UserEndpoint extends Endpoint {
         }
     }
 
-    public async createWebPush(subscription: any, session: string): Promise<boolean> {
+    public async createWebPush(session: UserNotificationSession): Promise<boolean> {
         try {
             const url: string = '/webpush';
+
+            const data = {
+                session: session.session,
+                subscription: session.subscription,
+                expires_at: session.expiresAt,
+                os: session.os,
+                browser: session.browser,
+            };
 
             const parser = (raw: any): { created: boolean } => ({created: raw.created});
             const result: ObjectResult<{
                 created: boolean
-            }> = await this.requestObject(url, {subscription, session}, parser, 'POST', true);
+            }> = await this.requestObject(url, data, parser, 'POST', true);
             const re: { created: boolean } | null = result.getData();
             if (re === null) {
                 console.log('created web push wrong data', {result, parsed: re});
@@ -153,5 +165,30 @@ export class UserEndpoint extends Endpoint {
             }
             throw e;
         }
+    }
+
+    public async getSessions(pagination: CursorPagination): Promise<CollectionResult<UserNotificationSession>> {
+
+
+        const queryString: QueryString = new QueryString('/webpush');
+        queryString.addPagination(pagination);
+
+        const parser = (raw: Record<string, unknown>): UserNotificationSession => {
+
+            const session: UserNotificationSession = new UserNotificationSession();
+            session.id = raw.id as string;
+            session.session = raw.session as string;
+            session.state = State.fromString(raw.state as string);
+            session.createdAt = raw.created_at as Date;
+            session.updatedAt = raw.updated_at as Date;
+            session.expiresAt = raw.expires_at as Date;
+            session.os = raw.os as string;
+            session.browser = raw.browser as string;
+            return session;
+
+        }
+        const rawTriggers = await this.requestCollection(queryString, parser);
+        return rawTriggers;
+
     }
 }

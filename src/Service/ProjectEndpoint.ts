@@ -1,10 +1,10 @@
-import {Endpoint} from './Endpoint.js';
 import {Project} from '../Model/Project/Project.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {State} from '../Model/State.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {Endpoint} from './Endpoint.js';
 
 export class ProjectEndpoint extends Endpoint {
     public async getAll(): Promise<CollectionResult<Project>> {

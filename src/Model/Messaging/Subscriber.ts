@@ -3,7 +3,7 @@ import {EventType} from '../Event/EventType.js';
 import {LogLevel} from '../Log/LogLevel.js';
 import {StateAware} from '../StateAware.js';
 import {MetaDataAware} from '../../Core/MetaDataAware.js';
-import {DataValueCollection} from '../DataValueCollection.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class Subscriber extends MetaDataAware implements StateAware {
     public id: string;
@@ -29,12 +29,12 @@ export class Subscriber extends MetaDataAware implements StateAware {
         this.logLevelThreshold = logLevelThreshold;
     }
 
-    public static parseRaw(rawSubscriber: any): Subscriber {
-        const subscriber: Subscriber = new Subscriber(rawSubscriber.id, rawSubscriber.event_types, rawSubscriber.project_environment, rawSubscriber.flow, rawSubscriber.channels, rawSubscriber.log_level_threshold);
-        subscriber.state = State.fromString(rawSubscriber.state);
-        if (Object.prototype.hasOwnProperty.call(rawSubscriber, 'metadata')) {
-            subscriber.metadata = DataValueCollection.fromObject(rawSubscriber.metadata);
-        }
+    public static parseRaw(rawSubscriber: ApiRecord): Subscriber {
+        let subscriber: Subscriber = new Subscriber(rawSubscriber.id as string, rawSubscriber.event_types as unknown as EventType[], rawSubscriber.project_environment as string, rawSubscriber.flow as string, rawSubscriber.channels as unknown as string[], rawSubscriber.log_level_threshold as LogLevel);
+        subscriber = MetaDataAware.parseMetaData(subscriber, rawSubscriber);
+
+        subscriber.state = State.fromString(rawSubscriber.state as string);
+
         return subscriber;
     }
 

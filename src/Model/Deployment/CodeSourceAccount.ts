@@ -1,9 +1,10 @@
 import {State} from '../State.js';
 import {StateAware} from '../StateAware.js';
+import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {ApiRecord} from '../ApiRecord.js';
 
-export class CodeSourceAccount implements StateAware {
+export class CodeSourceAccount extends MetaDataAware implements StateAware {
     public id: string;
-    public name: string;
     public userId: string;
     public workspaceId: string;
     public type: string;
@@ -12,17 +13,15 @@ export class CodeSourceAccount implements StateAware {
     // public scopes: string;
     public state: State;
 
-    public static parse(rawSourcesAccount: any): CodeSourceAccount {
-        const sourcesAccount: CodeSourceAccount = new CodeSourceAccount();
-        sourcesAccount.id = rawSourcesAccount.id;
-        sourcesAccount.name = rawSourcesAccount.name;
-        sourcesAccount.userId = rawSourcesAccount.user;
-        sourcesAccount.workspaceId = rawSourcesAccount.workspace;
-        sourcesAccount.type = rawSourcesAccount.type;
+    public static parse(rawSourcesAccount: ApiRecord): CodeSourceAccount {
+        const sourcesAccount: CodeSourceAccount = MetaDataAware.parseMetaData(new CodeSourceAccount(), rawSourcesAccount);
+        sourcesAccount.userId = rawSourcesAccount.user as string;
+        sourcesAccount.workspaceId = rawSourcesAccount.workspace as string;
+        sourcesAccount.type = rawSourcesAccount.type as string;
         // sourcesAccount.access_token = rawSourcesAccount.access_token;
         // sourcesAccount.refresh_token = rawSourcesAccount.refresh_token;
         // sourcesAccount.scopes = rawSourcesAccount.scopes;
-        sourcesAccount.state = State.fromString(rawSourcesAccount.state);
+        sourcesAccount.state = State.fromString(rawSourcesAccount.state as string);
         return sourcesAccount;
     }
 }
