@@ -28,6 +28,12 @@ describe('Query String', () => {
         queryString.set('scopes', 'valueB');
         expect(queryString.build()).toBe('https://attlaz.com?scopes=scopeA%20scopeB%20scopeC');
     });
+    test('Test collection', () => {
+        // TODO: should throw error OR override the existing param
+        const queryString: QueryString = new QueryString('https://attlaz.com');
+        queryString.set('scopes', ['valueA', 'valueB']);
+        expect(queryString.build()).toBe('https://attlaz.com?scopes=valueA&scopes=valueB');
+    });
     test('Filters - Equal', () => {
         const queryString: QueryString = new QueryString('https://attlaz.com');
         const filters: Filters = new Filters();

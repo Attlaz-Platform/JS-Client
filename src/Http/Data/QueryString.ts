@@ -60,11 +60,16 @@ export class QueryString {
         }
         const output: string[] = [];
         for (const parameter of this.parameters) {
-            let {value} = parameter;
+            const {value} = parameter;
             if (Array.isArray(value)) {
-                value = value.join(',');
+                /** Legacy way **/
+                //    output.push(parameter.parameter + '=' + encodeURIComponent(value.join(',')));
+                for (const subValue of value) {
+                    output.push(parameter.parameter + '=' + encodeURIComponent(subValue));
+                }
+            } else {
+                output.push(parameter.parameter + '=' + encodeURIComponent(value));
             }
-            output.push(parameter.parameter + '=' + encodeURIComponent(value));
         }
 
         if (this.command.includes('?')) {
