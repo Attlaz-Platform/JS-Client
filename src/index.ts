@@ -34,6 +34,8 @@ export {BlockedIp, FlaggedIp, IpRule} from './Service/FirewallEndpoint.js';
 export {Collection} from './Model/Collections/Collection.js';
 export {CollectionRecord} from './Model/Collections/CollectionRecord.js';
 
+export {Configuration} from './Model/Configuration/Configuration.js';
+
 export {EventType} from './Model/Event/EventType.js';
 
 export {HealthAlert} from './Model/HealthAlert/HealthAlert.js';
@@ -71,7 +73,6 @@ export {CodeDeploy} from './Model/Project/CodeDeploy.js';
 export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit.js';
 export {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment.js';
-export {ProjectEnvironmentConfiguration} from './Model/Project/ProjectEnvironmentConfiguration.js';
 export {ProjectEnvironmentType} from './Model/Project/ProjectEnvironmentType.js';
 /** Queue * */
 export {QueueStatus} from './Model/Queue/QueueStatus.js';
@@ -169,7 +170,7 @@ export {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
 export {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
 export {TriggerEndpoint} from './Service/TriggerEndpoint.js';
 export {UserEndpoint} from './Service/UserEndpoint.js';
-export {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint.js';
+export {InfrastructureConfigurationEndpoint} from './Service/InfrastructureConfigurationEndpoint.js';
 export {WorkerEndpoint} from './Service/WorkerEndpoint.js';
 export {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
 export {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';

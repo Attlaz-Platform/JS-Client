@@ -5,7 +5,7 @@ import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.j
 import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint.js';
 import {OAuthClient} from './Http/OAuthClient.js';
-import {WorkerConfigEndpoint} from './Service/WorkerConfigEndpoint.js';
+import {InfrastructureConfigurationEndpoint} from './Service/InfrastructureConfigurationEndpoint.js';
 import {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
 import {UserEndpoint} from './Service/UserEndpoint.js';
 import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
@@ -35,6 +35,7 @@ import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 import {VERSION} from './version.js';
 import {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
+import {ConfigurationEndpoint} from './Service/ConfigurationEndpoint.js';
 
 export class Client {
     private readonly endpoints: Map<string, any>;
@@ -67,7 +68,8 @@ export class Client {
         TriggerEndpoint,
         UserActionEndpoint,
         UserEndpoint,
-        WorkerConfigEndpoint,
+        InfrastructureConfigurationEndpoint,
+        ConfigurationEndpoint,
         WorkerEndpoint,
         WorkspaceEndpoint,
         WorkspaceMemberEndpoint,
@@ -240,8 +242,12 @@ export class Client {
         return this.getEndpoint('storage', this.Store.StorageEndpoint);
     }
 
-    public getWorkerConfigEndpoint(): WorkerConfigEndpoint {
-        return this.getEndpoint('worker-config', this.Store.WorkerConfigEndpoint);
+    public getInfrastructureConfigurationEndpoint(): InfrastructureConfigurationEndpoint {
+        return this.getEndpoint('worker-config', this.Store.InfrastructureConfigurationEndpoint);
+    }
+
+    public getConfigurationEndpoint(): ConfigurationEndpoint {
+        return this.getEndpoint('configuration', this.Store.ConfigurationEndpoint);
     }
 
     public getQueueEndpoint(): QueueEndpoint {

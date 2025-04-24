@@ -1,6 +1,9 @@
 import {Utils} from '../Utils.js';
 import {State} from './State.js';
 
+/**
+ * @deprecated
+ */
 export class Config {
     public id: number;
     public projectId: string;
