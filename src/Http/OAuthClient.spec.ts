@@ -1,6 +1,7 @@
 import {OAuthClient} from './OAuthClient.js';
 import {OAuthClientOptions} from './OAuthClientOptions.js';
 import {QueryString} from './Data/QueryString.js';
+import {OAuthClientToken} from './OAuthClientToken.js';
 
 test('Test enum parsing', async () => {
     const options: OAuthClientOptions = new OAuthClientOptions('https://github.com/login', '3b938da6f58d6bef7d59', 'da05698a6bd449de9437e11ff0b99003f511e40f');
@@ -24,6 +25,20 @@ test('Get authorization url', () => {
 
     const options: OAuthClientOptions = new OAuthClientOptions('https://github.com/', '3b938da6f58d6bef7d59', 'da05698a6bd449de9437e11ff0b99003f511e40f');
     const client: OAuthClient = new OAuthClient(options);
+
+    // expect(client.getAuthorizationUrl()).toEqual('https://github.com/oauth/authorize');
+
+    const queryString: QueryString = new QueryString();
+    queryString.set('response_type', 'code');
+    // expect(client.getAuthorizationUrl(queryString)).toEqual('https://github.com/oauth/authorize?response_type=code');
+})
+test('Auth with token', async () => {
+
+    const options: OAuthClientOptions = new OAuthClientOptions('https://api.attlaz.com/', null);
+    const client: OAuthClient = new OAuthClient(options);
+
+    const clientToken = new OAuthClientToken('testtoken', 'Bearer', '', '');
+    await client.authenticate();
 
     // expect(client.getAuthorizationUrl()).toEqual('https://github.com/oauth/authorize');
 

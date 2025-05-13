@@ -44,17 +44,21 @@ export class OAuthClient {
 
                 return true;
             }
-            // Client credentials flow
-            const getClientCredentials = clientCredentials(
-                this.getAxiosInstance(),
-                this.getApiEndpointUrl(this.options.accessTokenUri),
-                this.options.clientId === null ? undefined : this.options.clientId,
-                this.options.clientSecret === null ? undefined : this.options.clientSecret,
-            );
-            const rawAuthToken = await getClientCredentials(this.options.scopes.join(' '));
-            // console.log('Raw token', rawAuthToken);
-            this.oathClientToken = this.tokenToOauthClientToken(rawAuthToken);
 
+            if (this.options.clientId !== null && this.options.clientSecret !== null) {
+
+
+                // Client credentials flow
+                const getClientCredentials = clientCredentials(
+                    this.getAxiosInstance(),
+                    this.getApiEndpointUrl(this.options.accessTokenUri),
+                    this.options.clientId === null ? undefined : this.options.clientId,
+                    this.options.clientSecret === null ? undefined : this.options.clientSecret,
+                );
+                const rawAuthToken = await getClientCredentials(this.options.scopes.join(' '));
+                // console.log('Raw token', rawAuthToken);
+                this.oathClientToken = this.tokenToOauthClientToken(rawAuthToken);
+            }
             // const getRefreshToken = refreshToken(
             //     this.getAxiosInstance(),
             //     this.getApiEndpointUrl(this.options.accessTokenUri),
@@ -101,7 +105,7 @@ export class OAuthClient {
     private getAxiosInstance(): AxiosInstance {
         if (this.axiosInstance === null) {
 
-            const config:{} = {
+            const config: {} = {
                 // httpsAgent: new https.Agent({
                 //     rejectUnauthorized: false,
                 // }),
