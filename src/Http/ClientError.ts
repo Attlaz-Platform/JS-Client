@@ -47,8 +47,12 @@ export class ClientError extends Error {
 
             } else {
 
-                const response: { status: number; statusText: string } = error.response;
-                //  console.log('Response', response);
+                const response: { status: number; statusText: string; data: unknown } = {
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data,
+                };
+
                 clientError.message = response.statusText;
 
                 clientError.response = response;
