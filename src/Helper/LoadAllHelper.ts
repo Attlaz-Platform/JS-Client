@@ -1,10 +1,11 @@
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {EntityId} from '../Model/EntityId.js';
 
 
 export class LoadAllHelper {
     public static async loadAll<T extends {
-        id: string
+        id: string | EntityId
     }>(call: (pagination: CursorPagination) => Promise<CollectionResult<T>>, limit: number = 100): Promise<T[]> {
         const totalResult: T[] = [];
 
@@ -18,7 +19,7 @@ export class LoadAllHelper {
 
             for (const record of data.getData()) {
                 totalResult.push(record);
-                lastRef = record.id;
+                lastRef = record.id.toString();
             }
 
             hasMore = data.hasMore;
