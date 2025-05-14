@@ -1,7 +1,7 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
 import {CodeDeployStatus} from './CodeDeployStatus.js';
 import {ProjectDeployCommit} from './ProjectDeployCommit.js';
-import {ApiRecord} from '../ApiRecord.js';
 
 export class CodeDeploy {
     public id: string;
@@ -13,7 +13,14 @@ export class CodeDeploy {
     public started: Date | null = null;
     public finished: Date | null = null;
     public status: CodeDeployStatus = CodeDeployStatus.Unknown;
-    public bytes: number | null = null;
+
+    public archiveChecksum: string | null = null;
+    public archiveType: string | null = null;
+    public archiveSize: number | null = null;
+
+    public checksum: string | null = null;
+    public size: number | null = null;
+
     public commits: ProjectDeployCommit[] = [];
     public path: string | null = null;
     public commitHash: string | null = null;
@@ -31,8 +38,14 @@ export class CodeDeploy {
         projectDeploy.started = rawCodeDeploy.started === null ? null : Utils.parseRawDate(rawCodeDeploy.started as Date);
         projectDeploy.finished = rawCodeDeploy.finished === null ? null : Utils.parseRawDate(rawCodeDeploy.finished as Date);
         projectDeploy.status = CodeDeployStatus.fromString(rawCodeDeploy.status as string);
-        projectDeploy.bytes = rawCodeDeploy.bytes === null ? null : Utils.parseInt(rawCodeDeploy.bytes as number);
-        projectDeploy.path = rawCodeDeploy.path as string;
+
+        projectDeploy.archiveChecksum = rawCodeDeploy.archive_checksum as string | null;
+        projectDeploy.archiveType = rawCodeDeploy.archive_type as string | null;
+        projectDeploy.archiveSize = rawCodeDeploy.archive_size === null ? null : Utils.parseInt(rawCodeDeploy.archive_size as number);
+
+        projectDeploy.checksum = rawCodeDeploy.checksum as string | null;
+        projectDeploy.size = rawCodeDeploy.size === null ? null : Utils.parseInt(rawCodeDeploy.size as number);
+
         projectDeploy.commitHash = rawCodeDeploy.commit_hash as string;
 
         const rawProjectDeployCommits: any[] = rawCodeDeploy.commits as unknown as any[];
