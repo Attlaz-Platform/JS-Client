@@ -5,13 +5,16 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 import {HttpStatus} from '../Http/HttpStatus.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {Endpoint} from './Endpoint.js';
 
 export class FlowEndpoint extends Endpoint {
-    public async getByProject(projectId: string): Promise<CollectionResult<Flow>> {
+    public async getByProject(projectId: string, pagination: CursorPagination): Promise<CollectionResult<Flow>> {
         try {
-            const url: string = '/projects/' + projectId + '/flows';
-            const result: CollectionResult<Flow> = await this.requestCollection(url, Flow.parse);
+            const queryString: QueryString = new QueryString('/projects/' + projectId + '/flows');
+            queryString.addPagination(pagination);
+            const result: CollectionResult<Flow> = await this.requestCollection(queryString, Flow.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

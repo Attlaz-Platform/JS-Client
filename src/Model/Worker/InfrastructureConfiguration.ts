@@ -1,6 +1,4 @@
-import {DataValueValue} from '../DataValue.js';
-
-export class WorkerConfig {
+export class InfrastructureConfiguration {
     public static KEY_STATE: string = 'state';
 
     public static KEY_SCALE: string = 'scale';
@@ -14,12 +12,4 @@ export class WorkerConfig {
     public static KEY_API_ENDPOINT: string = 'api_endpoint';
     public static KEY_API_CLIENT_ID: string = 'api_client_id';
     public static KEY_API_CLIENT_SECRET: string = 'api_client_secret';
-
-    constructor(public readonly projectEnvironmentId: string, public readonly key: string, public readonly value: DataValueValue | null) {
-
-    }
-
-    public static parse(raw: any): WorkerConfig {
-        return new WorkerConfig(raw.project_environment, raw.key, raw.value);
-    }
 }

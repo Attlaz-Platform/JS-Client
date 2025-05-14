@@ -74,8 +74,6 @@ export {ProjectDeployCommit} from './Model/Project/ProjectDeployCommit.js';
 export {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 export {ProjectEnvironment} from './Model/Project/ProjectEnvironment.js';
 export {ProjectEnvironmentType} from './Model/Project/ProjectEnvironmentType.js';
-/** Queue * */
-export {QueueStatus} from './Model/Queue/QueueStatus.js';
 
 /** Result * */
 export {CollectionResult} from './Model/Result/CollectionResult.js';
@@ -95,12 +93,9 @@ export {Trigger} from './Model/Trigger/Trigger.js';
 /** Worker* */
 export {Platform} from './Model/Worker/Platform.js';
 export {PlatformImage} from './Model/Worker/PlatformImage.js';
-export {Worker} from './Model/Worker/Worker.js';
-export {WorkerConfig} from './Model/Worker/WorkerConfig.js';
 
-export {WorkerInstance} from './Model/Worker/WorkerInstance.js';
-export {WorkerInstanceState} from './Model/Worker/WorkerInstanceState.js';
-export {WorkerState} from './Model/Worker/WorkerState.js';
+export {InfrastructureConfiguration} from './Model/Worker/InfrastructureConfiguration.js';
+
 
 /** Deployment * */
 export {CodeSource} from './Model/Deployment/CodeSource.js';
@@ -123,7 +118,13 @@ export {DataValue, DataValueValue} from './Model/DataValue.js';
 export {EntityId} from './Model/EntityId.js';
 export {DataValueCollection} from './Model/DataValueCollection.js';
 export {EntityType} from './Model/EntityType.js';
+
 export {InboxMessage} from './Model/Inbox/InboxMessage.js';
+
+/** Infrastructure Status **/
+export {QueueStatus} from './Model/InfrastructureStatus/QueueStatus.js';
+export {RunnersStatus} from './Model/InfrastructureStatus/RunnersStatus.js';
+export {StorageStatus} from './Model/InfrastructureStatus/StorageStatus.js';
 
 export {State} from './Model/State.js';
 export {StateAware} from './Model/StateAware.js';
@@ -158,7 +159,6 @@ export {InboxEndpoint} from './Service/InboxEndpoint.js';
 export {PlatformEndpoint} from './Service/PlatformEndpoint.js';
 export {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
-export {QueueEndpoint} from './Service/QueueEndpoint.js';
 export {SearchEndpoint} from './Service/SearchEndpoint.js';
 export {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint.js';
 export {StorageEndpoint} from './Service/StorageEndpoint.js';
@@ -170,8 +170,7 @@ export {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
 export {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
 export {TriggerEndpoint} from './Service/TriggerEndpoint.js';
 export {UserEndpoint} from './Service/UserEndpoint.js';
-export {InfrastructureConfigurationEndpoint} from './Service/InfrastructureConfigurationEndpoint.js';
-export {WorkerEndpoint} from './Service/WorkerEndpoint.js';
+export {RunnerEndpoint} from './Service/RunnerEndpoint.js';
 export {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
 export {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
 

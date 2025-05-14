@@ -1,11 +1,10 @@
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
-import {WorkerEndpoint} from './Service/WorkerEndpoint.js';
+import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
 import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
 import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint.js';
 import {OAuthClient} from './Http/OAuthClient.js';
-import {InfrastructureConfigurationEndpoint} from './Service/InfrastructureConfigurationEndpoint.js';
 import {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
 import {UserEndpoint} from './Service/UserEndpoint.js';
 import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
@@ -13,7 +12,6 @@ import {SubscriberEndpoint} from './Service/SubscriberEndpoint.js';
 import {FlowEndpoint} from './Service/FlowEndpoint.js';
 import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
 import {StorageEndpoint} from './Service/StorageEndpoint.js';
-import {QueueEndpoint} from './Service/QueueEndpoint.js';
 import {InboxEndpoint} from './Service/InboxEndpoint.js';
 import {Endpoint} from './Service/Endpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
@@ -60,7 +58,6 @@ export class Client {
         PlatformLanguageEndpoint,
         ProjectEndpoint,
         ProjectEnvironmentEndpoint,
-        QueueEndpoint,
         SearchEndpoint,
         SourcesAccountEndpoint,
         StorageEndpoint,
@@ -68,9 +65,8 @@ export class Client {
         TriggerEndpoint,
         UserActionEndpoint,
         UserEndpoint,
-        InfrastructureConfigurationEndpoint,
         ConfigurationEndpoint,
-        WorkerEndpoint,
+        RunnerEndpoint,
         WorkspaceEndpoint,
         WorkspaceMemberEndpoint,
         CollectionsEndpoint,
@@ -226,8 +222,8 @@ export class Client {
         return this.getEndpoint('member', this.Store.WorkspaceMemberEndpoint);
     }
 
-    public getWorkerEndpoint(): WorkerEndpoint {
-        return this.getEndpoint('worker', this.Store.WorkerEndpoint);
+    public getRunnerEndpoint(): RunnerEndpoint {
+        return this.getEndpoint('worker', this.Store.RunnerEndpoint);
     }
 
     public getSourcesAccountEndpoint(): SourcesAccountEndpoint {
@@ -242,16 +238,8 @@ export class Client {
         return this.getEndpoint('storage', this.Store.StorageEndpoint);
     }
 
-    public getInfrastructureConfigurationEndpoint(): InfrastructureConfigurationEndpoint {
-        return this.getEndpoint('worker-config', this.Store.InfrastructureConfigurationEndpoint);
-    }
-
     public getConfigurationEndpoint(): ConfigurationEndpoint {
         return this.getEndpoint('configuration', this.Store.ConfigurationEndpoint);
-    }
-
-    public getQueueEndpoint(): QueueEndpoint {
-        return this.getEndpoint('queue', this.Store.QueueEndpoint);
     }
 
     public getHealthAlertEndpoint(): HealthAlertEndpoint {

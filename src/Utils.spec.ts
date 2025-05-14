@@ -3,8 +3,6 @@ import {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 import {State} from './Model/State.js';
 import {LogLevel} from './Model/Log/LogLevel.js';
 import {StorageType} from './Model/Storage/StorageType.js';
-import {WorkerInstanceState} from './Model/Worker/WorkerInstanceState.js';
-import {WorkerState} from './Model/Worker/WorkerState.js';
 import {Utils} from './Utils.js';
 import {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
 
@@ -16,8 +14,6 @@ describe('Test utils', () => {
         expect(CodeDeployStatus.fromString('complete')).toBe(CodeDeployStatus.Complete);
         expect(StorageType.fromString('cache')).toBe(StorageType.Cache);
         expect(State.fromString('active')).toBe(State.Active);
-        expect(WorkerInstanceState.fromString('started')).toBe(WorkerInstanceState.Started);
-        expect(WorkerState.fromString('active')).toBe(WorkerState.Active);
     });
     test('Test base64 encode/decode', () => {
         expect(Utils.base64encode('Lorem ipsum')).toBe('TG9yZW0gaXBzdW0=');

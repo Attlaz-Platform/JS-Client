@@ -135,29 +135,33 @@ export abstract class Endpoint {
             action = action.build();
         }
         const result: ObjectResult<T> = new ObjectResult<T>();
+        let requestResponse: any;
         try {
-            let requestResponse: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
-
-            // TODO: add errors
-            /**
-             * Parse errors
-             */
-            // TODO: temporary check until we know the API is fully upgraded
-            if (requestResponse === null || requestResponse === undefined) {
-                throw new Error('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`');
-            }
-            if ((Object.prototype.hasOwnProperty.call(requestResponse, 'data') && !Object.prototype.hasOwnProperty.call(requestResponse, 'id')) && requestResponse.data !== undefined) {
-                console.error('Response for object "' + action + '" seem to still use old "data" property (this property is only used for collection requests)', {requestResponse});
-                requestResponse = requestResponse.data;
-            }
-            result.setData(this.parseObject<T>(requestResponse, parser));
-        } catch (error: any) {
-            if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {
+            requestResponse = await this.httpClient.request(action, parameters, method, signWithOauthToken);
+        } catch (error: unknown) {
+            if ((error as ApiError).httpStatus === HttpStatus.HTTP_NOTFOUND) {
                 result.setData(null);
-            } else {
-                throw this.toApiError(error);
+                return result;
             }
+            throw this.toApiError(error);
+
         }
+
+
+        // TODO: add errors
+        /**
+         * Parse errors
+         */
+        // TODO: temporary check until we know the API is fully upgraded
+        if (requestResponse === null || requestResponse === undefined) {
+            throw new ApiError('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
+        }
+        if ((Object.prototype.hasOwnProperty.call(requestResponse, 'data') && !Object.prototype.hasOwnProperty.call(requestResponse, 'id')) && requestResponse.data !== undefined) {
+            console.error('Response for object "' + action + '" seem to still use old "data" property (this property is only used for collection requests)', {requestResponse});
+            requestResponse = requestResponse.data;
+        }
+        result.setData(this.parseObject<T>(requestResponse, parser));
+
         return result;
     }
 
@@ -200,6 +204,8 @@ export abstract class Endpoint {
 
             return apiError;
         }
+        // TODO: remove this
+        console.log('Not client error', {error});
         return new ApiError('Unknown Error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
     }
 

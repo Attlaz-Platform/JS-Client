@@ -1,7 +1,6 @@
 import {Client} from '../Client.js';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment.js';
 import {Helper} from '../../e2e/src/helper.js';
-import {ProjectEnvironmentConfiguration} from '../Model/Project/ProjectEnvironmentConfiguration.js';
 
 jest.setTimeout((60) * 1000);
 
@@ -25,34 +24,34 @@ test('Test get project environment by id', async () => {
     const nonExistingProjectDeploy: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('random');
     expect(nonExistingProjectDeploy).toBeNull();
 });
-test('Test get project environment configuration', async () => {
-    expect.assertions(3);
-
-    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
-    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
-    client.getHttpClient().enableDebug();
-
-    await client.authenticate();
-
-    const configuration: ProjectEnvironmentConfiguration | null = await client.getProjectEnvironmentEndpoint().getConfigByKey('1tWWv6mQiG8dGwpPH7CdAnsxSfi', 'flow_run_queue_name');
-    expect(configuration).not.toBeNull();
-    expect(configuration?.id).toBe('2Z340crbywJW8P5jHIohggdsIwC');
-    expect(configuration?.value).toBe('flowrun.audiosense.staging');
-
-    console.log(configuration);
-});
-test('Test get non existing project environment configuration', async () => {
-    expect.assertions(1);
-
-    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
-    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
-    client.getHttpClient().enableDebug();
-
-    await client.authenticate();
-
-    const configuration: ProjectEnvironmentConfiguration | null = await client.getProjectEnvironmentEndpoint().getConfigByKey('1tWWv6mQiG8dGwpPH7CdAnsxSfi', 'som_non_existing_key');
-    expect(configuration).toBeNull();
-
-
-    console.log(configuration);
-});
+// test('Test get project environment configuration', async () => {
+//     expect.assertions(3);
+//
+//     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+//     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+//     client.getHttpClient().enableDebug();
+//
+//     await client.authenticate();
+//
+//     const configuration: ProjectEnvironmentConfiguration | null = await client.getProjectEnvironmentEndpoint().getConfigByKey('1tWWv6mQiG8dGwpPH7CdAnsxSfi', 'flow_run_queue_name');
+//     expect(configuration).not.toBeNull();
+//     expect(configuration?.id).toBe('2Z340crbywJW8P5jHIohggdsIwC');
+//     expect(configuration?.value).toBe('flowrun.audiosense.staging');
+//
+//     console.log(configuration);
+// });
+// test('Test get non existing project environment configuration', async () => {
+//     expect.assertions(1);
+//
+//     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+//     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+//     client.getHttpClient().enableDebug();
+//
+//     await client.authenticate();
+//
+//     const configuration: ProjectEnvironmentConfiguration | null = await client.getProjectEnvironmentEndpoint().getConfigByKey('1tWWv6mQiG8dGwpPH7CdAnsxSfi', 'som_non_existing_key');
+//     expect(configuration).toBeNull();
+//
+//
+//     console.log(configuration);
+// });
