@@ -6,6 +6,7 @@ export class PlatformImage implements StateAware {
     public id: string;
     public platformId: string;
     public image: string;
+    public name: string;
     public version: string;
     public languageVersion: string;
     public buildDate: Date;
@@ -15,6 +16,7 @@ export class PlatformImage implements StateAware {
         const platformImage: PlatformImage = new PlatformImage();
         platformImage.id = raw.id;
         platformImage.platformId = raw.platform;
+        platformImage.name = raw.name;
         platformImage.image = raw.image;
         platformImage.version = raw.version;
         platformImage.languageVersion = raw.language_version;
