@@ -1,16 +1,16 @@
-import {OAuthClient} from '../Http/OAuthClient.js';
-import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {Utils} from '../Utils.js';
-import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
-import {DataValueCollection} from '../Model/DataValueCollection.js';
-import {JsonSerializable} from '../Model/JsonSerializable.js';
+import {ClientError} from '../Http/ClientError.js';
 import {Parameters} from '../Http/Data/Parameters.js';
-import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {HttpStatus} from '../Http/HttpStatus.js';
+import {OAuthClient} from '../Http/OAuthClient.js';
+import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {ApiError} from '../Model/Error/ApiError.js';
-import {ClientError} from '../Http/ClientError.js';
+import {JsonSerializable} from '../Model/JsonSerializable.js';
+import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
+import {Utils} from '../Utils.js';
 
 export abstract class Endpoint {
     protected httpClient: OAuthClient;
@@ -22,6 +22,11 @@ export abstract class Endpoint {
     private formatParameters(data: any | null = null): any {
         if (data === null || data === undefined) {
             return null;
+        }
+
+        if (typeof data === 'object' && '_formatted' in data) {
+            // TODO: unset _formatted
+            return data;
         }
 
         if (Array.isArray(data)) {
@@ -129,7 +134,13 @@ export abstract class Endpoint {
         return result;
     }
 
-    public async requestObject<T>(action: string | QueryString, parameters: Parameters = null, parser: (input: Record<string, any>) => T, method: string = 'GET', signWithOauthToken: boolean = true): Promise<ObjectResult<T>> {
+    public async requestObject<T>(
+        action: string | QueryString,
+        parameters: Parameters = null,
+        parser: (input: Record<string, any>) => T,
+        method: string = 'GET',
+        signWithOauthToken: boolean = true,
+    ): Promise<ObjectResult<T>> {
         parameters = this.formatParameters(parameters);
         if (action instanceof QueryString) {
             action = action.build();
@@ -236,8 +247,8 @@ export abstract class Endpoint {
         const wrappedData: any = ObjectWrapper.wrap(rawObject);
         try {
             return parser(wrappedData);
-        } catch (error: any) {
-            console.error('Unable to parse: ' + error.message);
+        } catch (error: unknown) {
+            console.error('Unable to parse object', {object: rawObject, error});
         }
         return null;
     }
