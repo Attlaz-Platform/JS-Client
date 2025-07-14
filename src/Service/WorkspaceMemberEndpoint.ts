@@ -1,12 +1,12 @@
-import {Endpoint} from './Endpoint.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember.js';
 import {WorkspaceMemberInvite} from '../Model/Workspace/WorkspaceMemberInvite.js';
 import {WorkspaceMemberInvite2} from '../Model/Workspace/WorkspaceMemberInvite2.js';
-import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
-import {QueryString} from '../Http/Data/QueryString.js';
 import {WorkspaceMemberRole} from '../Model/Workspace/WorkspaceMemberRole.js';
+import {Endpoint} from './Endpoint.js';
 
 export class WorkspaceMemberEndpoint extends Endpoint {
     public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<WorkspaceMember>> {
@@ -28,6 +28,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
 
         try {
             const parser = (raw: any): any => raw;
+            // The result is actually a collection with shape {email:string;invited:boolean}[]
             const result: ObjectResult<void> = await this.requestObject(cmd, {invites: rawInvites}, parser, 'POST');
 
             const re: any | null = result.getData();
@@ -50,7 +51,8 @@ export class WorkspaceMemberEndpoint extends Endpoint {
     }
 
     public async getWorkspaceInviteByCode(inviteCode: string): Promise<WorkspaceMemberInvite2 | null> {
-        const cmd: string = '/workspaces/invites/' + inviteCode;
+        const cmd: QueryString = new QueryString('/workspaces/invites');
+        cmd.set('inviteCode', inviteCode);
 
         const rawInvite: ObjectResult<WorkspaceMemberInvite2> = await this.requestObject(cmd, null, WorkspaceMemberInvite2.parse, 'GET', false);
         if (rawInvite !== null) {

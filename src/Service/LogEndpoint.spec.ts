@@ -1,16 +1,16 @@
-import {Client} from '../Client.js';
 import {Helper} from '../../e2e/src/helper.js';
-import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {LogQuery} from '../Model/Log/LogQuery.js';
-import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {Client} from '../Client.js';
 import {Log} from '../Model/Log/Log.js';
 import {LogLevel} from '../Model/Log/LogLevel.js';
+import {LogQuery} from '../Model/Log/LogQuery.js';
+import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {LogStreamInformation} from '../Model/Log/LogStreamInformation.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
 
 jest.setTimeout((60) * 1000);
 
-const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
+const apiEndpoint: string = Helper.getApiEndpoint('beta');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
@@ -23,7 +23,7 @@ test('Get log stream entries', async () => {
 
     await client.authenticate();
 
-    const logQuery: LogQuery = new LogQuery(new LogStreamId('UTV0OWtsNXBa'));
+    const logQuery: LogQuery = new LogQuery(new LogStreamId('lst_0nAQnvxYSscFpzE04eVD6VfVfJY'));
 
     const logItems: CollectionResult<Log> = await client.getLogEndPoint().getLogs(logQuery);
 
@@ -67,10 +67,12 @@ test('Write to logstream', async () => {
 
     await client.authenticate();
 
-    const logEntry: Log = new Log(new LogStreamId('UTV0OWtsNXBa'), 'This is a test message0', LogLevel.Debug, new Date());
+    const logEntry: Log = new Log(new LogStreamId('2xIDWJyvlkhzl3YvnxIztlrzmA9'), 'This is a test message0', LogLevel.Debug, new Date());
     logEntry.tags.set('Color', 'Red');
     logEntry.tags.set('Size', 12);
     const savedLogEntry: Log = await client.getLogEndPoint().save(logEntry);
+
+    console.log({savedLogEntry});
 
     expect(savedLogEntry.message).toEqual(logEntry.message);
 });
@@ -84,10 +86,10 @@ test('Get information', async () => {
 
     await client.authenticate();
 
-    const logStreamInformation: LogStreamInformation | null = await client.getLogEndPoint().getInformation(new LogStreamId('UTV0OWtsNXBa'));
+    const logStreamInformation: LogStreamInformation | null = await client.getLogEndPoint().getInformation(new LogStreamId('2xIDWJyvlkhzl3YvnxIztlrzmA9'));
     if (logStreamInformation === null) {
         throw new Error('Log stream not found');
     }
 
-    expect(logStreamInformation.logStreamId.toString()).toEqual('UTV0OWtsNXBa');
+    expect(logStreamInformation.logStreamId.toString()).toEqual('2xIDWJyvlkhzl3YvnxIztlrzmA9');
 });

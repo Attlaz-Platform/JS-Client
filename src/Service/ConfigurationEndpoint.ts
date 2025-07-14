@@ -2,8 +2,8 @@ import {QueryString} from '../Http/Data/QueryString.js';
 import {Configuration} from '../Model/Configuration/Configuration.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
-import {Endpoint} from './Endpoint.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {Endpoint} from './Endpoint.js';
 
 export class ConfigurationEndpoint extends Endpoint {
     public async getByPath(scopeId: string, path: string): Promise<Configuration | null> {

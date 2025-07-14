@@ -9,6 +9,7 @@ export class Platform implements StateAware {
     public released: Date;
     public endOfSupport: Date;
     public endOfLife: Date;
+    public activeImage: string | null;
     public state: State = State.Active;
 
     public static parse(raw: any): Platform {
@@ -19,6 +20,7 @@ export class Platform implements StateAware {
         platform.released = Utils.parseRawDate(raw.released);
         platform.endOfSupport = Utils.parseRawDate(raw.end_of_support);
         platform.endOfLife = Utils.parseRawDate(raw.end_of_life);
+        platform.activeImage = raw.active_image as string | null;
         platform.state = State.fromString(raw.state);
 
         return platform;

@@ -22,7 +22,7 @@ export class AdapterConnection extends MetaDataAware implements StateAware {
         adapterConnection.projectId = rawAdapterConnection.project as string;
         adapterConnection.state = State.fromString(rawAdapterConnection.state as string);
         adapterConnection.status = AdapterConnectionStatus.fromString(rawAdapterConnection.status as string);
-        adapterConnection.lastUsedAt = rawAdapterConnection.last_used === null ? null : Utils.parseRawDate(rawAdapterConnection.last_used as Date);
+        adapterConnection.lastUsedAt = (rawAdapterConnection.last_used === null || rawAdapterConnection.last_used === undefined) ? null : Utils.parseRawDate(rawAdapterConnection.last_used as Date);
         return adapterConnection;
     }
 }

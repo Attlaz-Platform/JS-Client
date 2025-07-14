@@ -88,6 +88,22 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
+    public async getBucketItem(storageBucketId: string, storageItemKey: string): Promise<StorageItem | null> {
+        const cmd: string = '/storage-buckets/' + storageBucketId + '/items/' + storageItemKey;
+
+        try {
+            const result: ObjectResult<StorageItem> = await this.requestObject(cmd, null, StorageItem.parse, 'GET');
+
+            return result.getData();
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to get storage item', ex);
+            }
+
+            throw ex;
+        }
+    }
+
     public async setItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItem: StorageItem): Promise<StorageItem> {
         const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
 

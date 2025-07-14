@@ -21,6 +21,9 @@ export class CodeDeploy {
     public checksum: string | null = null;
     public size: number | null = null;
 
+    public storageBucketId: string | null = null;
+    public storageItemId: string | null = null;
+
     public commits: ProjectDeployCommit[] = [];
     public path: string | null = null;
     public commitHash: string | null = null;
@@ -45,6 +48,9 @@ export class CodeDeploy {
 
         projectDeploy.checksum = rawCodeDeploy.checksum as string | null;
         projectDeploy.size = rawCodeDeploy.size === null ? null : Utils.parseInt(rawCodeDeploy.size as number);
+
+        projectDeploy.storageBucketId = rawCodeDeploy.storage_bucket as string | null;
+        projectDeploy.storageItemId = rawCodeDeploy.storage_item as string | null;
 
         projectDeploy.commitHash = rawCodeDeploy.commit_hash as string;
 

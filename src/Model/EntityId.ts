@@ -3,7 +3,7 @@ export abstract class EntityId {
 
     public constructor(protected readonly id: string) {
         if (id === null || id === undefined || (id + '').length < 1) {
-            throw new Error('Invalid id');
+            throw new Error('Invalid entity id (' + this.constructor.name + ')');
         }
         if ((id + '').length !== 27) {
             // console.error('Id `' + id + '` does not seem a valid KSUID (type `' + this.getIdType() + '`)');

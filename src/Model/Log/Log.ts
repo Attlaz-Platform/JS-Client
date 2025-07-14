@@ -1,8 +1,8 @@
-import {DataValueCollection} from '../DataValueCollection.js';
 import {Utils} from '../../Utils.js';
+import {DataValueCollection} from '../DataValueCollection.js';
 import {LogLevel} from './LogLevel.js';
-import {LogStreamId} from './LogStreamId.js';
 import {LogStatus} from './LogStatus.js';
+import {LogStreamId} from './LogStreamId.js';
 
 export class Log {
     public id: string;
@@ -37,9 +37,7 @@ export class Log {
         if (rawLog.status !== null && rawLog.status !== undefined && rawLog.status !== '') {
             log.status = LogStatus.fromString(rawLog.status);
         }
-
         log.tags = DataValueCollection.fromObject(rawLog.tags);
-
         log._version = rawLog._version;
         return log;
     }
