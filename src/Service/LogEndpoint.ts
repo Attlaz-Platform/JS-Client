@@ -1,15 +1,15 @@
-import {Endpoint} from './Endpoint.js';
-import {LogQuery} from '../Model/Log/LogQuery.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {ApiRecord} from '../Model/ApiRecord.js';
 import {Log} from '../Model/Log/Log.js';
-import {Utils} from '../Utils.js';
+import {LogItemFilter} from '../Model/Log/LogItemFilter.js';
+import {LogQuery} from '../Model/Log/LogQuery.js';
+import {LogStream} from '../Model/Log/LogStream.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
+import {LogStreamInformation} from '../Model/Log/LogStreamInformation.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {LogStreamInformation} from '../Model/Log/LogStreamInformation.js';
-import {LogStream} from '../Model/Log/LogStream.js';
-import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
-import {QueryString} from '../Http/Data/QueryString.js';
-import {LogItemFilter} from '../Model/Log/LogItemFilter.js';
+import {Endpoint} from './Endpoint.js';
 
 export class LogEndpoint extends Endpoint {
     public async getLogs(logQuery: LogQuery): Promise<CollectionResult<Log>> {
@@ -47,14 +47,14 @@ export class LogEndpoint extends Endpoint {
             arrQuery.push('tags=' + strTags);
         }
 
-        const cmd: string = '/logstreams/' + Utils.base64encode(logQuery.logStreamId.toString()) + '/logs/?' + arrQuery.join('&');
+        const cmd: string = '/logstreams/' + logQuery.logStreamId.toString() + '/logs/?' + arrQuery.join('&');
 
         const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
         return result;
     }
 
     public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: LogItemFilter | null): Promise<CollectionResult<Log>> {
-        const queryString: QueryString = new QueryString('/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/logs');
+        const queryString: QueryString = new QueryString('/logstreams/' + logStreamId.toString() + '/logs');
         queryString.addPagination(pagination);
         if (filter !== null && filter !== undefined) {
             if (filter.tags !== null && filter.tags.length > 0) {
@@ -80,7 +80,7 @@ export class LogEndpoint extends Endpoint {
 
     public async save(log: Log): Promise<Log> {
         try {
-            const cmd: string = '/logstreams/' + Utils.base64encode(log.logStream.toString()) + '/logs';
+            const cmd: string = '/logstreams/' + log.logStream.toString() + '/logs';
 
             const result: ObjectResult<Log> = await this.requestObject(cmd, log, Log.parse, 'POST');
             const updatedLogEntry: Log | null = result.getData();
@@ -120,7 +120,7 @@ export class LogEndpoint extends Endpoint {
     }
 
     public async clear(logStreamId: LogStreamId): Promise<boolean> {
-        const cmd: string = '/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/clear';
+        const cmd: string = '/logstreams/' + logStreamId.toString() + '/clear';
 
         try {
             const parser = (raw: any): { cleared: boolean } => ({cleared: raw.cleared});
@@ -141,7 +141,7 @@ export class LogEndpoint extends Endpoint {
 
     public async getInformation(logStreamId: LogStreamId): Promise<LogStreamInformation | null> {
         try {
-            const url: string = '/logstreams/' + Utils.base64encode(logStreamId.toString()) + '/info';
+            const url: string = '/logstreams/' + logStreamId.toString() + '/info';
 
             const result: ObjectResult<LogStreamInformation> = await this.requestObject(url, null, LogStreamInformation.parse);
 
@@ -155,9 +155,12 @@ export class LogEndpoint extends Endpoint {
         }
     }
 
-    public async getByProject(projectId: string): Promise<CollectionResult<LogStream>> {
-        const parser = (raw: any): LogStream => new LogStream(new LogStreamId(raw.id), raw.name);
-        const result: CollectionResult<LogStream> = await this.requestCollection('projects/' + projectId + '/logstreams', parser);
+    public async getByProject(projectId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<LogStream>> {
+
+        const queryString: QueryString = new QueryString('projects/' + projectId + '/logstreams');
+        queryString.addPagination(pagination);
+        const parser = (raw: ApiRecord): LogStream => new LogStream(new LogStreamId(raw.id as string), raw.name as string);
+        const result: CollectionResult<LogStream> = await this.requestCollection(queryString, parser);
         return result;
     }
 }
