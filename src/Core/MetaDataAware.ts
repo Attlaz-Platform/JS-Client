@@ -8,7 +8,8 @@ export abstract class MetaDataAware {
 
     public name: string;
     public description: string | null = null;
-    public icon: string | null = null;
+
+    // public icon: string | null = null;
 
     public metadata: DataValueCollection;
 
@@ -19,7 +20,7 @@ export abstract class MetaDataAware {
         input.id = raw.id as string;
         input.name = raw.name as string;
         input.description = raw.description as string | null;
-        input.icon = raw.icon as string | null;
+       // input.icon = raw.icon as string | null;
 
         // TODO: parse meta data
         if (Object.prototype.hasOwnProperty.call(raw, 'metadata')) {

@@ -1,7 +1,7 @@
-import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {MetaDataWithIconAware} from '../../Core/MetaDataWithIconAware.js';
 import {ApiRecord} from '../ApiRecord.js';
 
-export class Adapter extends MetaDataAware {
+export class Adapter extends MetaDataWithIconAware {
     public id: string;
     public vendor: string;
     public logo: string;
@@ -11,13 +11,13 @@ export class Adapter extends MetaDataAware {
     public website: string | null;
 
     public static parse(rawAdapter: ApiRecord): Adapter {
-        const adapter: Adapter = MetaDataAware.parseMetaData(new Adapter(), rawAdapter);
+        const adapter: Adapter = MetaDataWithIconAware.parseMetaData(new Adapter(), rawAdapter);
 
-        adapter.id = rawAdapter.id as string;
-        adapter.name = rawAdapter.name as string;
-        adapter.description = rawAdapter.description as string;
+        // adapter.id = rawAdapter.id as string;
+        // adapter.name = rawAdapter.name as string;
+        // adapter.description = rawAdapter.description as string;
         adapter.vendor = rawAdapter.vendor as string;
-        adapter.icon = rawAdapter.icon as string;
+        // adapter.icon = rawAdapter.icon as string;
         adapter.logo = rawAdapter.logo as string;
         adapter.type = rawAdapter.type as string;
         adapter.categoryIds = rawAdapter.categories as unknown as string[];
