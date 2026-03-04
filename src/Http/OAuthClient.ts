@@ -1,15 +1,15 @@
-import {clientCredentials, ownerCredentials, refreshToken} from 'axios-oauth-client';
 import axios, {AxiosInstance} from 'axios';
-import {VERSION} from '../version.js';
+import {clientCredentials, ownerCredentials, refreshToken} from 'axios-oauth-client';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
-import {OAuthClientOptions} from './OAuthClientOptions.js';
+import {VERSION} from '../version.js';
 import {ClientError} from './ClientError.js';
+import {Headers} from './Data/Headers.js';
+import {Parameters} from './Data/Parameters.js';
 import {HttpClient} from './HttpClient.js';
 import {HttpClientRequest} from './HttpClientRequest.js';
 import {HttpClientResponse} from './HttpClientResponse.js';
+import {OAuthClientOptions} from './OAuthClientOptions.js';
 import {OAuthClientToken} from './OAuthClientToken.js';
-import {Parameters} from './Data/Parameters.js';
-import {Headers} from './Data/Headers.js';
 
 export class OAuthClient {
     private debug: boolean = false;
@@ -17,6 +17,8 @@ export class OAuthClient {
 
     private oathClientToken: OAuthClientToken | null = null;
     private refreshTokenPromise: Promise<void> | null = null;
+
+    private version: string | null = null;
 
     constructor(private readonly options: OAuthClientOptions) {
         this.initDefaultHeaders();
@@ -223,6 +225,10 @@ export class OAuthClient {
         this.defaultHeaders[header] = value;
     }
 
+    public setVersion(version: string | null): void {
+        this.version = version;
+    }
+
     private isNodeEnvironment(): boolean {
         return typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
     }
@@ -264,6 +270,9 @@ export class OAuthClient {
 
         let requestData: HttpClientRequest = new HttpClientRequest(url, method);
         requestData.headers = this.getDefaultHeaders();
+        if (this.version !== null) {
+            requestData.setHeader('Attlaz-API-Version', this.version);
+        }
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
                 requestData.body = JsonSerializable.stringify(parameters);

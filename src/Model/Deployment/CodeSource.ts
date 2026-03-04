@@ -1,9 +1,9 @@
-import {StateAware} from '../StateAware.js';
-import {State} from '../State.js';
-import {MetaDataAware} from '../../Core/MetaDataAware.js';
+import {MetaDataWithIconAware} from '../../Core/MetaDataWithIconAware.js';
 import {ApiRecord} from '../ApiRecord.js';
+import {State} from '../State.js';
+import {StateAware} from '../StateAware.js';
 
-export class CodeSource extends MetaDataAware implements StateAware {
+export class CodeSource extends MetaDataWithIconAware implements StateAware {
     public id: string;
     public codeSourceAccountId: string;
     public repository: { key: string; name: string; url: string };
@@ -16,7 +16,7 @@ export class CodeSource extends MetaDataAware implements StateAware {
     public deployCount: number | null = null;
 
     public static parse(rawCodeSource: ApiRecord): CodeSource {
-        const codeSource: CodeSource = MetaDataAware.parseMetaData(new CodeSource(), rawCodeSource);
+        const codeSource: CodeSource = MetaDataWithIconAware.parseMetaData(new CodeSource(), rawCodeSource);
         codeSource.id = rawCodeSource.id as string;
         codeSource.codeSourceAccountId = rawCodeSource.code_source_account as string;
         codeSource.repository = rawCodeSource.repository as unknown as { key: string; name: string; url: string };

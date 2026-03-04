@@ -1,8 +1,8 @@
 import {QueryString} from '../Http/Data/QueryString.js';
 import {Configuration} from '../Model/Configuration/Configuration.js';
-import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {CollectionResult} from '../Model/Result/CollectionResult.js';
+import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Endpoint} from './Endpoint.js';
 
 export class ConfigurationEndpoint extends Endpoint {
@@ -41,4 +41,14 @@ export class ConfigurationEndpoint extends Endpoint {
         }
     }
 
+    public async save(scopeId: string, path: string, value: unknown): Promise<CollectionResult<Configuration>> {
+
+        const qs: QueryString = new QueryString('/configurations/' + scopeId);
+        qs.set('path', path);
+
+
+        const result: CollectionResult<Configuration> = await this.requestCollection(qs, Configuration.parse, {value: value}, 'POST');
+        return result;
+
+    }
 }

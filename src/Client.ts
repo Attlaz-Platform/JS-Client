@@ -1,39 +1,41 @@
-import {OAuthClientToken} from './Http/OAuthClientToken.js';
-import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
-import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
-import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
-import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
-import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint.js';
 import {OAuthClient} from './Http/OAuthClient.js';
-import {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
-import {UserEndpoint} from './Service/UserEndpoint.js';
-import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
-import {SubscriberEndpoint} from './Service/SubscriberEndpoint.js';
-import {FlowEndpoint} from './Service/FlowEndpoint.js';
-import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
-import {StorageEndpoint} from './Service/StorageEndpoint.js';
-import {InboxEndpoint} from './Service/InboxEndpoint.js';
-import {Endpoint} from './Service/Endpoint.js';
-import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
-import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint.js';
 import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
-import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
-import {ChannelEndpoint} from './Service/ChannelEndpoint.js';
-import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
-import {FlowRunEndpoint} from './Service/FlowRunEndpoint.js';
-import {LogEndpoint} from './Service/LogEndpoint.js';
-import {TriggerEndpoint} from './Service/TriggerEndpoint.js';
-import {PlatformEndpoint} from './Service/PlatformEndpoint.js';
-import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
-import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
-import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
-import {SearchEndpoint} from './Service/SearchEndpoint.js';
-import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
+import {OAuthClientToken} from './Http/OAuthClientToken.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
-import {VERSION} from './version.js';
+import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
+import {ChannelEndpoint} from './Service/ChannelEndpoint.js';
+import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
+import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
+import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 import {ConfigurationEndpoint} from './Service/ConfigurationEndpoint.js';
+import {Endpoint} from './Service/Endpoint.js';
+import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
+import {FlowEndpoint} from './Service/FlowEndpoint.js';
+import {FlowRunEndpoint} from './Service/FlowRunEndpoint.js';
+import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint.js';
+import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
+import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
+import {InboxEndpoint} from './Service/InboxEndpoint.js';
+import {LogEndpoint} from './Service/LogEndpoint.js';
+import {PlatformEndpoint} from './Service/PlatformEndpoint.js';
+import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
+import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
+import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
+import {ProviderTokenEndpoint} from './Service/ProviderTokenEndpoint.js';
+import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
+import {RunnerPoolEndpoint} from './Service/RunnerPoolEndpoint.js';
+import {SearchEndpoint} from './Service/SearchEndpoint.js';
+import {SourcesAccountEndpoint} from './Service/SourcesAccountEndpoint.js';
+import {StorageEndpoint} from './Service/StorageEndpoint.js';
+import {SubscriberEndpoint} from './Service/SubscriberEndpoint.js';
+import {TriggerEndpoint} from './Service/TriggerEndpoint.js';
+import {UserActionEndpoint} from './Service/UserActionEndpoint.js';
+import {UserEndpoint} from './Service/UserEndpoint.js';
+import {WorkspaceEndpoint} from './Service/WorkspaceEndpoint.js';
+import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
+import {VERSION} from './version.js';
 
 export class Client {
     private readonly endpoints: Map<string, any>;
@@ -70,6 +72,8 @@ export class Client {
         WorkspaceEndpoint,
         WorkspaceMemberEndpoint,
         CollectionsEndpoint,
+        RunnerPoolEndpoint,
+        ProviderTokenEndpoint,
     };
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
@@ -103,6 +107,10 @@ export class Client {
         options.scopes = ['all'];
         // TODO: do we need to create a new oauth client, or can we update with these credentials?
         this.httpClient = new OAuthClient(options);
+    }
+
+    public setVersion(version: string | null): void {
+        this.httpClient.setVersion(version);
     }
 
     public getHttpClient(): OAuthClient {
@@ -264,6 +272,14 @@ export class Client {
 
     public getCollectionsEndpoint(): CollectionsEndpoint {
         return this.getEndpoint('collections', this.Store.CollectionsEndpoint);
+    }
+
+    public getRunnerPoolEndpoint(): RunnerPoolEndpoint {
+        return this.getEndpoint('runner_pool', this.Store.RunnerPoolEndpoint);
+    }
+
+    public getProviderTokenEndpoint(): ProviderTokenEndpoint {
+        return this.getEndpoint('provider_token', this.Store.ProviderTokenEndpoint);
     }
 
     // TODO: this should be in a separate API?

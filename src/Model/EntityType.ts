@@ -27,6 +27,7 @@ export enum EntityType {
 
     StorageBucket = 'storage-bucket',
     LogStream = 'log-stream',
+    RunnerPool = 'runner-pool',
 }
 
 export namespace EntityType {
