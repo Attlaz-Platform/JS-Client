@@ -2,7 +2,7 @@ import {ClientError} from '../Http/ClientError.js';
 import {Parameters} from '../Http/Data/Parameters.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {HttpStatus} from '../Http/HttpStatus.js';
-import {OAuthClient} from '../Http/OAuthClient.js';
+import {ITransport} from '../Http/Transport/ITransport.js';
 import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {ApiError} from '../Model/Error/ApiError.js';
 import {JsonSerializable} from '../Model/JsonSerializable.js';
@@ -13,9 +13,9 @@ import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
 import {Utils} from '../Utils.js';
 
 export abstract class Endpoint {
-    protected httpClient: OAuthClient;
+    protected httpClient: ITransport;
 
-    public constructor(httpClient: OAuthClient) {
+    public constructor(httpClient: ITransport) {
         this.httpClient = httpClient;
     }
 

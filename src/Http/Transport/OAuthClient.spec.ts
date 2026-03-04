@@ -1,7 +1,7 @@
 import {OAuthClient} from './OAuthClient.js';
-import {OAuthClientOptions} from './OAuthClientOptions.js';
-import {QueryString} from './Data/QueryString.js';
-import {OAuthClientToken} from './OAuthClientToken.js';
+import {OAuthClientOptions} from '../OAuthClientOptions.js';
+import {QueryString} from '../Data/QueryString.js';
+import {OAuthClientToken} from '../OAuthClientToken.js';
 
 test('Test enum parsing', async () => {
     const options: OAuthClientOptions = new OAuthClientOptions('https://github.com/login', '3b938da6f58d6bef7d59', 'da05698a6bd449de9437e11ff0b99003f511e40f');

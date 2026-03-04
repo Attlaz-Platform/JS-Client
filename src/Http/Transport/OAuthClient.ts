@@ -1,17 +1,18 @@
 import axios, {AxiosInstance} from 'axios';
 import {clientCredentials, ownerCredentials, refreshToken} from 'axios-oauth-client';
-import {JsonSerializable} from '../Model/JsonSerializable.js';
-import {VERSION} from '../version.js';
-import {ClientError} from './ClientError.js';
-import {Headers} from './Data/Headers.js';
-import {Parameters} from './Data/Parameters.js';
-import {HttpClient} from './HttpClient.js';
-import {HttpClientRequest} from './HttpClientRequest.js';
-import {HttpClientResponse} from './HttpClientResponse.js';
-import {OAuthClientOptions} from './OAuthClientOptions.js';
-import {OAuthClientToken} from './OAuthClientToken.js';
+import {JsonSerializable} from '../../Model/JsonSerializable.js';
+import {VERSION} from '../../version.js';
+import {ClientError} from '../ClientError.js';
+import {Headers} from '../Data/Headers.js';
+import {Parameters} from '../Data/Parameters.js';
+import {HttpClient} from '../HttpClient.js';
+import {HttpClientRequest} from '../HttpClientRequest.js';
+import {HttpClientResponse} from '../HttpClientResponse.js';
+import {ITransport} from './ITransport.js';
+import {OAuthClientOptions} from '../OAuthClientOptions.js';
+import {OAuthClientToken} from '../OAuthClientToken.js';
 
-export class OAuthClient {
+export class OAuthClient implements ITransport {
     private debug: boolean = false;
     private axiosInstance: AxiosInstance | null = null;
 
@@ -125,7 +126,7 @@ export class OAuthClient {
         return OAuthClientToken.isExpired(this.oathClientToken);
     }
 
-    public async request(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<any> {
+    public async request<T>(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<T> {
         if (signWithOauthToken && !this.isAuthenticated()) {
             throw new ClientError('Unable to perform request, access token not provided');
         } else {
@@ -150,14 +151,10 @@ export class OAuthClient {
             }
             try {
                 const response: HttpClientResponse = await HttpClient.request(requestData);
-
-                // if (this.debug) {
-                //     console.info('[Client response] ', {body: response.body});
-                // }
                 return response.body;
-            } catch (error: any) {
+            } catch (error: unknown) {
                 if (!(error instanceof ClientError)) {
-                    const clientError: Error = ClientError.fromError(error);
+                    const clientError: Error = ClientError.fromError(error as Error);
                     if (this.debug) {
                         console.error('[Client] Error:', {error, clientError});
                     }

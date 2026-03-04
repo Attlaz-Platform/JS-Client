@@ -1,6 +1,7 @@
-import {OAuthClient} from './Http/OAuthClient.js';
 import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
+import {ITransport} from './Http/Transport/ITransport.js';
+import {OAuthClient} from './Http/Transport/OAuthClient.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
@@ -40,6 +41,7 @@ import {VERSION} from './version.js';
 export class Client {
     private readonly endpoints: Map<string, any>;
     private httpClient: OAuthClient;
+    private transport: ITransport;
     private readonly Store: any = {
         AccessTokenEndpoint,
         AdapterConnectionEndpoint,
@@ -98,7 +100,20 @@ export class Client {
             this.httpClient.setToken(clientToken);
         }
 
+        this.transport = this.httpClient;
         this.endpoints = new Map<string, any>();
+    }
+
+    /**
+     * Create a Client that uses a custom transport instead of OAuth.
+     * Intended for internal service-to-service calls (e.g. using DirectTransport).
+     */
+    public static withTransport(transport: ITransport, config: {
+        apiEndpoint: string | undefined
+    } = {apiEndpoint: undefined}): Client {
+        const client = new Client(null, config);
+        client.transport = transport;
+        return client;
     }
 
     public setClientCredentials(clientId: string, clientSecret: string = ''): void {
@@ -107,6 +122,7 @@ export class Client {
         options.scopes = ['all'];
         // TODO: do we need to create a new oauth client, or can we update with these credentials?
         this.httpClient = new OAuthClient(options);
+        this.transport = this.httpClient;
     }
 
     public setVersion(version: string | null): void {
@@ -282,23 +298,18 @@ export class Client {
         return this.getEndpoint('provider_token', this.Store.ProviderTokenEndpoint);
     }
 
-    // TODO: this should be in a separate API?
     public getFirewallEndpoint(): FirewallEndpoint {
         return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
     }
 
-    private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: OAuthClient): T; }): T {
-        // const classNameString: string = className.name;
-
+    private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: ITransport): T; }): T {
         if (!this.endpoints.has(key)) {
-            // if (this.Store[classNameString] === undefined || this.Store[classNameString] === null) {
-            //     throw new Error(`Class type of \'${classNameString}\' is not in the store`);
-            // }
             try {
-                const endpoint: Endpoint = new ClassName(this.httpClient);
+                const endpoint: Endpoint = new ClassName(this.transport);
                 this.endpoints.set(key, endpoint);
-            } catch (error: any) {
-                throw new Error('Unable to initialize ' + key + ' endpoint (' + error.message + ')');
+            } catch (error: unknown) {
+                const errorMsg: string = (error !== null && typeof error === 'object' && 'message' in error && typeof error.message === 'string') ? error.message : 'Unknown';
+                throw new Error('Unable to initialize ' + key + ' endpoint (' + errorMsg + ')');
             }
         }
         return this.endpoints.get(key);
