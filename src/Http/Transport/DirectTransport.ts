@@ -1,4 +1,3 @@
-import {createHmac} from 'node:crypto';
 import {Parameters} from '../Data/Parameters.js';
 import {OAuthClientOptions} from '../OAuthClientOptions.js';
 import {ITransport} from './ITransport.js';
@@ -13,13 +12,18 @@ export interface DirectTransportRoute {
  * Transport for internal service-to-service calls that bypasses Gateway OAuth.
  * Authenticates via HMAC-signed session headers instead of an OAuth token.
  *
+ * The caller is responsible for computing the HMAC signature (since this requires
+ * node:crypto which is not available in browser environments).
+ *
  * Usage:
- *   const transport = new DirectTransport('http://core-api:5728', process.env.api_secret);
+ *   import {createHmac} from 'node:crypto';
+ *   const sessionPayload = DirectTransport.createSessionPayload();
+ *   const sessionSignature = createHmac('sha256', apiSecret).update(sessionPayload).digest('hex');
+ *   const transport = new DirectTransport('http://core-api:5728', sessionPayload, sessionSignature);
  *   const client = Client.withTransport(transport);
- *   client.getFlowEndpoint().getById(id);
  *
  * With multiple backends:
- *   const transport = new DirectTransport('http://core-api:5728', secret, [
+ *   const transport = new DirectTransport('http://core-api:5728', sessionPayload, sessionSignature, [
  *     { prefix: '/products', baseUrl: 'http://products-api:5730' },
  *     { prefix: '/services', baseUrl: 'http://services-api:5731' },
  *   ]);
@@ -28,9 +32,11 @@ export class DirectTransport implements ITransport {
     private readonly clients: Map<string, OAuthClient> = new Map();
     private readonly sortedRoutes: DirectTransportRoute[];
 
-    constructor(defaultBaseUrl: string, apiSecret: string, routes: DirectTransportRoute[] = []) {
-        // TODO: do we need to define user, client and ip?
-        const sessionPayload = JSON.stringify({
+    /**
+     * Creates the default session payload for internal service-to-service calls.
+     */
+    public static createSessionPayload(): string {
+        return JSON.stringify({
             api_version: 'latest',
             user: null,
             client: null,
@@ -39,8 +45,9 @@ export class DirectTransport implements ITransport {
             scopes: [],
             access_token: null,
         });
+    }
 
-        const sessionSignature = createHmac('sha256', apiSecret).update(sessionPayload).digest('hex');
+    constructor(defaultBaseUrl: string, sessionPayload: string, sessionSignature: string, routes: DirectTransportRoute[] = []) {
 
         // All routes plus the catch-all default, sorted by prefix length descending (most specific first)
         this.sortedRoutes = [...routes, {prefix: '', baseUrl: defaultBaseUrl}]

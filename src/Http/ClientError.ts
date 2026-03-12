@@ -34,17 +34,10 @@ export class ClientError extends Error {
             // console.log('Status', clientError.httpStatus);
             // if(clientError.httpStatus === HttpStatusCode.Ref)
             // clientError.message = error.message;
-            if (error.code !== undefined) {
-                //  clientError.code = error.code;
-            }
-
-
             if (error.response === undefined) {
-
                 console.error('Unknown AxiosError error', {
                     error, status: error.status, code: error.code,
                 });
-
             } else {
 
                 const response: { status: number; statusText: string; data: unknown } = {
@@ -60,19 +53,7 @@ export class ClientError extends Error {
             return clientError;
         }
 
-        // if (error.body !== undefined && error.body !== null && error.body.error !== undefined && error.body.error !== null) {
-        //     error = error.body.error;
-        // }
-
-        // let message: string = error;
-        // if (error.message !== undefined && error.message !== null) {
-        //     message = error.message;
-        // }
-        //
-
-        //    console.error(error);
-
-        const xError = error as any as { status: number; code: number | string; body: string };
+        const xError = error as unknown as { status: number; code: number | string; body: string };
         if (xError.status !== null && xError.status !== undefined) {
             const statusCode: number = xError.status;
             const {body} = xError;

@@ -39,10 +39,10 @@ import {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
 import {VERSION} from './version.js';
 
 export class Client {
-    private readonly endpoints: Map<string, any>;
+    private readonly endpoints: Map<string, Endpoint> = new Map();
     private httpClient: OAuthClient;
     private transport: ITransport;
-    private readonly Store: any = {
+    private readonly Store = {
         AccessTokenEndpoint,
         AdapterConnectionEndpoint,
         AdapterEndpoint,
@@ -80,17 +80,9 @@ export class Client {
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
 
-    private parseConfig(config: Record<string, unknown>): { apiEndpoint: string | undefined } {
-        // TODO: go over other records in config and warn if any unknown ones
-
-        return config as any;
-    }
-
-    constructor(token: string | null = null, config: { apiEndpoint: string | undefined } = {apiEndpoint: undefined}) {
-        const parsedConfig = this.parseConfig(config);
-
-        if (parsedConfig.apiEndpoint !== undefined) {
-            this.apiEndpoint = parsedConfig.apiEndpoint;
+    constructor(token: string | null = null, config: { apiEndpoint?: string } = {}) {
+        if (config.apiEndpoint !== undefined) {
+            this.apiEndpoint = config.apiEndpoint;
         }
 
         const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint);
@@ -101,7 +93,6 @@ export class Client {
         }
 
         this.transport = this.httpClient;
-        this.endpoints = new Map<string, any>();
     }
 
     /**
@@ -267,7 +258,7 @@ export class Client {
     }
 
     public getHealthAlertEndpoint(): HealthAlertEndpoint {
-        return this.getEndpoint('healt-alert', this.Store.HealthAlertEndpoint);
+        return this.getEndpoint('health-alert', this.Store.HealthAlertEndpoint);
     }
 
     public getCodeSourceStrategiesEndpoint(): CodeSourceStrategiesEndpoint {
@@ -305,14 +296,13 @@ export class Client {
     private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: ITransport): T; }): T {
         if (!this.endpoints.has(key)) {
             try {
-                const endpoint: Endpoint = new ClassName(this.transport);
-                this.endpoints.set(key, endpoint);
+                this.endpoints.set(key, new ClassName(this.transport));
             } catch (error: unknown) {
                 const errorMsg: string = (error !== null && typeof error === 'object' && 'message' in error && typeof error.message === 'string') ? error.message : 'Unknown';
                 throw new Error('Unable to initialize ' + key + ' endpoint (' + errorMsg + ')');
             }
         }
-        return this.endpoints.get(key);
+        return this.endpoints.get(key) as T;
     }
 
     public getVersion(): string {

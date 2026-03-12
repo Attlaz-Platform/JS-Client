@@ -24,7 +24,6 @@ export class UserEndpoint extends Endpoint {
             }> = await this.requestObject('/users/auth/providers', {provider: providerId}, parser, 'DELETE');
             const re: { deleted: boolean } | null = result.getData();
             if (re === null) {
-                console.log('remove auth provider wrong data', {result, parsed: re});
                 throw new Error('Unable to remove auth provider: wrong response from API');
             }
             return re.deleted;
@@ -75,9 +74,7 @@ export class UserEndpoint extends Endpoint {
     public async create(user: User, password: string, invitationCode: string | null = null): Promise<User> {
         try {
             const url: string = '/users/';
-            const data: any = user;
-            data.password = password;
-            data.invitation_code = invitationCode;
+            const data = {...user, password, invitation_code: invitationCode};
 
             const result: ObjectResult<User> = await this.requestObject(url, data, User.parse, 'PUT', false);
 
@@ -104,7 +101,6 @@ export class UserEndpoint extends Endpoint {
             }> = await this.requestObject(url, {email}, parser, 'POST', false);
             const re: { requested: boolean } | null = result.getData();
             if (re === null) {
-                console.log('reset password request wrong data', {result, parsed: re});
                 throw new Error('Unable to request password reset: wrong response from API');
             }
             return re.requested;
@@ -125,7 +121,6 @@ export class UserEndpoint extends Endpoint {
             }> = await this.requestObject(url, {password}, parser, 'POST', false);
             const re: { updated: boolean } | null = result.getData();
             if (re === null) {
-                console.log('reset password wrong data', {result, parsed: re});
                 throw new Error('Unable to reset password: wrong response from API');
             }
             return re.updated;
@@ -155,7 +150,6 @@ export class UserEndpoint extends Endpoint {
             }> = await this.requestObject(url, data, parser, 'POST', true);
             const re: { created: boolean } | null = result.getData();
             if (re === null) {
-                console.log('created web push wrong data', {result, parsed: re});
                 throw new Error('Unable to request web push: wrong response from API');
             }
             return re.created;

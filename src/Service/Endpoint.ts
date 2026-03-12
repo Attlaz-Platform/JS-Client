@@ -5,7 +5,6 @@ import {HttpStatus} from '../Http/HttpStatus.js';
 import {ITransport} from '../Http/Transport/ITransport.js';
 import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {ApiError} from '../Model/Error/ApiError.js';
-import {JsonSerializable} from '../Model/JsonSerializable.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -41,29 +40,20 @@ export abstract class Endpoint {
             return data.toISOString();
         }
 
-        // tODo: this does not seem to work correclty
-        if (data instanceof JsonSerializable && 'jsonSerialize' in data) {
-            return data.jsonSerialize();
-        }
         if (typeof data === 'object') {
-            if (
-                // data instanceof WorkspaceId ||
-                // data instanceof ProjectEnvironmentId ||
-                // data instanceof ProjectId ||
-                // data instanceof OrganisationId ||
-                // data instanceof FlowId ||
-                // data instanceof FlowRunId ||
-                // data instanceof UserId ||
-                // data instanceof DataCollectionResult ||
-                // data instanceof SuccessResult ||
-                data instanceof DataValueCollection
-                || data instanceof LogStreamId
-            ) {
+            // These types need recursive formatting applied to their serialized output.
+            if (data instanceof DataValueCollection || data instanceof LogStreamId) {
                 return this.formatParameters(data.jsonSerialize());
             }
 
             if (data instanceof QueryString) {
                 return data.getParameters();
+            }
+
+            // Duck-type check for JsonSerializable: avoids fragile instanceof checks across
+            // ESM module boundaries where class identity can differ between realms.
+            if (typeof (data as any).jsonSerialize === 'function') {
+                return (data as any).jsonSerialize();
             }
 
             const result: any = {};
@@ -82,11 +72,14 @@ export abstract class Endpoint {
     private formatKey(key: string): string {
         let formattedKey: string = key.replace(/([A-Z])/g, ' $1');
         formattedKey = formattedKey.split(' ').join('_').toLowerCase();
+        // Intentional: the API expects bare resource names, not ID-suffixed ones.
+        // e.g. TypeScript `environmentId` → snake_case `environment_id` → API param `environment`
         if (formattedKey.endsWith('_id')) {
             formattedKey = formattedKey.substring(0, formattedKey.length - '_id'.length);
         }
+        // Intentional: same convention for plural IDs.
+        // e.g. `categoryIds` → `category_ids` → `categorys` (TODO: handle irregular plurals properly)
         if (formattedKey.endsWith('_ids')) {
-            // TODO: update this to format correct plurals (for example category_ids should become categories instead of categorys)
             formattedKey = formattedKey.substring(0, formattedKey.length - '_ids'.length) + 's';
         }
 
@@ -108,11 +101,6 @@ export abstract class Endpoint {
         }
 
         const result: CollectionResult<T> = new CollectionResult<T>();
-
-        /**
-         * Parse errors
-         */
-        // DataResult.appendErrors(result, requestResponse);
 
         /**
          * Parse data
@@ -176,7 +164,7 @@ export abstract class Endpoint {
         return result;
     }
 
-    private toApiError(error: any): ApiError {
+    private toApiError(error: unknown): ApiError {
         if (error instanceof ClientError) {
             const apiError: ApiError = new ApiError(error.message, error.httpStatus);
 
@@ -194,7 +182,6 @@ export abstract class Endpoint {
 
 
                 if (response.data.error !== undefined) {
-                    // console.debug('Error data', errorData);
                     if (response.data.error.type !== undefined) {
                         apiError.type = response.data.error.type;
                     }
@@ -215,16 +202,11 @@ export abstract class Endpoint {
 
             return apiError;
         }
-        // TODO: remove this
-        console.log('Not client error', {error});
+        if (this.httpClient.isDebugEnabled()) {
+            console.error('Unrecognised error type (not a ClientError)', {error});
+        }
         return new ApiError('Unknown Error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
     }
-
-    // public async request<T>(action: string, parameters: any | null = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<DataResult<T>> {
-    //     const result: any = await this.httpClient.request(action, parameters, method, signWithOauthToken);
-    //
-    //     return DataResult.parse<T>(result);
-    // }
 
     public parseCollection<T>(rawData: object[], parser: (input: any) => T): T[] {
         const data: T[] = [];
@@ -252,8 +234,4 @@ export abstract class Endpoint {
         }
         return null;
     }
-
-    // public static getAll(): CollectionResult<T> {
-    //
-    // }
 }

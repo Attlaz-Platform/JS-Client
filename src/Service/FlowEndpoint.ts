@@ -1,12 +1,12 @@
-import {Utils} from '../Utils.js';
+import {Parameters} from '../Http/Data/Parameters.js';
+import {QueryString} from '../Http/Data/QueryString.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
 import {Flow} from '../Model/Flow/Flow.js';
 import {FlowSummary} from '../Model/Flow/FlowSummary.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
-import {Parameters} from '../Http/Data/Parameters.js';
-import {HttpStatus} from '../Http/HttpStatus.js';
-import {QueryString} from '../Http/Data/QueryString.js';
-import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {Utils} from '../Utils.js';
 import {Endpoint} from './Endpoint.js';
 
 export class FlowEndpoint extends Endpoint {
@@ -41,22 +41,18 @@ export class FlowEndpoint extends Endpoint {
         }
     }
 
-    public async getFlowSummaries(projectId: string, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowSummary>> {
+    public async getFlowSummaries(projectId: string, projectEnvironmentId: string | null = null, pagination: CursorPagination | null = null): Promise<CollectionResult<FlowSummary>> {
         let parameters: Parameters = null;
         if (!Utils.isNullOrUndefined(projectEnvironmentId)) {
             parameters = {environment: projectEnvironmentId};
         }
-        const result: CollectionResult<FlowSummary> = await this.requestCollection('projects/' + projectId + '/flowsummaries', FlowSummary.parse, parameters);
-        return result;
-        //
-        //     }).catch((reason: any) => {
-        //         if (this.httpClient.isDebugEnabled()) {
-        //             console.error('Failed to load flow summaries: ' + reason);
-        //         }
-        //
-        //         reject(reason);
-        //     });
-        // });
+
+        const queryString: QueryString = new QueryString('projects/' + projectId + '/flowsummaries');
+        if (pagination !== null) {
+            queryString.addPagination(pagination);
+        }
+
+        return await this.requestCollection<FlowSummary>(queryString, FlowSummary.parse, parameters);
     }
 
     public async getFlowSummary(flowId: string, projectEnvironmentId: string | null = null): Promise<FlowSummary | null> {

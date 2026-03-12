@@ -42,7 +42,6 @@ export class StorageEndpoint extends Endpoint {
 
             const re: { deleted: boolean } | null = result.getData();
             if (re === null) {
-                console.log('clearpool wrong data', {result, parsed: re});
                 throw new Error('Unable to clear storage pool: wrong response from API');
             }
             return re.deleted;
@@ -112,7 +111,6 @@ export class StorageEndpoint extends Endpoint {
 
             const savedItem: StorageItem | null = result.getData();
             if (savedItem === null) {
-                console.log('Storage set item wrong data', {result, parsed: savedItem});
                 throw new Error('Unable to save storage item: wrong response from API');
             }
 
@@ -134,7 +132,6 @@ export class StorageEndpoint extends Endpoint {
             const result: ObjectResult<{ deleted: boolean }> = await this.requestObject(cmd, null, parser, 'DELETE');
             const x: { deleted: boolean } | null = result.getData();
             if (x === null) {
-                console.log('Storage delete item wrong data', {result, parsed: x});
                 throw new Error('Unable to delete storage item: wrong response from API');
             }
             return x.deleted;
