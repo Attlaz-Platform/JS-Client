@@ -16,10 +16,14 @@ export class LoadAllHelper {
             firstPagination.limit = limit;
             firstPagination.startingAfter = lastRef;
             const data: CollectionResult<T> = await call(firstPagination);
-
-            for (const record of data.getData()) {
-                totalResult.push(record);
-                lastRef = record.id.toString();
+            const records: T[] = data.getData();
+            // Spread is faster than a per-element loop but can exceed the call stack for very large collections (50k+)
+            if (totalResult.length + records.length > 50_000) {
+                throw new Error('loadAll exceeded 50,000 records (' + (totalResult.length + records.length) + '). This method is not intended for large datasets.');
+            }
+            totalResult.push(...records);
+            if (records.length > 0) {
+                lastRef = records[records.length - 1].id.toString();
             }
 
             hasMore = data.hasMore;
