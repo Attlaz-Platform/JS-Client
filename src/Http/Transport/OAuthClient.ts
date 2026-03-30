@@ -290,9 +290,9 @@ export class OAuthClient implements ITransport {
             requestData.setJsonHeader();
         }
         if (method === 'GET' && parameters !== null && parameters !== undefined) {
-            Object.keys(parameters).forEach((key: string, index: number) => {
-                const value: string | number = parameters[key] as unknown as string | number;
-                requestData.addQueryParam(key, value);
+            const params = parameters as Record<string, string | number>;
+            Object.keys(params).forEach((key: string) => {
+                requestData.addQueryParam(key, params[key]);
             });
         }
 

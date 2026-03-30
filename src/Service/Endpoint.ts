@@ -177,11 +177,11 @@ export abstract class Endpoint {
                             message: string | undefined;
                             param?: string | undefined
                         } | undefined
-                    }
+                    } | undefined
                 } = error.response as any;
 
 
-                if (response.data.error !== undefined) {
+                if (response.data !== null && response.data !== undefined && response.data.error !== undefined) {
                     if (response.data.error.type !== undefined) {
                         apiError.type = response.data.error.type;
                     }
