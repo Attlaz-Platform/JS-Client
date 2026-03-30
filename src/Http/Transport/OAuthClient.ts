@@ -34,24 +34,32 @@ export class OAuthClient implements ITransport {
         try {
             if (username !== null && username !== undefined && password !== null && password !== undefined) {
                 // Password flow / Owner Credentials grant
-                const getOwnerCredentials = ownerCredentials(
-                    this.getAxiosInstance(),
-                    this.getApiEndpointUrl(this.options.accessTokenUri),
-                    this.options.clientId === null ? undefined : this.options.clientId,
-                    this.options.clientSecret === null ? undefined : this.options.clientSecret,
-                );
-
-                const rawAuthToken = await getOwnerCredentials(username, password, this.options.scopes.join(' '));
-                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
-
+                if (this.isPublicClient()) {
+                    // Public clients omit client_secret entirely
+                    const rawAuthToken = await this.requestToken({
+                        grant_type: 'password',
+                        client_id: this.options.clientId,
+                        username,
+                        password,
+                        scope: this.options.scopes.join(' '),
+                    });
+                    this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+                } else {
+                    const getOwnerCredentials = ownerCredentials(
+                        this.getAxiosInstance(),
+                        this.getApiEndpointUrl(this.options.accessTokenUri),
+                        this.options.clientId === null ? undefined : this.options.clientId,
+                        this.options.clientSecret === null ? undefined : this.options.clientSecret,
+                    );
+                    const rawAuthToken = await getOwnerCredentials(username, password, this.options.scopes.join(' '));
+                    this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+                }
 
                 return true;
             }
 
             if (this.options.clientId !== null && this.options.clientSecret !== null) {
-
-
-                // Client credentials flow
+                // Client credentials flow (only for confidential clients)
                 const getClientCredentials = clientCredentials(
                     this.getAxiosInstance(),
                     this.getApiEndpointUrl(this.options.accessTokenUri),
@@ -82,17 +90,53 @@ export class OAuthClient implements ITransport {
         }
 
         try {
-            const getRefreshToken = refreshToken(
-                this.getAxiosInstance(),
-                this.getApiEndpointUrl(this.options.accessTokenUri),
-                this.options.clientId === null ? undefined : this.options.clientId,
-                this.options.clientSecret === null ? undefined : this.options.clientSecret,
-            );
-            const auth = await getRefreshToken(this.oauthClientToken.refresh_token, this.options.scopes.join(' '));
-            this.oauthClientToken = this.tokenToOauthClientToken(auth);
+            if (this.isPublicClient()) {
+                // Public clients omit client_secret entirely
+                const rawAuthToken = await this.requestToken({
+                    grant_type: 'refresh_token',
+                    client_id: this.options.clientId,
+                    refresh_token: this.oauthClientToken.refresh_token,
+                    scope: this.options.scopes.join(' '),
+                });
+                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+            } else {
+                const getRefreshToken = refreshToken(
+                    this.getAxiosInstance(),
+                    this.getApiEndpointUrl(this.options.accessTokenUri),
+                    this.options.clientId === null ? undefined : this.options.clientId,
+                    this.options.clientSecret === null ? undefined : this.options.clientSecret,
+                );
+                const auth = await getRefreshToken(this.oauthClientToken.refresh_token, this.options.scopes.join(' '));
+                this.oauthClientToken = this.tokenToOauthClientToken(auth);
+            }
         } catch (e: unknown) {
             throw ClientError.fromError(e as Error);
         }
+    }
+
+    private isPublicClient(): boolean {
+        return this.options.clientSecret === null || this.options.clientSecret === '';
+    }
+
+    /**
+     * Direct token request for public clients that must not send client_secret.
+     * The axios-oauth-client library always includes client_secret in the body,
+     * so public clients use this method instead.
+     */
+    private async requestToken(params: Record<string, string | null>): Promise<{
+        access_token: string;
+        token_type: string;
+        refresh_token: string | undefined;
+        expires_in: number;
+        scope: string | undefined;
+        scopes: string | undefined;
+    }> {
+        const response = await this.getAxiosInstance().post(
+            this.getApiEndpointUrl(this.options.accessTokenUri),
+            new URLSearchParams(params as Record<string, string>).toString(),
+            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}},
+        );
+        return response.data;
     }
 
 

@@ -116,6 +116,17 @@ export class Client {
         this.transport = this.httpClient;
     }
 
+    /**
+     * Configure this client as a public OAuth client (no client_secret).
+     * Used for SPAs and other public clients that cannot keep a secret.
+     */
+    public setPublicClient(clientId: string): void {
+        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, null);
+        options.scopes = ['all'];
+        this.httpClient = new OAuthClient(options);
+        this.transport = this.httpClient;
+    }
+
     public setVersion(version: string | null): void {
         this.httpClient.setVersion(version);
     }
