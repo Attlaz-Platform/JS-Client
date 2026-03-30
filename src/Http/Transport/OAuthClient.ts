@@ -1,5 +1,3 @@
-import axios, {AxiosInstance} from 'axios';
-import {clientCredentials, ownerCredentials, refreshToken} from 'axios-oauth-client';
 import {JsonSerializable} from '../../Model/JsonSerializable.js';
 import {VERSION} from '../../version.js';
 import {ClientError} from '../ClientError.js';
@@ -8,13 +6,12 @@ import {Parameters} from '../Data/Parameters.js';
 import {HttpClient} from '../HttpClient.js';
 import {HttpClientRequest} from '../HttpClientRequest.js';
 import {HttpClientResponse} from '../HttpClientResponse.js';
-import {ITransport} from './ITransport.js';
 import {OAuthClientOptions} from '../OAuthClientOptions.js';
 import {OAuthClientToken} from '../OAuthClientToken.js';
+import {ITransport} from './ITransport.js';
 
 export class OAuthClient implements ITransport {
     private debug: boolean = false;
-    private axiosInstance: AxiosInstance | null = null;
 
     private oauthClientToken: OAuthClientToken | null = null;
     private refreshTokenPromise: Promise<void> | null = null;
@@ -34,39 +31,30 @@ export class OAuthClient implements ITransport {
         try {
             if (username !== null && username !== undefined && password !== null && password !== undefined) {
                 // Password flow / Owner Credentials grant
-                if (this.isPublicClient()) {
-                    // Public clients omit client_secret entirely
-                    const rawAuthToken = await this.requestToken({
-                        grant_type: 'password',
-                        client_id: this.options.clientId,
-                        username,
-                        password,
-                        scope: this.options.scopes.join(' '),
-                    });
-                    this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
-                } else {
-                    const getOwnerCredentials = ownerCredentials(
-                        this.getAxiosInstance(),
-                        this.getApiEndpointUrl(this.options.accessTokenUri),
-                        this.options.clientId === null ? undefined : this.options.clientId,
-                        this.options.clientSecret === null ? undefined : this.options.clientSecret,
-                    );
-                    const rawAuthToken = await getOwnerCredentials(username, password, this.options.scopes.join(' '));
-                    this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+                const params: Record<string, string | null> = {
+                    grant_type: 'password',
+                    client_id: this.options.clientId,
+                    username,
+                    password,
+                    scope: this.options.scopes.join(' '),
+                };
+                if (!this.isPublicClient()) {
+                    params.client_secret = this.options.clientSecret;
                 }
+                const rawAuthToken = await this.requestToken(params);
+                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
 
                 return true;
             }
 
             if (this.options.clientId !== null && this.options.clientSecret !== null) {
                 // Client credentials flow (only for confidential clients)
-                const getClientCredentials = clientCredentials(
-                    this.getAxiosInstance(),
-                    this.getApiEndpointUrl(this.options.accessTokenUri),
-                    this.options.clientId === null ? undefined : this.options.clientId,
-                    this.options.clientSecret === null ? undefined : this.options.clientSecret,
-                );
-                const rawAuthToken = await getClientCredentials(this.options.scopes.join(' '));
+                const rawAuthToken = await this.requestToken({
+                    grant_type: 'client_credentials',
+                    client_id: this.options.clientId,
+                    client_secret: this.options.clientSecret,
+                    scope: this.options.scopes.join(' '),
+                });
                 this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
             }
             return true;
@@ -90,25 +78,17 @@ export class OAuthClient implements ITransport {
         }
 
         try {
-            if (this.isPublicClient()) {
-                // Public clients omit client_secret entirely
-                const rawAuthToken = await this.requestToken({
-                    grant_type: 'refresh_token',
-                    client_id: this.options.clientId,
-                    refresh_token: this.oauthClientToken.refresh_token,
-                    scope: this.options.scopes.join(' '),
-                });
-                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
-            } else {
-                const getRefreshToken = refreshToken(
-                    this.getAxiosInstance(),
-                    this.getApiEndpointUrl(this.options.accessTokenUri),
-                    this.options.clientId === null ? undefined : this.options.clientId,
-                    this.options.clientSecret === null ? undefined : this.options.clientSecret,
-                );
-                const auth = await getRefreshToken(this.oauthClientToken.refresh_token, this.options.scopes.join(' '));
-                this.oauthClientToken = this.tokenToOauthClientToken(auth);
+            const params: Record<string, string | null> = {
+                grant_type: 'refresh_token',
+                client_id: this.options.clientId,
+                refresh_token: this.oauthClientToken.refresh_token,
+                scope: this.options.scopes.join(' '),
+            };
+            if (!this.isPublicClient()) {
+                params.client_secret = this.options.clientSecret;
             }
+            const rawAuthToken = await this.requestToken(params);
+            this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
         } catch (e: unknown) {
             throw ClientError.fromError(e as Error);
         }
@@ -131,27 +111,20 @@ export class OAuthClient implements ITransport {
         scope: string | undefined;
         scopes: string | undefined;
     }> {
-        const response = await this.getAxiosInstance().post(
+        const response: Response = await fetch(
             this.getApiEndpointUrl(this.options.accessTokenUri),
-            new URLSearchParams(params as Record<string, string>).toString(),
-            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}},
+            {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams(params as Record<string, string>).toString(),
+            },
         );
-        return response.data;
-    }
 
-
-    private getAxiosInstance(): AxiosInstance {
-        if (this.axiosInstance === null) {
-
-            const config: {} = {
-                // httpsAgent: new https.Agent({
-                //     rejectUnauthorized: false,
-                // }),
-            };
-
-            this.axiosInstance = axios.create(config);
+        if (!response.ok) {
+            throw new ClientError(response.statusText || 'Token request failed', response.status);
         }
-        return this.axiosInstance;
+
+        return response.json();
     }
 
     public isTokenExpires(): boolean {
@@ -262,7 +235,7 @@ export class OAuthClient implements ITransport {
     }
 
     private isNodeEnvironment(): boolean {
-        return typeof process !== 'undefined' && process.versions != null && process.versions.node != null;
+        return typeof process !== 'undefined' && process.versions !== null && process.versions.node !== null;
     }
 
     private tokenToOauthClientToken(oauthToken: {
@@ -291,7 +264,7 @@ export class OAuthClient implements ITransport {
     }
 
     private getApiEndpointUrl(uri: string): string {
-        if (uri.indexOf('http://') === 0 || uri.indexOf('https://') === 0) {
+        if (uri.startsWith('http://') || uri.startsWith('https://')) {
             return uri;
         }
         return this.options.apiEndpoint.replace(/\/+$/, '') + '/' + uri.replace(/^\/+/g, '');
@@ -318,8 +291,7 @@ export class OAuthClient implements ITransport {
         }
         if (method === 'GET' && parameters !== null && parameters !== undefined) {
             Object.keys(parameters).forEach((key: string, index: number) => {
-                // @ts-ignore
-                const value: string | number = parameters[key];
+                const value: string | number = parameters[key] as unknown as string | number;
                 requestData.addQueryParam(key, value);
             });
         }

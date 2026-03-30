@@ -1,4 +1,3 @@
-import {AxiosError} from 'axios';
 import {HttpStatus} from './HttpStatus.js';
 
 export class ClientError extends Error {
@@ -12,46 +11,9 @@ export class ClientError extends Error {
         this.httpStatus = httpErrorCode;
     }
 
-    public static fromError(error: Error | AxiosError): ClientError {
+    public static fromError(error: Error): ClientError {
 
         let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
-
-
-        if (error instanceof AxiosError) {
-            if (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK') {
-                clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
-                // clientError.code = 'Service not available';
-                clientError.message = 'Service not available';
-                return clientError;
-            }
-
-            if (error.status !== undefined && error.status !== null) {
-
-                clientError.httpStatus = error.status;
-
-
-            }
-            // console.log('Status', clientError.httpStatus);
-            // if(clientError.httpStatus === HttpStatusCode.Ref)
-            // clientError.message = error.message;
-            if (error.response === undefined) {
-                console.error('Unknown AxiosError error', {
-                    error, status: error.status, code: error.code,
-                });
-            } else {
-
-                const response: { status: number; statusText: string; data: unknown } = {
-                    status: error.response.status,
-                    statusText: error.response.statusText,
-                    data: error.response.data,
-                };
-
-                clientError.message = response.statusText;
-
-                clientError.response = response;
-            }
-            return clientError;
-        }
 
         const xError = error as unknown as { status: number; code: number | string; body: string };
         if (xError.status !== null && xError.status !== undefined) {
@@ -85,6 +47,11 @@ export class ClientError extends Error {
                     console.warn('[Client error] Error code `' + xError.code + '` not recognised');
                     clientError.httpStatus = HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
             }
+        } else if (error instanceof TypeError) {
+            // fetch throws TypeError on network failures (ECONNREFUSED, DNS, etc.)
+            clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
+            clientError.message = 'Service not available';
+            return clientError;
         }
         clientError.name = error.name;
 
