@@ -11,8 +11,12 @@ export class RunnerPool {
 
     public type: QueueSpecificationType = 'flow_run';
 
-    public minRunners: number;
-    public maxRunners: number;
+    // Effective values resolved server-side via the configuration chain (pool → env → workspace → zone fallback).
+    public effectiveMinRunners: number | null = null;
+    public effectiveMaxRunners: number | null = null;
+    public effectiveCpuLimit: number | null = null;
+    public effectiveMemoryLimit: number | null = null;
+    public effectiveImageId: string | null = null;
 
     public state: State = State.Active;
 
@@ -26,8 +30,11 @@ export class RunnerPool {
         queueSpecification.deploymentIdentifier = raw.deployment_identifier;
         queueSpecification.type = raw.type;
 
-        queueSpecification.minRunners = raw.min_runners;
-        queueSpecification.maxRunners = raw.max_runners;
+        queueSpecification.effectiveMinRunners = raw.effective_min_runners ?? null;
+        queueSpecification.effectiveMaxRunners = raw.effective_max_runners ?? null;
+        queueSpecification.effectiveCpuLimit = raw.effective_cpu_limit ?? null;
+        queueSpecification.effectiveMemoryLimit = raw.effective_memory_limit ?? null;
+        queueSpecification.effectiveImageId = raw.effective_image_id ?? null;
 
         queueSpecification.state = State.fromString(raw.state);
 
