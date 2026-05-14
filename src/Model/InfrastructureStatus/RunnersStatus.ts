@@ -8,5 +8,5 @@ export class RunnersStatus {
     public memory_limit: number | null;
     public cpu_limit: number | null;
 
-    public updated: Date;
+    public date: Date;
 }

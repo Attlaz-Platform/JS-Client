@@ -11,5 +11,5 @@ export class QueueStatus {
 
     public consumers: number = 0;
 
-    public updated: Date;
+    public date: Date;
 }
