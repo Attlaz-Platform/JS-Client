@@ -9,7 +9,10 @@ export class HttpClient {
             method: request.method,
             headers: request.headers as Record<string, string>,
         };
-        if (request.body !== null && request.body !== undefined) {
+        // Node's fetch (undici) throws TypeError when GET/HEAD carry a body. Axios used to silently drop it,
+        // so callers may still set body on GET — skip it here instead of propagating a confusing network error.
+        const method: string = request.method.toUpperCase();
+        if (request.body !== null && request.body !== undefined && method !== 'GET' && method !== 'HEAD') {
             init.body = request.body;
         }
 
