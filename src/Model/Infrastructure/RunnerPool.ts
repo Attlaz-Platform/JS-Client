@@ -11,12 +11,14 @@ export class RunnerPool {
 
     public type: QueueSpecificationType = 'flow_run';
 
-    // Effective values resolved server-side via the configuration chain (pool → env → workspace → zone fallback).
-    public effectiveMinRunners: number | null = null;
-    public effectiveMaxRunners: number | null = null;
-    public effectiveCpuLimit: number | null = null;
-    public effectiveMemoryLimit: number | null = null;
-    public effectiveImageId: string | null = null;
+    // Resolved server-side via the configuration chain (pool → env → workspace → zone fallback). null = unset anywhere in the chain.
+    public configuration: RunnerPoolConfiguration = {
+        minRunners: null,
+        maxRunners: null,
+        cpuLimit: null,
+        memoryLimit: null,
+        imageId: null,
+    };
 
     public state: State = State.Active;
 
@@ -30,11 +32,14 @@ export class RunnerPool {
         queueSpecification.deploymentIdentifier = raw.deployment_identifier;
         queueSpecification.type = raw.type;
 
-        queueSpecification.effectiveMinRunners = raw.effective_min_runners ?? null;
-        queueSpecification.effectiveMaxRunners = raw.effective_max_runners ?? null;
-        queueSpecification.effectiveCpuLimit = raw.effective_cpu_limit ?? null;
-        queueSpecification.effectiveMemoryLimit = raw.effective_memory_limit ?? null;
-        queueSpecification.effectiveImageId = raw.effective_image_id ?? null;
+        const rawConfiguration = raw.configuration ?? {};
+        queueSpecification.configuration = {
+            minRunners: rawConfiguration.min_runners ?? null,
+            maxRunners: rawConfiguration.max_runners ?? null,
+            cpuLimit: rawConfiguration.cpu_limit ?? null,
+            memoryLimit: rawConfiguration.memory_limit ?? null,
+            imageId: rawConfiguration.image_id ?? null,
+        };
 
         queueSpecification.state = State.fromString(raw.state);
 
@@ -43,3 +48,11 @@ export class RunnerPool {
 }
 
 export type QueueSpecificationType = 'flow_run';
+
+export interface RunnerPoolConfiguration {
+    minRunners: number | null;
+    maxRunners: number | null;
+    cpuLimit: number | null;
+    memoryLimit: number | null;
+    imageId: string | null;
+}
