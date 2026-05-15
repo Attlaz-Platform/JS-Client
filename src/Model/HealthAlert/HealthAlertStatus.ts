@@ -3,7 +3,6 @@ import {Utils} from '../../Utils.js';
 export enum HealthAlertStatus {
     PASSED = 'pass',
     SKIPPED = 'skip',
-    WARNING = 'warning',
     FAILED = 'fail',
 }
 

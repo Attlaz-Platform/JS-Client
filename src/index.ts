@@ -42,6 +42,7 @@ export {Configuration} from './Model/Configuration/Configuration.js';
 export {EventType} from './Model/Event/EventType.js';
 
 export {HealthAlert} from './Model/HealthAlert/HealthAlert.js';
+export {HealthAlertSeverity} from './Model/HealthAlert/HealthAlertSeverity.js';
 export {HealthAlertStatus} from './Model/HealthAlert/HealthAlertStatus.js';
 export {HealthTestType} from './Model/HealthAlert/HealthTestType.js';
 

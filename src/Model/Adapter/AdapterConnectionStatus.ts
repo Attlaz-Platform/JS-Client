@@ -10,14 +10,8 @@ export enum AdapterConnectionStatus {
 export namespace AdapterConnectionStatus {
 
     export const fromString = (input: string): AdapterConnectionStatus => {
-        if (input === 'pass') {
-            return AdapterConnectionStatus.Healthy;
-        }
-        if (input === null || input === 'skip') {
+        if (input === null) {
             return AdapterConnectionStatus.Unknown;
-        }
-        if (input === 'fail') {
-            return AdapterConnectionStatus.Critical;
         }
 
         const result: AdapterConnectionStatus | null = Utils.parseEnum<AdapterConnectionStatus>(input, AdapterConnectionStatus);

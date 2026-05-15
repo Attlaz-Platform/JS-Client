@@ -1,7 +1,8 @@
 import {Utils} from '../../Utils.js';
 import {DataValueCollection} from '../DataValueCollection.js';
-import {HealthTestType} from './HealthTestType.js';
+import {HealthAlertSeverity} from './HealthAlertSeverity.js';
 import {HealthAlertStatus} from './HealthAlertStatus.js';
+import {HealthTestType} from './HealthTestType.js';
 
 export class HealthAlert {
     public id: string;
@@ -10,6 +11,7 @@ export class HealthAlert {
 
     public healthTestType: HealthTestType;
     public status: HealthAlertStatus;
+    public severity: HealthAlertSeverity = HealthAlertSeverity.ERROR;
     public date: Date;
     public updated: Date;
 
@@ -27,6 +29,8 @@ export class HealthAlert {
         healthAlert.id = raw.id;
         healthAlert.scopeId = raw.scope;
         healthAlert.parentScopeId = raw.parent_scope;
+        // severity defaults to ERROR — defensive for older API responses that don't yet send it.
+        healthAlert.severity = raw.severity ? HealthAlertSeverity.fromString(raw.severity) : HealthAlertSeverity.ERROR;
         healthAlert.date = Utils.parseRawDate(raw.date);
         healthAlert.updated = Utils.parseRawDate(raw.updated);
         healthAlert.data = DataValueCollection.fromObject(raw.data);
