@@ -22,4 +22,9 @@ export class RunnerPoolEndpoint extends Endpoint {
         return result.getData();
 
     }
+
+    public async redeploy(runnerPoolId: string): Promise<void> {
+        const queryString: QueryString = new QueryString('/runner-pools/' + runnerPoolId + '/redeploy');
+        await this.requestObject(queryString, null, (raw: Record<string, any>) => raw, 'POST');
+    }
 }
