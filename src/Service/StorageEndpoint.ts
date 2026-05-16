@@ -16,7 +16,7 @@ export class StorageEndpoint extends Endpoint {
             const parser = (raw: Record<string, unknown>): StorageInformation => {
                 const storageInformation: StorageInformation = new StorageInformation();
                 storageInformation.bytes = raw.bytes as number;
-                storageInformation.bytes_limit = raw.bytes_limit as number;
+                storageInformation.bytes_limit = raw.bytes_limit as number | null;
                 storageInformation.items = raw.items as number;
                 storageInformation.pools = raw.pools as any;
 

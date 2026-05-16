@@ -51,4 +51,19 @@ export class ConfigurationEndpoint extends Endpoint {
         return result;
 
     }
+
+    /**
+     * Remove a configuration row so resolution falls back to the parent scope.
+     * Use this for the "Clear field" / "Inherit from parent" UX action.
+     *
+     * Distinct from `save(scopeId, path, null)` which keeps an explicit "no value"
+     * override at this scope (e.g. for limit fields meaning "no limit").
+     */
+    public async delete(scopeId: string, path: string): Promise<ObjectResult<{removed: boolean}>> {
+        const qs: QueryString = new QueryString('/configurations/' + scopeId);
+        qs.set('path', path);
+
+        const result: ObjectResult<{removed: boolean}> = await this.requestObject(qs, null, (raw: unknown) => raw as {removed: boolean}, 'DELETE');
+        return result;
+    }
 }
