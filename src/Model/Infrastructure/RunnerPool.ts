@@ -39,22 +39,53 @@ export class RunnerPool {
         queueSpecification.deploymentIdentifier = raw.deployment_identifier;
         queueSpecification.type = raw.type;
 
+        // Per-field defensive parsing. Each entry falls back to a default ResolvedValue
+        // if the server didn't send it or sent a malformed shape — keeps the UI alive
+        // when wire contracts drift (e.g. the API auto-strips `_id` so `image_id` arrives
+        // as `image`; we hit that 2026-05-17). Missing/malformed fields are collected and
+        // logged together as a single console.warn so server-side regressions stay visible.
+        const config: any = raw.configuration ?? {};
+        const missing: string[] = [];
+        if (raw.configuration === undefined || raw.configuration === null) {
+            missing.push('(entire configuration object)');
+        }
         queueSpecification.configuration = {
-            enabled: raw.configuration.enabled,
-            minRunners: raw.configuration.min_runners,
-            maxRunners: raw.configuration.max_runners,
-            cpuLimit: raw.configuration.cpu_limit,
-            memoryLimit: raw.configuration.memory_limit,
-            imageId: raw.configuration.image_id,
-            runnerEndpoint: raw.configuration.runner_endpoint,
-            runnerTokenId: raw.configuration.runner_token,
-            codeEndpoint: raw.configuration.code_endpoint,
-            codeTokenId: raw.configuration.code_token,
+            enabled: RunnerPool.parseResolved(config.enabled, false, 'enabled', missing),
+            minRunners: RunnerPool.parseResolved(config.min_runners, 0, 'min_runners', missing),
+            maxRunners: RunnerPool.parseResolved(config.max_runners, 0, 'max_runners', missing),
+            cpuLimit: RunnerPool.parseResolved<number | null>(config.cpu_limit, null, 'cpu_limit', missing),
+            memoryLimit: RunnerPool.parseResolved<number | null>(config.memory_limit, null, 'memory_limit', missing),
+            // API strips `_id` suffix from snake_case keys, so `image_id` → `image` on the wire.
+            imageId: RunnerPool.parseResolved<string | null>(config.image, null, 'image', missing),
+            runnerEndpoint: RunnerPool.parseResolved<string | null>(config.runner_endpoint, null, 'runner_endpoint', missing),
+            runnerTokenId: RunnerPool.parseResolved<string | null>(config.runner_token, null, 'runner_token', missing),
+            codeEndpoint: RunnerPool.parseResolved<string | null>(config.code_endpoint, null, 'code_endpoint', missing),
+            codeTokenId: RunnerPool.parseResolved<string | null>(config.code_token, null, 'code_token', missing),
         };
+
+        if (missing.length > 0) {
+            console.warn('RunnerPool.parse: pool "' + queueSpecification.id + '" has missing or malformed configuration fields', {fields: missing});
+        }
 
         queueSpecification.state = State.fromString(raw.state);
 
         return queueSpecification;
+    }
+
+    /**
+     * Coerce a raw wire value into a ResolvedValue<T> envelope. Accepts `{value, source}`
+     * as-is; falls back to `{value: defaultValue, source: null}` when the input is null,
+     * undefined, or missing the envelope shape, and appends the field name to `missing`
+     * so the caller can log a single batched warning. The `value` itself isn't type-
+     * validated — if T is `string | null` and the server sends a number, that's a
+     * server-side bug, not something this layer can fix.
+     */
+    private static parseResolved<T>(raw: any, defaultValue: T, fieldName: string, missing: string[]): ResolvedValue<T> {
+        if (raw !== null && typeof raw === 'object' && 'value' in raw && 'source' in raw) {
+            return raw as ResolvedValue<T>;
+        }
+        missing.push(fieldName);
+        return {value: defaultValue, source: null};
     }
 }
 
