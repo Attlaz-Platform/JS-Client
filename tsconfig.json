@@ -15,14 +15,13 @@
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "baseUrl": "src",
     "lib": [
       "es2017",
       "dom"
     ],
-    "typeRoots": [
-      "node_modules/@types",
-      "src/typings.d.ts"
+    "types": [
+      "jest",
+      "node"
     ]
   },
   "exclude": [
