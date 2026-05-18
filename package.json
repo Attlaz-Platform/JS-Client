@@ -1,6 +1,6 @@
 {
   "name": "attlaz-client",
-  "version": "1.59.0",
+  "version": "1.61.0",
   "description": "Javascript Client to access Attlaz API",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",

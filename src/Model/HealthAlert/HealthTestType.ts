@@ -6,6 +6,11 @@ export enum HealthTestType {
     WORKER_IS_UP_TO_DATE = 'worker_is_up_to_date',
     ADAPTER_CONNECTION_IS_HEALTHY = 'adapter_connection_is_healthy',
     FLOW_RUNS_ARE_SUCCESSFUL = 'flow_runs_are_successful',
+
+    STORAGE_CACHE_USAGE_WITHIN_LIMIT = 'storage_cache_usage_within_limit',
+    STORAGE_PERSISTENT_USAGE_WITHIN_LIMIT = 'storage_persistent_usage_within_limit',
+    STORAGE_VAULT_USAGE_WITHIN_LIMIT = 'storage_vault_usage_within_limit',
+    STORAGE_INFRASTRUCTURE_USAGE_WITHIN_LIMIT = 'storage_infrastructure_usage_within_limit',
 }
 
 export namespace HealthTestType {

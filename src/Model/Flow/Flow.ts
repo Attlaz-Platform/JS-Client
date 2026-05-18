@@ -16,6 +16,7 @@ export class Flow extends MetaDataAware implements StateAware {
 
     public codeSourceId: string | null = null;
     public runStrategyId: string | null = null;
+    public runnerPoolId: string | null = null;
 
     public static parse(rawFlow: ApiRecord): Flow {
         const flow: Flow = MetaDataAware.parseMetaData(new Flow(), rawFlow);
@@ -27,6 +28,7 @@ export class Flow extends MetaDataAware implements StateAware {
         flow.parallelLimit = Utils.parseInt(rawFlow.parallel_limit as number);
         flow.codeSourceId = rawFlow.code_source as string | null;
         flow.runStrategyId = rawFlow.run_strategy as string | null;
+        flow.runnerPoolId = rawFlow.runner_pool as string | null;
 
         return flow;
     }
