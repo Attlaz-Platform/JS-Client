@@ -32,6 +32,11 @@ export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 export {AdapterConnectionStatus} from './Model/Adapter/AdapterConnectionStatus.js';
 export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
 export {AdapterConnectionEvent} from './Model/Adapter/AdapterConnectionEvent.js';
+export type {
+    ConnectionTestState,
+    TestConnectionCheck,
+    TestConnectionResult,
+} from './Model/Adapter/TestConnectionResult.js';
 export {BlockedIp, FlaggedIp, IpRule} from './Service/FirewallEndpoint.js';
 
 export {Collection} from './Model/Collections/Collection.js';

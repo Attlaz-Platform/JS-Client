@@ -1,4 +1,5 @@
 import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
+import {parseTestConnectionResult, TestConnectionResult} from '../Model/Adapter/TestConnectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue.js';
@@ -121,5 +122,26 @@ export class AdapterConnectionEndpoint extends Endpoint {
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, AdapterConnectionEvent.parse);
+    }
+
+    /**
+     * Test an adapter connection end-to-end via Services-Api.
+     *
+     * Runs schema validation first (config completeness) and then invokes the
+     * adapter's `testConnection()` probe. The returned result has a per-check
+     * breakdown so the UI can render a step-by-step view; the overall `state`
+     * is the worst of the per-check states (skipped < passed < warning < failed).
+     *
+     * Used by the Web App's "Test" button. The legacy
+     * `POST /connections/:id/check` route on Core-Api is deprecated.
+     */
+    public async testConnection(connectionId: string): Promise<TestConnectionResult> {
+        const url: string = '/services/' + connectionId + '/test-connection';
+        const result: ObjectResult<TestConnectionResult> = await this.requestObject(url, null, parseTestConnectionResult, 'POST');
+        const data: TestConnectionResult | null = result.getData();
+        if (data === null) {
+            return {state: 'skipped', checks: [], error: 'Empty response from test endpoint'};
+        }
+        return data;
     }
 }
