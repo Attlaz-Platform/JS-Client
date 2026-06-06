@@ -2,6 +2,7 @@ import {FlowRun} from '../Model/Flow/FlowRun.js';
 import {FlowRunStatus} from '../Model/Flow/FlowRunStatus.js';
 import {FlowRunSummary} from '../Model/Flow/FlowRunSummary.js';
 import {FlowRunHistory} from '../Model/Flow/FlowRunHistory.js';
+import {FlowRunLifecycle} from '../Model/Flow/FlowRunLifecycle.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
@@ -73,6 +74,16 @@ export class FlowRunEndpoint extends Endpoint {
     public async getFlowRunHistory(flowRunId: string): Promise<CollectionResult<FlowRunHistory>> {
         const result: CollectionResult<FlowRunHistory> = await this.requestCollection('/flowruns/' + flowRunId + '/history', FlowRunHistory.parse);
         return result;
+    }
+
+    /**
+     * Authoritative lifecycle (status derived from history, first-terminal-wins). Prefer this over
+     * getFlowRunSummary for control-flow decisions (e.g. the worker tombstone), since the summary
+     * reflects the eventually-consistent index projection which can lag the history.
+     */
+    public async getFlowRunLifecycle(flowRunId: string): Promise<FlowRunLifecycle | null> {
+        const result: ObjectResult<FlowRunLifecycle | null> = await this.requestObject('/flowruns/' + flowRunId + '/lifecycle', null, FlowRunLifecycle.parse);
+        return result.getData();
     }
 
     public async updateFlowRun(flowRunId: string, status: FlowRunStatus, time: Date | null = null): Promise<FlowRun> {

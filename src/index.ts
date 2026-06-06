@@ -141,6 +141,8 @@ export {StateAware} from './Model/StateAware.js';
 export {Flow} from './Model/Flow/Flow.js';
 export {FlowRun} from './Model/Flow/FlowRun.js';
 export {FlowRunHistory} from './Model/Flow/FlowRunHistory.js';
+export {FlowRunHistoryStatus} from './Model/Flow/FlowRunHistoryStatus.js';
+export {FlowRunLifecycle} from './Model/Flow/FlowRunLifecycle.js';
 export {FlowRunResponse} from './Model/Flow/FlowRunResponse.js';
 export {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
 export {FlowRunSummary} from './Model/Flow/FlowRunSummary.js';
