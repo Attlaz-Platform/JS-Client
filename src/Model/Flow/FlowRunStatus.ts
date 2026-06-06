@@ -1,13 +1,13 @@
 import {Utils} from '../../Utils.js';
 
 export enum FlowRunStatus {
-    Unknown = <any>'unknown',
-    Pending = <any>'pending',
-    Canceled = <any>'canceled',
-    Running = <any>'running',
-    Failed = <any>'failed',
-    Stopped = <any>'stopped',
-    Complete = <any>'complete',
+    Unknown = 'unknown',
+    Pending = 'pending',
+    Canceled = 'canceled',
+    Running = 'running',
+    Failed = 'failed',
+    Stopped = 'stopped',
+    Complete = 'complete',
 
 }
 
