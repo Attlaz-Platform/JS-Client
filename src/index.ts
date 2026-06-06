@@ -59,7 +59,8 @@ export {LogStatus} from './Model/Log/LogStatus.js';
 export {LogStream} from './Model/Log/LogStream.js';
 export {LogStreamId} from './Model/Log/LogStreamId.js';
 export {LogStreamInformation} from './Model/Log/LogStreamInformation.js';
-export {LogItemFilter} from './Model/Log/LogItemFilter.js';
+export {FilterNode, AndFilterNode, OrFilterNode, NotFilterNode, CompareFilterNode, FilterValue, FilterPrimitive} from './Model/Filter/FilterNode.js';
+export {FilterOperator} from './Model/Filter/FilterOperator.js';
 export {CursorPagination} from './Model/Pagination/CursorPagination.js';
 /** Messaging * */
 
@@ -155,6 +156,9 @@ export {User} from './Model/User/User.js';
 export {UserAuthProvider} from './Model/User/UserAuthProvider.js';
 export {UserAction} from './Model/User/UserAction.js';
 export {RunnerImage} from './Model/Runner/RunnerImage.js';
+export {CommandExecutionHistory} from './Model/Command/CommandExecutionHistory.js';
+export {CommandExecutionStatus} from './Model/Command/CommandExecutionStatus.js';
+export {CommandExecutionFilter} from './Model/Command/CommandExecutionFilter.js';
 
 export {Endpoint} from './Service/Endpoint.js';
 

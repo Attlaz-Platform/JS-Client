@@ -10,6 +10,7 @@ export class ProjectEnvironment extends MetaDataAware implements StateAware {
     public projectId: string;
     public codeSourceId: string | null = null;
     public parentId: string | null = null;
+    public defaultRunnerPoolId: string | null = null;
     public type: ProjectEnvironmentType = ProjectEnvironmentType.Production;
     public state: State = State.Active;
 
@@ -20,6 +21,7 @@ export class ProjectEnvironment extends MetaDataAware implements StateAware {
         projectEnvironment.projectId = rawProjectEnvironment.project as string;
         projectEnvironment.codeSourceId = rawProjectEnvironment.code_source as string;
         projectEnvironment.parentId = rawProjectEnvironment.parent as string;
+        projectEnvironment.defaultRunnerPoolId = rawProjectEnvironment.default_runner_pool as string | null;
         projectEnvironment.type = ProjectEnvironmentType.fromString(rawProjectEnvironment.type as string);
         projectEnvironment.state = State.fromString(rawProjectEnvironment.state as string);
         return projectEnvironment;

@@ -132,8 +132,8 @@ export class AdapterConnectionEndpoint extends Endpoint {
      * breakdown so the UI can render a step-by-step view; the overall `state`
      * is the worst of the per-check states (skipped < passed < warning < failed).
      *
-     * Used by the Web App's "Test" button. The legacy
-     * `POST /connections/:id/check` route on Core-Api is deprecated.
+     * Used by the Web App's "Test" button. Replaces the legacy
+     * `POST /connections/:id/check` route on Core-Api (removed).
      */
     public async testConnection(connectionId: string): Promise<TestConnectionResult> {
         const url: string = '/services/' + connectionId + '/test-connection';

@@ -1,7 +1,7 @@
 import {QueryString} from '../Http/Data/QueryString.js';
+import {FilterNode} from '../Model/Filter/FilterNode.js';
 import {ApiRecord} from '../Model/ApiRecord.js';
 import {Log} from '../Model/Log/Log.js';
-import {LogItemFilter} from '../Model/Log/LogItemFilter.js';
 import {LogQuery} from '../Model/Log/LogQuery.js';
 import {LogStream} from '../Model/Log/LogStream.js';
 import {LogStreamId} from '../Model/Log/LogStreamId.js';
@@ -53,25 +53,11 @@ export class LogEndpoint extends Endpoint {
         return result;
     }
 
-    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: LogItemFilter | null): Promise<CollectionResult<Log>> {
+    public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: FilterNode | null): Promise<CollectionResult<Log>> {
         const queryString: QueryString = new QueryString('/logstreams/' + logStreamId.toString() + '/logs');
         queryString.addPagination(pagination);
         if (filter !== null && filter !== undefined) {
-            if (filter.tags !== null && filter.tags.length > 0) {
-                const arrTags: string[] = [];
-
-                // TODO: map this
-                for (const tag of filter.tags) {
-                    arrTags.push(tag.key + ':' + tag.values.join('||'));
-                }
-                const strTags: string = arrTags.join('|||');
-
-                // filter_tags=color:gree OR color:blue
-                queryString.set('filter_tags', strTags);
-            }
-            if (filter.logLevels !== null && filter.logLevels.length > 0) {
-                queryString.set('filter_log_levels', filter.logLevels.join(','));
-            }
+            queryString.set('filter', JSON.stringify(filter));
         }
 
         const result: CollectionResult<Log> = await this.requestCollection(queryString, Log.parse);
