@@ -2,13 +2,17 @@ import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {UserAccessToken} from '../Model/AccessToken/UserAccessToken.js';
+import {UserAccessTokenStatus} from '../Model/AccessToken/UserAccessTokenStatus.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Endpoint} from './Endpoint.js';
 
 export class AccessTokenEndpoint extends Endpoint {
-    public async getByUser(pagination: CursorPagination): Promise<CollectionResult<UserAccessToken>> {
+    public async getByUser(pagination: CursorPagination, status: UserAccessTokenStatus | null = null): Promise<CollectionResult<UserAccessToken>> {
         const queryString: QueryString = new QueryString('/access-tokens');
         queryString.addPagination(pagination);
+        if (status !== null) {
+            queryString.set('status', status);
+        }
         try {
             const result: CollectionResult<UserAccessToken> = await this.requestCollection(queryString, UserAccessToken.parse);
             return result;

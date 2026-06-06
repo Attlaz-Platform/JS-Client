@@ -24,6 +24,7 @@ export {LoadAllHelper} from './Helper/LoadAllHelper.js';
  * Models
  */
 export {UserAccessToken} from './Model/AccessToken/UserAccessToken.js';
+export {UserAccessTokenStatus} from './Model/AccessToken/UserAccessTokenStatus.js';
 
 export {Adapter} from './Model/Adapter/Adapter.js';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration.js';
