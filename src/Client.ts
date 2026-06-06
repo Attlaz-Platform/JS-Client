@@ -9,6 +9,7 @@ import {ChannelEndpoint} from './Service/ChannelEndpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
+import {CommandExecutionEndpoint} from './Service/CommandExecutionEndpoint.js';
 import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 import {ConfigurationEndpoint} from './Service/ConfigurationEndpoint.js';
 import {Endpoint} from './Service/Endpoint.js';
@@ -49,6 +50,7 @@ export class Client {
         ChannelEndpoint,
         CodeDeployEndpoint,
         CodeSourceStrategiesEndpoint,
+        CommandExecutionEndpoint,
         ConfigEndpoint,
         FirewallEndpoint,
         FlowEndpoint,
@@ -282,6 +284,10 @@ export class Client {
 
     public getUserActionEndpoint(): UserActionEndpoint {
         return this.getEndpoint('useraction', this.Store.UserActionEndpoint);
+    }
+
+    public getCommandExecutionEndpoint(): CommandExecutionEndpoint {
+        return this.getEndpoint('commandexecution', this.Store.CommandExecutionEndpoint);
     }
 
     public getAccessTokenEndpoint(): AccessTokenEndpoint {
