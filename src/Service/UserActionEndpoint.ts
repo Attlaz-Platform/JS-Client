@@ -1,6 +1,9 @@
 import {Utils} from '../Utils.js';
 
 import {UserAction} from '../Model/User/UserAction.js';
+import {UserActionFilter} from '../Model/User/UserActionFilter.js';
+import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
+import {State} from '../Model/State.js';
 import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
@@ -47,10 +50,40 @@ export class UserActionEndpoint extends Endpoint {
         }
     }
 
-    public async getAll(pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
+    public async getAll(pagination: CursorPagination | null = null, filter: UserActionFilter | null = null): Promise<CollectionResult<UserAction>> {
         const queryString: QueryString = new QueryString('/audit-logs');
         queryString.addPagination(pagination);
+        if (filter !== null) {
+            if (filter.userIds !== undefined && filter.userIds.length > 0) {
+                queryString.set('user', filter.userIds);
+            }
+            if (filter.entityId !== undefined) {
+                queryString.set('entity', filter.entityId);
+            }
+            if (filter.timeFrom !== undefined) {
+                queryString.set('time_from', filter.timeFrom.toISOString());
+            }
+            if (filter.timeTo !== undefined) {
+                queryString.set('time_to', filter.timeTo.toISOString());
+            }
+        }
         return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
+    }
+
+    /** Distinct users that appear in the audit log, resolved to display-safe summaries (for the user filter). */
+    public async getDistinctUsers(): Promise<UserSummary[]> {
+        const queryString: QueryString = new QueryString('/audit-logs/users');
+        const result: CollectionResult<UserSummary> = await this.requestCollection<UserSummary>(queryString, UserActionEndpoint.parseSummary, null, 'GET');
+        return result.getData();
+    }
+
+    private static parseSummary(raw: Record<string, unknown>): UserSummary {
+        const summary: UserSummary = new UserSummary();
+        summary.id = raw.id as string;
+        summary.type = raw.type as UserSummaryType;
+        summary.state = (raw.state === null || raw.state === undefined) ? null : State.fromString(raw.state as string);
+        summary.displayName = raw.display_name as string;
+        return summary;
     }
 
     private static parse(rawUserEvent: Record<string, unknown>): UserAction {

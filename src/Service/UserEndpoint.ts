@@ -1,5 +1,6 @@
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
 import {User} from '../Model/User/User.js';
+import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Endpoint} from './Endpoint.js';
@@ -33,6 +34,30 @@ export class UserEndpoint extends Endpoint {
             }
             throw e;
         }
+    }
+
+    /**
+     * Resolve display-safe summaries for a set of user ids (e.g. to show "Requested by" names in a
+     * list). The server applies visibility rules and returns tombstones ("Unknown user" / "Removed
+     * user") rather than leaking anything the caller isn't allowed to see.
+     */
+    public async getSummaries(userIds: string[]): Promise<UserSummary[]> {
+        if (userIds.length === 0) {
+            return [];
+        }
+        const queryString: QueryString = new QueryString('/users/summaries');
+        queryString.set('id', userIds);
+        const result: CollectionResult<UserSummary> = await this.requestCollection<UserSummary>(queryString, UserEndpoint.parseSummary, null, 'GET');
+        return result.getData();
+    }
+
+    private static parseSummary(raw: Record<string, unknown>): UserSummary {
+        const summary: UserSummary = new UserSummary();
+        summary.id = raw.id as string;
+        summary.type = raw.type as UserSummaryType;
+        summary.state = (raw.state === null || raw.state === undefined) ? null : State.fromString(raw.state as string);
+        summary.displayName = raw.display_name as string;
+        return summary;
     }
 
     public async getAuthProviders(): Promise<CollectionResult<UserAuthProvider>> {

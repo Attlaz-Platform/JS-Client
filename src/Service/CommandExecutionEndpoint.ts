@@ -6,6 +6,8 @@ import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {State} from '../Model/State.js';
+import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
 import {Utils} from '../Utils.js';
 import {Endpoint} from './Endpoint.js';
 
@@ -21,7 +23,7 @@ export class CommandExecutionEndpoint extends Endpoint {
             if (filter.type !== undefined && filter.type.length > 0) {
                 queryString.set('type', filter.type);
             }
-            if (filter.requestedBy !== undefined) {
+            if (filter.requestedBy !== undefined && filter.requestedBy.length > 0) {
                 queryString.set('requested_by', filter.requestedBy);
             }
         }
@@ -32,6 +34,22 @@ export class CommandExecutionEndpoint extends Endpoint {
         const queryString: QueryString = new QueryString('/system/command-executions/' + id);
         const result: ObjectResult<CommandExecutionHistory> = await this.requestObject<CommandExecutionHistory>(queryString, null, CommandExecutionEndpoint.parse, 'GET');
         return result.getData();
+    }
+
+    /** Distinct users that requested commands, resolved to display-safe summaries (for the requester filter). */
+    public async getDistinctRequesters(): Promise<UserSummary[]> {
+        const queryString: QueryString = new QueryString('/system/command-executions/users');
+        const result: CollectionResult<UserSummary> = await this.requestCollection<UserSummary>(queryString, CommandExecutionEndpoint.parseSummary, null, 'GET');
+        return result.getData();
+    }
+
+    private static parseSummary(raw: Record<string, unknown>): UserSummary {
+        const summary: UserSummary = new UserSummary();
+        summary.id = raw.id as string;
+        summary.type = raw.type as UserSummaryType;
+        summary.state = (raw.state === null || raw.state === undefined) ? null : State.fromString(raw.state as string);
+        summary.displayName = raw.display_name as string;
+        return summary;
     }
 
     private static parse(raw: Record<string, unknown>): CommandExecutionHistory {
