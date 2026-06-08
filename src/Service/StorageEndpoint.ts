@@ -18,7 +18,8 @@ export class StorageEndpoint extends Endpoint {
                 storageInformation.bytes = raw.bytes as number;
                 storageInformation.bytes_limit = raw.bytes_limit as number | null;
                 storageInformation.items = raw.items as number;
-                storageInformation.pools = raw.pools as any;
+                // Prefer the new `buckets` field; fall back to the legacy `pools` for older API responses.
+                storageInformation.buckets = (raw.buckets ?? raw.pools) as any;
 
                 return storageInformation;
             };
@@ -33,8 +34,8 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async clearPool(projectEnvironmentId: string, storageType: StorageType, poolKey: string): Promise<boolean> {
-        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey;
+    public async clearBucket(projectEnvironmentId: string, storageType: StorageType, bucketKey: string): Promise<boolean> {
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + bucketKey;
 
         try {
             const parser = (raw: any): { deleted: boolean } => raw.deleted;
@@ -54,8 +55,8 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, poolKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<StorageItemInformation>> {
-        const qs: QueryString = new QueryString('/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items');
+    public async getBucketItemsInformation(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<StorageItemInformation>> {
+        const qs: QueryString = new QueryString('/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + bucketKey + '/items');
         qs.addPagination(pagination);
 
 
@@ -71,8 +72,18 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async getItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string): Promise<StorageItem | null> {
-        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
+    /** @deprecated Renamed to getBucketItemsInformation. Kept for backwards compatibility. */
+    public async getPoolItemsInformation(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, pagination: CursorPagination | null = null): Promise<CollectionResult<StorageItemInformation>> {
+        return this.getBucketItemsInformation(projectEnvironmentId, storageType, bucketKey, pagination);
+    }
+
+    /** @deprecated Renamed to clearBucket. Kept for backwards compatibility. */
+    public async clearPool(projectEnvironmentId: string, storageType: StorageType, bucketKey: string): Promise<boolean> {
+        return this.clearBucket(projectEnvironmentId, storageType, bucketKey);
+    }
+
+    public async getItem(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<StorageItem | null> {
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + bucketKey + '/items/' + storageItemKey;
 
         try {
             const result: ObjectResult<StorageItem> = await this.requestObject(cmd, null, StorageItem.parse, 'GET');
@@ -103,8 +114,8 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async setItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItem: StorageItem): Promise<StorageItem> {
-        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItem.key;
+    public async setItem(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItem: StorageItem): Promise<StorageItem> {
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + bucketKey + '/items/' + storageItem.key;
 
         try {
             const result: ObjectResult<StorageItem> = await this.requestObject(cmd, storageItem, StorageItem.parse, 'POST');
@@ -124,8 +135,8 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async deleteItem(projectEnvironmentId: string, storageType: StorageType, poolKey: string, storageItemKey: string): Promise<boolean> {
-        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + poolKey + '/items/' + storageItemKey;
+    public async deleteItem(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<boolean> {
+        const cmd: string = '/projectenvironments/' + projectEnvironmentId + '/storage/' + storageType + '/' + bucketKey + '/items/' + storageItemKey;
 
         try {
             const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});

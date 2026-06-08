@@ -3,7 +3,7 @@ export class StorageInformation {
     // null = explicitly unlimited at some scope in the configuration chain.
     bytes_limit: number | null;
     items: number;
-    pools: {
+    buckets: {
         name: string;
         bytes: number;
         items: number;

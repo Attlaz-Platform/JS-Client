@@ -7,9 +7,12 @@ import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {Endpoint} from './Endpoint.js';
 
 export class ProjectEndpoint extends Endpoint {
-    public async getAll(): Promise<CollectionResult<Project>> {
+    public async getAll(pagination: CursorPagination | null = null): Promise<CollectionResult<Project>> {
         try {
-            const result: CollectionResult<Project> = await this.requestCollection('/projects', Project.parse);
+            const queryString: QueryString = new QueryString('/projects');
+            queryString.addPagination(pagination);
+
+            const result: CollectionResult<Project> = await this.requestCollection(queryString, Project.parse);
             return result;
         } catch (e) {
             if (this.httpClient.isDebugEnabled()) {
