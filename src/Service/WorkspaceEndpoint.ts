@@ -2,11 +2,16 @@ import {Endpoint} from './Endpoint.js';
 import {Workspace} from '../Model/Workspace/Workspace.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
+import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {QueryString} from '../Http/Data/QueryString.js';
 
 export class WorkspaceEndpoint extends Endpoint {
-    public async getAll(): Promise<CollectionResult<Workspace>> {
+    public async getAll(pagination: CursorPagination | null = null): Promise<CollectionResult<Workspace>> {
         try {
-            const result: CollectionResult<Workspace> = await this.requestCollection('/workspaces', Workspace.parse);
+            const queryString: QueryString = new QueryString('/workspaces');
+            queryString.addPagination(pagination);
+
+            const result: CollectionResult<Workspace> = await this.requestCollection(queryString, Workspace.parse);
 
             return result;
         } catch (e) {
