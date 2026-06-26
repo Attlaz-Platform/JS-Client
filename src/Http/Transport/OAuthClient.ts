@@ -9,7 +9,7 @@ import {HttpClientRequest} from '../HttpClientRequest.js';
 import {HttpClientResponse} from '../HttpClientResponse.js';
 import {OAuthClientOptions} from '../OAuthClientOptions.js';
 import {OAuthClientToken} from '../OAuthClientToken.js';
-import {ITransport} from './ITransport.js';
+import {ITransport, ParseErrorHandler} from './ITransport.js';
 
 export class OAuthClient implements ITransport {
     private debug: boolean = false;
@@ -18,6 +18,8 @@ export class OAuthClient implements ITransport {
     private refreshTokenPromise: Promise<void> | null = null;
 
     private version: string | null = null;
+
+    private parseErrorHandler: ParseErrorHandler | null = null;
 
     constructor(private readonly options: OAuthClientOptions) {
         this.initDefaultHeaders();
@@ -112,9 +114,9 @@ export class OAuthClient implements ITransport {
     }
 
     /**
-     * Direct token request for public clients that must not send client_secret.
-     * The axios-oauth-client library always includes client_secret in the body,
-     * so public clients use this method instead.
+     * Performs an OAuth token request (password, client_credentials or refresh_token grant) and
+     * returns the raw token response. On a non-ok response it throws a ClientError carrying the
+     * server's HTTP status and, when the body is JSON, its structured error message.
      */
     private async requestToken(params: Record<string, string | null>): Promise<{
         access_token: string;
@@ -134,13 +136,35 @@ export class OAuthClient implements ITransport {
         );
 
         if (!response.ok) {
-            throw new ClientError(response.statusText || 'Token request failed', response.status);
+            const clientError: ClientError = new ClientError(response.statusText || 'Token request failed', response.status);
+
+            // The token endpoint bypasses HttpClient (and authenticate() bypasses Endpoint.toApiError),
+            // so without this the server's body is discarded and callers only see the generic HTTP
+            // statusText. Attach the body and surface its structured OAuth error message directly so a
+            // failed login shows e.g. an invalid-credentials reason. Mirrors HttpClient.request() +
+            // Endpoint.toApiError(). The refresh path replaces this message with a 401, so it's unaffected.
+            try {
+                const data: unknown = await response.json();
+                clientError.response = {
+                    status: response.status,
+                    statusText: response.statusText,
+                    data,
+                };
+                const apiMessage: string | undefined = (data as { error?: { message?: string } } | null)?.error?.message;
+                if (apiMessage !== undefined && apiMessage !== null && apiMessage !== '') {
+                    clientError.message = apiMessage;
+                }
+            } catch {
+                // Response body is not JSON — leave response/message as-is
+            }
+
+            throw clientError;
         }
 
         return response.json();
     }
 
-    public isTokenExpires(): boolean {
+    public isTokenExpired(): boolean {
         if (this.oauthClientToken === null) {
             throw new Error('No token defined');
         }
@@ -148,50 +172,49 @@ export class OAuthClient implements ITransport {
     }
 
     public async request<T>(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<T> {
-        if (signWithOauthToken && !this.isAuthenticated()) {
-            throw new ClientError('Unable to perform request, access token not provided');
-        } else {
-            if (signWithOauthToken) {
-                if (this.oauthClientToken === null) {
-                    throw new ClientError('Unable to perform request, access token not provided');
-                }
-                if (signWithOauthToken && OAuthClientToken.isExpired(this.oauthClientToken)) {
-                    if (this.refreshTokenPromise === null) {
-                        this.refreshTokenPromise = this.refreshToken();
-                        try {
-                            await this.refreshTokenPromise;
-                        } finally {
-                            // Always clear, even on failure, so a single failed refresh
-                            // doesn't poison every later request with the same rejected
-                            // promise (e.g. after the user re-authenticates).
-                            this.refreshTokenPromise = null;
-                        }
-                    } else {
+        if (signWithOauthToken) {
+            // A single null check both guards and narrows the token type. No access token at
+            // all is an auth failure (401), so consumers route it to the same sign-out path as
+            // a rejected refresh.
+            if (this.oauthClientToken === null) {
+                throw new ClientError('Unable to perform request, access token not provided', HttpStatus.HTTP_UNAUTHORIZED);
+            }
+            if (OAuthClientToken.isExpired(this.oauthClientToken)) {
+                if (this.refreshTokenPromise === null) {
+                    this.refreshTokenPromise = this.refreshToken();
+                    try {
                         await this.refreshTokenPromise;
+                    } finally {
+                        // Always clear, even on failure, so a single failed refresh doesn't
+                        // poison every later request with the same rejected promise (e.g.
+                        // after the user re-authenticates).
+                        this.refreshTokenPromise = null;
                     }
+                } else {
+                    await this.refreshTokenPromise;
                 }
             }
+        }
 
-            const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
-            if (this.debug) {
-                console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl(), {headers: requestData.headers});
-            }
-            try {
-                const response: HttpClientResponse = await HttpClient.request(requestData);
-                return response.body;
-            } catch (error: unknown) {
-                if (!(error instanceof ClientError)) {
-                    const clientError: Error = ClientError.fromError(error as Error);
-                    if (this.debug) {
-                        console.error('[Client] Error:', {error, clientError});
-                    }
-                    throw clientError;
-                }
+        const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
+        if (this.debug) {
+            console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl(), {headers: requestData.headers});
+        }
+        try {
+            const response: HttpClientResponse = await HttpClient.request(requestData);
+            return response.body;
+        } catch (error: unknown) {
+            if (!(error instanceof ClientError)) {
+                const clientError: Error = ClientError.fromError(error as Error);
                 if (this.debug) {
-                    console.error('[Client] Error:', {error});
+                    console.error('[Client] Error:', {error, clientError});
                 }
-                throw error;
+                throw clientError;
             }
+            if (this.debug) {
+                console.error('[Client] Error:', {error});
+            }
+            throw error;
         }
     }
 
@@ -222,6 +245,18 @@ export class OAuthClient implements ITransport {
 
     public isDebugEnabled(): boolean {
         return this.debug;
+    }
+
+    public setParseErrorHandler(handler: ParseErrorHandler | null): void {
+        this.parseErrorHandler = handler;
+    }
+
+    public reportParseError(message: string, context: Record<string, unknown>): void {
+        if (this.parseErrorHandler !== null) {
+            this.parseErrorHandler(message, context);
+            return;
+        }
+        console.error(message, context);
     }
 
     private defaultHeaders: Headers = {};
@@ -316,24 +351,19 @@ export class OAuthClient implements ITransport {
         }
 
         if (signWithOauthToken) {
+            // request() already ensured a present, non-expired token; this guard only narrows
+            // the type before signing.
             if (this.oauthClientToken === null) {
-                throw new ClientError('Unable to perform request, access token not provided');
+                throw new ClientError('Unable to perform request, access token not provided', HttpStatus.HTTP_UNAUTHORIZED);
             }
-            if (OAuthClientToken.isExpired(this.oauthClientToken)) {
-                throw new Error('Unable to sign request, token is expired');
-            }
-
-            requestData = this.signRequest(requestData);
+            requestData = this.signRequest(requestData, this.oauthClientToken);
         }
         return requestData;
     }
 
-    private signRequest(requestObject: HttpClientRequest): HttpClientRequest {
-        if (this.oauthClientToken === null) {
-            throw new ClientError('Unable to sign request, access token not provided');
-        }
-        const tokenType: string | undefined = this.oauthClientToken.token_type;
-        const accessToken: string = this.oauthClientToken.access_token;
+    private signRequest(requestObject: HttpClientRequest, token: OAuthClientToken): HttpClientRequest {
+        const tokenType: string | undefined = token.token_type;
+        const accessToken: string = token.access_token;
         if (tokenType !== undefined && tokenType.toLowerCase() === 'bearer') {
             requestObject.setHeader('Authorization', 'Bearer ' + accessToken);
         } else {

@@ -23,11 +23,6 @@ export abstract class Endpoint {
             return null;
         }
 
-        if (typeof data === 'object' && '_formatted' in data) {
-            // TODO: unset _formatted
-            return data;
-        }
-
         if (Array.isArray(data)) {
             const result: any[] = [];
             for (const value of data) {
@@ -151,13 +146,8 @@ export abstract class Endpoint {
         /**
          * Parse errors
          */
-        // TODO: temporary check until we know the API is fully upgraded
         if (requestResponse === null || requestResponse === undefined) {
             throw new ApiError('Unable to parse object: response is empty for action `[' + method + '] ' + action + '`', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
-        }
-        if ((Object.prototype.hasOwnProperty.call(requestResponse, 'data') && !Object.prototype.hasOwnProperty.call(requestResponse, 'id')) && requestResponse.data !== undefined) {
-            console.error('Response for object "' + action + '" seem to still use old "data" property (this property is only used for collection requests)', {requestResponse});
-            requestResponse = requestResponse.data;
         }
         result.setData(this.parseObject<T>(requestResponse, parser));
 
@@ -225,12 +215,23 @@ export abstract class Endpoint {
     }
 
     private parseObject<T>(rawObject: any, parser: (input: any) => T): T | null {
-        // TODO: is it interesting to keep this wrapper, or only in develop mode?
-        const wrappedData: any = ObjectWrapper.wrap(rawObject);
+        // Parse the raw object directly by default. With debug enabled the object is wrapped so
+        // that reads of properties the response doesn't contain get reported — useful for spotting
+        // schema drift, but too noisy (and a per-object Proxy cost) to run normally.
+        // Enable via client.getHttpClient().enableDebug().
+        const data: any = this.httpClient.isDebugEnabled() ? ObjectWrapper.wrap(rawObject) : rawObject;
         try {
-            return parser(wrappedData);
+            return parser(data);
         } catch (error: unknown) {
-            console.error('Unable to parse object', {object: rawObject, error});
+            // Report through the transport's parse-error handler (defaults to console.error;
+            // consumers can route it to a logger / error tracker via Client.setParseErrorHandler).
+            this.httpClient.reportParseError('Unable to parse object', {object: rawObject, error});
+            // In debug, surface schema drift loudly (dev/tests) by rethrowing. In production,
+            // degrade gracefully — return null so the caller skips the row / shows a not-found
+            // state, and a single unparseable object never breaks an entire view.
+            if (this.httpClient.isDebugEnabled()) {
+                throw error;
+            }
         }
         return null;
     }

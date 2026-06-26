@@ -1,6 +1,6 @@
 import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
-import {ITransport} from './Http/Transport/ITransport.js';
+import {ITransport, ParseErrorHandler} from './Http/Transport/ITransport.js';
 import {OAuthClient} from './Http/Transport/OAuthClient.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
@@ -135,6 +135,16 @@ export class Client {
 
     public getHttpClient(): OAuthClient {
         return this.httpClient;
+    }
+
+    /**
+     * Set a handler for non-fatal response parse failures (schema drift). Defaults to
+     * console.error; wire this to your logger / error tracker to observe drift in production
+     * without breaking views. Pass null to restore the default. Set on the active transport,
+     * so it applies whether the client uses OAuth or a custom transport.
+     */
+    public setParseErrorHandler(handler: ParseErrorHandler | null): void {
+        this.transport.setParseErrorHandler(handler);
     }
 
     public async authenticate(): Promise<boolean>;

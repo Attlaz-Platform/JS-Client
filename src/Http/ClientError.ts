@@ -14,55 +14,18 @@ export class ClientError extends Error {
     public static fromError(error: Error): ClientError {
 
         // Already a ClientError (or a subclass such as ApiError) — preserve it as-is.
-        // Re-deriving here would discard its httpStatus, because this method inspects the
-        // `.status`/`.code` shape of raw transport errors, not ClientError's own fields.
         if (error instanceof ClientError) {
             return error;
         }
 
-        let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
+        // The transport uses fetch, which throws TypeError on network failures (DNS, refused
+        // connection, TLS, etc.). Anything else reaching here is unexpected — surface it as a
+        // generic 500 while keeping the original name/stack for debugging.
+        const clientError: ClientError = error instanceof TypeError
+            ? new ClientError('Service not available', HttpStatus.HTTP_UNAVAILABLE)
+            : new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
 
-        const xError = error as unknown as { status: number; code: number | string; body: string };
-        if (xError.status !== null && xError.status !== undefined) {
-            const statusCode: number = xError.status;
-            const {body} = xError;
-
-            const clientErrorByStatus: ClientError | null = this.byStatus(statusCode, body);
-            if (clientErrorByStatus !== null) {
-                clientError = clientErrorByStatus;
-            }
-        } else if (xError.code !== null && xError.code !== undefined) {
-            switch (xError.code) {
-                case 'EUNAVAILABLE':
-                case 'ECONNREFUSED':
-                case 'HTTP_UNAVAILABLE':
-                    clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
-                    break;
-                case 'EAUTH':
-                case 401:
-                    clientError.httpStatus = HttpStatus.HTTP_UNAUTHORIZED;
-                    break;
-                case 'ESTATUS':
-                    if (error.message === 'HTTP status 503') {
-                        clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
-                    }
-                    break;
-                case 500:
-                    clientError.httpStatus = HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
-                    break;
-                default:
-                    console.warn('[Client error] Error code `' + xError.code + '` not recognised');
-                    clientError.httpStatus = HttpStatus.HTTP_INTERNAL_SERVER_ERROR;
-            }
-        } else if (error instanceof TypeError) {
-            // fetch throws TypeError on network failures (ECONNREFUSED, DNS, etc.)
-            clientError.httpStatus = HttpStatus.HTTP_UNAVAILABLE;
-            clientError.message = 'Service not available';
-            return clientError;
-        }
         clientError.name = error.name;
-
-        // TODO: only in debug mode
         clientError.stack = error.stack;
 
         return clientError;

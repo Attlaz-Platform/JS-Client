@@ -1,6 +1,6 @@
 import {Parameters} from '../Data/Parameters.js';
 import {OAuthClientOptions} from '../OAuthClientOptions.js';
-import {ITransport} from './ITransport.js';
+import {ITransport, ParseErrorHandler} from './ITransport.js';
 import {OAuthClient} from './OAuthClient.js';
 
 export interface DirectTransportRoute {
@@ -31,6 +31,7 @@ export interface DirectTransportRoute {
 export class DirectTransport implements ITransport {
     private readonly clients: Map<string, OAuthClient> = new Map();
     private readonly sortedRoutes: DirectTransportRoute[];
+    private parseErrorHandler: ParseErrorHandler | null = null;
 
     /**
      * Creates the default session payload for internal service-to-service calls.
@@ -83,5 +84,17 @@ export class DirectTransport implements ITransport {
 
     public isDebugEnabled(): boolean {
         return false;
+    }
+
+    public setParseErrorHandler(handler: ParseErrorHandler | null): void {
+        this.parseErrorHandler = handler;
+    }
+
+    public reportParseError(message: string, context: Record<string, unknown>): void {
+        if (this.parseErrorHandler !== null) {
+            this.parseErrorHandler(message, context);
+            return;
+        }
+        console.error(message, context);
     }
 }
