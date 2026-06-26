@@ -4,6 +4,7 @@ export class HttpStatus {
     public static HTTP_FORBIDDEN: number = 403;
     public static HTTP_NOTFOUND: number = 404;
     public static HTTP_NOT_ALLOWED: number = 405;
+    public static HTTP_REQUEST_ENTITY_TOO_LARGE: number = 413;
     public static HTTP_UNPROCESSABLE_ENTITY: number = 422;
 
     public static HTTP_INTERNAL_SERVER_ERROR: number = 500;

@@ -1,6 +1,7 @@
 import {JsonSerializable} from '../../Model/JsonSerializable.js';
 import {VERSION} from '../../version.js';
 import {ClientError} from '../ClientError.js';
+import {HttpStatus} from '../HttpStatus.js';
 import {Headers} from '../Data/Headers.js';
 import {Parameters} from '../Data/Parameters.js';
 import {HttpClient} from '../HttpClient.js';
@@ -90,6 +91,18 @@ export class OAuthClient implements ITransport {
             const rawAuthToken = await this.requestToken(params);
             this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
         } catch (e: unknown) {
+            if (e instanceof ClientError) {
+                // A refresh grant rejected by the server (4xx — the refresh token is
+                // expired/revoked/invalid_grant) means the session is irrecoverable and
+                // the user must re-authenticate. Surface it as 401 Unauthorized so
+                // consumers sign out and redirect to login instead of showing a generic
+                // error. Transient failures (network / 5xx) are rethrown unchanged so a
+                // hiccup doesn't force a logout.
+                if (e.httpStatus !== null && e.httpStatus >= 400 && e.httpStatus < 500) {
+                    throw new ClientError('Refresh token rejected, re-authentication required', HttpStatus.HTTP_UNAUTHORIZED);
+                }
+                throw e;
+            }
             throw ClientError.fromError(e as Error);
         }
     }
@@ -145,8 +158,14 @@ export class OAuthClient implements ITransport {
                 if (signWithOauthToken && OAuthClientToken.isExpired(this.oauthClientToken)) {
                     if (this.refreshTokenPromise === null) {
                         this.refreshTokenPromise = this.refreshToken();
-                        await this.refreshTokenPromise;
-                        this.refreshTokenPromise = null;
+                        try {
+                            await this.refreshTokenPromise;
+                        } finally {
+                            // Always clear, even on failure, so a single failed refresh
+                            // doesn't poison every later request with the same rejected
+                            // promise (e.g. after the user re-authenticates).
+                            this.refreshTokenPromise = null;
+                        }
                     } else {
                         await this.refreshTokenPromise;
                     }

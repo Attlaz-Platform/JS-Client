@@ -14,6 +14,7 @@ export {OAuthClient} from './Http/Transport/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';
+export {ApiError} from './Model/Error/ApiError.js';
 export {HttpStatus} from './Http/HttpStatus.js';
 export {ContentTypeHelper} from './Http/ContentTypeHelper.js';
 /**

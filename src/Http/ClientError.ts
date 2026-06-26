@@ -13,6 +13,13 @@ export class ClientError extends Error {
 
     public static fromError(error: Error): ClientError {
 
+        // Already a ClientError (or a subclass such as ApiError) — preserve it as-is.
+        // Re-deriving here would discard its httpStatus, because this method inspects the
+        // `.status`/`.code` shape of raw transport errors, not ClientError's own fields.
+        if (error instanceof ClientError) {
+            return error;
+        }
+
         let clientError: ClientError = new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
 
         const xError = error as unknown as { status: number; code: number | string; body: string };
