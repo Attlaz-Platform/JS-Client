@@ -11,6 +11,30 @@ export class ClientError extends Error {
         this.httpStatus = httpErrorCode;
     }
 
+    /**
+     * Type guard: true when `error` is a ClientError (or a subclass such as ApiError). Use it to
+     * narrow before reading typed fields (`httpStatus`, `message`, …). Relies on instanceof, which
+     * is reliable when there's a single copy of this package (e.g. a bundled web app). For a status
+     * check that must survive multiple package copies / realm boundaries, prefer statusOf().
+     */
+    public static is(error: unknown): error is ClientError {
+        return error instanceof ClientError;
+    }
+
+    /**
+     * The HTTP status carried by a ClientError/ApiError, or null for anything else (e.g. a plain
+     * Error or a non-error value). Robust across module/realm boundaries: when instanceof fails
+     * (two copies of this package in one process) it falls back to reading a numeric httpStatus
+     * field. This is the safe way to ask "what status did this error carry?".
+     */
+    public static statusOf(error: unknown): number | null {
+        if (error instanceof ClientError) {
+            return error.httpStatus;
+        }
+        const status: unknown = (error as { httpStatus?: unknown } | null)?.httpStatus;
+        return typeof status === 'number' ? status : null;
+    }
+
     public static fromError(error: Error): ClientError {
 
         // Already a ClientError (or a subclass such as ApiError) — preserve it as-is.

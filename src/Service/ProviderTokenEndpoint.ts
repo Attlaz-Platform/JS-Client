@@ -20,8 +20,17 @@ export class ProviderTokenEndpoint extends Endpoint {
         return result.getData();
     }
 
-    public async revokeProviderToken(providerTokenId: string): Promise<boolean> {
+    /**
+     * Revoke (remove) a provider token. Optionally pass the adapter-connection configuration that holds
+     * this token — the API also unsets that exact (connection, configuration) row when it references this
+     * token, so disconnecting a connection's auth is a single request.
+     */
+    public async revokeProviderToken(providerTokenId: string, connectionConfiguration: { connection: string, configuration: string } | null = null): Promise<boolean> {
         const queryString: QueryString = new QueryString('/provider-tokens/' + providerTokenId);
+        if (connectionConfiguration !== null) {
+            queryString.set('connection', connectionConfiguration.connection);
+            queryString.set('configuration', connectionConfiguration.configuration);
+        }
 
 
         try {
