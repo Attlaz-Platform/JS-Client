@@ -71,6 +71,25 @@ export class FlowRunEndpoint extends Endpoint {
         }
     }
 
+    /**
+     * Fetch a single flow run by id, including its `arguments` and `logStreamId`. Uses the same
+     * endpoint as {@link getFlowRunSummary} but parses the full {@link FlowRun} (the summary model
+     * only carries execution stats). Used by the flow-run runtime to resolve the real arguments
+     * and the log stream to write to.
+     */
+    public async getFlowRun(flowRunId: string): Promise<FlowRun | null> {
+        try {
+            const result: ObjectResult<FlowRun | null> = await this.requestObject('/flowruns/' + flowRunId + '/summaries', null, FlowRun.parse);
+
+            return result.getData();
+        } catch (error: any) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to load flow run: ' + error);
+            }
+            throw error;
+        }
+    }
+
     public async getFlowRunHistory(flowRunId: string): Promise<CollectionResult<FlowRunHistory>> {
         const result: CollectionResult<FlowRunHistory> = await this.requestCollection('/flowruns/' + flowRunId + '/history', FlowRunHistory.parse);
         return result;
