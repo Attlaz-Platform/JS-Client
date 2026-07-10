@@ -89,7 +89,9 @@ export class Client {
 
         const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint);
         this.httpClient = new OAuthClient(options);
-        if (token !== null) {
+        // An empty string is not a token — treat it as "no token" so callers like `new Client('')`
+        // (public/credentials clients that set the real token later) don't carry a bogus empty token.
+        if (token !== null && token !== '') {
             const clientToken: OAuthClientToken = new OAuthClientToken(token, 'Bearer', '', '');
             this.httpClient.setToken(clientToken);
         }
@@ -110,12 +112,9 @@ export class Client {
     }
 
     public setClientCredentials(clientId: string, clientSecret: string = ''): void {
-        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, clientSecret);
-        // TODO: how to know these scopes?
-        options.scopes = ['all'];
-        // TODO: do we need to create a new oauth client, or can we update with these credentials?
-        this.httpClient = new OAuthClient(options);
-        this.transport = this.httpClient;
+        // Store the credentials in place; the token (if any) is preserved and used while valid. When
+        // no valid token exists, the client mints one from these credentials on the next request.
+        this.httpClient.setClientCredentials(clientId, clientSecret, ['all']);
     }
 
     /**
@@ -123,10 +122,7 @@ export class Client {
      * Used for SPAs and other public clients that cannot keep a secret.
      */
     public setPublicClient(clientId: string): void {
-        const options: OAuthClientOptions = new OAuthClientOptions(this.apiEndpoint, clientId, null);
-        options.scopes = ['all'];
-        this.httpClient = new OAuthClient(options);
-        this.transport = this.httpClient;
+        this.httpClient.setClientCredentials(clientId, null, ['all']);
     }
 
     public setVersion(version: string | null): void {

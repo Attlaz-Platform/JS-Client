@@ -7,8 +7,10 @@ export class OAuthClientOptions {
 
     constructor(
         public apiEndpoint: string,
-        public readonly clientId: string | null = null,
-        public readonly clientSecret: string | null = null,
+        // Mutable so client credentials can be updated in place (see OAuthClient.setClientCredentials)
+        // without recreating the client and losing its token.
+        public clientId: string | null = null,
+        public clientSecret: string | null = null,
     ) {
 
     }

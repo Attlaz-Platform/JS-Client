@@ -15,7 +15,9 @@ export class OAuthClient implements ITransport {
     private debug: boolean = false;
 
     private oauthClientToken: OAuthClientToken | null = null;
-    private refreshTokenPromise: Promise<void> | null = null;
+    // Single-flight guard for token acquisition (initial client-credentials auth or refresh), so
+    // concurrent requests share one in-flight acquisition instead of each hitting the token endpoint.
+    private tokenAcquisitionPromise: Promise<void> | null = null;
 
     private version: string | null = null;
 
@@ -109,6 +111,60 @@ export class OAuthClient implements ITransport {
         }
     }
 
+    /**
+     * Update the client credentials in place — without recreating the client or touching the current
+     * token. Mirrors the PHP client: token and credentials are independent. A valid token keeps being
+     * used; the credentials are only the fallback to mint/renew a token when none is valid.
+     */
+    public setClientCredentials(clientId: string | null, clientSecret: string | null, scopes: string[] = ['all']): void {
+        this.options.clientId = clientId;
+        this.options.clientSecret = clientSecret;
+        this.options.scopes = scopes;
+    }
+
+    /**
+     * Ensure a usable access token exists before a signed request. Token-first with credentials as a
+     * fallback (mirrors the PHP client's lazy authenticate()): a valid token is left untouched; an
+     * expired token carrying a refresh_token is refreshed; otherwise, if confidential client
+     * credentials are configured, a token is minted via the client_credentials grant. Single-flighted
+     * so concurrent requests share one acquisition.
+     */
+    private async ensureAccessToken(): Promise<void> {
+        if (this.oauthClientToken !== null && !OAuthClientToken.isExpired(this.oauthClientToken)) {
+            return;
+        }
+        if (this.tokenAcquisitionPromise === null) {
+            this.tokenAcquisitionPromise = this.acquireToken();
+            try {
+                await this.tokenAcquisitionPromise;
+            } finally {
+                // Always clear, even on failure, so one failed acquisition doesn't poison every later
+                // request with the same rejected promise.
+                this.tokenAcquisitionPromise = null;
+            }
+        } else {
+            await this.tokenAcquisitionPromise;
+        }
+    }
+
+    private async acquireToken(): Promise<void> {
+        // Expired token that carries a refresh_token → refresh grant (keeps the existing session).
+        if (this.oauthClientToken !== null && OAuthClientToken.isExpired(this.oauthClientToken) && OAuthClient.hasRefreshToken(this.oauthClientToken)) {
+            await this.refreshToken();
+            return;
+        }
+        // No usable token (missing, or expired without a refresh_token): mint one from client
+        // credentials if we have them. Public clients (no secret) can't use the client_credentials
+        // grant, so they fall through and the caller gets a 401 — they must obtain a token another way.
+        if (this.options.clientId !== null && !this.isPublicClient()) {
+            await this.authenticate();
+        }
+    }
+
+    private static hasRefreshToken(token: OAuthClientToken): boolean {
+        return token.refresh_token !== undefined && token.refresh_token !== null && token.refresh_token !== '';
+    }
+
     private isPublicClient(): boolean {
         return this.options.clientSecret === null || this.options.clientSecret === '';
     }
@@ -173,26 +229,12 @@ export class OAuthClient implements ITransport {
 
     public async request<T>(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<T> {
         if (signWithOauthToken) {
-            // A single null check both guards and narrows the token type. No access token at
-            // all is an auth failure (401), so consumers route it to the same sign-out path as
-            // a rejected refresh.
+            // Token-first, credentials-as-fallback (mirrors the PHP client): use a valid token as-is,
+            // otherwise refresh or mint one from client credentials. Only when nothing is available do
+            // we 401 — the same sign-out path consumers already handle for a rejected refresh.
+            await this.ensureAccessToken();
             if (this.oauthClientToken === null) {
                 throw new ClientError('Unable to perform request, access token not provided', HttpStatus.HTTP_UNAUTHORIZED);
-            }
-            if (OAuthClientToken.isExpired(this.oauthClientToken)) {
-                if (this.refreshTokenPromise === null) {
-                    this.refreshTokenPromise = this.refreshToken();
-                    try {
-                        await this.refreshTokenPromise;
-                    } finally {
-                        // Always clear, even on failure, so a single failed refresh doesn't
-                        // poison every later request with the same rejected promise (e.g.
-                        // after the user re-authenticates).
-                        this.refreshTokenPromise = null;
-                    }
-                } else {
-                    await this.refreshTokenPromise;
-                }
             }
         }
 
