@@ -30,7 +30,7 @@ const config = {
     //     "node"
     // ],
     setupFiles: [
-        'dotenv/config'
+        '<rootDir>/jest.setup.cjs'
     ],
     "testTimeout": 10000,
 };
