@@ -1,4 +1,5 @@
 import {LogLevel} from './LogLevel.js';
+import {ApiRecord} from '../ApiRecord.js';
 import {DataValueValue} from '../DataValue.js';
 import {LogStreamId} from './LogStreamId.js';
 
@@ -7,10 +8,12 @@ export class LogStreamInformation {
     logLevels: { logLevel: LogLevel; count: number }[];
     tags: { tag: string; values: { value: DataValueValue; count: number }[] }[];
 
-    public static parse(raw: any): LogStreamInformation {
+    public static parse(raw: ApiRecord): LogStreamInformation {
         const rawData: {
             log_stream: string; log_levels: { log_level: string, count: number }[], tags: any
-        } | null = raw;
+        } | null = raw as unknown as {
+            log_stream: string; log_levels: { log_level: string, count: number }[], tags: any
+        } | null;
         if (rawData === null || rawData === undefined) {
             throw new Error('Invalid response');
         }

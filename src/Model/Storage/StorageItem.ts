@@ -1,4 +1,5 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class StorageItem {
     // public id: string | null = null;
@@ -11,15 +12,15 @@ export class StorageItem {
 
     public value: string | number | boolean | null | any;
 
-    public static parse(raw: any): StorageItem {
+    public static parse(raw: ApiRecord): StorageItem {
         const storageItem: StorageItem = new StorageItem();
         // storageItem.id = raw.id === null || raw.id === undefined ? null : raw.id;
-        storageItem.key = raw.key;
-        storageItem.bytes = raw.bytes;
+        storageItem.key = raw.key as string;
+        storageItem.bytes = raw.bytes as number;
         storageItem.value = raw.value;
-        storageItem.created = raw.created === null ? null : Utils.parseRawDate(raw.created);
-        storageItem.updated = raw.updated === null ? null : Utils.parseRawDate(raw.updated);
-        storageItem.expiration = raw.expiration === null ? null : Utils.parseRawDate(raw.expiration);
+        storageItem.created = raw.created === null ? null : Utils.parseRawDate(raw.created as Date);
+        storageItem.updated = raw.updated === null ? null : Utils.parseRawDate(raw.updated as Date);
+        storageItem.expiration = raw.expiration === null ? null : Utils.parseRawDate(raw.expiration as Date);
         return storageItem;
     }
 }

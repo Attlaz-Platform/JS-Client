@@ -1,4 +1,6 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
+import {DataValueValue} from '../DataValue.js';
 import {DataValueCollection} from '../DataValueCollection.js';
 import {LogLevel} from './LogLevel.js';
 import {LogStatus} from './LogStatus.js';
@@ -26,19 +28,19 @@ export class Log {
         this.tags = new DataValueCollection();
     }
 
-    public static parse(rawLog: any): Log {
-        const date: Date = Utils.parseRawDate(rawLog.date);
-        const level: LogLevel = LogLevel.fromString(rawLog.level);
-        const logStream: LogStreamId = new LogStreamId(rawLog.log_stream);
-        const log: Log = new Log(logStream, rawLog.message, level, date);
-        log.id = rawLog.id;
-        log.context = rawLog.context;
+    public static parse(rawLog: ApiRecord): Log {
+        const date: Date = Utils.parseRawDate(rawLog.date as Date);
+        const level: LogLevel = LogLevel.fromString(rawLog.level as string);
+        const logStream: LogStreamId = new LogStreamId(rawLog.log_stream as string);
+        const log: Log = new Log(logStream, rawLog.message as string, level, date);
+        log.id = rawLog.id as string;
+        log.context = rawLog.context as object;
 
         if (rawLog.status !== null && rawLog.status !== undefined && rawLog.status !== '') {
-            log.status = LogStatus.fromString(rawLog.status);
+            log.status = LogStatus.fromString(rawLog.status as string);
         }
-        log.tags = DataValueCollection.fromObject(rawLog.tags);
-        log._version = rawLog._version;
+        log.tags = DataValueCollection.fromObject(rawLog.tags as { key: string, value: DataValueValue }[] | null);
+        log._version = rawLog._version as string;
         return log;
     }
 }

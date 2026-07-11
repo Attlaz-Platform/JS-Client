@@ -1,3 +1,4 @@
+import {ApiRecord} from '../ApiRecord.js';
 import {State} from '../State.js';
 
 export class RunnerPool {
@@ -29,15 +30,15 @@ export class RunnerPool {
 
     public state: State = State.Active;
 
-    public static parse(raw: any): RunnerPool {
+    public static parse(raw: ApiRecord): RunnerPool {
         const queueSpecification: RunnerPool = new RunnerPool();
-        queueSpecification.id = raw.id;
-        queueSpecification.name = raw.name;
-        queueSpecification.environment = raw.environment;
+        queueSpecification.id = raw.id as string;
+        queueSpecification.name = raw.name as string;
+        queueSpecification.environment = raw.environment as string;
 
-        queueSpecification.queueIdentifier = raw.queue_identifier;
-        queueSpecification.deploymentIdentifier = raw.deployment_identifier;
-        queueSpecification.type = raw.type;
+        queueSpecification.queueIdentifier = raw.queue_identifier as string;
+        queueSpecification.deploymentIdentifier = raw.deployment_identifier as string;
+        queueSpecification.type = raw.type as QueueSpecificationType;
 
         // Per-field defensive parsing. Each entry falls back to a default ResolvedValue
         // if the server didn't send it or sent a malformed shape — keeps the UI alive
@@ -67,7 +68,7 @@ export class RunnerPool {
             console.warn('RunnerPool.parse: pool "' + queueSpecification.id + '" has missing or malformed configuration fields', {fields: missing});
         }
 
-        queueSpecification.state = State.fromString(raw.state);
+        queueSpecification.state = State.fromString(raw.state as string);
 
         return queueSpecification;
     }

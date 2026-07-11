@@ -1,5 +1,6 @@
 import {State} from '../State.js';
 import {StateAware} from '../StateAware.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class PlatformLanguage implements StateAware {
     public id: string;
@@ -13,7 +14,7 @@ export class PlatformLanguage implements StateAware {
         this.name = name;
     }
 
-    public static parse(rawLanguage: Record<string, unknown>): PlatformLanguage {
+    public static parse(rawLanguage: ApiRecord): PlatformLanguage {
         const language: PlatformLanguage = new PlatformLanguage(rawLanguage.id as string, rawLanguage.name as string);
         language.key = rawLanguage.key as string;
         language.description = rawLanguage.description as string;

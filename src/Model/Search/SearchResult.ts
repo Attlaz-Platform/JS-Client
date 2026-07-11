@@ -22,7 +22,7 @@ export class SearchResult {
     public entity: Workspace | WorkspaceMember | Project | ProjectEnvironment | Flow | FlowRun | Trigger | Channel | Subscriber | Adapter | AdapterConnection | CodeSourceAccount | CodeSource | CodeDeploy;
     public score: number;
 
-    public static parse(rawResult: Record<string, unknown>): SearchResult {
+    public static parse(rawResult: ApiRecord): SearchResult {
         const searchResult: SearchResult = new SearchResult();
         searchResult.type = EntityType.fromString(rawResult.entity_type as string);
         // searchResult.entity = rawResult.entity;

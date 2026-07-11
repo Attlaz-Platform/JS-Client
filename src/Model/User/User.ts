@@ -1,5 +1,6 @@
 import {StateAware} from '../StateAware.js';
 import {State} from '../State.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class User implements StateAware {
     public id: string;
@@ -24,23 +25,23 @@ export class User implements StateAware {
 
     public state: State = State.Active;
 
-    public static parse(rawUser: any): User {
+    public static parse(rawUser: ApiRecord): User {
         const user: User = new User();
-        user.id = rawUser.id;
-        user.name = rawUser.name;
-        user.email = rawUser.email;
-        user.emailIsVerified = rawUser.email_is_verified;
-        user.phone = rawUser.phone;
-        user.language = rawUser.language;
-        user.time_zone = rawUser.time_zone;
+        user.id = rawUser.id as string;
+        user.name = rawUser.name as string;
+        user.email = rawUser.email as string;
+        user.emailIsVerified = rawUser.email_is_verified as boolean;
+        user.phone = rawUser.phone as string;
+        user.language = rawUser.language as string;
+        user.time_zone = rawUser.time_zone as string;
 
-        user.locale = rawUser.locale;
-        user.date_format = rawUser.date_format;
-        user.time_format = rawUser.time_format;
-        user.number_format = rawUser.number_format;
+        user.locale = rawUser.locale as string;
+        user.date_format = rawUser.date_format as string | null;
+        user.time_format = rawUser.time_format as string | null;
+        user.number_format = rawUser.number_format as string | null;
 
-        user.picture = rawUser.picture;
-        user.state = State.fromString(rawUser.state);
+        user.picture = rawUser.picture as string;
+        user.state = State.fromString(rawUser.state as string);
 
         return user;
     }

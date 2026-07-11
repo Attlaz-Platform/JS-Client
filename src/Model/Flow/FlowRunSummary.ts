@@ -1,6 +1,7 @@
 import {Utils} from '../../Utils.js';
 import {FlowRunStatus} from './FlowRunStatus.js';
 import {FlowRun} from './FlowRun.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class FlowRunSummary extends FlowRun {
     public time: Date;
@@ -21,25 +22,25 @@ export class FlowRunSummary extends FlowRun {
     public memoryAverage: number | null = null;
     public memoryMaximum: number | null = null;
 
-    public static parse(rawFlowRunSummary: any): FlowRunSummary {
+    public static parse(rawFlowRunSummary: ApiRecord): FlowRunSummary {
         const flowRunSummary: FlowRunSummary = FlowRun.parse(rawFlowRunSummary) as FlowRunSummary;
 
-        flowRunSummary.time = Utils.parseRawDate(rawFlowRunSummary.time);
-        flowRunSummary.runDuration = rawFlowRunSummary.run_duration;
-        flowRunSummary.pendingDuration = rawFlowRunSummary.pending_duration;
-        flowRunSummary.status = FlowRunStatus.fromString(rawFlowRunSummary.status);
+        flowRunSummary.time = Utils.parseRawDate(rawFlowRunSummary.time as Date);
+        flowRunSummary.runDuration = rawFlowRunSummary.run_duration as number;
+        flowRunSummary.pendingDuration = rawFlowRunSummary.pending_duration as number;
+        flowRunSummary.status = FlowRunStatus.fromString(rawFlowRunSummary.status as string);
 
-        flowRunSummary.networkUpload = rawFlowRunSummary.network_upload;
-        flowRunSummary.networkDownload = rawFlowRunSummary.network_download;
+        flowRunSummary.networkUpload = rawFlowRunSummary.network_upload as number | null;
+        flowRunSummary.networkDownload = rawFlowRunSummary.network_download as number | null;
 
-        flowRunSummary.fileRead = rawFlowRunSummary.file_read;
-        flowRunSummary.fileWrite = rawFlowRunSummary.file_write;
+        flowRunSummary.fileRead = rawFlowRunSummary.file_read as number | null;
+        flowRunSummary.fileWrite = rawFlowRunSummary.file_write as number | null;
 
-        flowRunSummary.cpuAverage = rawFlowRunSummary.cpu_average;
-        flowRunSummary.cpuMaximum = rawFlowRunSummary.cpu_maximum;
+        flowRunSummary.cpuAverage = rawFlowRunSummary.cpu_average as number | null;
+        flowRunSummary.cpuMaximum = rawFlowRunSummary.cpu_maximum as number | null;
 
-        flowRunSummary.memoryAverage = rawFlowRunSummary.memory_average;
-        flowRunSummary.memoryMaximum = rawFlowRunSummary.memory_maximum;
+        flowRunSummary.memoryAverage = rawFlowRunSummary.memory_average as number | null;
+        flowRunSummary.memoryMaximum = rawFlowRunSummary.memory_maximum as number | null;
 
         return flowRunSummary;
     }

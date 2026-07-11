@@ -1,4 +1,5 @@
 import {DataValueValue} from '../DataValue.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class AdapterConfiguration {
     public id: string;
@@ -10,16 +11,16 @@ export class AdapterConfiguration {
     public default: DataValueValue | null;
     public validation: string[];
 
-    public static parse(rawAdapterConfiguration: any): AdapterConfiguration {
+    public static parse(rawAdapterConfiguration: ApiRecord): AdapterConfiguration {
         const configuration: AdapterConfiguration = new AdapterConfiguration();
-        configuration.id = rawAdapterConfiguration.id;
-        configuration.key = rawAdapterConfiguration.key;
-        configuration.type = rawAdapterConfiguration.type;
-        configuration.adapter = rawAdapterConfiguration.adapter;
-        configuration.name = rawAdapterConfiguration.name;
-        configuration.description = rawAdapterConfiguration.description;
-        configuration.default = rawAdapterConfiguration.default;
-        configuration.validation = rawAdapterConfiguration.validation;
+        configuration.id = rawAdapterConfiguration.id as string;
+        configuration.key = rawAdapterConfiguration.key as string;
+        configuration.type = rawAdapterConfiguration.type as string;
+        configuration.adapter = rawAdapterConfiguration.adapter as string;
+        configuration.name = rawAdapterConfiguration.name as string;
+        configuration.description = rawAdapterConfiguration.description as string;
+        configuration.default = rawAdapterConfiguration.default as DataValueValue | null;
+        configuration.validation = rawAdapterConfiguration.validation as string[];
         return configuration;
     }
 }

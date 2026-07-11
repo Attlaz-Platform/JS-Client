@@ -1,4 +1,5 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class FlowRunStats {
     public flowRunId: string;
@@ -17,22 +18,22 @@ export class FlowRunStats {
     public fileRead: number | null = null;
     public fileWrite: number | null = null;
 
-    public static parse(raw: any): FlowRunStats {
+    public static parse(raw: ApiRecord): FlowRunStats {
         const flowRunStats: FlowRunStats = new FlowRunStats();
-        flowRunStats.flowRunId = raw.flow_run;
-        flowRunStats.time = Utils.parseRawDate(raw.time);
+        flowRunStats.flowRunId = raw.flow_run as string;
+        flowRunStats.time = Utils.parseRawDate(raw.time as Date);
 
-        flowRunStats.memory = raw.memory;
-        flowRunStats.memoryLimit = raw.memory_limit;
+        flowRunStats.memory = raw.memory as number | null;
+        flowRunStats.memoryLimit = raw.memory_limit as number | null;
 
-        flowRunStats.cpu = raw.cpu;
-        flowRunStats.cpuLimit = raw.cpu_limit;
+        flowRunStats.cpu = raw.cpu as number | null;
+        flowRunStats.cpuLimit = raw.cpu_limit as number | null;
 
-        flowRunStats.networkOutbound = raw.network_outbound;
-        flowRunStats.networkInbound = raw.network_inbound;
+        flowRunStats.networkOutbound = raw.network_outbound as number | null;
+        flowRunStats.networkInbound = raw.network_inbound as number | null;
 
-        flowRunStats.fileRead = raw.file_read;
-        flowRunStats.fileWrite = raw.file_write;
+        flowRunStats.fileRead = raw.file_read as number | null;
+        flowRunStats.fileWrite = raw.file_write as number | null;
 
         return flowRunStats;
     }

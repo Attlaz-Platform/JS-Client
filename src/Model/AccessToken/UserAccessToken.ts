@@ -1,6 +1,7 @@
-import {StateAware} from '../StateAware.js';
-import {State} from '../State.js';
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
+import {State} from '../State.js';
+import {StateAware} from '../StateAware.js';
 
 export class UserAccessToken implements StateAware {
     public id: string;
@@ -18,18 +19,18 @@ export class UserAccessToken implements StateAware {
 
     public state: State = State.Active;
 
-    public static parse(rawUser: any): UserAccessToken {
+    public static parse(rawUser: ApiRecord): UserAccessToken {
         const userAccessToken: UserAccessToken = new UserAccessToken();
-        userAccessToken.id = rawUser.id;
-        userAccessToken.userId = rawUser.user;
-        userAccessToken.ipAllowList = rawUser.ip_allow_list;
-        userAccessToken.name = rawUser.name;
-        userAccessToken.scopes = rawUser.scopes;
-        userAccessToken.token = rawUser.token;
-        userAccessToken.createdAt = Utils.parseRawDate(rawUser.created_at);
-        userAccessToken.lastUsedAt = rawUser.last_used_at === null ? null : Utils.parseRawDate(rawUser.last_used_at);
-        userAccessToken.expiresAt = rawUser.expires_at === null ? null : Utils.parseRawDate(rawUser.expires_at);
-        userAccessToken.state = State.fromString(rawUser.state);
+        userAccessToken.id = rawUser.id as string;
+        userAccessToken.userId = rawUser.user as string;
+        userAccessToken.ipAllowList = rawUser.ip_allow_list as string[];
+        userAccessToken.name = rawUser.name as string;
+        userAccessToken.scopes = rawUser.scopes as string[];
+        userAccessToken.token = rawUser.token as string;
+        userAccessToken.createdAt = Utils.parseRawDate(rawUser.created_at as Date);
+        userAccessToken.lastUsedAt = rawUser.last_used_at === null ? null : Utils.parseRawDate(rawUser.last_used_at as Date);
+        userAccessToken.expiresAt = rawUser.expires_at === null ? null : Utils.parseRawDate(rawUser.expires_at as Date);
+        userAccessToken.state = State.fromString(rawUser.state as string);
 
         return userAccessToken;
     }

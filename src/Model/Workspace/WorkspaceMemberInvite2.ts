@@ -1,4 +1,5 @@
 import {WorkspaceMemberInviteState} from './WorkspaceMemberInviteState.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class WorkspaceMemberInvite2 {
     code: string;
@@ -8,14 +9,14 @@ export class WorkspaceMemberInvite2 {
     workspaceName: string | null;
     state: WorkspaceMemberInviteState;
 
-    public static parse(rawInvite: any): WorkspaceMemberInvite2 {
+    public static parse(rawInvite: ApiRecord): WorkspaceMemberInvite2 {
         return {
-            code: rawInvite.code,
-            email: rawInvite.email,
-            inviterName: rawInvite.inviter_name,
-            inviterEmail: rawInvite.inviter_email,
-            workspaceName: rawInvite.workspace_name,
-            state: WorkspaceMemberInviteState.fromString(rawInvite.state),
+            code: rawInvite.code as string,
+            email: rawInvite.email as string | null,
+            inviterName: rawInvite.inviter_name as string | null,
+            inviterEmail: rawInvite.inviter_email as string | null,
+            workspaceName: rawInvite.workspace_name as string | null,
+            state: WorkspaceMemberInviteState.fromString(rawInvite.state as string),
         };
     }
 }

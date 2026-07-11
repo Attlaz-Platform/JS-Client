@@ -1,6 +1,7 @@
 import {State} from '../State.js';
 import {StateAware} from '../StateAware.js';
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class PlatformImage implements StateAware {
     public id: string;
@@ -12,16 +13,16 @@ export class PlatformImage implements StateAware {
     public buildDate: Date;
     public state: State = State.Active;
 
-    public static parse(raw: any): PlatformImage {
+    public static parse(raw: ApiRecord): PlatformImage {
         const platformImage: PlatformImage = new PlatformImage();
-        platformImage.id = raw.id;
-        platformImage.platformId = raw.platform;
-        platformImage.name = raw.name;
-        platformImage.image = raw.image;
-        platformImage.version = raw.version;
-        platformImage.languageVersion = raw.language_version;
-        platformImage.buildDate = Utils.parseRawDate(raw.build_date);
-        platformImage.state = State.fromString(raw.state);
+        platformImage.id = raw.id as string;
+        platformImage.platformId = raw.platform as string;
+        platformImage.name = raw.name as string;
+        platformImage.image = raw.image as string;
+        platformImage.version = raw.version as string;
+        platformImage.languageVersion = raw.language_version as string;
+        platformImage.buildDate = Utils.parseRawDate(raw.build_date as Date);
+        platformImage.state = State.fromString(raw.state as string);
         return platformImage;
     }
 }

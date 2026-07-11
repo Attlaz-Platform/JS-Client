@@ -1,4 +1,5 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
 
 export class ChannelHistory {
     public id: string;
@@ -19,7 +20,7 @@ export class ChannelHistory {
     //     this.result = result;
     //
     // }
-    public static parse(rawChannelHistory: Record<string, unknown>): ChannelHistory {
+    public static parse(rawChannelHistory: ApiRecord): ChannelHistory {
         const log: ChannelHistory = new ChannelHistory();
         log.id = rawChannelHistory.id as string;
         log.subscriberId = rawChannelHistory.subscriber as string;

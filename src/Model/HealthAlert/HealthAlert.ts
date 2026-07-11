@@ -1,4 +1,6 @@
 import {Utils} from '../../Utils.js';
+import {ApiRecord} from '../ApiRecord.js';
+import {DataValueValue} from '../DataValue.js';
 import {DataValueCollection} from '../DataValueCollection.js';
 import {HealthAlertSeverity} from './HealthAlertSeverity.js';
 import {HealthAlertStatus} from './HealthAlertStatus.js';
@@ -24,16 +26,16 @@ export class HealthAlert {
         this.data = new DataValueCollection();
     }
 
-    public static parse(raw: any): HealthAlert {
-        const healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.health_test_type), HealthAlertStatus.fromString(raw.status));
-        healthAlert.id = raw.id;
-        healthAlert.scopeId = raw.scope;
-        healthAlert.parentScopeId = raw.parent_scope;
+    public static parse(raw: ApiRecord): HealthAlert {
+        const healthAlert: HealthAlert = new HealthAlert(HealthTestType.fromString(raw.health_test_type as string), HealthAlertStatus.fromString(raw.status as string));
+        healthAlert.id = raw.id as string;
+        healthAlert.scopeId = raw.scope as string;
+        healthAlert.parentScopeId = raw.parent_scope as string | null;
         // severity defaults to ERROR — defensive for older API responses that don't yet send it.
-        healthAlert.severity = raw.severity ? HealthAlertSeverity.fromString(raw.severity) : HealthAlertSeverity.ERROR;
-        healthAlert.date = Utils.parseRawDate(raw.date);
-        healthAlert.updated = Utils.parseRawDate(raw.updated);
-        healthAlert.data = DataValueCollection.fromObject(raw.data);
+        healthAlert.severity = raw.severity ? HealthAlertSeverity.fromString(raw.severity as string) : HealthAlertSeverity.ERROR;
+        healthAlert.date = Utils.parseRawDate(raw.date as Date);
+        healthAlert.updated = Utils.parseRawDate(raw.updated as Date);
+        healthAlert.data = DataValueCollection.fromObject(raw.data as { key: string, value: DataValueValue }[] | null);
         return healthAlert;
     }
 }
