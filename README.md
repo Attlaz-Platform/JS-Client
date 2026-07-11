@@ -4,7 +4,7 @@ Attlaz Javascript/Node client
 [Attlaz](https://attlaz.com) is a cloud-based iPaas (Integration Platform as a Service), automation and data management
 platform.
 
-[![Latest Stable Version](https://img.shields.io/npm/v/attlaz-client.svg)](https://www.npmjs.com/package/attlaz-client)
+[![Latest Stable Version](https://img.shields.io/npm/v/@attlaz/client.svg)](https://www.npmjs.com/package/@attlaz/client)
 
 Getting Started
 ---------------
