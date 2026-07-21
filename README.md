@@ -12,13 +12,13 @@ Getting Started
 Install Attlaz using `yarn`:
 
 ```bash
-yarn add attlaz-client
+yarn add @attlaz/client
 ```
 
 Or npm, if you wish:
 
 ```bash
-npm install attlaz-client
+npm install @attlaz/client
 ```
 
 Getting Help
