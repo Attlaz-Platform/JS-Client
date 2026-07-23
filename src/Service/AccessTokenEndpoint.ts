@@ -47,12 +47,12 @@ export class AccessTokenEndpoint extends Endpoint {
         }
     }
 
-    public async update(tokenId: string, name: string, scopes: string[]): Promise<UserAccessToken> {
+    public async update(tokenId: string, name: string): Promise<UserAccessToken> {
         try {
             const url: string = '/access-tokens/' + tokenId;
 
             const result: ObjectResult<UserAccessToken> = await this.requestObject(url, {
-                name, scopes,
+                name,
             }, UserAccessToken.parse, 'POST');
 
             const updatedToken: UserAccessToken | null = result.getData();
