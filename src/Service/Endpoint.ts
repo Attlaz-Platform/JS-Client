@@ -18,6 +18,20 @@ export abstract class Endpoint {
         this.httpClient = httpClient;
     }
 
+    /**
+     * Prepare a request body for sending. Normally the keys are rewritten to the API's snake_case /
+     * id-stripped convention (see {@link formatParameters}). A caller that has already shaped the
+     * body — or that carries an opaque payload whose keys must NOT be rewritten, such as a flow
+     * run's `arguments` — sets `_formatted: true`; then the body is sent verbatim (minus the marker).
+     */
+    private prepareParameters(parameters: Parameters): Parameters {
+        if (parameters !== null && typeof parameters === 'object' && (parameters as { _formatted?: unknown })._formatted === true) {
+            const {_formatted, ...rest} = parameters as Record<string, unknown>;
+            return rest;
+        }
+        return this.formatParameters(parameters);
+    }
+
     private formatParameters(data: any | null = null): any {
         if (data === null || data === undefined) {
             return null;
@@ -82,7 +96,7 @@ export abstract class Endpoint {
     }
 
     public async requestCollection<T>(action: string | QueryString, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
-        parameters = this.formatParameters(parameters);
+        parameters = this.prepareParameters(parameters);
 
         if (action instanceof QueryString) {
             action = action.build();
@@ -124,7 +138,7 @@ export abstract class Endpoint {
         method: string = 'GET',
         signWithOauthToken: boolean = true,
     ): Promise<ObjectResult<T>> {
-        parameters = this.formatParameters(parameters);
+        parameters = this.prepareParameters(parameters);
         if (action instanceof QueryString) {
             action = action.build();
         }
