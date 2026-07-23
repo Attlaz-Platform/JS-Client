@@ -15,6 +15,18 @@ export class RunnerPoolEndpoint extends Endpoint {
 
     }
 
+    public async create(projectEnvironmentId: string, pool: RunnerPoolCreate): Promise<RunnerPool | null> {
+        const queryString: QueryString = new QueryString('/runner-pools/project-environments/' + projectEnvironmentId + '');
+
+        const body = {
+            name: pool.name,
+        };
+
+        const result: ObjectResult<RunnerPool> = await this.requestObject(queryString, body, RunnerPool.parse, 'POST');
+        return result.getData();
+
+    }
+
     public async getById(queueSpecificationId: string): Promise<RunnerPool | null> {
         const queryString: QueryString = new QueryString('/runner-pools/' + queueSpecificationId);
 
@@ -27,4 +39,10 @@ export class RunnerPoolEndpoint extends Endpoint {
         const queryString: QueryString = new QueryString('/runner-pools/' + runnerPoolId + '/redeploy');
         await this.requestObject(queryString, null, (raw: Record<string, any>) => raw, 'POST');
     }
+}
+
+// Create payload for a runner pool. Identifiers are derived server-side; config is set afterwards
+// via the configuration endpoint (scope `rpl_<id>`).
+export interface RunnerPoolCreate {
+    name: string;
 }
