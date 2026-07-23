@@ -49,4 +49,36 @@ export class CrawlJobEndpoint extends Endpoint {
         );
         return result.getData();
     }
+
+    /** Register the pages this crawl will process (idempotent server-side). */
+    public async registerPages(crawlJobId: string, urls: string[]): Promise<void> {
+        await this.postUrls(crawlJobId, '/pages', urls);
+    }
+
+    /** Mark pages as crawled (fetched). */
+    public async markPagesCrawled(crawlJobId: string, urls: string[]): Promise<void> {
+        await this.postUrls(crawlJobId, '/pages/crawled', urls);
+    }
+
+    /** Mark pages as parsed (terminal). The crawl auto-finishes once every page is terminal. */
+    public async markPagesParsed(crawlJobId: string, urls: string[]): Promise<void> {
+        await this.postUrls(crawlJobId, '/pages/parsed', urls);
+    }
+
+    /** Mark pages as failed (terminal, e.g. blocked/unfetchable). */
+    public async markPagesFailed(crawlJobId: string, urls: string[]): Promise<void> {
+        await this.postUrls(crawlJobId, '/pages/failed', urls);
+    }
+
+    private async postUrls(crawlJobId: string, path: string, urls: string[]): Promise<void> {
+        if (urls.length === 0) {
+            return;
+        }
+        await this.requestObject(
+            '/pulse/crawl-jobs/' + crawlJobId + path,
+            {urls},
+            (raw: unknown): unknown => raw,
+            'POST',
+        );
+    }
 }
