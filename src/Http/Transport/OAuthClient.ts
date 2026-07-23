@@ -374,7 +374,7 @@ export class OAuthClient implements ITransport {
         if (this.version !== null) {
             requestData.setHeader('Attlaz-API-Version', this.version);
         }
-        if ((method === 'POST' || method === 'DELETE' || method === 'PUT') && parameters !== null && parameters !== undefined) {
+        if ((method === 'POST' || method === 'DELETE' || method === 'PUT' || method === 'PATCH') && parameters !== null && parameters !== undefined) {
             if (typeof parameters === 'object') {
                 requestData.body = JsonSerializable.stringify(parameters);
             } else if (typeof parameters === 'string') {
