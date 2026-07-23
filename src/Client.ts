@@ -27,6 +27,7 @@ import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
 import {ProviderTokenEndpoint} from './Service/ProviderTokenEndpoint.js';
 import {VendorProductEndpoint} from './Service/Pulse/VendorProductEndpoint.js';
+import {CrawlJobEndpoint} from './Service/Pulse/CrawlJobEndpoint.js';
 import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
 import {RunnerPoolEndpoint} from './Service/RunnerPoolEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
@@ -80,6 +81,7 @@ export class Client {
         RunnerPoolEndpoint,
         ProviderTokenEndpoint,
         VendorProductEndpoint,
+        CrawlJobEndpoint,
     };
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
@@ -320,6 +322,10 @@ export class Client {
 
     public getVendorProductEndpoint(): VendorProductEndpoint {
         return this.getEndpoint('vendor-product', this.Store.VendorProductEndpoint);
+    }
+
+    public getCrawlJobEndpoint(): CrawlJobEndpoint {
+        return this.getEndpoint('crawl-job', this.Store.CrawlJobEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: ITransport): T; }): T {

@@ -97,6 +97,8 @@ export {StorageInformation} from './Model/Storage/StorageInformation.js';
 export {StorageType} from './Model/Storage/StorageType.js';
 export {VendorProduct} from './Model/Pulse/VendorProduct.js';
 export {VendorProductEndpoint} from './Service/Pulse/VendorProductEndpoint.js';
+export {CrawlJob, CrawlJobStatus} from './Model/Pulse/CrawlJob.js';
+export {CrawlJobEndpoint} from './Service/Pulse/CrawlJobEndpoint.js';
 export {StorageItem} from './Model/Storage/StorageItem.js';
 export {StorageItemInformation} from './Model/Storage/StorageItemInformation.js';
 
