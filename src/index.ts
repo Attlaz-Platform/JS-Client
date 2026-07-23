@@ -95,6 +95,8 @@ export {ResultError} from './Model/Result/ResultError.js';
 
 export {StorageInformation} from './Model/Storage/StorageInformation.js';
 export {StorageType} from './Model/Storage/StorageType.js';
+export {VendorProduct} from './Model/Pulse/VendorProduct.js';
+export {VendorProductEndpoint} from './Service/Pulse/VendorProductEndpoint.js';
 export {StorageItem} from './Model/Storage/StorageItem.js';
 export {StorageItemInformation} from './Model/Storage/StorageItemInformation.js';
 

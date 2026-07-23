@@ -26,6 +26,7 @@ import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
 import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
 import {ProviderTokenEndpoint} from './Service/ProviderTokenEndpoint.js';
+import {VendorProductEndpoint} from './Service/Pulse/VendorProductEndpoint.js';
 import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
 import {RunnerPoolEndpoint} from './Service/RunnerPoolEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
@@ -78,6 +79,7 @@ export class Client {
         CollectionsEndpoint,
         RunnerPoolEndpoint,
         ProviderTokenEndpoint,
+        VendorProductEndpoint,
     };
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
@@ -314,6 +316,10 @@ export class Client {
 
     public getFirewallEndpoint(): FirewallEndpoint {
         return this.getEndpoint('firewall', this.Store.FirewallEndpoint);
+    }
+
+    public getVendorProductEndpoint(): VendorProductEndpoint {
+        return this.getEndpoint('vendor-product', this.Store.VendorProductEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: ITransport): T; }): T {
