@@ -1,4 +1,5 @@
 import {CrawlJob, CrawlJobStatus} from '../../Model/Pulse/CrawlJob.js';
+import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../Endpoint.js';
 
@@ -37,6 +38,15 @@ export class CrawlJobEndpoint extends Endpoint {
             throw new Error('Unable to update crawl job: empty response');
         }
         return job;
+    }
+
+    /** A vendor's crawl jobs (newest first), each with progress (`total` / `processed`). */
+    public async getByVendor(vendorId: string): Promise<CrawlJob[]> {
+        const result: CollectionResult<CrawlJob> = await this.requestCollection(
+            '/pulse/vendors/' + vendorId + '/crawl-jobs',
+            CrawlJob.parse,
+        );
+        return result.getData();
     }
 
     /** The crawl job with this id, or null. */
