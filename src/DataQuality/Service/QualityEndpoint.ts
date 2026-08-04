@@ -7,6 +7,7 @@ import {QualityEntity} from '../Model/QualityEntity.js';
 import {QualityEntityFilters} from '../Model/QualityEntityFilters.js';
 import {QualityFilterOptions} from '../Model/QualityFilterOptions.js';
 import {QualityProblem} from '../Model/QualityProblem.js';
+import {QualityProblemDefinition} from '../Model/QualityProblemDefinition.js';
 import {QualityProblemEvent} from '../Model/QualityProblemEvent.js';
 import {QualitySummary} from '../Model/QualitySummary.js';
 import {QualitySummaryRow} from '../Model/QualitySummaryRow.js';
@@ -188,6 +189,23 @@ export class QualityEndpoint extends Endpoint {
         );
 
         return result.getData() ?? {counts: [], codes: []};
+    }
+
+    // ---- Problem definitions ----
+
+    /**
+     * The catalogue for a project: the platform's definitions plus the project's own. Use it to turn
+     * codes into something readable — `summary`/`filter-options` only carry codes that currently
+     * have open problems, so a fully suppressed or resolved code has no label there.
+     */
+    public async getDefinitions(projectId: string, pack: string | null = null): Promise<CollectionResult<QualityProblemDefinition>> {
+        const queryString: QueryString = new QueryString('/data_quality/definitions');
+        queryString.set('project', projectId);
+        if (pack !== null) {
+            queryString.set('pack', pack);
+        }
+
+        return await this.requestCollection(queryString, QualityProblemDefinition.parse);
     }
 
     // ---- Suppressions ----

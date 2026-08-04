@@ -151,6 +151,7 @@ export {PulseStatisticsEndpoint} from './Pulse/Service/PulseStatisticsEndpoint.j
 export {QualityDataset} from './DataQuality/Model/QualityDataset.js';
 export {QualityEntity} from './DataQuality/Model/QualityEntity.js';
 export {QualityProblem} from './DataQuality/Model/QualityProblem.js';
+export {QualityProblemDefinition} from './DataQuality/Model/QualityProblemDefinition.js';
 export {QualityProblemEvent} from './DataQuality/Model/QualityProblemEvent.js';
 export {QualitySuppression} from './DataQuality/Model/QualitySuppression.js';
 export {QualityCodeOption} from './DataQuality/Model/QualityCodeOption.js';

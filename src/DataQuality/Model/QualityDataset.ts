@@ -14,6 +14,13 @@ export class QualityDataset {
     public config: Record<string, unknown> | null = null;
     public createdAt: Date | null = null;
 
+    /**
+     * Totals for the overview: how much is being watched, and how much currently needs attention.
+     * Only the list endpoint counts them — both stay null when a single dataset is fetched.
+     */
+    public entityCount: number | null = null;
+    public openProblemCount: number | null = null;
+
     public constructor(id: string, project: string, name: string) {
         this.id = id;
         this.project = project;
@@ -29,6 +36,8 @@ export class QualityDataset {
         dataset.autoCloseMode = (raw.auto_close_mode as string | undefined) ?? '';
         dataset.config = (raw.config as Record<string, unknown> | undefined) ?? null;
         dataset.createdAt = raw.created_at ? new Date(raw.created_at as string) : null;
+        dataset.entityCount = raw.entity_count === undefined ? null : Number(raw.entity_count);
+        dataset.openProblemCount = raw.open_problem_count === undefined ? null : Number(raw.open_problem_count);
 
         return dataset;
     }
