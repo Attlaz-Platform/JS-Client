@@ -4,33 +4,12 @@ import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
+import {MatchHistory} from '../Model/MatchHistory.js';
+import {MatchHistoryBucket} from '../Model/MatchHistoryBucket.js';
+import {MatchHistoryInterval} from '../Model/MatchHistoryInterval.js';
 import {ProductMatch} from '../Model/ProductMatch.js';
 import {ReviewMatch} from '../Model/ReviewMatch.js';
-
-/** Narrows the review queue. Omitting `statuses` returns the pending ones. */
-export type ReviewMatchFilters = {
-    statuses?: string[];
-    competitor?: string;
-    gtin?: string;
-    search?: string;
-};
-
-export type MatchHistoryInterval = 'day' | 'week' | 'month';
-
-/** Matches discovered and reviewed within one bucket of the history. */
-export type MatchHistoryBucket = {
-    date: Date;
-    discovered: number;
-    manualAccepted: number;
-    manualDeclined: number;
-};
-
-/** A match-history series plus where the queue stands right now. */
-export type MatchHistory = {
-    interval: MatchHistoryInterval;
-    buckets: MatchHistoryBucket[];
-    snapshot: {pending: number; accepted: number; declined: number};
-};
+import {ReviewMatchFilters} from '../Model/ReviewMatchFilters.js';
 
 /**
  * Product matches — reviewing the queue, accepting or declining a match, and the history of how

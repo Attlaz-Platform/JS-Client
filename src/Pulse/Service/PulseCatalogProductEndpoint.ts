@@ -6,23 +6,8 @@ import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 import {CatalogProductWithMatches} from '../Model/CatalogProductWithMatches.js';
-
-/** Simple narrowing of the product list; `tags` filters on materialised tag values. */
-export type PulseCatalogProductFilters = {
-    brand?: string;
-    category?: string;
-    search?: string;
-    productGroup?: string;
-    tags?: Record<string, string>;
-};
-
-/** The values the product list can currently be filtered on. */
-export type PulseCatalogProductFilterOptions = {
-    brands: string[];
-    categories: string[];
-    productGroups: {id: string; name: string}[];
-    tags: Record<string, string[]>;
-};
+import {PulseCatalogProductFilterOptions} from '../Model/PulseCatalogProductFilterOptions.js';
+import {PulseCatalogProductFilters} from '../Model/PulseCatalogProductFilters.js';
 
 /**
  * A catalog's own products as Market Pulse sees them — with the competitor products matched to

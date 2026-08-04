@@ -1,4 +1,5 @@
 import {QueryString} from '../Http/Data/QueryString.js';
+import {RunnerPoolCreate} from '../Model/Infrastructure/RunnerPoolCreate.js';
 import {RunnerPool} from '../Model/Infrastructure/RunnerPool.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -41,8 +42,3 @@ export class RunnerPoolEndpoint extends Endpoint {
     }
 }
 
-// Create payload for a runner pool. Identifiers are derived server-side; config is set afterwards
-// via the configuration endpoint (scope `rpl_<id>`).
-export interface RunnerPoolCreate {
-    name: string;
-}

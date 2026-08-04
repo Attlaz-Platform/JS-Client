@@ -40,7 +40,9 @@ export type {
     TestConnectionCheck,
     TestConnectionResult,
 } from './Model/Adapter/TestConnectionResult.js';
-export {BlockedIp, FlaggedIp, IpRule} from './Service/FirewallEndpoint.js';
+export {BlockedIp} from './Model/Firewall/BlockedIp.js';
+export {FlaggedIp} from './Model/Firewall/FlaggedIp.js';
+export {IpRule} from './Model/Firewall/IpRule.js';
 
 export {Collection} from './Model/Collections/Collection.js';
 export {CollectionRecord} from './Model/Collections/CollectionRecord.js';
@@ -117,22 +119,35 @@ export {CatalogProductWithMatches, PriceProposal} from './Pulse/Model/CatalogPro
 export {ReviewMatch, ReviewProduct, ReviewCompetitorProduct} from './Pulse/Model/ReviewMatch.js';
 export {TopCompetitor} from './Pulse/Model/TopCompetitor.js';
 export {PriceIndexSnapshotEntry} from './Pulse/Model/PriceIndexSnapshotEntry.js';
-export {ProductMatchEndpoint, ReviewMatchFilters, MatchHistory, MatchHistoryBucket, MatchHistoryInterval} from './Pulse/Service/ProductMatchEndpoint.js';
-export {PulseCatalogProductEndpoint, PulseCatalogProductFilters, PulseCatalogProductFilterOptions} from './Pulse/Service/PulseCatalogProductEndpoint.js';
+export {MatchHistory} from './Pulse/Model/MatchHistory.js';
+export {MatchHistoryBucket} from './Pulse/Model/MatchHistoryBucket.js';
+export {MatchHistoryInterval} from './Pulse/Model/MatchHistoryInterval.js';
+export {ReviewMatchFilters} from './Pulse/Model/ReviewMatchFilters.js';
+export {ProductMatchEndpoint} from './Pulse/Service/ProductMatchEndpoint.js';
+export {PulseCatalogProductFilterOptions} from './Pulse/Model/PulseCatalogProductFilterOptions.js';
+export {PulseCatalogProductFilters} from './Pulse/Model/PulseCatalogProductFilters.js';
+export {PulseCatalogProductEndpoint} from './Pulse/Service/PulseCatalogProductEndpoint.js';
 export {PriceAlertConfig} from './Pulse/Model/PriceAlertConfig.js';
 export {PriceAlertEvent} from './Pulse/Model/PriceAlertEvent.js';
-export {PriceAlertEndpoint, PriceAlertConfigData} from './Pulse/Service/PriceAlertEndpoint.js';
+export {PriceAlertConfigData} from './Pulse/Model/PriceAlertConfigData.js';
+export {PriceAlertEndpoint} from './Pulse/Service/PriceAlertEndpoint.js';
 export {PricingRule} from './Pulse/Model/PricingRule.js';
 export {PriceSuggestion, PriceSuggestionStatus} from './Pulse/Model/PriceSuggestion.js';
-export {PricingEndpoint, PricingRuleData} from './Pulse/Service/PricingEndpoint.js';
+export {PricingRuleData} from './Pulse/Model/PricingRuleData.js';
+export {PricingEndpoint} from './Pulse/Service/PricingEndpoint.js';
 export {ProductGroup, ProductGroupType} from './Pulse/Model/ProductGroup.js';
-export {ProductGroupEndpoint, ProductGroupData} from './Pulse/Service/ProductGroupEndpoint.js';
+export {ProductGroupData} from './Pulse/Model/ProductGroupData.js';
+export {ProductGroupEndpoint} from './Pulse/Service/ProductGroupEndpoint.js';
 export {CatalogProduct} from './Catalog/Model/CatalogProduct.js';
 export {CatalogProductEndpoint} from './Catalog/Service/CatalogProductEndpoint.js';
 export {GenerateContentBatch} from './EnhanceData/Model/GenerateContentBatch.js';
-export {GenerateContentEndpoint, GenerateContentBatchData} from './EnhanceData/Service/GenerateContentEndpoint.js';
+export {GenerateContentBatchData} from './EnhanceData/Model/GenerateContentBatchData.js';
+export {GenerateContentEndpoint} from './EnhanceData/Service/GenerateContentEndpoint.js';
 export {CompetitorEndpoint} from './Pulse/Service/CompetitorEndpoint.js';
-export {PulseStatisticsEndpoint, ProductsSegment, ProductSegmentType, MarketSummaryEntry} from './Pulse/Service/PulseStatisticsEndpoint.js';
+export {MarketSummaryEntry} from './Pulse/Model/MarketSummaryEntry.js';
+export {ProductSegmentType} from './Pulse/Model/ProductSegmentType.js';
+export {ProductsSegment} from './Pulse/Model/ProductsSegment.js';
+export {PulseStatisticsEndpoint} from './Pulse/Service/PulseStatisticsEndpoint.js';
 export {QualityDataset} from './DataQuality/Model/QualityDataset.js';
 export {QualityEntity} from './DataQuality/Model/QualityEntity.js';
 export {QualityProblem} from './DataQuality/Model/QualityProblem.js';

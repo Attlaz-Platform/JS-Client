@@ -1,3 +1,6 @@
+import {BlockedIp} from '../Model/Firewall/BlockedIp.js';
+import {FlaggedIp} from '../Model/Firewall/FlaggedIp.js';
+import {IpRule} from '../Model/Firewall/IpRule.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {Utils} from '../Utils.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -5,9 +8,6 @@ import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {Endpoint} from './Endpoint.js';
 
-export type BlockedIp = { id: string; ip: string; from: Date; to: Date; reason: string };
-export type FlaggedIp = { id: string; ip: string; date: Date; reason: string };
-export type IpRule = { id: string; ip: string; action: string; description: string };
 
 export class FirewallEndpoint extends Endpoint {
     public async getBlockedIps(pagination: CursorPagination): Promise<CollectionResult<BlockedIp>> {

@@ -4,15 +4,8 @@ import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
-import {ProductGroup, ProductGroupType} from '../Model/ProductGroup.js';
-
-/** Fields accepted when writing a group; camelCase keys are snake_cased by the base Endpoint. */
-export type ProductGroupData = {
-    name: string;
-    description?: string | null;
-    groupType?: ProductGroupType;
-    criteria?: Record<string, unknown>;
-};
+import {ProductGroup} from '../Model/ProductGroup.js';
+import {ProductGroupData} from '../Model/ProductGroupData.js';
 
 /** Product groups — `/pulse/catalogs/:catalogId/product-groups`. */
 export class ProductGroupEndpoint extends Endpoint {

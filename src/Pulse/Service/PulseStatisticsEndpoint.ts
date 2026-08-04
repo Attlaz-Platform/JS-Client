@@ -2,26 +2,11 @@ import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
+import {MarketSummaryEntry} from '../Model/MarketSummaryEntry.js';
 import {PriceIndexSnapshotEntry} from '../Model/PriceIndexSnapshotEntry.js';
+import {ProductSegmentType} from '../Model/ProductSegmentType.js';
+import {ProductsSegment} from '../Model/ProductsSegment.js';
 import {TopCompetitor} from '../Model/TopCompetitor.js';
-
-/** Which axis the products are bucketed on. */
-export type ProductSegmentType = 'price' | 'profit';
-
-/** How many products fall in a segment now versus the previous period. */
-export type ProductsSegment = {
-    code: string;
-    current: number;
-    previous: number;
-};
-
-/** One headline figure of the catalog, with its previous-period value to compare against. */
-export type MarketSummaryEntry = {
-    id: string;
-    title: string;
-    currentAmount: number;
-    previousAmount: number;
-};
 
 /**
  * Aggregated Market Pulse figures for a catalog — `/pulse/catalogs/:catalogId/statistics/*`.

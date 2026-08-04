@@ -4,15 +4,7 @@ import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 import {GenerateContentBatch} from '../Model/GenerateContentBatch.js';
-
-/** What to generate, for which resources, using which strategy. */
-export type GenerateContentBatchData = {
-    name: string;
-    strategy: string;
-    resourcePool: string;
-    resources: string[];
-    properties: string[];
-};
+import {GenerateContentBatchData} from '../Model/GenerateContentBatchData.js';
 
 /**
  * Data Enrichment content generation — `/projects/:projectId/content-generation-batches`.

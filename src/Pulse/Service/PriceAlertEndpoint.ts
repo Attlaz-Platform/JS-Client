@@ -5,17 +5,8 @@ import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 import {PriceAlertConfig} from '../Model/PriceAlertConfig.js';
+import {PriceAlertConfigData} from '../Model/PriceAlertConfigData.js';
 import {PriceAlertEvent} from '../Model/PriceAlertEvent.js';
-
-/** Fields accepted when creating an alert; camelCase keys are snake_cased by the base Endpoint. */
-export type PriceAlertConfigData = {
-    name: string;
-    conditionType: string;
-    conditionParams?: Record<string, unknown>;
-    productGroup?: string | null;
-    channelId: string;
-    isActive?: boolean;
-};
 
 /**
  * Price alerts — the standing rules (`/pulse/price-alert-configs`) and the events they produce.

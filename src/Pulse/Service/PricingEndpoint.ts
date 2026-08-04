@@ -6,22 +6,7 @@ import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 import {PriceSuggestion, PriceSuggestionStatus} from '../Model/PriceSuggestion.js';
 import {PricingRule} from '../Model/PricingRule.js';
-
-/** Fields accepted when writing a rule; camelCase keys are snake_cased by the base Endpoint. */
-export type PricingRuleData = {
-    name: string;
-    description?: string | null;
-    productGroup?: string | null;
-    conditions?: Record<string, unknown>;
-    actionType: string;
-    actionParams?: Record<string, unknown>;
-    floorMargin?: number | null;
-    floorPrice?: number | null;
-    ceilingPrice?: number | null;
-    ignoreIfNoCostPrice?: boolean;
-    priority?: number;
-    isActive?: boolean;
-};
+import {PricingRuleData} from '../Model/PricingRuleData.js';
 
 /**
  * Repricing — the rules that propose prices (`/pulse/pricing-rules`) and the suggestions they
