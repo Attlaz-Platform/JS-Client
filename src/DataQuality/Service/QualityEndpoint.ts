@@ -1,75 +1,21 @@
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {ApiRecord} from '../../Model/ApiRecord.js';
+import {QualityCodeOption} from '../Model/QualityCodeOption.js';
+import {QualityCodeSummaryRow} from '../Model/QualityCodeSummaryRow.js';
 import {QualityDataset} from '../Model/QualityDataset.js';
 import {QualityEntity} from '../Model/QualityEntity.js';
+import {QualityEntityFilters} from '../Model/QualityEntityFilters.js';
+import {QualityFilterOptions} from '../Model/QualityFilterOptions.js';
 import {QualityProblem} from '../Model/QualityProblem.js';
 import {QualityProblemEvent} from '../Model/QualityProblemEvent.js';
+import {QualitySummary} from '../Model/QualitySummary.js';
+import {QualitySummaryRow} from '../Model/QualitySummaryRow.js';
 import {QualitySuppression} from '../Model/QualitySuppression.js';
+import {QualitySuppressionResult} from '../Model/QualitySuppressionResult.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
-
-/** Narrows the entity list; every field is optional and omitted filters are not sent. */
-export type QualityEntityFilters = {
-    entityType?: string | null;
-    status?: string | null;
-    severity?: string | null;
-    property?: string | null;
-    code?: string | null;
-    /** Only entities carrying a problem first seen after this moment ("what appeared since…"). */
-    newSince?: Date | null;
-};
-
-/** One row of the dataset summary: how many problems of a severity are open on a property. */
-export type QualitySummaryRow = {
-    property: string;
-    severity: string;
-    count: number;
-};
-
-/**
- * One row of the per-code summary, joined to the problem definition — the input for the
- * "what should I fix next" cards. Already ordered blocking first, then severity, then count.
- *
- * `blocking` and `severity` are orthogonal: severity is how bad the problem is, blocking is whether
- * the entity can ship at all.
- */
-export type QualityCodeSummaryRow = {
-    code: string;
-    count: number;
-    worstSeverity: string;
-    label: string | null;
-    description: string | null;
-    blocking: boolean;
-    helpUrl: string | null;
-};
-
-/** Both groupings returned by the summary endpoint. */
-export type QualitySummary = {
-    counts: QualitySummaryRow[];
-    codes: QualityCodeSummaryRow[];
-};
-
-/** A code with its label and open count, so a filter control can show the label not the raw code. */
-export type QualityCodeOption = {
-    code: string;
-    label: string | null;
-    count: number;
-};
-
-/** The values the entity list can be filtered on, for the dataset as it currently stands. */
-export type QualityFilterOptions = {
-    entityTypes: string[];
-    properties: string[];
-    codes: QualityCodeOption[];
-};
-
-/** What a new suppression did: the record itself, plus how many open problems it muted. */
-export type QualitySuppressionResult = {
-    suppression: QualitySuppression | null;
-    muted: number;
-};
 
 /**
  * Data Quality — `/data_quality/datasets`. A dataset holds the entities being checked and the

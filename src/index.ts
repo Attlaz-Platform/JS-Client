@@ -138,16 +138,14 @@ export {QualityEntity} from './DataQuality/Model/QualityEntity.js';
 export {QualityProblem} from './DataQuality/Model/QualityProblem.js';
 export {QualityProblemEvent} from './DataQuality/Model/QualityProblemEvent.js';
 export {QualitySuppression} from './DataQuality/Model/QualitySuppression.js';
-export {
-    QualityEndpoint,
-    QualityEntityFilters,
-    QualitySummaryRow,
-    QualityCodeSummaryRow,
-    QualitySummary,
-    QualityCodeOption,
-    QualityFilterOptions,
-    QualitySuppressionResult,
-} from './DataQuality/Service/QualityEndpoint.js';
+export {QualityCodeOption} from './DataQuality/Model/QualityCodeOption.js';
+export {QualityCodeSummaryRow} from './DataQuality/Model/QualityCodeSummaryRow.js';
+export {QualityEntityFilters} from './DataQuality/Model/QualityEntityFilters.js';
+export {QualityFilterOptions} from './DataQuality/Model/QualityFilterOptions.js';
+export {QualitySummary} from './DataQuality/Model/QualitySummary.js';
+export {QualitySummaryRow} from './DataQuality/Model/QualitySummaryRow.js';
+export {QualitySuppressionResult} from './DataQuality/Model/QualitySuppressionResult.js';
+export {QualityEndpoint} from './DataQuality/Service/QualityEndpoint.js';
 export {CatalogFeed} from './FeedManagement/Model/CatalogFeed.js';
 export {CatalogFeedEndpoint} from './FeedManagement/Service/CatalogFeedEndpoint.js';
 export {StorageItem} from './Model/Storage/StorageItem.js';
