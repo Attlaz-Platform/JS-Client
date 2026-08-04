@@ -2,11 +2,11 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 import {CatalogId} from './CatalogId.js';
 
 /**
- * A product's membership of a catalog — the `/catalogs/:catalogId/products` resource.
+ * A vendor product assigned to a catalog — the `/catalogs/:catalogId/products` resource.
  *
- * The descriptive fields (name, image, gtin, price) live on the linked vendor product, not here;
- * this record adds what the catalog itself knows: the identifier it is addressed by and the cost
- * price the margin calculations need.
+ * The descriptive fields (name, image, gtin, price) belong to the linked vendor product and are
+ * never duplicated here. This record holds what the catalog itself knows about the product: the
+ * identifier it is addressed by, its cost price, and whatever the import source attached.
  */
 export class CatalogProduct {
     public id: string;
