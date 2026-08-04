@@ -136,7 +136,18 @@ export {PulseStatisticsEndpoint, ProductsSegment, ProductSegmentType, MarketSumm
 export {QualityDataset} from './DataQuality/Model/QualityDataset.js';
 export {QualityEntity} from './DataQuality/Model/QualityEntity.js';
 export {QualityProblem} from './DataQuality/Model/QualityProblem.js';
-export {QualityEndpoint, QualityEntityFilters, QualitySummaryRow, QualityFilterOptions} from './DataQuality/Service/QualityEndpoint.js';
+export {QualityProblemEvent} from './DataQuality/Model/QualityProblemEvent.js';
+export {QualitySuppression} from './DataQuality/Model/QualitySuppression.js';
+export {
+    QualityEndpoint,
+    QualityEntityFilters,
+    QualitySummaryRow,
+    QualityCodeSummaryRow,
+    QualitySummary,
+    QualityCodeOption,
+    QualityFilterOptions,
+    QualitySuppressionResult,
+} from './DataQuality/Service/QualityEndpoint.js';
 export {CatalogFeed} from './FeedManagement/Model/CatalogFeed.js';
 export {CatalogFeedEndpoint} from './FeedManagement/Service/CatalogFeedEndpoint.js';
 export {StorageItem} from './Model/Storage/StorageItem.js';
