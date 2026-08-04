@@ -41,15 +41,16 @@ export class ConfigurationEndpoint extends Endpoint {
         }
     }
 
-    public async save(scopeId: string, path: string, value: unknown): Promise<CollectionResult<Configuration>> {
+    /** Write the value at this path and scope, returning the row as stored. */
+    public async save(scopeId: string, path: string, value: unknown): Promise<Configuration | null> {
 
         const qs: QueryString = new QueryString('/configurations/' + scopeId);
         qs.set('path', path);
 
+        // The API answers with the single saved row, not a collection.
+        const result: ObjectResult<Configuration> = await this.requestObject(qs, {value: value}, Configuration.parse, 'POST');
 
-        const result: CollectionResult<Configuration> = await this.requestCollection(qs, Configuration.parse, {value: value}, 'POST');
-        return result;
-
+        return result.getData();
     }
 
     /**
