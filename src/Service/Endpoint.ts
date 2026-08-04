@@ -5,7 +5,6 @@ import {HttpStatus} from '../Http/HttpStatus.js';
 import {ITransport} from '../Http/Transport/ITransport.js';
 import {DataValueCollection} from '../Model/DataValueCollection.js';
 import {ApiError} from '../Model/Error/ApiError.js';
-import {LogStreamId} from '../Model/Log/LogStreamId.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {ObjectWrapper} from '../Model/Result/ObjectWrapper.js';
@@ -50,8 +49,11 @@ export abstract class Endpoint {
         }
 
         if (typeof data === 'object') {
-            // These types need recursive formatting applied to their serialized output.
-            if (data instanceof DataValueCollection || data instanceof LogStreamId) {
+            // Serializes to a structure whose keys and nested values still need formatting, so it
+            // is handled before the plain jsonSerialize() branch below. An EntityId (LogStreamId,
+            // CatalogId, …) serializes to a bare string and needs no recursion — the duck-typed
+            // branch covers those.
+            if (data instanceof DataValueCollection) {
                 return this.formatParameters(data.jsonSerialize());
             }
 
