@@ -1,6 +1,6 @@
 import {State} from '../State.js';
 import {EventType} from '../Event/EventType.js';
-import {LogLevel} from '../Log/LogLevel.js';
+import {LogLevel} from '../../Logging/Model/LogLevel.js';
 import {StateAware} from '../StateAware.js';
 import {MetaDataAware} from '../../Core/MetaDataAware.js';
 import {ApiRecord} from '../ApiRecord.js';

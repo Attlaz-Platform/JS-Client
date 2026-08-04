@@ -14,20 +14,34 @@ import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 import {ConfigurationEndpoint} from './Service/ConfigurationEndpoint.js';
 import {Endpoint} from './Service/Endpoint.js';
 import {FirewallEndpoint} from './Service/FirewallEndpoint.js';
-import {FlowEndpoint} from './Service/FlowEndpoint.js';
-import {FlowRunEndpoint} from './Service/FlowRunEndpoint.js';
-import {FlowRunRequestEndpoint} from './Service/FlowRunRequestEndpoint.js';
-import {FlowRunStatsEndpoint} from './Service/FlowRunStatsEndpoint.js';
+import {FlowEndpoint} from './Flow/Service/FlowEndpoint.js';
+import {FlowRunEndpoint} from './Flow/Service/FlowRunEndpoint.js';
+import {FlowRunRequestEndpoint} from './Flow/Service/FlowRunRequestEndpoint.js';
+import {FlowRunStatsEndpoint} from './Flow/Service/FlowRunStatsEndpoint.js';
 import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
 import {InboxEndpoint} from './Service/InboxEndpoint.js';
-import {LogEndpoint} from './Service/LogEndpoint.js';
+import {LogEndpoint} from './Logging/Service/LogEndpoint.js';
 import {PlatformEndpoint} from './Service/PlatformEndpoint.js';
 import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
 import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
 import {ProviderTokenEndpoint} from './Service/ProviderTokenEndpoint.js';
-import {VendorProductEndpoint} from './Service/Pulse/VendorProductEndpoint.js';
-import {CrawlJobEndpoint} from './Service/Pulse/CrawlJobEndpoint.js';
+import {VendorProductEndpoint} from './Pulse/Service/VendorProductEndpoint.js';
+import {CrawlJobEndpoint} from './Pulse/Service/CrawlJobEndpoint.js';
+import {CatalogEndpoint} from './Catalog/Service/CatalogEndpoint.js';
+import {ProductMatchJobEndpoint} from './Pulse/Service/ProductMatchJobEndpoint.js';
+import {IndexJobEndpoint} from './Pulse/Service/IndexJobEndpoint.js';
+import {ProductMatchEndpoint} from './Pulse/Service/ProductMatchEndpoint.js';
+import {PulseCatalogProductEndpoint} from './Pulse/Service/PulseCatalogProductEndpoint.js';
+import {PriceAlertEndpoint} from './Pulse/Service/PriceAlertEndpoint.js';
+import {PricingEndpoint} from './Pulse/Service/PricingEndpoint.js';
+import {ProductGroupEndpoint} from './Pulse/Service/ProductGroupEndpoint.js';
+import {CatalogProductEndpoint} from './Catalog/Service/CatalogProductEndpoint.js';
+import {GenerateContentEndpoint} from './EnhanceData/Service/GenerateContentEndpoint.js';
+import {CompetitorEndpoint} from './Pulse/Service/CompetitorEndpoint.js';
+import {PulseStatisticsEndpoint} from './Pulse/Service/PulseStatisticsEndpoint.js';
+import {QualityEndpoint} from './DataQuality/Service/QualityEndpoint.js';
+import {CatalogFeedEndpoint} from './FeedManagement/Service/CatalogFeedEndpoint.js';
 import {RunnerEndpoint} from './Service/RunnerEndpoint.js';
 import {RunnerPoolEndpoint} from './Service/RunnerPoolEndpoint.js';
 import {SearchEndpoint} from './Service/SearchEndpoint.js';
@@ -82,6 +96,20 @@ export class Client {
         ProviderTokenEndpoint,
         VendorProductEndpoint,
         CrawlJobEndpoint,
+        CatalogEndpoint,
+        ProductMatchJobEndpoint,
+        IndexJobEndpoint,
+        ProductMatchEndpoint,
+        PulseCatalogProductEndpoint,
+        PriceAlertEndpoint,
+        PricingEndpoint,
+        ProductGroupEndpoint,
+        CatalogProductEndpoint,
+        GenerateContentEndpoint,
+        CompetitorEndpoint,
+        PulseStatisticsEndpoint,
+        QualityEndpoint,
+        CatalogFeedEndpoint,
     };
 
     private readonly apiEndpoint: string = 'https://api.attlaz.com';
@@ -326,6 +354,62 @@ export class Client {
 
     public getCrawlJobEndpoint(): CrawlJobEndpoint {
         return this.getEndpoint('crawl-job', this.Store.CrawlJobEndpoint);
+    }
+
+    public getCatalogEndpoint(): CatalogEndpoint {
+        return this.getEndpoint('catalog', this.Store.CatalogEndpoint);
+    }
+
+    public getProductMatchJobEndpoint(): ProductMatchJobEndpoint {
+        return this.getEndpoint('product-match-job', this.Store.ProductMatchJobEndpoint);
+    }
+
+    public getIndexJobEndpoint(): IndexJobEndpoint {
+        return this.getEndpoint('index-job', this.Store.IndexJobEndpoint);
+    }
+
+    public getProductMatchEndpoint(): ProductMatchEndpoint {
+        return this.getEndpoint('product-match', this.Store.ProductMatchEndpoint);
+    }
+
+    public getPulseCatalogProductEndpoint(): PulseCatalogProductEndpoint {
+        return this.getEndpoint('pulse-catalog-product', this.Store.PulseCatalogProductEndpoint);
+    }
+
+    public getCatalogProductEndpoint(): CatalogProductEndpoint {
+        return this.getEndpoint('catalog-product', this.Store.CatalogProductEndpoint);
+    }
+
+    public getPriceAlertEndpoint(): PriceAlertEndpoint {
+        return this.getEndpoint('price-alert', this.Store.PriceAlertEndpoint);
+    }
+
+    public getPricingEndpoint(): PricingEndpoint {
+        return this.getEndpoint('pricing', this.Store.PricingEndpoint);
+    }
+
+    public getProductGroupEndpoint(): ProductGroupEndpoint {
+        return this.getEndpoint('product-group', this.Store.ProductGroupEndpoint);
+    }
+
+    public getGenerateContentEndpoint(): GenerateContentEndpoint {
+        return this.getEndpoint('generate-content', this.Store.GenerateContentEndpoint);
+    }
+
+    public getCompetitorEndpoint(): CompetitorEndpoint {
+        return this.getEndpoint('competitor', this.Store.CompetitorEndpoint);
+    }
+
+    public getPulseStatisticsEndpoint(): PulseStatisticsEndpoint {
+        return this.getEndpoint('pulse-statistics', this.Store.PulseStatisticsEndpoint);
+    }
+
+    public getQualityEndpoint(): QualityEndpoint {
+        return this.getEndpoint('quality', this.Store.QualityEndpoint);
+    }
+
+    public getCatalogFeedEndpoint(): CatalogFeedEndpoint {
+        return this.getEndpoint('catalog-feed', this.Store.CatalogFeedEndpoint);
     }
 
     private getEndpoint<T extends Endpoint>(key: string, ClassName: { new(x: ITransport): T; }): T {

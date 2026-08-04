@@ -1,10 +1,10 @@
 import {ChannelType} from './Model/Messaging/Channel/ChannelType.js';
 import {CodeDeployStatus} from './Model/Project/CodeDeployStatus.js';
 import {State} from './Model/State.js';
-import {LogLevel} from './Model/Log/LogLevel.js';
+import {LogLevel} from './Logging/Model/LogLevel.js';
 import {StorageType} from './Model/Storage/StorageType.js';
 import {Utils} from './Utils.js';
-import {FlowRunStatus} from './Model/Flow/FlowRunStatus.js';
+import {FlowRunStatus} from './Flow/Model/FlowRunStatus.js';
 
 describe('Test utils', () => {
     test('Test enum parsing', () => {
