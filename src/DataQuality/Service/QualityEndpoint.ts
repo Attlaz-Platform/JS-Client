@@ -11,21 +11,21 @@ import {QualityProblemDefinition} from '../Model/QualityProblemDefinition.js';
 import {QualityProblemEvent} from '../Model/QualityProblemEvent.js';
 import {QualitySummary} from '../Model/QualitySummary.js';
 import {QualitySummaryRow} from '../Model/QualitySummaryRow.js';
-import {QualitySuppression} from '../Model/QualitySuppression.js';
-import {QualitySuppressionResult} from '../Model/QualitySuppressionResult.js';
+import {QualityEntityProblemSuppression} from '../Model/QualityEntityProblemSuppression.js';
+import {QualityEntityProblemSuppressionResult} from '../Model/QualityEntityProblemSuppressionResult.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 
 /**
- * Data Quality — `/data_quality/datasets`. A dataset holds the entities being checked and the
+ * Data Quality — `/data-quality/datasets`. A dataset holds the entities being checked and the
  * problems open on them.
  */
 export class QualityEndpoint extends Endpoint {
 
     public async getDatasets(projectId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<QualityDataset>> {
-        const queryString: QueryString = new QueryString('/data_quality/datasets');
+        const queryString: QueryString = new QueryString('/data-quality/datasets');
         queryString.set('project', projectId);
         queryString.addPagination(pagination);
 
@@ -34,7 +34,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async getDataset(datasetId: string): Promise<QualityDataset | null> {
         const result: ObjectResult<QualityDataset> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId,
+            '/data-quality/datasets/' + datasetId,
             null,
             QualityDataset.parse,
             'GET',
@@ -49,7 +49,7 @@ export class QualityEndpoint extends Endpoint {
             body['auto_close_mode'] = autoCloseMode;
         }
         const result: ObjectResult<QualityDataset> = await this.requestObject(
-            '/data_quality/datasets',
+            '/data-quality/datasets',
             body,
             QualityDataset.parse,
             'POST',
@@ -61,7 +61,7 @@ export class QualityEndpoint extends Endpoint {
     public async updateDataset(datasetId: string, changes: {name?: string; autoCloseMode?: string}): Promise<QualityDataset | null> {
         // camelCase keys are snake_cased by the base Endpoint (autoCloseMode -> auto_close_mode).
         const result: ObjectResult<QualityDataset> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId,
+            '/data-quality/datasets/' + datasetId,
             changes,
             QualityDataset.parse,
             'PATCH',
@@ -72,7 +72,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async deleteDataset(datasetId: string): Promise<void> {
         await this.requestObject(
-            '/data_quality/datasets/' + datasetId,
+            '/data-quality/datasets/' + datasetId,
             null,
             (raw: unknown): unknown => raw,
             'DELETE',
@@ -80,7 +80,7 @@ export class QualityEndpoint extends Endpoint {
     }
 
     public async getEntities(datasetId: string, pagination: CursorPagination | null = null, filters: QualityEntityFilters = {}): Promise<CollectionResult<QualityEntity>> {
-        const queryString: QueryString = new QueryString('/data_quality/datasets/' + datasetId + '/entities');
+        const queryString: QueryString = new QueryString('/data-quality/datasets/' + datasetId + '/entities');
         if (filters.entityType) {
             queryString.set('entity_type', filters.entityType);
         }
@@ -106,7 +106,7 @@ export class QualityEndpoint extends Endpoint {
 
     /** Suppressed problems are hidden unless `includeSuppressed` is set. */
     public async getEntityProblems(datasetId: string, entityType: string, entityId: string, includeSuppressed: boolean = false): Promise<CollectionResult<QualityProblem>> {
-        const queryString: QueryString = new QueryString('/data_quality/datasets/' + datasetId
+        const queryString: QueryString = new QueryString('/data-quality/datasets/' + datasetId
             + '/entities/' + encodeURIComponent(entityType)
             + '/' + encodeURIComponent(entityId) + '/problems');
         if (includeSuppressed) {
@@ -118,7 +118,7 @@ export class QualityEndpoint extends Endpoint {
 
     /** The transition timeline for one problem, oldest first. */
     public async getProblemEvents(datasetId: string, entityType: string, entityId: string, code: string): Promise<CollectionResult<QualityProblemEvent>> {
-        const path: string = '/data_quality/datasets/' + datasetId
+        const path: string = '/data-quality/datasets/' + datasetId
             + '/entities/' + encodeURIComponent(entityType)
             + '/' + encodeURIComponent(entityId)
             + '/problems/' + encodeURIComponent(code) + '/events';
@@ -128,7 +128,7 @@ export class QualityEndpoint extends Endpoint {
 
     /** Clear an entity's problems so the next scan starts from scratch; returns how many were removed. */
     public async resetEntity(datasetId: string, entityType: string, entityId: string): Promise<number> {
-        const path: string = '/data_quality/datasets/' + datasetId
+        const path: string = '/data-quality/datasets/' + datasetId
             + '/entities/' + encodeURIComponent(entityType)
             + '/' + encodeURIComponent(entityId) + '/reset';
 
@@ -144,7 +144,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async getFilterOptions(datasetId: string): Promise<QualityFilterOptions> {
         const result: ObjectResult<QualityFilterOptions> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId + '/filter-options',
+            '/data-quality/datasets/' + datasetId + '/filter-options',
             null,
             (raw: Record<string, unknown>): QualityFilterOptions => ({
                 entityTypes: (raw.entity_types as string[] | undefined) ?? [],
@@ -165,7 +165,7 @@ export class QualityEndpoint extends Endpoint {
     /** Both groupings in one call: `counts` by (property, severity) and `codes` for the fix cards. */
     public async getSummary(datasetId: string): Promise<QualitySummary> {
         const result: ObjectResult<QualitySummary> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId + '/summary',
+            '/data-quality/datasets/' + datasetId + '/summary',
             null,
             (raw: Record<string, unknown>): QualitySummary => ({
                 counts: ((raw.counts as Record<string, unknown>[] | undefined) ?? []).map(
@@ -199,7 +199,7 @@ export class QualityEndpoint extends Endpoint {
      * have open problems, so a fully suppressed or resolved code has no label there.
      */
     public async getDefinitions(projectId: string, pack: string | null = null): Promise<CollectionResult<QualityProblemDefinition>> {
-        const queryString: QueryString = new QueryString('/data_quality/definitions');
+        const queryString: QueryString = new QueryString('/data-quality/definitions');
         queryString.set('project', projectId);
         if (pack !== null) {
             queryString.set('pack', pack);
@@ -210,10 +210,10 @@ export class QualityEndpoint extends Endpoint {
 
     // ---- Suppressions ----
 
-    public async getSuppressions(datasetId: string): Promise<CollectionResult<QualitySuppression>> {
+    public async getEntityProblemSuppressions(datasetId: string): Promise<CollectionResult<QualityEntityProblemSuppression>> {
         return await this.requestCollection(
-            '/data_quality/datasets/' + datasetId + '/suppressions',
-            QualitySuppression.parse,
+            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions',
+            QualityEntityProblemSuppression.parse,
         );
     }
 
@@ -222,7 +222,7 @@ export class QualityEndpoint extends Endpoint {
      * dataset. Also mutes the matching problems that are already open, so suppressing acts on what
      * is there rather than only on future scans.
      */
-    public async createSuppression(datasetId: string, suppression: {code: string; entityType?: string | null; entityId?: string | null; reason?: string | null}): Promise<QualitySuppressionResult> {
+    public async createEntityProblemSuppression(datasetId: string, suppression: {code: string; entityType?: string | null; entityId?: string | null; reason?: string | null}): Promise<QualityEntityProblemSuppressionResult> {
         // Both entity keys are always sent, explicitly null for a dataset-wide suppression: the
         // endpoint requires them to be present so that a dropped or renamed key is an error rather
         // than a silent widening to the whole dataset.
@@ -236,11 +236,11 @@ export class QualityEndpoint extends Endpoint {
             reason: suppression.reason ?? null,
         };
 
-        const result: ObjectResult<QualitySuppressionResult> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId + '/suppressions',
+        const result: ObjectResult<QualityEntityProblemSuppressionResult> = await this.requestObject(
+            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions',
             body,
-            (raw: ApiRecord): QualitySuppressionResult => ({
-                suppression: raw.id ? QualitySuppression.parse(raw) : null,
+            (raw: ApiRecord): QualityEntityProblemSuppressionResult => ({
+                suppression: raw.id ? QualityEntityProblemSuppression.parse(raw) : null,
                 muted: Number(raw.muted ?? 0),
             }),
             'POST',
@@ -250,9 +250,9 @@ export class QualityEndpoint extends Endpoint {
     }
 
     /** Lift a suppression; returns how many muted problems were returned to the open list. */
-    public async deleteSuppression(datasetId: string, suppressionId: string): Promise<number> {
+    public async deleteEntityProblemSuppression(datasetId: string, entityProblemSuppressionId: string): Promise<number> {
         const result: ObjectResult<{reopened: number}> = await this.requestObject(
-            '/data_quality/datasets/' + datasetId + '/suppressions/' + suppressionId,
+            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions/' + entityProblemSuppressionId,
             null,
             (raw: Record<string, unknown>): {reopened: number} => ({reopened: Number(raw.reopened ?? 0)}),
             'DELETE',

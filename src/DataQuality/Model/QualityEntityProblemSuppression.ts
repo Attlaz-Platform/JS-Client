@@ -2,13 +2,13 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * A standing decision to ignore a problem code — the
- * `/data_quality/datasets/:datasetId/suppressions` resource.
+ * `/data-quality/datasets/:datasetId/entity-problem-suppressions` resource.
  *
  * With `entityType` and `entityId` set it covers that one entity; with both null it covers the code
  * across the whole dataset. Suppressed problems are still ingested but parked in `muted`, so they
  * stay out of the needs-attention list and out of every auto-close path without losing history.
  */
-export class QualitySuppression {
+export class QualityEntityProblemSuppression {
     public id: string;
     public code: string;
     /** Both null = the suppression applies to this code across the whole dataset. */
@@ -27,8 +27,8 @@ export class QualitySuppression {
         return this.entityId === null;
     }
 
-    public static parse(raw: ApiRecord): QualitySuppression {
-        const suppression: QualitySuppression = new QualitySuppression(raw.id as string, raw.code as string);
+    public static parse(raw: ApiRecord): QualityEntityProblemSuppression {
+        const suppression: QualityEntityProblemSuppression = new QualityEntityProblemSuppression(raw.id as string, raw.code as string);
         suppression.entityType = (raw.entity_type as string | undefined) ?? null;
         // The API strips the `_id` suffix, so `entity_id` arrives as `entity`.
         suppression.entityId = (raw.entity as string | undefined) ?? null;

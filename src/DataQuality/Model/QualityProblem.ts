@@ -2,7 +2,7 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * One quality issue found on an entity — the
- * `/data_quality/datasets/:datasetId/entities/:entityType/:entityId/problems` resource.
+ * `/data-quality/datasets/:datasetId/entities/:entityType/:entityId/problems` resource.
  *
  * `code` says what is wrong (the rule that fired) and `property` where; `channel` and `locale`
  * narrow it to one sales channel or language when the rule is scoped that way.

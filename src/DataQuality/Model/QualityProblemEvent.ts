@@ -2,7 +2,7 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * One transition of a single problem — the
- * `/data_quality/datasets/:datasetId/entities/:entityType/:entityId/problems/:code/events` resource.
+ * `/data-quality/datasets/:datasetId/entities/:entityType/:entityId/problems/:code/events` resource.
  *
  * A problem is reported once and then re-reported by every later scan; only the transitions are
  * recorded, so the timeline stays short: `reported` when it first appears, `resolved` when a scan

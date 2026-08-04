@@ -1,7 +1,7 @@
 import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
- * The catalogue entry behind a problem code — the `/data_quality/definitions` resource.
+ * The catalogue entry behind a problem code — the `/data-quality/definitions` resource.
  *
  * A code is a machine key (`verlichting.ean_invalid_checkdigit`); the definition is what makes it
  * readable, so anything showing a code to a user should resolve it here. Definitions are either

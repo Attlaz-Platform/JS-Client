@@ -2,7 +2,7 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * One thing being checked in a dataset (a product, a category, …), with a rollup of the problems
- * currently open on it — the `/data_quality/datasets/:datasetId/entities` resource.
+ * currently open on it — the `/data-quality/datasets/:datasetId/entities` resource.
  *
  * `entityType` + `entityId` identify it in the source system; `id` is the dataset's own row.
  */

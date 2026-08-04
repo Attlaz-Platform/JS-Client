@@ -2,7 +2,7 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * A data-quality dataset: the set of entities being checked, and the problems found on them —
- * the `/data_quality/datasets` resource.
+ * the `/data-quality/datasets` resource.
  *
  * `autoCloseMode` decides what happens to an open problem that a later scan no longer reports.
  */
