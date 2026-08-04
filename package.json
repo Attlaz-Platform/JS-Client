@@ -1,6 +1,6 @@
 {
   "name": "@attlaz/client",
-  "version": "1.88.0",
+  "version": "1.91.0",
   "description": "Javascript Client to access Attlaz API",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.1.1",
+    "@types/node": "^26.1.2",
     "@typescript-eslint/eslint-plugin": "^8.59.3",
     "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^9.39.5",
