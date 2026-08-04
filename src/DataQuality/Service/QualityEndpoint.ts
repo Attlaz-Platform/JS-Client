@@ -205,14 +205,18 @@ export class QualityEndpoint extends Endpoint {
      * is there rather than only on future scans.
      */
     public async createSuppression(datasetId: string, suppression: {code: string; entityType?: string | null; entityId?: string | null; reason?: string | null}): Promise<QualitySuppressionResult> {
-        const body: Record<string, unknown> = {code: suppression.code};
-        if (suppression.entityType && suppression.entityId) {
-            body.entity_type = suppression.entityType;
-            body.entity_id = suppression.entityId;
-        }
-        if (suppression.reason) {
-            body.reason = suppression.reason;
-        }
+        // Both entity keys are always sent, explicitly null for a dataset-wide suppression: the
+        // endpoint requires them to be present so that a dropped or renamed key is an error rather
+        // than a silent widening to the whole dataset.
+        //
+        // `entity`, not `entity_id`: formatKey() strips a trailing `_id`, so `entity_id` is not
+        // expressible from this client at all.
+        const body: Record<string, unknown> = {
+            code: suppression.code,
+            entity_type: suppression.entityType ?? null,
+            entity: suppression.entityId ?? null,
+            reason: suppression.reason ?? null,
+        };
 
         const result: ObjectResult<QualitySuppressionResult> = await this.requestObject(
             '/data_quality/datasets/' + datasetId + '/suppressions',
