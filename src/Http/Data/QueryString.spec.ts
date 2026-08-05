@@ -22,11 +22,13 @@ describe('Query String', () => {
         expect(queryString.build()).toBe('https://attlaz.com?scopes=scopeA%20scopeB%20scopeC');
     });
     test('Test duplicate parameters', () => {
-        // TODO: should throw error OR override the existing param
+        // Setting the same parameter twice throws rather than silently keeping one of the values: to
+        // send several values for one parameter, pass them as an array (see 'Test collection').
         const queryString: QueryString = new QueryString('https://attlaz.com');
         queryString.set('scopes', 'valueA');
-        queryString.set('scopes', 'valueB');
-        expect(queryString.build()).toBe('https://attlaz.com?scopes=scopeA%20scopeB%20scopeC');
+
+        expect(() => queryString.set('scopes', 'valueB')).toThrow('Param already defined');
+        expect(queryString.build()).toBe('https://attlaz.com?scopes=valueA');
     });
     test('Test collection', () => {
         // TODO: should throw error OR override the existing param

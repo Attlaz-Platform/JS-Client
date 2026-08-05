@@ -9,6 +9,9 @@ test('That we can fetch log stream information', async () => {
     // client.getHttpClient().enableDebug();
     const authenticated: boolean = await client.authenticate();
 
-    const logStreamInformation: any = await client.getLogEndPoint().getInformation(new LogStreamId('attlaz:infrastructure'))
+    // The shared test log stream (Zone.EU_ZONE.TEST_LOG_STREAM in the core library). This used to
+    // ask for `attlaz:infrastructure`: log stream ids stopped carrying a type prefix in May 2025 and
+    // the API rejects that form, so the test could only ever have failed.
+    const logStreamInformation: any = await client.getLogEndPoint().getInformation(new LogStreamId('lst_0nAQnvxYSscFpzE04eVD6VfVfJY'))
     expect(logStreamInformation).not.toBeNull();
 });
