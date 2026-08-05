@@ -320,8 +320,15 @@ export class OAuthClient implements ITransport {
 
     private defaultHeaders: Headers = {};
 
+    /**
+     * A copy, not the live object. Returning the internal map let callers mutate it by accident: a
+     * request assigned it and then set its own headers, so `Authorization` (and `Attlaz-API-Version`)
+     * were written into the shared defaults and sent on every later request — including the ones that
+     * deliberately pass `signWithOauthToken: false` (password reset, email confirmation, invite
+     * lookup, health). {@link addDefaultHeader} is the only way to add a real default.
+     */
     public getDefaultHeaders(): Headers {
-        return this.defaultHeaders;
+        return {...this.defaultHeaders};
     }
 
     private initDefaultHeaders(): void {
