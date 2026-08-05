@@ -9,6 +9,9 @@ import {QualityFilterOptions} from '../Model/QualityFilterOptions.js';
 import {QualityProblem} from '../Model/QualityProblem.js';
 import {QualityProblemDefinition} from '../Model/QualityProblemDefinition.js';
 import {QualityProblemEvent} from '../Model/QualityProblemEvent.js';
+import {QualityReportEntity} from '../Model/QualityReportEntity.js';
+import {QualityReportResult} from '../Model/QualityReportResult.js';
+import {QualityScan} from '../Model/QualityScan.js';
 import {QualitySummary} from '../Model/QualitySummary.js';
 import {QualitySummaryRow} from '../Model/QualitySummaryRow.js';
 import {QualityEntityProblemSuppression} from '../Model/QualityEntityProblemSuppression.js';
@@ -124,6 +127,85 @@ export class QualityEndpoint extends Endpoint {
             + '/problems/' + encodeURIComponent(code) + '/events';
 
         return await this.requestCollection(path, QualityProblemEvent.parse);
+    }
+
+    // ---- Ingest ----
+
+    /**
+     * Open a scan: the bracket a reporter puts around one run of checks.
+     *
+     * `pack` names the group of checks this run covers. It scopes what completing the scan is allowed
+     * to close, so a partial run cannot resolve problems it never looked at.
+     */
+    public async openScan(datasetId: string, pack: string | null = null): Promise<QualityScan | null> {
+        const result: ObjectResult<QualityScan> = await this.requestObject(
+            '/data-quality/datasets/' + datasetId + '/scans',
+            {pack: pack},
+            QualityScan.parse,
+            'POST',
+        );
+
+        return result.getData();
+    }
+
+    /**
+     * Report what an open scan found. Safe to call repeatedly to send entities in batches.
+     *
+     * Entities are created on first report — there is nothing to register up front.
+     */
+    public async reportToScan(datasetId: string, scanId: string, entities: QualityReportEntity[]): Promise<QualityReportResult> {
+        return await this.postReport(
+            '/data-quality/datasets/' + datasetId + '/scans/' + scanId + '/report',
+            {entities: entities.map((entity: QualityReportEntity): Record<string, unknown> => entity.toPayload())},
+        );
+    }
+
+    /**
+     * Close the scan, resolving problems the run covered but did not re-report. Returns how many were
+     * resolved.
+     *
+     * Skipping this leaves problems open that the reporter has already stopped finding.
+     */
+    public async completeScan(datasetId: string, scanId: string): Promise<number> {
+        const result: ObjectResult<{resolved: number}> = await this.requestObject(
+            '/data-quality/datasets/' + datasetId + '/scans/' + scanId + '/complete',
+            {},
+            (raw: Record<string, unknown>): {resolved: number} => ({resolved: Number(raw.resolved ?? 0)}),
+            'POST',
+        );
+
+        return result.getData()?.resolved ?? 0;
+    }
+
+    /**
+     * Open a scan, report everything and complete it in one call — for a reporter that already has
+     * the full picture in memory and does not need to stream it in batches.
+     */
+    public async reportProblems(datasetId: string, entities: QualityReportEntity[], pack: string | null = null): Promise<QualityReportResult> {
+        return await this.postReport(
+            '/data-quality/datasets/' + datasetId + '/problems',
+            {
+                pack: pack,
+                entities: entities.map((entity: QualityReportEntity): Record<string, unknown> => entity.toPayload()),
+            },
+        );
+    }
+
+    /**
+     * Both report routes take the same already-snake_cased body and return the same counts.
+     *
+     * `_formatted: true` sends the body verbatim. Without it the client's key formatter would rewrite
+     * every key and strip the trailing `_id` from `entity_id`, which the endpoint requires.
+     */
+    private async postReport(path: string, body: Record<string, unknown>): Promise<QualityReportResult> {
+        const result: ObjectResult<QualityReportResult> = await this.requestObject(
+            path,
+            {...body, _formatted: true},
+            QualityReportResult.parse,
+            'POST',
+        );
+
+        return result.getData() ?? new QualityReportResult();
     }
 
     /** Clear an entity's problems so the next scan starts from scratch; returns how many were removed. */
