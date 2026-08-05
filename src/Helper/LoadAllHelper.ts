@@ -17,7 +17,15 @@ export class LoadAllHelper {
             firstPagination.startingAfter = lastRef;
             const data: CollectionResult<T> = await call(firstPagination);
             const records: T[] = data.getData();
-            // Spread is faster than a per-element loop but can exceed the call stack for very large collections (50k+)
+
+            // An empty page that still claims hasMore cannot be paged past: the cursor advances from
+            // the last record, so the next call would repeat this one forever. The server contradicted
+            // itself — say so rather than spin.
+            if (records.length === 0 && data.hasMore) {
+                throw new Error('loadAll stopped after ' + totalResult.length + ' records: the API reported more results but returned an empty page, so paging cannot continue.');
+            }
+
+            // Spread one page at a time (bounded by `limit`), so the argument count stays small.
             if (totalResult.length + records.length > 50_000) {
                 throw new Error('loadAll exceeded 50,000 records (' + (totalResult.length + records.length) + '). This method is not intended for large datasets.');
             }
