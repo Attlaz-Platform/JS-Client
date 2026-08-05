@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -10,7 +11,7 @@ import {Endpoint} from './Endpoint.js';
 
 export class WorkspaceMemberEndpoint extends Endpoint {
     public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<WorkspaceMember>> {
-        const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/members');
+        const queryString: QueryString = new QueryString(path('workspaces/:workspaceId/members', {workspaceId}));
         queryString.addPagination(pagination);
 
         const result: CollectionResult<WorkspaceMember> = await this.requestCollection(queryString, WorkspaceMember.parse);
@@ -19,7 +20,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
     }
 
     public async invite(workspaceId: string, invites: WorkspaceMemberInvite[]): Promise<boolean> {
-        const cmd: string = '/workspaces/' + workspaceId + '/invites';
+        const cmd: string = path('/workspaces/:workspaceId/invites', {workspaceId});
 
         const rawInvites: { email: string, role: string }[] = [];
         for (const invite of invites) {
@@ -63,7 +64,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
     }
 
     public async getRoles(workspaceId: string): Promise<CollectionResult<WorkspaceMemberRole>> {
-        const cmd: string = '/workspaces/' + workspaceId + '/member-roles';
+        const cmd: string = path('/workspaces/:workspaceId/member-roles', {workspaceId});
 
         const parser = (raw: any): WorkspaceMemberRole => {
             const role: WorkspaceMemberRole = new WorkspaceMemberRole();
@@ -76,7 +77,7 @@ export class WorkspaceMemberEndpoint extends Endpoint {
 
     public async saveMember(member: WorkspaceMember): Promise<WorkspaceMember> {
         try {
-            const url: string = '/workspaces/' + member.workspaceId + '/members/' + member.id;
+            const url: string = path('/workspaces/:workspaceId/members/:id', {workspaceId: member.workspaceId, id: member.id});
             const result: ObjectResult<WorkspaceMember> = await this.requestObject(url, member, WorkspaceMember.parse, 'POST');
             const updatedWorkspaceMember: WorkspaceMember | null = result.getData();
             if (updatedWorkspaceMember === null) {

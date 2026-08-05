@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {EntityType} from '../Model/EntityType.js';
 import {HealthAlert} from '../Model/HealthAlert/HealthAlert.js';
@@ -7,7 +8,7 @@ import {Endpoint} from './Endpoint.js';
 export class HealthAlertEndpoint extends Endpoint {
     public async getCurrentAlertsByScope(scopeType: EntityType, scopeId: string): Promise<CollectionResult<HealthAlert>> {
         try {
-            const q: QueryString = new QueryString('/health/' + scopeType + '/' + scopeId);
+            const q: QueryString = new QueryString(path('/health/:scopeType/:scopeId', {scopeType, scopeId}));
 
             const result: CollectionResult<HealthAlert> = await this.requestCollection(q, HealthAlert.parse);
             return result;
@@ -27,7 +28,7 @@ export class HealthAlertEndpoint extends Endpoint {
      */
     public async getCurrentAlertsByParentScope(parentScopeType: EntityType, parentScopeId: string): Promise<CollectionResult<HealthAlert>> {
         try {
-            const q: QueryString = new QueryString('/health/by-parent/' + parentScopeType + '/' + parentScopeId);
+            const q: QueryString = new QueryString(path('/health/by-parent/:parentScopeType/:parentScopeId', {parentScopeType, parentScopeId}));
 
             const result: CollectionResult<HealthAlert> = await this.requestCollection(q, HealthAlert.parse);
             return result;

@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -31,7 +32,7 @@ export class CrawlJobEndpoint extends Endpoint {
     /** Update a crawl job's status ('started', 'finished', 'cancelled'). */
     public async updateStatus(crawlJobId: string, status: CrawlJobStatus): Promise<CrawlJob> {
         const result: ObjectResult<CrawlJob> = await this.requestObject(
-            '/pulse/crawl-jobs/' + crawlJobId,
+            path('/pulse/crawl-jobs/:crawlJobId', {crawlJobId}),
             {status},
             CrawlJob.parse,
             'PATCH',
@@ -45,7 +46,7 @@ export class CrawlJobEndpoint extends Endpoint {
 
     /** A vendor's crawl jobs (newest first), each with progress (`total` / `processed`). */
     public async getByVendor(vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CrawlJob>> {
-        const queryString: QueryString = new QueryString('/pulse/vendors/' + vendorId + '/crawl-jobs');
+        const queryString: QueryString = new QueryString(path('/pulse/vendors/:vendorId/crawl-jobs', {vendorId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, CrawlJob.parse);
@@ -58,7 +59,7 @@ export class CrawlJobEndpoint extends Endpoint {
      * and returns the jobs of their vendors.
      */
     public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<CrawlJob>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/crawl-jobs');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/crawl-jobs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, CrawlJob.parse);
@@ -67,7 +68,7 @@ export class CrawlJobEndpoint extends Endpoint {
     /** The crawl job with this id, or null. */
     public async getById(crawlJobId: string): Promise<CrawlJob | null> {
         const result: ObjectResult<CrawlJob> = await this.requestObject(
-            '/pulse/crawl-jobs/' + crawlJobId,
+            path('/pulse/crawl-jobs/:crawlJobId', {crawlJobId}),
             null,
             CrawlJob.parse,
             'GET',
@@ -95,12 +96,13 @@ export class CrawlJobEndpoint extends Endpoint {
         await this.postUrls(crawlJobId, '/pages/failed', urls);
     }
 
-    private async postUrls(crawlJobId: string, path: string, urls: string[]): Promise<void> {
+    /** @param suffix a literal trailing segment, e.g. `/pages/crawled` — not caller data. */
+    private async postUrls(crawlJobId: string, suffix: string, urls: string[]): Promise<void> {
         if (urls.length === 0) {
             return;
         }
         await this.requestObject(
-            '/pulse/crawl-jobs/' + crawlJobId + path,
+            path('/pulse/crawl-jobs/:crawlJobId', {crawlJobId}) + suffix,
             {urls},
             (raw: unknown): unknown => raw,
             'POST',

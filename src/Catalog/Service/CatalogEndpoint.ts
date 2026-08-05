@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {Catalog} from '../Model/Catalog.js';
 import {CatalogId} from '../Model/CatalogId.js';
@@ -24,7 +25,7 @@ export class CatalogEndpoint extends Endpoint {
     /** The catalog with this id, or null. */
     public async getById(catalogId: CatalogId | string): Promise<Catalog | null> {
         const result: ObjectResult<Catalog> = await this.requestObject(
-            '/catalogs/' + catalogId.toString(),
+            path('/catalogs/:catalogId', {catalogId: catalogId.toString()}),
             null,
             Catalog.parse,
             'GET',

@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {FlowRunResponse} from '../Model/FlowRunResponse.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Parameters} from '../../Http/Data/Parameters.js';
@@ -5,7 +6,7 @@ import {Endpoint} from '../../Service/Endpoint.js';
 
 export class FlowRunRequestEndpoint extends Endpoint {
     public async requestFlowRun(flowId: string, params: Parameters, wait: boolean = false): Promise<FlowRunResponse> {
-        let url: string = '/flows/' + flowId + '/flowrunrequests';
+        let url: string = path('/flows/:flowId/flowrunrequests', {flowId});
         if (wait) {
             url += '?wait=true';
         }

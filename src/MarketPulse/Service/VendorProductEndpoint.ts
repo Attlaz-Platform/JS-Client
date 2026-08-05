@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CompetingVendorProduct} from '../Model/CompetingVendorProduct.js';
@@ -16,7 +17,7 @@ export class VendorProductEndpoint extends Endpoint {
     /** The product with this identifier for the vendor, or null. */
     public async getByIdentifier(vendorId: string, identifier: string): Promise<VendorProduct | null> {
         const result: CollectionResult<VendorProduct> = await this.requestCollection(
-            '/pulse/vendors/' + vendorId + '/products?identifier=' + encodeURIComponent(identifier),
+            path('/pulse/vendors/:vendorId/products', {vendorId}) + '?identifier=' + encodeURIComponent(identifier),
             VendorProduct.parse,
         );
         const products: VendorProduct[] = result.getData();
@@ -28,7 +29,7 @@ export class VendorProductEndpoint extends Endpoint {
      * Same products as {@link getByVendor}, read through the competitor, so `competitorId` is set.
      */
     public async getByCompetitor(competitorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CompetingVendorProduct>> {
-        const queryString: QueryString = new QueryString('/pulse/competing-vendors/' + competitorId + '/products');
+        const queryString: QueryString = new QueryString(path('/pulse/competing-vendors/:competitorId/products', {competitorId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, CompetingVendorProduct.parse);
@@ -37,7 +38,7 @@ export class VendorProductEndpoint extends Endpoint {
     /** A single competitor product — `/pulse/competing-vendors/products/:id`. */
     public async getCompetitorProductById(competingVendorProductId: string): Promise<CompetingVendorProduct | null> {
         const result: ObjectResult<CompetingVendorProduct> = await this.requestObject(
-            '/pulse/competing-vendors/products/' + competingVendorProductId,
+            path('/pulse/competing-vendors/products/:competingVendorProductId', {competingVendorProductId}),
             null,
             CompetingVendorProduct.parse,
             'GET',
@@ -48,7 +49,7 @@ export class VendorProductEndpoint extends Endpoint {
 
     /** A vendor's products. */
     public async getByVendor(vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<VendorProduct>> {
-        const queryString: QueryString = new QueryString('/pulse/vendors/' + vendorId + '/products');
+        const queryString: QueryString = new QueryString(path('/pulse/vendors/:vendorId/products', {vendorId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, VendorProduct.parse);
@@ -59,7 +60,7 @@ export class VendorProductEndpoint extends Endpoint {
      * entries (the API defaults to 365).
      */
     public async getPriceHistory(vendorProductId: string, limit: number | null = null): Promise<VendorProductPriceHistoryEntry[]> {
-        const queryString: QueryString = new QueryString('/pulse/vendor-products/' + vendorProductId + '/price-history');
+        const queryString: QueryString = new QueryString(path('/pulse/vendor-products/:vendorProductId/price-history', {vendorProductId}));
         if (limit !== null) {
             queryString.set('limit', limit.toString());
         }
@@ -89,7 +90,7 @@ export class VendorProductEndpoint extends Endpoint {
             properties: product.properties,
         };
         const result: ObjectResult<VendorProduct> = await this.requestObject(
-            '/pulse/vendors/' + product.vendorId + '/products',
+            path('/pulse/vendors/:vendorId/products', {vendorId: product.vendorId}),
             body,
             VendorProduct.parse,
             'POST',
@@ -110,8 +111,11 @@ export class VendorProductEndpoint extends Endpoint {
             {op: 'add', path: 'image', value: product.image},
             {op: 'add', path: 'properties', value: product.properties},
         ];
+        if (product.id === null) {
+            throw new Error('Unable to update vendor product: the product has no id. Save it first.');
+        }
         await this.requestObject(
-            '/pulse/vendors/' + product.vendorId + '/products/' + product.id,
+            path('/pulse/vendors/:vendorId/products/:id', {vendorId: product.vendorId, id: product.id}),
             operations,
             (raw: unknown): unknown => raw,
             'PATCH',

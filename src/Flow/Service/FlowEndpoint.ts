@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {Parameters} from '../../Http/Data/Parameters.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {HttpStatus} from '../../Http/HttpStatus.js';
@@ -12,7 +13,7 @@ import {Endpoint} from '../../Service/Endpoint.js';
 export class FlowEndpoint extends Endpoint {
     public async getByProject(projectId: string, pagination: CursorPagination): Promise<CollectionResult<Flow>> {
         try {
-            const queryString: QueryString = new QueryString('/projects/' + projectId + '/flows');
+            const queryString: QueryString = new QueryString(path('/projects/:projectId/flows', {projectId}));
             queryString.addPagination(pagination);
             const result: CollectionResult<Flow> = await this.requestCollection(queryString, Flow.parse);
             return result;
@@ -26,7 +27,7 @@ export class FlowEndpoint extends Endpoint {
 
     public async getById(flowId: string): Promise<Flow | null> {
         try {
-            const result: ObjectResult<Flow> = await this.requestObject('/flows/' + flowId, null, Flow.parse);
+            const result: ObjectResult<Flow> = await this.requestObject(path('/flows/:flowId', {flowId}), null, Flow.parse);
 
             return result.getData();
         } catch (error: any) {
@@ -47,7 +48,7 @@ export class FlowEndpoint extends Endpoint {
             parameters = {environment: projectEnvironmentId};
         }
 
-        const queryString: QueryString = new QueryString('projects/' + projectId + '/flowsummaries');
+        const queryString: QueryString = new QueryString(path('projects/:projectId/flowsummaries', {projectId}));
         if (pagination !== null) {
             queryString.addPagination(pagination);
         }
@@ -62,7 +63,7 @@ export class FlowEndpoint extends Endpoint {
         }
 
         try {
-            const rawFlowSummaries: ObjectResult<FlowSummary> = await this.requestObject('flows/' + flowId + '/summaries', parameters, FlowSummary.parse);
+            const rawFlowSummaries: ObjectResult<FlowSummary> = await this.requestObject(path('flows/:flowId/summaries', {flowId}), parameters, FlowSummary.parse);
             if (rawFlowSummaries.getData() === null) {
                 return null;
             }
@@ -78,7 +79,7 @@ export class FlowEndpoint extends Endpoint {
 
     public async save(flow: Flow): Promise<Flow> {
         try {
-            const url: string = '/projects/' + flow.projectId + '/flows';
+            const url: string = path('/projects/:projectId/flows', {projectId: flow.projectId});
             const result: ObjectResult<Flow> = await this.requestObject(url, flow, Flow.parse, 'POST');
             const updatedFlow: Flow | null = result.getData();
             if (updatedFlow === null) {

@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Project} from '../Model/Project/Project.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -24,7 +25,7 @@ export class ProjectEndpoint extends Endpoint {
 
     public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null, states: State[] | null = null): Promise<CollectionResult<Project>> {
         try {
-            const queryString: QueryString = new QueryString('workspaces/' + workspaceId + '/projects');
+            const queryString: QueryString = new QueryString(path('workspaces/:workspaceId/projects', {workspaceId}));
             queryString.addPagination(pagination);
             queryString.addStateFilter(states);
 
@@ -40,7 +41,7 @@ export class ProjectEndpoint extends Endpoint {
 
     public async getById(projectId: string): Promise<Project | null> {
         try {
-            const result: ObjectResult<Project> = await this.requestObject('projects/' + projectId + '', null, Project.parse);
+            const result: ObjectResult<Project> = await this.requestObject(path('projects/:projectId', {projectId}), null, Project.parse);
             return result.getData();
         } catch (error: any) {
             if (this.httpClient.isDebugEnabled()) {

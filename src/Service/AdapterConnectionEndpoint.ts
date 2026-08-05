@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
 import {parseTestConnectionResult, TestConnectionResult} from '../Model/Adapter/TestConnectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -13,7 +14,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async getConnections(projectId: string, pagination: CursorPagination): Promise<CollectionResult<AdapterConnection>> {
         try {
-            const queryString: QueryString = new QueryString('/projects/' + projectId + '/connections');
+            const queryString: QueryString = new QueryString(path('/projects/:projectId/connections', {projectId}));
             queryString.addPagination(pagination);
 
             return await this.requestCollection(queryString, AdapterConnection.parse);
@@ -28,7 +29,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async getConnectionById(connectionId: string): Promise<AdapterConnection | null> {
         try {
-            const url: string = '/connections/' + connectionId;
+            const url: string = path('/connections/:connectionId', {connectionId});
 
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, null, AdapterConnection.parse);
 
@@ -44,7 +45,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async getConnectionByKey(projectId: string, connectionKey: string): Promise<AdapterConnection | null> {
         try {
-            const url: string = '/projects/' + projectId + '/connections/' + connectionKey;
+            const url: string = path('/projects/:projectId/connections/:connectionKey', {projectId, connectionKey});
 
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, null, AdapterConnection.parse);
 
@@ -60,7 +61,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async getConnectionConfiguration(connectionId: string): Promise<CollectionResult<AdapterConnectionConfigurationValue>> {
         try {
-            const url: string = '/connections/' + connectionId + '/configuration';
+            const url: string = path('/connections/:connectionId/configuration', {connectionId});
 
             const parser = (raw: any): AdapterConnectionConfigurationValue => ({
                 id: raw.id,
@@ -81,7 +82,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async saveConnection(projectId: string, connection: AdapterConnection): Promise<AdapterConnection> {
         try {
-            const url: string = '/projects/' + projectId + '/connections';
+            const url: string = path('/projects/:projectId/connections', {projectId});
             const result: ObjectResult<AdapterConnection> = await this.requestObject(url, connection, AdapterConnection.parse, 'POST');
             const updatedAdapterConnection: AdapterConnection | null = result.getData();
             if (updatedAdapterConnection === null) {
@@ -98,7 +99,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
 
     public async saveConnectionConfiguration(connectionId: string, configuration: AdapterConnectionConfigurationValue[]): Promise<boolean> {
         try {
-            const url: string = '/connections/' + connectionId + '/configuration';
+            const url: string = path('/connections/:connectionId/configuration', {connectionId});
 
             const parser = (raw: any): { saved: boolean } => ({saved: raw.saved});
             const result: ObjectResult<{
@@ -118,7 +119,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
     }
 
     public async getConnectionEvents(connectionId: string, pagination: CursorPagination): Promise<CollectionResult<AdapterConnectionEvent>> {
-        const queryString: QueryString = new QueryString('/adapters/connections/' + connectionId + '/events');
+        const queryString: QueryString = new QueryString(path('/adapters/connections/:connectionId/events', {connectionId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, AdapterConnectionEvent.parse);
@@ -136,7 +137,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
      * `POST /connections/:id/check` route on Core-Api (removed).
      */
     public async testConnection(connectionId: string): Promise<TestConnectionResult> {
-        const url: string = '/services/' + connectionId + '/test-connection';
+        const url: string = path('/services/:connectionId/test-connection', {connectionId});
         const result: ObjectResult<TestConnectionResult> = await this.requestObject(url, null, parseTestConnectionResult, 'POST');
         const data: TestConnectionResult | null = result.getData();
         if (data === null) {

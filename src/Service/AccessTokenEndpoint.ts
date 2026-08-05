@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
@@ -49,7 +50,7 @@ export class AccessTokenEndpoint extends Endpoint {
 
     public async update(tokenId: string, name: string): Promise<UserAccessToken> {
         try {
-            const url: string = '/access-tokens/' + tokenId;
+            const url: string = path('/access-tokens/:tokenId', {tokenId});
 
             const result: ObjectResult<UserAccessToken> = await this.requestObject(url, {
                 name,
@@ -70,7 +71,7 @@ export class AccessTokenEndpoint extends Endpoint {
 
     public async revoke(tokenId: string): Promise<boolean> {
         try {
-            const url: string = '/access-tokens/' + tokenId;
+            const url: string = path('/access-tokens/:tokenId', {tokenId});
             const parser = (raw: any): { revoked: boolean } => ({revoked: raw.revoked});
             const result: ObjectResult<{ revoked: boolean }> = await this.requestObject(url, null, parser, 'DELETE');
 

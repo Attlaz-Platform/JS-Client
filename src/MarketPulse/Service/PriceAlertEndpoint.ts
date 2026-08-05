@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -14,7 +15,7 @@ import {PriceAlertEvent} from '../Model/PriceAlertEvent.js';
 export class PriceAlertEndpoint extends Endpoint {
 
     public async getConfigs(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<PriceAlertConfig>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/price-alert-configs');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/price-alert-configs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, PriceAlertConfig.parse);
@@ -22,7 +23,7 @@ export class PriceAlertEndpoint extends Endpoint {
 
     public async getConfig(alertConfigId: string): Promise<PriceAlertConfig | null> {
         const result: ObjectResult<PriceAlertConfig> = await this.requestObject(
-            '/pulse/price-alert-configs/' + alertConfigId,
+            path('/pulse/price-alert-configs/:alertConfigId', {alertConfigId}),
             null,
             PriceAlertConfig.parse,
             'GET',
@@ -33,7 +34,7 @@ export class PriceAlertEndpoint extends Endpoint {
 
     public async createConfig(catalogId: CatalogId | string, data: PriceAlertConfigData): Promise<PriceAlertConfig | null> {
         const result: ObjectResult<PriceAlertConfig> = await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/price-alert-configs',
+            path('/pulse/catalogs/:catalogId/price-alert-configs', {catalogId: catalogId.toString()}),
             data,
             PriceAlertConfig.parse,
             'POST',
@@ -44,7 +45,7 @@ export class PriceAlertEndpoint extends Endpoint {
 
     public async updateConfig(alertConfigId: string, data: Partial<PriceAlertConfigData>): Promise<PriceAlertConfig | null> {
         const result: ObjectResult<PriceAlertConfig> = await this.requestObject(
-            '/pulse/price-alert-configs/' + alertConfigId,
+            path('/pulse/price-alert-configs/:alertConfigId', {alertConfigId}),
             data,
             PriceAlertConfig.parse,
             'PATCH',
@@ -55,7 +56,7 @@ export class PriceAlertEndpoint extends Endpoint {
 
     public async deleteConfig(alertConfigId: string): Promise<void> {
         await this.requestObject(
-            '/pulse/price-alert-configs/' + alertConfigId,
+            path('/pulse/price-alert-configs/:alertConfigId', {alertConfigId}),
             null,
             (raw: unknown): unknown => raw,
             'DELETE',
@@ -63,7 +64,7 @@ export class PriceAlertEndpoint extends Endpoint {
     }
 
     public async getEvents(alertConfigId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<PriceAlertEvent>> {
-        const queryString: QueryString = new QueryString('/pulse/price-alert-configs/' + alertConfigId + '/events');
+        const queryString: QueryString = new QueryString(path('/pulse/price-alert-configs/:alertConfigId/events', {alertConfigId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, PriceAlertEvent.parse);
@@ -75,7 +76,7 @@ export class PriceAlertEndpoint extends Endpoint {
      */
     public async acknowledgeEvent(alertEventId: string): Promise<PriceAlertEvent | null> {
         const result: ObjectResult<PriceAlertEvent> = await this.requestObject(
-            '/pulse/price-alert-events/' + alertEventId,
+            path('/pulse/price-alert-events/:alertEventId', {alertEventId}),
             {},
             PriceAlertEvent.parse,
             'PATCH',

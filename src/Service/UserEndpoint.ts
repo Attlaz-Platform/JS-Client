@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
 import {User} from '../Model/User/User.js';
 import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
@@ -81,7 +82,7 @@ export class UserEndpoint extends Endpoint {
 
     public async update(user: User): Promise<User> {
         try {
-            const url: string = '/users/' + user.id;
+            const url: string = path('/users/:id', {id: user.id});
             const result: ObjectResult<User> = await this.requestObject(url, user, User.parse, 'POST');
             const updatedUser: User | null = result.getData();
             if (updatedUser === null) {
@@ -139,7 +140,7 @@ export class UserEndpoint extends Endpoint {
 
     public async resetPassword(code: string, password: string): Promise<boolean> {
         try {
-            const url: string = '/users/resetpassword/' + code;
+            const url: string = path('/users/resetpassword/:code', {code});
             const parser = (raw: any): { updated: boolean } => ({updated: raw.updated});
             const result: ObjectResult<{
                 updated: boolean

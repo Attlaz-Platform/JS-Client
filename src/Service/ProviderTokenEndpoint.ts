@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {ProviderToken} from '../Model/ProviderToken/ProviderToken.js';
 import {ProviderTokenAccessToken} from '../Model/ProviderToken/ProviderTokenAccessToken.js';
@@ -7,14 +8,14 @@ import {Endpoint} from './Endpoint.js';
 export class ProviderTokenEndpoint extends Endpoint {
 
     public async getProviderToken(providerTokenId: string): Promise<ProviderToken | null> {
-        const queryString: QueryString = new QueryString('/provider-tokens/' + providerTokenId);
+        const queryString: QueryString = new QueryString(path('/provider-tokens/:providerTokenId', {providerTokenId}));
 
         const result: ObjectResult<ProviderToken> = await this.requestObject(queryString, null, ProviderToken.parse);
         return result.getData();
     }
 
     public async getProviderTokenAccessToken(providerTokenId: string): Promise<ProviderTokenAccessToken | null> {
-        const queryString: QueryString = new QueryString('/provider-tokens/' + providerTokenId + '/access-token');
+        const queryString: QueryString = new QueryString(path('/provider-tokens/:providerTokenId/access-token', {providerTokenId}));
 
         const result: ObjectResult<ProviderTokenAccessToken> = await this.requestObject(queryString, null, ProviderTokenAccessToken.parse);
         return result.getData();
@@ -26,7 +27,7 @@ export class ProviderTokenEndpoint extends Endpoint {
      * token, so disconnecting a connection's auth is a single request.
      */
     public async revokeProviderToken(providerTokenId: string, connectionConfiguration: { connection: string, configuration: string } | null = null): Promise<boolean> {
-        const queryString: QueryString = new QueryString('/provider-tokens/' + providerTokenId);
+        const queryString: QueryString = new QueryString(path('/provider-tokens/:providerTokenId', {providerTokenId}));
         if (connectionConfiguration !== null) {
             queryString.set('connection', connectionConfiguration.connection);
             queryString.set('configuration', connectionConfiguration.configuration);

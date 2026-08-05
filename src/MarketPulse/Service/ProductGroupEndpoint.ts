@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -11,7 +12,7 @@ import {ProductGroupData} from '../Model/ProductGroupData.js';
 export class ProductGroupEndpoint extends Endpoint {
 
     public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<ProductGroup>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/product-groups');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/product-groups', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, ProductGroup.parse);
@@ -19,7 +20,7 @@ export class ProductGroupEndpoint extends Endpoint {
 
     public async getById(productGroupId: string): Promise<ProductGroup | null> {
         const result: ObjectResult<ProductGroup> = await this.requestObject(
-            '/pulse/product-groups/' + productGroupId,
+            path('/pulse/product-groups/:productGroupId', {productGroupId}),
             null,
             ProductGroup.parse,
             'GET',
@@ -30,7 +31,7 @@ export class ProductGroupEndpoint extends Endpoint {
 
     public async create(catalogId: CatalogId | string, data: ProductGroupData): Promise<ProductGroup | null> {
         const result: ObjectResult<ProductGroup> = await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/product-groups',
+            path('/pulse/catalogs/:catalogId/product-groups', {catalogId: catalogId.toString()}),
             data,
             ProductGroup.parse,
             'POST',

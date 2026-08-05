@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {FlowRun} from '../Model/FlowRun.js';
 import {FlowRunStatus} from '../Model/FlowRunStatus.js';
 import {FlowRunSummary} from '../Model/FlowRunSummary.js';
@@ -11,13 +12,13 @@ import {Endpoint} from '../../Service/Endpoint.js';
 
 export class FlowRunEndpoint extends Endpoint {
     public async getFlowRuns(flowId: string): Promise<CollectionResult<FlowRun>> {
-        const result: CollectionResult<FlowRun> = await this.requestCollection('/flows/' + flowId + '/runs', FlowRun.parse);
+        const result: CollectionResult<FlowRun> = await this.requestCollection(path('/flows/:flowId/runs', {flowId}), FlowRun.parse);
         return result;
     }
 
     public async getFlowRunSummaries(flowId: string, flowRunStatuses: FlowRunStatus[] | null = null, pagination: CursorPagination | null = null, projectEnvironmentId: string | null = null): Promise<CollectionResult<FlowRunSummary>> {
         try {
-            const queryString: QueryString = new QueryString('/flows/' + flowId + '/runsummaries');
+            const queryString: QueryString = new QueryString(path('/flows/:flowId/runsummaries', {flowId}));
             queryString.addPagination(pagination);
 
             // if (from !== null && from !== undefined) {
@@ -60,7 +61,7 @@ export class FlowRunEndpoint extends Endpoint {
 
     public async getFlowRunSummary(flowRunId: string): Promise<FlowRunSummary | null> {
         try {
-            const result: ObjectResult<FlowRunSummary | null> = await this.requestObject('/flowruns/' + flowRunId + '/summaries', null, FlowRunSummary.parse);
+            const result: ObjectResult<FlowRunSummary | null> = await this.requestObject(path('/flowruns/:flowRunId/summaries', {flowRunId}), null, FlowRunSummary.parse);
 
             return result.getData();
         } catch (error: any) {
@@ -79,7 +80,7 @@ export class FlowRunEndpoint extends Endpoint {
      */
     public async getFlowRun(flowRunId: string): Promise<FlowRun | null> {
         try {
-            const result: ObjectResult<FlowRun | null> = await this.requestObject('/flowruns/' + flowRunId + '/summaries', null, FlowRun.parse);
+            const result: ObjectResult<FlowRun | null> = await this.requestObject(path('/flowruns/:flowRunId/summaries', {flowRunId}), null, FlowRun.parse);
 
             return result.getData();
         } catch (error: any) {
@@ -91,7 +92,7 @@ export class FlowRunEndpoint extends Endpoint {
     }
 
     public async getFlowRunHistory(flowRunId: string): Promise<CollectionResult<FlowRunHistory>> {
-        const result: CollectionResult<FlowRunHistory> = await this.requestCollection('/flowruns/' + flowRunId + '/history', FlowRunHistory.parse);
+        const result: CollectionResult<FlowRunHistory> = await this.requestCollection(path('/flowruns/:flowRunId/history', {flowRunId}), FlowRunHistory.parse);
         return result;
     }
 
@@ -101,7 +102,7 @@ export class FlowRunEndpoint extends Endpoint {
      * reflects the eventually-consistent index projection which can lag the history.
      */
     public async getFlowRunLifecycle(flowRunId: string): Promise<FlowRunLifecycle | null> {
-        const result: ObjectResult<FlowRunLifecycle | null> = await this.requestObject('/flowruns/' + flowRunId + '/lifecycle', null, FlowRunLifecycle.parse);
+        const result: ObjectResult<FlowRunLifecycle | null> = await this.requestObject(path('/flowruns/:flowRunId/lifecycle', {flowRunId}), null, FlowRunLifecycle.parse);
         return result.getData();
     }
 
@@ -119,7 +120,7 @@ export class FlowRunEndpoint extends Endpoint {
             params.time = time;
         }
 
-        const result: ObjectResult<FlowRun> = await this.requestObject('/flowruns/' + flowRunId + '', params, FlowRun.parse, 'POST');
+        const result: ObjectResult<FlowRun> = await this.requestObject(path('/flowruns/:flowRunId', {flowRunId}), params, FlowRun.parse, 'POST');
 
         const updatedFlowRun: FlowRun | null = result.getData();
         if (updatedFlowRun === null) {

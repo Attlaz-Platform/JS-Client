@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Endpoint} from './Endpoint.js';
 import {Workspace} from '../Model/Workspace/Workspace.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -25,7 +26,7 @@ export class WorkspaceEndpoint extends Endpoint {
 
     public async getById(workspaceId: string): Promise<Workspace | null> {
         try {
-            const url: string = '/workspaces/' + workspaceId + '';
+            const url: string = path('/workspaces/:workspaceId', {workspaceId});
 
             const result: ObjectResult<Workspace> = await this.requestObject(url, null, Workspace.parse);
 

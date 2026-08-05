@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CommandExecutionFilter} from '../Model/Command/CommandExecutionFilter.js';
 import {CommandExecutionHistory} from '../Model/Command/CommandExecutionHistory.js';
@@ -31,7 +32,7 @@ export class CommandExecutionEndpoint extends Endpoint {
     }
 
     public async getById(id: string): Promise<CommandExecutionHistory | null> {
-        const queryString: QueryString = new QueryString('/system/command-executions/' + id);
+        const queryString: QueryString = new QueryString(path('/system/command-executions/:id', {id}));
         const result: ObjectResult<CommandExecutionHistory> = await this.requestObject<CommandExecutionHistory>(queryString, null, CommandExecutionEndpoint.parse, 'GET');
         return result.getData();
     }

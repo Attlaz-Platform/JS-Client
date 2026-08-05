@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -15,7 +16,7 @@ import {PricingRuleData} from '../Model/PricingRuleData.js';
 export class PricingEndpoint extends Endpoint {
 
     public async getRules(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<PricingRule>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/pricing-rules');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/pricing-rules', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, PricingRule.parse);
@@ -23,7 +24,7 @@ export class PricingEndpoint extends Endpoint {
 
     public async getRule(pricingRuleId: string): Promise<PricingRule | null> {
         const result: ObjectResult<PricingRule> = await this.requestObject(
-            '/pulse/pricing-rules/' + pricingRuleId,
+            path('/pulse/pricing-rules/:pricingRuleId', {pricingRuleId}),
             null,
             PricingRule.parse,
             'GET',
@@ -34,7 +35,7 @@ export class PricingEndpoint extends Endpoint {
 
     public async createRule(catalogId: CatalogId | string, data: PricingRuleData): Promise<PricingRule | null> {
         const result: ObjectResult<PricingRule> = await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/pricing-rules',
+            path('/pulse/catalogs/:catalogId/pricing-rules', {catalogId: catalogId.toString()}),
             data,
             PricingRule.parse,
             'POST',
@@ -45,7 +46,7 @@ export class PricingEndpoint extends Endpoint {
 
     public async updateRule(pricingRuleId: string, data: Partial<PricingRuleData>): Promise<PricingRule | null> {
         const result: ObjectResult<PricingRule> = await this.requestObject(
-            '/pulse/pricing-rules/' + pricingRuleId,
+            path('/pulse/pricing-rules/:pricingRuleId', {pricingRuleId}),
             data,
             PricingRule.parse,
             'PATCH',
@@ -56,7 +57,7 @@ export class PricingEndpoint extends Endpoint {
 
     public async deleteRule(pricingRuleId: string): Promise<void> {
         await this.requestObject(
-            '/pulse/pricing-rules/' + pricingRuleId,
+            path('/pulse/pricing-rules/:pricingRuleId', {pricingRuleId}),
             null,
             (raw: unknown): unknown => raw,
             'DELETE',
@@ -65,7 +66,7 @@ export class PricingEndpoint extends Endpoint {
 
     /** Price suggestions of a catalog, optionally only those in one status. */
     public async getSuggestions(catalogId: CatalogId | string, pagination: CursorPagination | null = null, status: string | null = null): Promise<CollectionResult<PriceSuggestion>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/price-suggestions');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/price-suggestions', {catalogId: catalogId.toString()}));
         if (status !== null) {
             queryString.set('status', status);
         }
@@ -76,7 +77,7 @@ export class PricingEndpoint extends Endpoint {
 
     public async getSuggestion(priceSuggestionId: string): Promise<PriceSuggestion | null> {
         const result: ObjectResult<PriceSuggestion> = await this.requestObject(
-            '/pulse/price-suggestions/' + priceSuggestionId,
+            path('/pulse/price-suggestions/:priceSuggestionId', {priceSuggestionId}),
             null,
             PriceSuggestion.parse,
             'GET',
@@ -91,7 +92,7 @@ export class PricingEndpoint extends Endpoint {
      */
     public async reviewSuggestion(priceSuggestionId: string, status: Exclude<PriceSuggestionStatus, 'pending'>): Promise<PriceSuggestion | null> {
         const result: ObjectResult<PriceSuggestion> = await this.requestObject(
-            '/pulse/price-suggestions/' + priceSuggestionId,
+            path('/pulse/price-suggestions/:priceSuggestionId', {priceSuggestionId}),
             {status},
             PriceSuggestion.parse,
             'PATCH',

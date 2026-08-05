@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {ProjectEnvironment} from '../Model/Project/ProjectEnvironment.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -7,7 +8,7 @@ import {Endpoint} from './Endpoint.js';
 export class ProjectEnvironmentEndpoint extends Endpoint {
     public async getByProject(id: string): Promise<CollectionResult<ProjectEnvironment>> {
         try {
-            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection<ProjectEnvironment>('/projects/' + id + '/environments', ProjectEnvironment.parse);
+            const result: CollectionResult<ProjectEnvironment> = await this.requestCollection<ProjectEnvironment>(path('/projects/:id/environments', {id}), ProjectEnvironment.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {
@@ -20,7 +21,7 @@ export class ProjectEnvironmentEndpoint extends Endpoint {
 
     public async getById(id: string): Promise<ProjectEnvironment | null> {
         try {
-            const rawProjectEnvironment: ObjectResult<ProjectEnvironment> = await this.requestObject<ProjectEnvironment>('/projectenvironments/' + id + '', null, ProjectEnvironment.parse);
+            const rawProjectEnvironment: ObjectResult<ProjectEnvironment> = await this.requestObject<ProjectEnvironment>(path('/projectenvironments/:id', {id}), null, ProjectEnvironment.parse);
             return rawProjectEnvironment.getData();
         } catch (error: any) {
             if (error.httpStatus === HttpStatus.HTTP_NOTFOUND) {

@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {FilterNode} from '../../Model/Filter/FilterNode.js';
 import {ApiRecord} from '../../Model/ApiRecord.js';
@@ -47,14 +48,15 @@ export class LogEndpoint extends Endpoint {
             arrQuery.push('tags=' + strTags);
         }
 
-        const cmd: string = '/logstreams/' + logQuery.logStreamId.toString() + '/logs/?' + arrQuery.join('&');
+        const cmd: string = path('/logstreams/:logStreamId/logs/', {logStreamId: logQuery.logStreamId.toString()})
+            + '?' + arrQuery.join('&');
 
         const result: CollectionResult<Log> = await this.requestCollection(cmd, Log.parse);
         return result;
     }
 
     public async getCursoredLogEntries(logStreamId: LogStreamId, pagination: CursorPagination | null, filter: FilterNode | null): Promise<CollectionResult<Log>> {
-        const queryString: QueryString = new QueryString('/logstreams/' + logStreamId.toString() + '/logs');
+        const queryString: QueryString = new QueryString(path('/logstreams/:logStreamId/logs', {logStreamId: logStreamId.toString()}));
         queryString.addPagination(pagination);
         if (filter !== null && filter !== undefined) {
             queryString.set('filter', JSON.stringify(filter));
@@ -66,7 +68,7 @@ export class LogEndpoint extends Endpoint {
 
     public async save(log: Log): Promise<Log> {
         try {
-            const cmd: string = '/logstreams/' + log.logStream.toString() + '/logs';
+            const cmd: string = path('/logstreams/:logStream/logs', {logStream: log.logStream.toString()});
 
             const result: ObjectResult<Log> = await this.requestObject(cmd, log, Log.parse, 'POST');
             const updatedLogEntry: Log | null = result.getData();
@@ -83,8 +85,12 @@ export class LogEndpoint extends Endpoint {
         }
     }
 
-    public async delete(logId: string): Promise<boolean> {
-        const cmd: string = '/logstreams/:streamId/logs/' + logId;
+    /**
+     * The stream id was missing here: the path was built with the literal text `:streamId`, so every
+     * call requested `/logstreams/:streamId/logs/<id>` and could never have matched the route.
+     */
+    public async delete(logStreamId: string, logId: string): Promise<boolean> {
+        const cmd: string = path('/logstreams/:logStreamId/logs/:logId', {logStreamId, logId});
 
         try {
             const parser = (raw: any): { deleted: boolean } => ({deleted: raw.deleted});
@@ -106,7 +112,7 @@ export class LogEndpoint extends Endpoint {
     }
 
     public async clear(logStreamId: LogStreamId): Promise<boolean> {
-        const cmd: string = '/logstreams/' + logStreamId.toString() + '/clear';
+        const cmd: string = path('/logstreams/:logStreamId/clear', {logStreamId: logStreamId.toString()});
 
         try {
             const parser = (raw: any): { cleared: boolean } => ({cleared: raw.cleared});
@@ -127,7 +133,7 @@ export class LogEndpoint extends Endpoint {
 
     public async getInformation(logStreamId: LogStreamId): Promise<LogStreamInformation | null> {
         try {
-            const url: string = '/logstreams/' + logStreamId.toString() + '/info';
+            const url: string = path('/logstreams/:logStreamId/info', {logStreamId: logStreamId.toString()});
 
             const result: ObjectResult<LogStreamInformation> = await this.requestObject(url, null, LogStreamInformation.parse);
 
@@ -143,7 +149,7 @@ export class LogEndpoint extends Endpoint {
 
     public async getByProject(projectId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<LogStream>> {
 
-        const queryString: QueryString = new QueryString('projects/' + projectId + '/logstreams');
+        const queryString: QueryString = new QueryString(path('projects/:projectId/logstreams', {projectId}));
         queryString.addPagination(pagination);
         const parser = (raw: ApiRecord): LogStream => new LogStream(new LogStreamId(raw.id as string), raw.name as string);
         const result: CollectionResult<LogStream> = await this.requestCollection(queryString, parser);

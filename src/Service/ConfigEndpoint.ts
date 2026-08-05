@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Utils} from '../Utils.js';
 import {Config} from '../Model/Config.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
@@ -12,7 +13,7 @@ export class ConfigEndpoint extends Endpoint {
                 parameters = {environment: projectEnvironmentId};
             }
 
-            const result: CollectionResult<Config> = await this.requestCollection('/flows/' + flowId + '/configvalues', Config.parse, parameters);
+            const result: CollectionResult<Config> = await this.requestCollection(path('/flows/:flowId/configvalues', {flowId}), Config.parse, parameters);
 
             return result;
         } catch (error) {
@@ -23,9 +24,14 @@ export class ConfigEndpoint extends Endpoint {
         }
     }
 
-    public async getByProjectEnvironment(projectEnvironmentId: string | null = null): Promise<CollectionResult<Config>> {
+    /**
+     * The id is required: the API route is `/projectenvironments/:projectEnvironmentId/configvalues`
+     * and 404s on an unknown environment. It used to default to null, which built
+     * `/projectenvironments/null/configvalues` — a request that could never succeed.
+     */
+    public async getByProjectEnvironment(projectEnvironmentId: string): Promise<CollectionResult<Config>> {
         try {
-            const result: CollectionResult<Config> = await this.requestCollection('/projectenvironments/' + projectEnvironmentId + '/configvalues', Config.parse);
+            const result: CollectionResult<Config> = await this.requestCollection(path('/projectenvironments/:projectEnvironmentId/configvalues', {projectEnvironmentId}), Config.parse);
             return result;
         } catch (error) {
             if (this.httpClient.isDebugEnabled()) {

@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -18,7 +19,7 @@ export class CatalogFeedEndpoint extends Endpoint {
         pagination: CursorPagination | null = null,
         expand: string[] = [],
     ): Promise<CollectionResult<CatalogFeed>> {
-        const queryString: QueryString = new QueryString('/catalogs/' + catalogId.toString() + '/feeds');
+        const queryString: QueryString = new QueryString(path('/catalogs/:catalogId/feeds', {catalogId: catalogId.toString()}));
         if (expand.length > 0) {
             queryString.set('expand', expand);
         }

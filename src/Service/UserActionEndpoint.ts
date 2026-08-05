@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Utils} from '../Utils.js';
 
 import {UserAction} from '../Model/User/UserAction.js';
@@ -13,7 +14,7 @@ import {Endpoint} from './Endpoint.js';
 export class UserActionEndpoint extends Endpoint {
     public async getWorkspaceMemberActions(workspaceId: string, memberId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
         try {
-            const queryString: QueryString = new QueryString('/workspaces/' + workspaceId + '/members/' + memberId + '/actions');
+            const queryString: QueryString = new QueryString(path('/workspaces/:workspaceId/members/:memberId/actions', {workspaceId, memberId}));
             queryString.addPagination(pagination);
             return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {
@@ -26,7 +27,7 @@ export class UserActionEndpoint extends Endpoint {
 
     public async getUserActions(userId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
         try {
-            const queryString: QueryString = new QueryString('/users/' + userId + '/actions');
+            const queryString: QueryString = new QueryString(path('/users/:userId/actions', {userId}));
             queryString.addPagination(pagination);
             return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {
@@ -39,7 +40,7 @@ export class UserActionEndpoint extends Endpoint {
 
     public async getByResource(resourceId: string, resourceType: string, pagination: CursorPagination | null = null): Promise<CollectionResult<UserAction>> {
         try {
-            const queryString: QueryString = new QueryString('/resources/' + resourceType + '/' + resourceId + '/actions');
+            const queryString: QueryString = new QueryString(path('/resources/:resourceType/:resourceId/actions', {resourceType, resourceId}));
             queryString.addPagination(pagination);
             return await this.requestCollection<UserAction>(queryString, UserActionEndpoint.parse, null, 'GET');
         } catch (error) {

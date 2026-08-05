@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {FilterNode} from '../../Model/Filter/FilterNode.js';
@@ -27,7 +28,7 @@ export class PulseCatalogProductEndpoint extends Endpoint {
         filters: PulseCatalogProductFilters = {},
         filter: FilterNode | null = null,
     ): Promise<CollectionResult<CatalogProductWithMatches>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/products');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/products', {catalogId: catalogId.toString()}));
         queryString.set('expand', ['matches.vendor']);
         if (filters.brand) {
             queryString.set('brand', filters.brand);
@@ -56,7 +57,7 @@ export class PulseCatalogProductEndpoint extends Endpoint {
 
     public async getFilterOptions(catalogId: CatalogId | string): Promise<PulseCatalogProductFilterOptions> {
         const result: ObjectResult<PulseCatalogProductFilterOptions> = await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/filter-options',
+            path('/pulse/catalogs/:catalogId/filter-options', {catalogId: catalogId.toString()}),
             null,
             (raw: Record<string, unknown>): PulseCatalogProductFilterOptions => ({
                 brands: (raw.brands as string[] | undefined) ?? [],
@@ -73,7 +74,7 @@ export class PulseCatalogProductEndpoint extends Endpoint {
     /** Recalculate the catalog's cached statistics (price index, match counts, segments). */
     public async recomputeStatistics(catalogId: CatalogId | string): Promise<void> {
         await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/recompute-stats',
+            path('/pulse/catalogs/:catalogId/recompute-stats', {catalogId: catalogId.toString()}),
             {},
             (raw: unknown): unknown => raw,
             'POST',

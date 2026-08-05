@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Adapter} from '../Model/Adapter/Adapter.js';
 import {AdapterConfiguration} from '../Model/Adapter/AdapterConfiguration.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -28,7 +29,7 @@ export class AdapterEndpoint extends Endpoint {
 
     public async getAdapter(adapterId: string, withMedia: boolean = false): Promise<Adapter | null> {
         try {
-            const queryString: QueryString = new QueryString('/adapters/' + adapterId);
+            const queryString: QueryString = new QueryString(path('/adapters/:adapterId', {adapterId}));
             if (withMedia) {
                 queryString.set('with-media', true);
             }
@@ -46,7 +47,7 @@ export class AdapterEndpoint extends Endpoint {
 
     public async getAdapterConfiguration(adapterId: string): Promise<CollectionResult<AdapterConfiguration>> {
         try {
-            const url: string = '/adapters/' + adapterId + '/configuration';
+            const url: string = path('/adapters/:adapterId/configuration', {adapterId});
 
             return await this.requestCollection(url, AdapterConfiguration.parse);
         } catch (error) {

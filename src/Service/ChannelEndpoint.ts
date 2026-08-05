@@ -1,3 +1,4 @@
+import {path} from '../Http/Data/Path.js';
 import {Channel} from '../Model/Messaging/Channel/Channel.js';
 import {ChannelHistory} from '../Model/Messaging/ChannelHistory.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
@@ -9,7 +10,7 @@ import {Endpoint} from './Endpoint.js';
 export class ChannelEndpoint extends Endpoint {
     public async getById(channelId: string): Promise<Channel | null> {
         try {
-            const result: ObjectResult<Channel> = await this.requestObject('/channels/' + channelId + '', null, Channel.parse);
+            const result: ObjectResult<Channel> = await this.requestObject(path('/channels/:channelId', {channelId}), null, Channel.parse);
             return result.getData();
         } catch (ex) {
             if (this.httpClient.isDebugEnabled()) {
@@ -22,7 +23,7 @@ export class ChannelEndpoint extends Endpoint {
 
     public async getByWorkspace(workspaceId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<Channel>> {
         try {
-            const queryString: QueryString = new QueryString('/workspaces/' + workspaceId + '/channels');
+            const queryString: QueryString = new QueryString(path('/workspaces/:workspaceId/channels', {workspaceId}));
             queryString.addPagination(pagination);
             const result: CollectionResult<Channel> = await this.requestCollection(queryString, Channel.parse);
 
@@ -54,7 +55,7 @@ export class ChannelEndpoint extends Endpoint {
 
     public async getMessages(channelId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<ChannelHistory>> {
         try {
-            const querystring: QueryString = new QueryString('/channels/' + channelId + '/messages');
+            const querystring: QueryString = new QueryString(path('/channels/:channelId/messages', {channelId}));
             querystring.addPagination(pagination);
             const result: CollectionResult<ChannelHistory> = await this.requestCollection(querystring, ChannelHistory.parse);
 
@@ -89,7 +90,7 @@ export class ChannelEndpoint extends Endpoint {
 
     public async testChannel(subscriberChannel: Channel): Promise<boolean> {
         try {
-            const url: string = '/channels/' + subscriberChannel.id + '/test';
+            const url: string = path('/channels/:id/test', {id: subscriberChannel.id});
 
             const parser = (raw: any): { tested: boolean } => ({tested: raw.tested});
             const result: ObjectResult<{ tested: boolean }> = await this.requestObject(url, {}, parser, 'POST');

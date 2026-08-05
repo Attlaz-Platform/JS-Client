@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
@@ -14,7 +15,7 @@ import {CatalogProduct} from '../Model/CatalogProduct.js';
 export class CatalogProductEndpoint extends Endpoint {
 
     public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<CatalogProduct>> {
-        const queryString: QueryString = new QueryString('/catalogs/' + catalogId.toString() + '/products');
+        const queryString: QueryString = new QueryString(path('/catalogs/:catalogId/products', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, CatalogProduct.parse);
@@ -22,7 +23,7 @@ export class CatalogProductEndpoint extends Endpoint {
 
     /** The product with this catalog identifier, or null. */
     public async getByIdentifier(catalogId: CatalogId | string, identifier: string): Promise<CatalogProduct | null> {
-        const queryString: QueryString = new QueryString('/catalogs/' + catalogId.toString() + '/products');
+        const queryString: QueryString = new QueryString(path('/catalogs/:catalogId/products', {catalogId: catalogId.toString()}));
         queryString.set('identifier', identifier);
 
         const result: CollectionResult<CatalogProduct> = await this.requestCollection(queryString, CatalogProduct.parse);

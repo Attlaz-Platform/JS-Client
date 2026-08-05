@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -19,7 +20,7 @@ export class ProductMatchEndpoint extends Endpoint {
 
     /** The review queue of a catalog; pending matches unless `statuses` says otherwise. */
     public async getForReview(catalogId: CatalogId | string, pagination: CursorPagination | null = null, filters: ReviewMatchFilters = {}): Promise<CollectionResult<ReviewMatch>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/matches');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/matches', {catalogId: catalogId.toString()}));
         queryString.set('status', (filters.statuses ?? ['pending']).join(','));
         if (filters.competitor) {
             queryString.set('competitor', filters.competitor);
@@ -38,7 +39,7 @@ export class ProductMatchEndpoint extends Endpoint {
     /** The match record, or null. */
     public async getById(matchId: string): Promise<ProductMatch | null> {
         const result: ObjectResult<ProductMatch> = await this.requestObject(
-            '/pulse/matches/' + matchId,
+            path('/pulse/matches/:matchId', {matchId}),
             null,
             ProductMatch.parse,
             'GET',
@@ -50,7 +51,7 @@ export class ProductMatchEndpoint extends Endpoint {
     /** Confirm a match. `note` records why, for the reviewer's own audit trail. */
     public async accept(matchId: string, note: string | null = null): Promise<void> {
         await this.requestObject(
-            '/pulse/matches/' + matchId + '/accept',
+            path('/pulse/matches/:matchId/accept', {matchId}),
             note === null ? {} : {note},
             (raw: unknown): unknown => raw,
             'POST',
@@ -60,7 +61,7 @@ export class ProductMatchEndpoint extends Endpoint {
     /** Reject a match, so it stops counting towards the competitor's price index. */
     public async decline(matchId: string, note: string | null = null): Promise<void> {
         await this.requestObject(
-            '/pulse/matches/' + matchId + '/decline',
+            path('/pulse/matches/:matchId/decline', {matchId}),
             note === null ? {} : {note},
             (raw: unknown): unknown => raw,
             'POST',
@@ -69,7 +70,7 @@ export class ProductMatchEndpoint extends Endpoint {
 
     /** How many matches were discovered and reviewed over time, optionally for one competitor. */
     public async getHistory(catalogId: CatalogId | string, competitor: string | null = null, interval: MatchHistoryInterval = 'day'): Promise<MatchHistory> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/matches/history');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/matches/history', {catalogId: catalogId.toString()}));
         queryString.set('interval', interval);
         if (competitor !== null) {
             queryString.set('competitor', competitor);

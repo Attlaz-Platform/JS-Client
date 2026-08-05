@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
@@ -17,7 +18,7 @@ export class PulseStatisticsEndpoint extends Endpoint {
     /** Headline figures (products tracked, matches, competitors …) against the previous period. */
     public async getAccountSummary(catalogId: CatalogId | string): Promise<CollectionResult<MarketSummaryEntry>> {
         return await this.requestCollection(
-            '/pulse/catalogs/' + catalogId.toString() + '/statistics/account-summary',
+            path('/pulse/catalogs/:catalogId/statistics/account-summary', {catalogId: catalogId.toString()}),
             (raw: Record<string, unknown>): MarketSummaryEntry => ({
                 id: raw.id as string,
                 title: raw.title as string,
@@ -29,7 +30,7 @@ export class PulseStatisticsEndpoint extends Endpoint {
 
     /** Distribution of the catalog's products across price or profit segments. */
     public async getProductSegments(catalogId: CatalogId | string, type: ProductSegmentType | null = null): Promise<CollectionResult<ProductsSegment>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/statistics/product-segments');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/statistics/product-segments', {catalogId: catalogId.toString()}));
         if (type !== null) {
             queryString.set('type', type);
         }
@@ -49,7 +50,7 @@ export class PulseStatisticsEndpoint extends Endpoint {
      * the comparison against the previous period spans.
      */
     public async getTopCompetitors(catalogId: CatalogId | string, limit: number | null = null, period: number | null = null): Promise<CollectionResult<TopCompetitor>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/statistics/top-competitors');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/statistics/top-competitors', {catalogId: catalogId.toString()}));
         if (limit !== null) {
             queryString.set('limit', limit);
         }
@@ -69,7 +70,7 @@ export class PulseStatisticsEndpoint extends Endpoint {
         competitorIds: string[] = [],
         options: {group?: string; from?: string; to?: string} = {},
     ): Promise<CollectionResult<PriceIndexSnapshotEntry>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/statistics/price-index-history');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/statistics/price-index-history', {catalogId: catalogId.toString()}));
         if (competitorIds.length > 0) {
             queryString.set('competitor', competitorIds.join(','));
         }

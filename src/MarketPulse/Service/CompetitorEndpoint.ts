@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -13,7 +14,7 @@ import {Competitor} from '../Model/Competitor.js';
 export class CompetitorEndpoint extends Endpoint {
 
     public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<Competitor>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/competing-vendors');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/competing-vendors', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, Competitor.parse);
@@ -21,7 +22,7 @@ export class CompetitorEndpoint extends Endpoint {
 
     public async getById(competitorId: string): Promise<Competitor | null> {
         const result: ObjectResult<Competitor> = await this.requestObject(
-            '/pulse/competing-vendors/' + competitorId,
+            path('/pulse/competing-vendors/:competitorId', {competitorId}),
             null,
             Competitor.parse,
             'GET',
@@ -33,7 +34,7 @@ export class CompetitorEndpoint extends Endpoint {
     /** Start watching a vendor as a competitor of this catalog. */
     public async add(catalogId: CatalogId | string, vendorId: string): Promise<Competitor | null> {
         const result: ObjectResult<Competitor> = await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/competing-vendors',
+            path('/pulse/catalogs/:catalogId/competing-vendors', {catalogId: catalogId.toString()}),
             {vendor: vendorId},
             Competitor.parse,
             'POST',

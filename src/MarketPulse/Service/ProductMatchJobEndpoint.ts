@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
@@ -14,7 +15,7 @@ export class ProductMatchJobEndpoint extends Endpoint {
 
     /** Every match job of a catalog, newest first. */
     public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<ProductMatchJob>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/match-jobs');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/match-jobs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, ProductMatchJob.parse);
@@ -22,7 +23,7 @@ export class ProductMatchJobEndpoint extends Endpoint {
 
     /** The match jobs of one of the catalog's competitors. */
     public async getByVendor(catalogId: CatalogId | string, vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<ProductMatchJob>> {
-        const queryString: QueryString = new QueryString('/pulse/catalogs/' + catalogId.toString() + '/vendors/' + vendorId + '/match-jobs');
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/vendors/:vendorId/match-jobs', {catalogId: catalogId.toString(), vendorId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, ProductMatchJob.parse);
@@ -31,7 +32,7 @@ export class ProductMatchJobEndpoint extends Endpoint {
     /** Queue a matching run of the catalog against one competitor. */
     public async requestMatching(catalogId: CatalogId | string, vendorId: string): Promise<void> {
         await this.requestObject(
-            '/pulse/catalogs/' + catalogId.toString() + '/vendors/' + vendorId + '/match',
+            path('/pulse/catalogs/:catalogId/vendors/:vendorId/match', {catalogId: catalogId.toString(), vendorId}),
             {},
             (raw: unknown): unknown => raw,
             'POST',
@@ -41,7 +42,7 @@ export class ProductMatchJobEndpoint extends Endpoint {
     /** The match job with this id, or null. */
     public async getById(productMatchJobId: string): Promise<ProductMatchJob | null> {
         const result: ObjectResult<ProductMatchJob> = await this.requestObject(
-            '/pulse/match-jobs/' + productMatchJobId,
+            path('/pulse/match-jobs/:productMatchJobId', {productMatchJobId}),
             null,
             ProductMatchJob.parse,
             'GET',

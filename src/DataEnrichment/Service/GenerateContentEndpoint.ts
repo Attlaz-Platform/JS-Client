@@ -1,3 +1,4 @@
+import {path} from '../../Http/Data/Path.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
@@ -15,7 +16,7 @@ import {GenerateContentBatchData} from '../Model/GenerateContentBatchData.js';
 export class GenerateContentEndpoint extends Endpoint {
 
     public async getBatches(projectId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<GenerateContentBatch>> {
-        const queryString: QueryString = new QueryString('/projects/' + projectId + '/content-generation-batches');
+        const queryString: QueryString = new QueryString(path('/projects/:projectId/content-generation-batches', {projectId}));
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, GenerateContentBatch.parse);
@@ -24,7 +25,7 @@ export class GenerateContentEndpoint extends Endpoint {
     /** Queue a batch. The generated values become proposals to review, not direct writes. */
     public async requestGeneration(projectId: string, data: GenerateContentBatchData): Promise<GenerateContentBatch | null> {
         const result: ObjectResult<GenerateContentBatch> = await this.requestObject(
-            '/projects/' + projectId + '/content-generation-batches',
+            path('/projects/:projectId/content-generation-batches', {projectId}),
             data,
             GenerateContentBatch.parse,
             'POST',
