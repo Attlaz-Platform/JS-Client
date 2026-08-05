@@ -42,7 +42,9 @@
     "setversion": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "clean": "rimraf dist",
     "scan": "docker run -v .:/path zricethezav/gitleaks:latest detect --source=\"/path\" ",
-    "test": "jest"
+    "test": "jest",
+    "test:unit": "jest --config jest.config.unit.js",
+    "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "publishConfig": {
     "access": "public",

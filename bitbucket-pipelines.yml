@@ -1,0 +1,31 @@
+# Runs on every push: type-check, then the tests that need neither credentials nor network.
+#
+# The rest of the suite drives a real API with real credentials (see jest.config.unit.js) and is run
+# by hand with `npm test`. Keeping CI to the credential-free set is what makes it safe to run on
+# every commit — and without it, a broken test can sit unnoticed for months.
+image: node:24
+
+definitions:
+  caches:
+    npmcache: ~/.npm
+
+pipelines:
+  default:
+    - step:
+        name: Type-check and unit tests
+        caches:
+          - npmcache
+        script:
+          - npm ci
+          - npm run typecheck
+          - npm run test:unit
+  pull-requests:
+    '**':
+      - step:
+          name: Type-check and unit tests
+          caches:
+            - npmcache
+          script:
+            - npm ci
+            - npm run typecheck
+            - npm run test:unit

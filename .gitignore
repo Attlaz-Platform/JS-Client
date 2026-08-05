@@ -5,3 +5,11 @@ dist
 src/version.ts
 .env
 ~/
+
+# Compiled output sitting next to the e2e sources
+e2e/src/**/*.js
+e2e/src/**/*.d.ts
+
+# Local tooling / scratch artifacts
+*.jar
+*.zip
