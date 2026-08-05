@@ -182,14 +182,31 @@ export class OAuthClient implements ITransport {
         scope: string | undefined;
         scopes: string | undefined;
     }> {
-        const response: Response = await fetch(
-            this.getApiEndpointUrl(this.options.accessTokenUri),
-            {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams(params as Record<string, string>).toString(),
-            },
-        );
+        // The token endpoint bypasses HttpClient, so it does not inherit its timeout. Without one an
+        // unresponsive token endpoint hangs authenticate()/refreshToken() forever — and that is the
+        // one call every client makes before it can do anything else.
+        const timeoutMs: number = this.options.timeoutMs;
+        const init: RequestInit = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams(params as Record<string, string>).toString(),
+        };
+        if (timeoutMs > 0) {
+            init.signal = AbortSignal.timeout(timeoutMs);
+        }
+
+        const tokenUrl: string = this.getApiEndpointUrl(this.options.accessTokenUri);
+        let response: Response;
+        try {
+            response = await fetch(tokenUrl, init);
+        } catch (error: unknown) {
+            // Matched on `name`, not instanceof: a DOMException from another realm (a test runner's VM
+            // context, an iframe) is not an instance of this realm's Error. Same reasoning as HttpClient.
+            if (typeof error === 'object' && error !== null && (error as {name?: unknown}).name === 'TimeoutError') {
+                throw new ClientError('Token request to `' + tokenUrl + '` timed out after ' + timeoutMs + 'ms');
+            }
+            throw ClientError.fromError(error as Error);
+        }
 
         if (!response.ok) {
             const clientError: ClientError = new ClientError(response.statusText || 'Token request failed', response.status);
@@ -243,7 +260,7 @@ export class OAuthClient implements ITransport {
             console.debug('[OAuthClient] Request: ' + requestData.method.toUpperCase() + ' ' + requestData.getFullUrl(), {headers: requestData.headers});
         }
         try {
-            const response: HttpClientResponse = await HttpClient.request(requestData);
+            const response: HttpClientResponse = await HttpClient.request(requestData, this.options.timeoutMs);
             return response.body;
         } catch (error: unknown) {
             if (!(error instanceof ClientError)) {
