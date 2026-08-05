@@ -1,4 +1,7 @@
+import {path} from '../../Http/Data/Path.js';
+import {HttpStatus} from '../../Http/HttpStatus.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
+import {ApiError} from '../../Model/Error/ApiError.js';
 import {ApiRecord} from '../../Model/ApiRecord.js';
 import {QualityCodeOption} from '../Model/QualityCodeOption.js';
 import {QualityCodeSummaryRow} from '../Model/QualityCodeSummaryRow.js';
@@ -37,7 +40,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async getDataset(datasetId: string): Promise<QualityDataset | null> {
         const result: ObjectResult<QualityDataset> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId,
+            path('/data-quality/datasets/:datasetId', {datasetId}),
             null,
             QualityDataset.parse,
             'GET',
@@ -64,7 +67,7 @@ export class QualityEndpoint extends Endpoint {
     public async updateDataset(datasetId: string, changes: {name?: string; autoCloseMode?: string}): Promise<QualityDataset | null> {
         // camelCase keys are snake_cased by the base Endpoint (autoCloseMode -> auto_close_mode).
         const result: ObjectResult<QualityDataset> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId,
+            path('/data-quality/datasets/:datasetId', {datasetId}),
             changes,
             QualityDataset.parse,
             'PATCH',
@@ -75,7 +78,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async deleteDataset(datasetId: string): Promise<void> {
         await this.requestObject(
-            '/data-quality/datasets/' + datasetId,
+            path('/data-quality/datasets/:datasetId', {datasetId}),
             null,
             (raw: unknown): unknown => raw,
             'DELETE',
@@ -83,7 +86,7 @@ export class QualityEndpoint extends Endpoint {
     }
 
     public async getEntities(datasetId: string, pagination: CursorPagination | null = null, filters: QualityEntityFilters = {}): Promise<CollectionResult<QualityEntity>> {
-        const queryString: QueryString = new QueryString('/data-quality/datasets/' + datasetId + '/entities');
+        const queryString: QueryString = new QueryString(path('/data-quality/datasets/:datasetId/entities', {datasetId}));
         if (filters.entityType) {
             queryString.set('entity_type', filters.entityType);
         }
@@ -109,9 +112,8 @@ export class QualityEndpoint extends Endpoint {
 
     /** Suppressed problems are hidden unless `includeSuppressed` is set. */
     public async getEntityProblems(datasetId: string, entityType: string, entityId: string, includeSuppressed: boolean = false): Promise<CollectionResult<QualityProblem>> {
-        const queryString: QueryString = new QueryString('/data-quality/datasets/' + datasetId
-            + '/entities/' + encodeURIComponent(entityType)
-            + '/' + encodeURIComponent(entityId) + '/problems');
+        const queryString: QueryString = new QueryString(
+            path('/data-quality/datasets/:datasetId/entities/:entityType/:entityId/problems', {datasetId, entityType, entityId}));
         if (includeSuppressed) {
             queryString.set('include_suppressed', 'true');
         }
@@ -121,12 +123,11 @@ export class QualityEndpoint extends Endpoint {
 
     /** The transition timeline for one problem, oldest first. */
     public async getProblemEvents(datasetId: string, entityType: string, entityId: string, code: string): Promise<CollectionResult<QualityProblemEvent>> {
-        const path: string = '/data-quality/datasets/' + datasetId
-            + '/entities/' + encodeURIComponent(entityType)
-            + '/' + encodeURIComponent(entityId)
-            + '/problems/' + encodeURIComponent(code) + '/events';
+        const requestPath: string = path(
+            '/data-quality/datasets/:datasetId/entities/:entityType/:entityId/problems/:code/events',
+            {datasetId, entityType, entityId, code});
 
-        return await this.requestCollection(path, QualityProblemEvent.parse);
+        return await this.requestCollection(requestPath, QualityProblemEvent.parse);
     }
 
     // ---- Ingest ----
@@ -137,25 +138,30 @@ export class QualityEndpoint extends Endpoint {
      * `pack` names the group of checks this run covers. It scopes what completing the scan is allowed
      * to close, so a partial run cannot resolve problems it never looked at.
      */
-    public async openScan(datasetId: string, pack: string | null = null): Promise<QualityScan | null> {
-        const result: ObjectResult<QualityScan> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/scans',
-            {pack: pack},
-            QualityScan.parse,
-            'POST',
-        );
+    public async openScan(datasetId: string, pack: string | null = null): Promise<QualityScan> {
+        const requestPath: string = path('/data-quality/datasets/:datasetId/scans', {datasetId});
+        const result: ObjectResult<QualityScan> = await this.requestObject(requestPath, {pack: pack}, QualityScan.parse, 'POST');
+        const scan: QualityScan | null = result.getData();
+        if (scan === null) {
+            throw QualityEndpoint.writeFailed(requestPath);
+        }
 
-        return result.getData();
+        return scan;
     }
 
     /**
      * Report what an open scan found. Safe to call repeatedly to send entities in batches.
      *
      * Entities are created on first report — there is nothing to register up front.
+     *
+     * **Batch size**: the API caps a request body at 512 KB (the Gateway rejects over 1 MB before it
+     * even arrives), and an entity carrying one problem is roughly 250-300 bytes of JSON — so keep
+     * batches to a low four figures of entities. An oversize request comes back as `413` with error
+     * code `payload_too_large`. Send several batches into the same scan rather than one large one.
      */
     public async reportToScan(datasetId: string, scanId: string, entities: QualityReportEntity[]): Promise<QualityReportResult> {
         return await this.postReport(
-            '/data-quality/datasets/' + datasetId + '/scans/' + scanId + '/report',
+            path('/data-quality/datasets/:datasetId/scans/:scanId/report', {datasetId, scanId}),
             {entities: entities.map((entity: QualityReportEntity): Record<string, unknown> => entity.toPayload())},
         );
     }
@@ -167,23 +173,32 @@ export class QualityEndpoint extends Endpoint {
      * Skipping this leaves problems open that the reporter has already stopped finding.
      */
     public async completeScan(datasetId: string, scanId: string): Promise<number> {
+        const requestPath: string = path('/data-quality/datasets/:datasetId/scans/:scanId/complete', {datasetId, scanId});
         const result: ObjectResult<{resolved: number}> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/scans/' + scanId + '/complete',
+            requestPath,
             {},
             (raw: Record<string, unknown>): {resolved: number} => ({resolved: Number(raw.resolved ?? 0)}),
             'POST',
         );
+        const data: {resolved: number} | null = result.getData();
+        if (data === null) {
+            throw QualityEndpoint.writeFailed(requestPath);
+        }
 
-        return result.getData()?.resolved ?? 0;
+        return data.resolved;
     }
 
     /**
      * Open a scan, report everything and complete it in one call — for a reporter that already has
      * the full picture in memory and does not need to stream it in batches.
+     *
+     * Everything goes in one request, so this is bounded by the API's 512 KB body cap — a few
+     * thousand entities at most. Beyond that use `openScan` / `reportToScan` / `completeScan`, which
+     * can send as many batches as you like into one scan.
      */
     public async reportProblems(datasetId: string, entities: QualityReportEntity[], pack: string | null = null): Promise<QualityReportResult> {
         return await this.postReport(
-            '/data-quality/datasets/' + datasetId + '/problems',
+            path('/data-quality/datasets/:datasetId/problems', {datasetId}),
             {
                 pack: pack,
                 entities: entities.map((entity: QualityReportEntity): Record<string, unknown> => entity.toPayload()),
@@ -197,25 +212,47 @@ export class QualityEndpoint extends Endpoint {
      * `_formatted: true` sends the body verbatim. Without it the client's key formatter would rewrite
      * every key and strip the trailing `_id` from `entity_id`, which the endpoint requires.
      */
-    private async postReport(path: string, body: Record<string, unknown>): Promise<QualityReportResult> {
+    private async postReport(requestPath: string, body: Record<string, unknown>): Promise<QualityReportResult> {
         const result: ObjectResult<QualityReportResult> = await this.requestObject(
-            path,
+            requestPath,
             {...body, _formatted: true},
             QualityReportResult.parse,
             'POST',
         );
+        const reportResult: QualityReportResult | null = result.getData();
+        if (reportResult === null) {
+            throw QualityEndpoint.writeFailed(requestPath);
+        }
 
-        return result.getData() ?? new QualityReportResult();
+        return reportResult;
+    }
+
+    /**
+     * A write that came back with nothing — the base Endpoint maps a 404 to null data, and also
+     * returns null when the response cannot be parsed.
+     *
+     * Reads may legitimately answer "no such thing" with null, but a write cannot: returning a zero
+     * count here would be indistinguishable from a report that genuinely changed nothing, and a
+     * reporter would log success while its problems went nowhere.
+     *
+     * The message names both causes because the API cannot yet tell them apart — a missing dataset
+     * and a path that no longer exists (a reporter still on `/data_quality/`) both come back as a
+     * bare 404. Once the API sets an error `code`, branch on that instead.
+     */
+    private static writeFailed(requestPath: string): ApiError {
+        return new ApiError(
+            'Data Quality write to `' + requestPath + '` returned nothing. Either the dataset or scan does not exist, '
+            + 'or the endpoint does not — check the id, and that the client version matches the API.',
+            HttpStatus.HTTP_NOTFOUND,
+        );
     }
 
     /** Clear an entity's problems so the next scan starts from scratch; returns how many were removed. */
     public async resetEntity(datasetId: string, entityType: string, entityId: string): Promise<number> {
-        const path: string = '/data-quality/datasets/' + datasetId
-            + '/entities/' + encodeURIComponent(entityType)
-            + '/' + encodeURIComponent(entityId) + '/reset';
+        const requestPath: string = path('/data-quality/datasets/:datasetId/entities/:entityType/:entityId/reset', {datasetId, entityType, entityId});
 
         const result: ObjectResult<{deleted: number}> = await this.requestObject(
-            path,
+            requestPath,
             {},
             (raw: Record<string, unknown>): {deleted: number} => ({deleted: (raw.deleted as number | undefined) ?? 0}),
             'POST',
@@ -226,7 +263,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async getFilterOptions(datasetId: string): Promise<QualityFilterOptions> {
         const result: ObjectResult<QualityFilterOptions> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/filter-options',
+            path('/data-quality/datasets/:datasetId/filter-options', {datasetId}),
             null,
             (raw: Record<string, unknown>): QualityFilterOptions => ({
                 entityTypes: (raw.entity_types as string[] | undefined) ?? [],
@@ -247,7 +284,7 @@ export class QualityEndpoint extends Endpoint {
     /** Both groupings in one call: `counts` by (property, severity) and `codes` for the fix cards. */
     public async getSummary(datasetId: string): Promise<QualitySummary> {
         const result: ObjectResult<QualitySummary> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/summary',
+            path('/data-quality/datasets/:datasetId/summary', {datasetId}),
             null,
             (raw: Record<string, unknown>): QualitySummary => ({
                 counts: ((raw.counts as Record<string, unknown>[] | undefined) ?? []).map(
@@ -294,7 +331,7 @@ export class QualityEndpoint extends Endpoint {
 
     public async getEntityProblemSuppressions(datasetId: string): Promise<CollectionResult<QualityEntityProblemSuppression>> {
         return await this.requestCollection(
-            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions',
+            path('/data-quality/datasets/:datasetId/entity-problem-suppressions', {datasetId}),
             QualityEntityProblemSuppression.parse,
         );
     }
@@ -319,7 +356,7 @@ export class QualityEndpoint extends Endpoint {
         };
 
         const result: ObjectResult<QualityEntityProblemSuppressionResult> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions',
+            path('/data-quality/datasets/:datasetId/entity-problem-suppressions', {datasetId}),
             body,
             (raw: ApiRecord): QualityEntityProblemSuppressionResult => ({
                 suppression: raw.id ? QualityEntityProblemSuppression.parse(raw) : null,
@@ -334,7 +371,7 @@ export class QualityEndpoint extends Endpoint {
     /** Lift a suppression; returns how many muted problems were returned to the open list. */
     public async deleteEntityProblemSuppression(datasetId: string, entityProblemSuppressionId: string): Promise<number> {
         const result: ObjectResult<{reopened: number}> = await this.requestObject(
-            '/data-quality/datasets/' + datasetId + '/entity-problem-suppressions/' + entityProblemSuppressionId,
+            path('/data-quality/datasets/:datasetId/entity-problem-suppressions/:entityProblemSuppressionId', {datasetId, entityProblemSuppressionId}),
             null,
             (raw: Record<string, unknown>): {reopened: number} => ({reopened: Number(raw.reopened ?? 0)}),
             'DELETE',
