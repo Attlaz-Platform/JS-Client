@@ -39,6 +39,7 @@ import {ProductGroupEndpoint} from './MarketPulse/Service/ProductGroupEndpoint.j
 import {CatalogProductEndpoint} from './Catalog/Service/CatalogProductEndpoint.js';
 import {GenerateContentEndpoint} from './DataEnrichment/Service/GenerateContentEndpoint.js';
 import {CompetitorEndpoint} from './MarketPulse/Service/CompetitorEndpoint.js';
+import {VendorEndpoint} from './MarketPulse/Service/VendorEndpoint.js';
 import {PulseStatisticsEndpoint} from './MarketPulse/Service/PulseStatisticsEndpoint.js';
 import {QualityEndpoint} from './DataQuality/Service/QualityEndpoint.js';
 import {CatalogFeedEndpoint} from './FeedManagement/Service/CatalogFeedEndpoint.js';
@@ -107,6 +108,7 @@ export class Client {
         CatalogProductEndpoint,
         GenerateContentEndpoint,
         CompetitorEndpoint,
+        VendorEndpoint,
         PulseStatisticsEndpoint,
         QualityEndpoint,
         CatalogFeedEndpoint,
@@ -398,6 +400,10 @@ export class Client {
 
     public getCompetitorEndpoint(): CompetitorEndpoint {
         return this.getEndpoint('competitor', this.Store.CompetitorEndpoint);
+    }
+
+    public getVendorEndpoint(): VendorEndpoint {
+        return this.getEndpoint('vendor', this.Store.VendorEndpoint);
     }
 
     public getPulseStatisticsEndpoint(): PulseStatisticsEndpoint {

@@ -31,15 +31,53 @@ export class CompetitorEndpoint extends Endpoint {
         return result.getData();
     }
 
-    /** Start watching a vendor as a competitor of this catalog. */
-    public async add(catalogId: CatalogId | string, vendorId: string): Promise<Competitor | null> {
-        const result: ObjectResult<Competitor> = await this.requestObject(
+    /**
+     * Start watching an existing vendor as a competitor of this catalog.
+     *
+     * The vendor must already exist — create it with {@link VendorEndpoint.create} first. Re-adding
+     * a previously removed competitor reactivates the original link, so its matches and price
+     * history survive.
+     *
+     * Returns the link itself (`id`, `catalog`, `vendor`), not the populated competitor; read it
+     * back with {@link getById} if you need the counts and timestamps.
+     */
+    public async add(catalogId: CatalogId | string, vendorId: string): Promise<CompetitorLink | null> {
+        const result: ObjectResult<CompetitorLink> = await this.requestObject(
             path('/pulse/catalogs/:catalogId/competing-vendors', {catalogId: catalogId.toString()}),
             {vendor: vendorId},
-            Competitor.parse,
+            (raw): CompetitorLink => ({
+                id: raw.id as string,
+                catalogId: raw.catalog as string,
+                vendorId: raw.vendor as string,
+            }),
             'POST',
         );
 
         return result.getData();
     }
+
+    /**
+     * Stop watching a competitor.
+     *
+     * The vendor, its products and their price history are kept — only the catalog↔vendor link is
+     * retired, so {@link add} can resume it later.
+     */
+    public async remove(catalogId: CatalogId | string, competitorId: string): Promise<void> {
+        await this.requestObject(
+            path('/pulse/catalogs/:catalogId/competing-vendors/:competitorId', {
+                catalogId: catalogId.toString(),
+                competitorId,
+            }),
+            null,
+            (raw): unknown => raw,
+            'DELETE',
+        );
+    }
 }
+
+/** The catalog↔vendor link row returned by {@link CompetitorEndpoint.add}. */
+export type CompetitorLink = {
+    id: string;
+    catalogId: string;
+    vendorId: string;
+};
