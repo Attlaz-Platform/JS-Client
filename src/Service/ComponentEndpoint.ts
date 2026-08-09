@@ -18,9 +18,21 @@ import {Endpoint} from './Endpoint.js';
  */
 export class ComponentEndpoint extends Endpoint {
 
-    public async getAll(pagination: CursorPagination | null = null): Promise<CollectionResult<Component>> {
+    /**
+     * @param expand pass `['active_version']` to receive the promoted version inline instead of
+     *               just its id — one call rather than one per component.
+     * @param kinds  restrict to these kinds; a collection, so apis and services can be fetched
+     *               together without the runner.
+     */
+    public async getAll(pagination: CursorPagination | null = null, expand: string[] | null = null, kinds: ComponentKind[] | null = null): Promise<CollectionResult<Component>> {
         const queryString: QueryString = new QueryString('/system/components');
         queryString.addPagination(pagination);
+        if (kinds !== null && kinds.length > 0) {
+            queryString.set('kind', kinds);
+        }
+        if (expand !== null && expand.length > 0) {
+            queryString.set('expand', expand);
+        }
 
         return await this.requestCollection<Component>(queryString, ComponentEndpoint.parseComponent, null, 'GET');
     }
@@ -47,7 +59,9 @@ export class ComponentEndpoint extends Endpoint {
     public async setActiveVersion(componentId: string, versionId: string): Promise<void> {
         const queryString: QueryString = new QueryString(path('/system/components/:componentId/active-version', {componentId}));
 
-        await this.requestObject(queryString, {version_id: versionId}, (raw: Record<string, unknown>) => raw, 'POST');
+        // `_formatted` because formatParameters() strips a trailing `_id` from body keys, which
+        // would turn `version_id` into `version` — a key the endpoint does not read.
+        await this.requestObject(queryString, {version_id: versionId, _formatted: true}, (raw: Record<string, unknown>) => raw, 'POST');
     }
 
     private static parseComponent(raw: Record<string, unknown>): Component {
@@ -56,7 +70,15 @@ export class ComponentEndpoint extends Endpoint {
         component.name = raw.name as string;
         component.kind = ComponentKind.fromString(raw.kind as string);
         component.imageRepository = raw.image_repository as string;
-        component.activeVersionId = (raw.active_version as string | null) ?? null;
+        // `active_version` is either the id or, when expanded, the version itself.
+        const activeVersion: unknown = raw.active_version ?? null;
+        if (activeVersion !== null && typeof activeVersion === 'object') {
+            component.activeVersion = ComponentEndpoint.parseVersion(activeVersion as Record<string, unknown>);
+            component.activeVersionId = component.activeVersion.id;
+        } else {
+            component.activeVersionId = activeVersion as string | null;
+            component.activeVersion = null;
+        }
         component.createdAt = Utils.parseRawDate(raw.created_at as Date);
         component.updatedAt = Utils.parseRawDate(raw.updated_at as Date);
         component.state = State.fromString(raw.state as string);

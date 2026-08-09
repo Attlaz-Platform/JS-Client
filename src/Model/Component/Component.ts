@@ -1,5 +1,6 @@
 import {State} from '../State.js';
 import {ComponentKind} from './ComponentKind.js';
+import {ComponentVersion} from './ComponentVersion.js';
 
 /** One thing the platform builds and deploys: an api, a service, or the runner. */
 export class Component {
@@ -15,6 +16,13 @@ export class Component {
      * component is not managed this way, never "deploy nothing".
      */
     public activeVersionId: string | null;
+
+    /**
+     * The active version itself, present only when requested with `?expand=active_version`.
+     * Null both when nothing is promoted and when the caller did not ask for it — check
+     * `activeVersionId` to tell those apart.
+     */
+    public activeVersion: ComponentVersion | null = null;
 
     public createdAt: Date;
     public updatedAt: Date;
