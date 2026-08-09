@@ -4,7 +4,7 @@ import {Project} from '../Model/Project/Project.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {State} from '../Model/State.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

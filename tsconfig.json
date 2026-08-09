@@ -20,7 +20,7 @@
       "dom"
     ],
     "types": [
-      "jest",
+      "vitest/globals",
       "node"
     ]
   },

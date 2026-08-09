@@ -3,7 +3,7 @@ import {Helper} from '../../e2e/src/helper.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {WorkspaceMember} from '../Model/Workspace/WorkspaceMember.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

@@ -4,7 +4,7 @@ import {Helper} from '../../e2e/src/helper.js';
 import {StorageType} from '../Model/Storage/StorageType.js';
 import {StorageItem} from '../Model/Storage/StorageItem.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getApiEndpoint('ngrok');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

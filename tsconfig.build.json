@@ -2,7 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "declarationMap": false,
-    "rootDir": "src"
+    "rootDir": "src",
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts"
@@ -11,6 +14,8 @@
     "node_modules",
     "src/**/test*.ts",
     "src/**/*.spec.ts",
-    "src/test.ts"
+    "src/test.ts",
+    "src/**/*.ispec.ts",
+    "e2e/**/*"
   ]
 }

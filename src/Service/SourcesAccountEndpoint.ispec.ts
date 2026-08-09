@@ -6,7 +6,7 @@ import {SourcesAccountRepositoryBranch} from '../Model/Deployment/SourcesAccount
 import {CodeSource} from '../Model/Deployment/CodeSource.js';
 import {State} from '../Model/State.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

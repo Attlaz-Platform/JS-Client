@@ -5,7 +5,7 @@ import {Adapter} from '../Model/Adapter/Adapter.js';
 import {AdapterConnection} from '../Model/Adapter/AdapterConnection.js';
 import {AdapterConnectionConfigurationValue} from '../Model/Adapter/AdapterConnectionConfigurationValue.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

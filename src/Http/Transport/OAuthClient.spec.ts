@@ -1,4 +1,4 @@
-import {afterEach, describe, expect, jest, test} from '@jest/globals';
+import {afterEach, describe, expect, vi, test} from 'vitest';
 import {HttpClient} from '../HttpClient.js';
 import {HttpClientResponse} from '../HttpClientResponse.js';
 import {OAuthClient} from './OAuthClient.js';
@@ -69,15 +69,15 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     };
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     test('uses a valid token as-is, without acquiring a new one', async () => {
-        const httpRequest = jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(validToken());
-        const authenticate = jest.spyOn(client, 'authenticate');
-        const refresh = jest.spyOn(client, 'refreshToken');
+        const authenticate = vi.spyOn(client, 'authenticate');
+        const refresh = vi.spyOn(client, 'refreshToken');
 
         await client.request('/x');
 
@@ -87,13 +87,13 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('mints a token via client_credentials when none is set', async () => {
-        const httpRequest = jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(confidentialOptions());
-        const authenticate = jest.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
+        const authenticate = vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
             client.setToken(validToken());
             return true;
         });
-        const refresh = jest.spyOn(client, 'refreshToken');
+        const refresh = vi.spyOn(client, 'refreshToken');
 
         await client.request('/x');
 
@@ -103,11 +103,11 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('refreshes an expired token that carries a refresh_token', async () => {
-        jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(expiredToken('refresh-token'));
-        const authenticate = jest.spyOn(client, 'authenticate');
-        const refresh = jest.spyOn(client, 'refreshToken').mockImplementation(async (): Promise<void> => {
+        const authenticate = vi.spyOn(client, 'authenticate');
+        const refresh = vi.spyOn(client, 'refreshToken').mockImplementation(async (): Promise<void> => {
             client.setToken(validToken());
         });
 
@@ -118,14 +118,14 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('re-mints via client_credentials when the expired token has no refresh_token', async () => {
-        jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(expiredToken(null));
-        const authenticate = jest.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
+        const authenticate = vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
             client.setToken(validToken());
             return true;
         });
-        const refresh = jest.spyOn(client, 'refreshToken');
+        const refresh = vi.spyOn(client, 'refreshToken');
 
         await client.request('/x');
 
@@ -134,9 +134,9 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('throws 401 when there is no token and no usable credentials', async () => {
-        const httpRequest = jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(noCredentialsOptions());
-        const authenticate = jest.spyOn(client, 'authenticate');
+        const authenticate = vi.spyOn(client, 'authenticate');
 
         await expect(client.request('/x')).rejects.toThrow('access token not provided');
         expect(authenticate).not.toHaveBeenCalled();
@@ -144,19 +144,19 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('does not attempt client_credentials for a public client (no secret)', async () => {
-        jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(publicOptions());
-        const authenticate = jest.spyOn(client, 'authenticate');
+        const authenticate = vi.spyOn(client, 'authenticate');
 
         await expect(client.request('/x')).rejects.toThrow('access token not provided');
         expect(authenticate).not.toHaveBeenCalled();
     });
 
     test('single-flights concurrent token acquisition', async () => {
-        jest.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         let authCalls: number = 0;
-        jest.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
+        vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
             authCalls++;
             await new Promise<void>((resolve) => setTimeout(resolve, 10));
             client.setToken(validToken());

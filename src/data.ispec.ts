@@ -3,7 +3,7 @@ import {Client} from './Client.js';
 import {User} from './Model/User/User.js';
 import {Project} from './Model/Project/Project.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

@@ -4,7 +4,7 @@ import {Helper} from '../../e2e/src/helper.js';
 import {State} from '../Model/State.js';
 import {User} from '../Model/User/User.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

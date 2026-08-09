@@ -2,7 +2,7 @@ import {Client} from '../Client.js';
 import {CodeDeploy} from '../Model/Project/CodeDeploy.js';
 import {Helper} from '../../e2e/src/helper.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getEnvValue('apiEndpoint');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');

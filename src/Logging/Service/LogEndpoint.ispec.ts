@@ -8,7 +8,7 @@ import {LogStreamInformation} from '../Model/LogStreamInformation.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 
-jest.setTimeout((60) * 1000);
+vi.setConfig({testTimeout: 60 * 1000});
 
 const apiEndpoint: string = Helper.getApiEndpoint('beta');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
