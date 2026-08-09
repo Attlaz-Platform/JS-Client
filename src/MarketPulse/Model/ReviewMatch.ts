@@ -7,11 +7,19 @@ export type ReviewProduct = {
     name: string;
     brand: string | null;
     gtin: string | null;
+    sku: string | null;
     price: number | null;
+    originalPrice: number | null;
+    /** ISO 4217. Null falls back to the vendor's currency — never assume EUR when rendering. */
+    currency: string | null;
+    shippingCost: number | null;
     url: string | null;
     image: string | null;
+    /** Lifted out of {@link properties} because the matcher scores against it. */
     category: string | null;
     inStock: boolean | null;
+    /** The scraped attribute bag (tags, variant options, …). Keys are data, not schema. */
+    properties: Record<string, unknown> | null;
 };
 
 /** The competitor side additionally names the vendor it came from. */
@@ -75,11 +83,16 @@ export class ReviewMatch {
             name: raw.name as string,
             brand: (raw.brand as string | undefined) ?? null,
             gtin: (raw.gtin as string | undefined) ?? null,
+            sku: (raw.sku as string | undefined) ?? null,
             price: (raw.price as number | undefined) ?? null,
+            originalPrice: (raw.original_price as number | undefined) ?? null,
+            currency: (raw.currency as string | undefined) ?? null,
+            shippingCost: (raw.shipping_cost as number | undefined) ?? null,
             url: (raw.url as string | undefined) ?? null,
             image: (raw.image as string | undefined) ?? null,
             category: (raw.category as string | undefined) ?? null,
             inStock: typeof raw.in_stock === 'boolean' ? raw.in_stock : null,
+            properties: (raw.properties as Record<string, unknown> | undefined) ?? null,
         };
     }
 }

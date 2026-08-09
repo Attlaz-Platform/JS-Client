@@ -12,11 +12,12 @@ export class Competitor {
     public id: string;
     public vendorId: string;
     public name: string;
-    public domain: string = '';
+    /** The competitor's storefront root, scheme included — e.g. `https://shop.com/nl`. */
+    public url: string = '';
     public icon: string | null = null;
     public type: string | null = null;
-    /** Which index (embedding set) the competitor's products are held in. */
-    public index: string = '';
+    /** ISO 4217 code this storefront quotes prices in. */
+    public currency: string | null = null;
     public matchCount: number = 0;
     public productCount: number = 0;
     public priceIndex: number = 0;
@@ -36,10 +37,10 @@ export class Competitor {
             raw.vendor as string,
             (raw.name as string | undefined) ?? '',
         );
-        competitor.domain = (raw.domain as string | undefined) ?? '';
+        competitor.url = (raw.url as string | undefined) ?? '';
         competitor.icon = (raw.icon as string | undefined) ?? null;
         competitor.type = (raw.type as string | undefined) ?? null;
-        competitor.index = (raw.index as string | undefined) ?? '';
+        competitor.currency = (raw.currency as string | undefined) ?? null;
         competitor.matchCount = Number(raw.match_count ?? 0);
         competitor.productCount = Number(raw.product_count ?? 0);
         competitor.priceIndex = Number(raw.price_index ?? 0);

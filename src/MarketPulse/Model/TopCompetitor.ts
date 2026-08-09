@@ -11,7 +11,7 @@ export class TopCompetitor {
     public competitorId: string;
     public vendorId: string;
     public vendorName: string = '';
-    public vendorDomain: string = '';
+    public vendorUrl: string = '';
     public vendorIcon: string | null = null;
     public matchCount: number = 0;
     public productCount: number = 0;
@@ -31,7 +31,7 @@ export class TopCompetitor {
     public static parse(raw: ApiRecord): TopCompetitor {
         const competitor: TopCompetitor = new TopCompetitor(raw.competitor as string, raw.vendor as string);
         competitor.vendorName = (raw.vendor_name as string | undefined) ?? '';
-        competitor.vendorDomain = (raw.vendor_domain as string | undefined) ?? '';
+        competitor.vendorUrl = (raw.vendor_url as string | undefined) ?? '';
         competitor.vendorIcon = (raw.vendor_icon as string | undefined) ?? null;
         competitor.matchCount = Number(raw.match_count ?? 0);
         competitor.productCount = Number(raw.product_count ?? 0);

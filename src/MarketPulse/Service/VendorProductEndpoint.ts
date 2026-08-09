@@ -80,6 +80,7 @@ export class VendorProductEndpoint extends Endpoint {
             image: product.image,
             identifier: product.identifier,
             gtin: product.gtin,
+            sku: product.sku,
             brand: product.brand,
             url: product.url,
             currency: product.currency,
@@ -101,6 +102,7 @@ export class VendorProductEndpoint extends Endpoint {
     /** Update the mutable fields of an existing vendor product (JSON-patch style, per the API). */
     public async update(product: VendorProduct): Promise<void> {
         const operations = [
+            {op: 'add', path: 'name', value: product.name},
             {op: 'add', path: 'price', value: product.price},
             {op: 'add', path: 'original_price', value: product.originalPrice},
             {op: 'add', path: 'brand', value: product.brand},
@@ -109,6 +111,8 @@ export class VendorProductEndpoint extends Endpoint {
             {op: 'add', path: 'url', value: product.url},
             {op: 'add', path: 'gtin', value: product.gtin},
             {op: 'add', path: 'image', value: product.image},
+            {op: 'add', path: 'sku', value: product.sku},
+            {op: 'add', path: 'currency', value: product.currency},
             {op: 'add', path: 'properties', value: product.properties},
         ];
         if (product.id === null) {
