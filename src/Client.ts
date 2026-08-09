@@ -9,6 +9,7 @@ import {ChannelEndpoint} from './Service/ChannelEndpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 import {CodeSourceStrategiesEndpoint} from './Service/CodeSourceStrategiesEndpoint.js';
 import {CollectionsEndpoint} from './Service/CollectionsEndpoint.js';
+import {ComponentEndpoint} from './Service/ComponentEndpoint.js';
 import {CommandExecutionEndpoint} from './Service/CommandExecutionEndpoint.js';
 import {ConfigEndpoint} from './Service/ConfigEndpoint.js';
 import {ConfigurationEndpoint} from './Service/ConfigurationEndpoint.js';
@@ -22,6 +23,7 @@ import {HealthAlertEndpoint} from './Service/HealthAlertEndpoint.js';
 import {InboxEndpoint} from './Service/InboxEndpoint.js';
 import {LogEndpoint} from './Logging/Service/LogEndpoint.js';
 import {PlatformEndpoint} from './Service/PlatformEndpoint.js';
+import {TimezoneEndpoint} from './Service/TimezoneEndpoint.js';
 import {PlatformLanguageEndpoint} from './Service/PlatformLanguageEndpoint.js';
 import {ProjectEndpoint} from './Service/ProjectEndpoint.js';
 import {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
@@ -66,6 +68,7 @@ export class Client {
         AdapterEndpoint,
         ChannelEndpoint,
         CodeDeployEndpoint,
+        ComponentEndpoint,
         CodeSourceStrategiesEndpoint,
         CommandExecutionEndpoint,
         ConfigEndpoint,
@@ -78,6 +81,7 @@ export class Client {
         InboxEndpoint,
         LogEndpoint,
         PlatformEndpoint,
+        TimezoneEndpoint,
         PlatformLanguageEndpoint,
         ProjectEndpoint,
         ProjectEnvironmentEndpoint,
@@ -250,6 +254,10 @@ export class Client {
         return this.getEndpoint('platform', this.Store.PlatformEndpoint);
     }
 
+    public getTimezoneEndpoint(): TimezoneEndpoint {
+        return this.getEndpoint('timezone', this.Store.TimezoneEndpoint);
+    }
+
     public getSubscriberEndpoint(): SubscriberEndpoint {
         return this.getEndpoint('subscriber', this.Store.SubscriberEndpoint);
     }
@@ -332,6 +340,10 @@ export class Client {
 
     public getAccessTokenEndpoint(): AccessTokenEndpoint {
         return this.getEndpoint('accesstoken', this.Store.AccessTokenEndpoint);
+    }
+
+    public getComponentEndpoint(): ComponentEndpoint {
+        return this.getEndpoint('component', this.Store.ComponentEndpoint);
     }
 
     public getCollectionsEndpoint(): CollectionsEndpoint {

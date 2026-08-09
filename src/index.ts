@@ -143,7 +143,8 @@ export {CatalogProductEndpoint} from './Catalog/Service/CatalogProductEndpoint.j
 export {GenerateContentBatch} from './DataEnrichment/Model/GenerateContentBatch.js';
 export {GenerateContentBatchData} from './DataEnrichment/Model/GenerateContentBatchData.js';
 export {GenerateContentEndpoint} from './DataEnrichment/Service/GenerateContentEndpoint.js';
-export {CompetitorEndpoint} from './MarketPulse/Service/CompetitorEndpoint.js';
+export {CompetitorEndpoint, CompetitorLink} from './MarketPulse/Service/CompetitorEndpoint.js';
+export {VendorEndpoint} from './MarketPulse/Service/VendorEndpoint.js';
 export {MarketSummaryEntry} from './MarketPulse/Model/MarketSummaryEntry.js';
 export {ProductSegmentType} from './MarketPulse/Model/ProductSegmentType.js';
 export {ProductsSegment} from './MarketPulse/Model/ProductsSegment.js';
@@ -178,6 +179,7 @@ export {SearchResult} from './Model/Search/SearchResult.js';
 export {Trigger} from './Model/Trigger/Trigger.js';
 /** Worker* */
 export {Platform} from './Model/Worker/Platform.js';
+export {Timezone} from './Model/Timezone.js';
 export {PlatformImage} from './Model/Worker/PlatformImage.js';
 
 export {InfrastructureConfiguration} from './Model/Worker/InfrastructureConfiguration.js';
@@ -234,6 +236,10 @@ export type {UserActionFilter} from './Model/User/UserActionFilter.js';
 export {UserSummary} from './Model/User/UserSummary.js';
 export type {UserSummaryType} from './Model/User/UserSummary.js';
 export {RunnerImage} from './Model/Runner/RunnerImage.js';
+export {Component} from './Model/Component/Component.js';
+export {ComponentKind} from './Model/Component/ComponentKind.js';
+export {ComponentStatus} from './Model/Component/ComponentStatus.js';
+export {ComponentVersion} from './Model/Component/ComponentVersion.js';
 export {CommandExecutionHistory} from './Model/Command/CommandExecutionHistory.js';
 export {CommandExecutionStatus} from './Model/Command/CommandExecutionStatus.js';
 export {CommandExecutionFilter} from './Model/Command/CommandExecutionFilter.js';
@@ -251,6 +257,7 @@ export {LogEndpoint} from './Logging/Service/LogEndpoint.js';
 export {WorkspaceMemberEndpoint} from './Service/WorkspaceMemberEndpoint.js';
 export {InboxEndpoint} from './Service/InboxEndpoint.js';
 export {PlatformEndpoint} from './Service/PlatformEndpoint.js';
+export {TimezoneEndpoint} from './Service/TimezoneEndpoint.js';
 export {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
 export {ProjectEnvironmentEndpoint} from './Service/ProjectEnvironmentEndpoint.js';
 export {SearchEndpoint} from './Service/SearchEndpoint.js';
