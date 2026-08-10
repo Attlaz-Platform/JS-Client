@@ -27,9 +27,28 @@ export class PasswordCheck {
      * Treat it as a display hint, not a policy: the server owns the threshold, and a low score with
      * `code === null` still means accepted.
      */
-    public strength: number | null = null;
+    public strength: PasswordStrength | null = null;
+}
 
-    public isAcceptable(): boolean {
-        return this.code === null;
+export type PasswordStrength = 0 | 1 | 2 | 3 | 4;
+
+export namespace PasswordStrength {
+
+    /**
+     * Throws on anything outside 0–4, rather than degrading to null.
+     *
+     * Null does not mean "unknown" here — it means the password was refused before it could be
+     * scored, and a caller may rely on that: a strength of null with no code is a state the API never
+     * produces. Mapping an unexpected number to null would fabricate exactly that combination.
+     * Throwing surfaces as a failed check, which callers already handle.
+     */
+    export const fromRaw = (input: unknown): PasswordStrength | null => {
+        if (input === null || input === undefined) {
+            return null;
+        }
+        if (input === 0 || input === 1 || input === 2 || input === 3 || input === 4) {
+            return input;
+        }
+        throw new Error('Unable to parse PasswordStrength: expected 0-4 or null, got "' + String(input) + '"');
     }
 }

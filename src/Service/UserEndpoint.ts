@@ -2,7 +2,7 @@ import {path} from '../Http/Data/Path.js';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
 import {User} from '../Model/User/User.js';
 import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
-import {PasswordCheck, PasswordCheckCode} from '../Model/User/PasswordCheck.js';
+import {PasswordCheck, PasswordCheckCode, PasswordStrength} from '../Model/User/PasswordCheck.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Endpoint} from './Endpoint.js';
@@ -173,7 +173,7 @@ export class UserEndpoint extends Endpoint {
         const check: PasswordCheck = new PasswordCheck();
         check.code = (raw.code ?? null) as PasswordCheckCode | null;
         check.error = (raw.error ?? null) as string | null;
-        check.strength = (raw.strength ?? null) as number | null;
+        check.strength = PasswordStrength.fromRaw(raw.strength);
         return check;
     }
 
