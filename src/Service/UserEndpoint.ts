@@ -2,6 +2,7 @@ import {path} from '../Http/Data/Path.js';
 import {UserAuthProvider} from '../Model/User/UserAuthProvider.js';
 import {User} from '../Model/User/User.js';
 import {UserSummary, UserSummaryType} from '../Model/User/UserSummary.js';
+import {PasswordCheck, PasswordCheckCode} from '../Model/User/PasswordCheck.js';
 import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {Endpoint} from './Endpoint.js';
@@ -136,6 +137,44 @@ export class UserEndpoint extends Endpoint {
             }
             throw e;
         }
+    }
+
+    /**
+     * Ask the server whether a password is acceptable, without setting it.
+     *
+     * Unauthenticated — signup calls this before an account, and therefore a token, exists. Pass the
+     * email when it is known so the server can price the password against the user's own details;
+     * `stijn2026` for `stijn@echron.com` scores far lower with it than without.
+     *
+     * Advisory only. The same rules run again when the password is actually set, so a caller must not
+     * treat acceptance here as a guarantee.
+     */
+    public async checkPassword(password: string, email: string | null = null): Promise<PasswordCheck> {
+        try {
+            const url: string = '/users/check-password';
+            const parameters: Record<string, string> = email === null ? {password} : {password, email};
+
+            const result: ObjectResult<PasswordCheck> = await this.requestObject(url, parameters, UserEndpoint.parsePasswordCheck, 'POST', false);
+            const check: PasswordCheck | null = result.getData();
+            if (check === null) {
+                throw new Error('Unable to check password: wrong response from API');
+            }
+            return check;
+        } catch (e) {
+            if (this.httpClient.isDebugEnabled()) {
+                // Never log the password itself.
+                console.error('Failed to check password: ', e);
+            }
+            throw e;
+        }
+    }
+
+    private static parsePasswordCheck(raw: Record<string, any>): PasswordCheck {
+        const check: PasswordCheck = new PasswordCheck();
+        check.code = (raw.code ?? null) as PasswordCheckCode | null;
+        check.error = (raw.error ?? null) as string | null;
+        check.strength = (raw.strength ?? null) as number | null;
+        return check;
     }
 
     public async resetPassword(code: string, password: string): Promise<boolean> {

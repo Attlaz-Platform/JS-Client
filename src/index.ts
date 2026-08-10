@@ -235,6 +235,8 @@ export {UserAction} from './Model/User/UserAction.js';
 export type {UserActionFilter} from './Model/User/UserActionFilter.js';
 export {UserSummary} from './Model/User/UserSummary.js';
 export type {UserSummaryType} from './Model/User/UserSummary.js';
+export {PasswordCheck} from './Model/User/PasswordCheck.js';
+export type {PasswordCheckCode} from './Model/User/PasswordCheck.js';
 export {RunnerImage} from './Model/Runner/RunnerImage.js';
 export {Component} from './Model/Component/Component.js';
 export {ComponentKind} from './Model/Component/ComponentKind.js';
