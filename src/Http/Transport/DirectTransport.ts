@@ -9,6 +9,15 @@ export interface DirectTransportRoute {
 }
 
 /**
+ * The actor an internal call runs as. Backends resolve access against this, so a caller that reaches
+ * user-owned resources must name one — an anonymous session can only reach unguarded routes.
+ */
+export interface DirectTransportPrincipal {
+    id: string;
+    name: string;
+}
+
+/**
  * Transport for internal service-to-service calls that bypasses Gateway OAuth.
  * Authenticates via HMAC-signed session headers instead of an OAuth token.
  *
@@ -34,12 +43,16 @@ export class DirectTransport implements ITransport {
     private parseErrorHandler: ParseErrorHandler | null = null;
 
     /**
-     * Creates the default session payload for internal service-to-service calls.
+     * Creates the session payload for internal service-to-service calls.
+     *
+     * Pass `user` when the call reaches resources an access policy guards (typically the platform
+     * SYSTEM user); omit it only for routes that need no actor. The payload is what the receiving
+     * backend authenticates as, so it must be re-signed whenever it changes.
      */
-    public static createSessionPayload(): string {
+    public static createSessionPayload(user: DirectTransportPrincipal | null = null): string {
         return JSON.stringify({
             api_version: 'latest',
-            user: null,
+            user: user,
             client: null,
             ip: 'internal',
             roles: [],
