@@ -25,10 +25,13 @@ export class CrawlJobPage {
     }
 
     public static parse(raw: ApiRecord): CrawlJobPage {
+        // `crawl_job`, not `crawl_job_id`: the API's output serializer snake_cases every key and then
+        // strips a trailing `_id` (ApiOutputSerializer.formatKey), so `crawlJobId` arrives as
+        // `crawl_job` — the same shape CrawlJob's own `vendorId` takes.
         const page: CrawlJobPage = new CrawlJobPage(
             raw.id as string,
-            (raw.crawl_job_id as string | undefined) ?? (raw.crawl_job as string | undefined) ?? '',
-            (raw.url as string | undefined) ?? '',
+            (raw.crawl_job ?? raw.crawl_job_id) as string,
+            raw.url as string,
         );
         page.status = ((raw.status as string | undefined) ?? 'pending') as CrawlJobPageStatus;
         page.claimedAt = raw.claimed_at === undefined || raw.claimed_at === null ? null : new Date(raw.claimed_at as string);
