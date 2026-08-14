@@ -9,24 +9,17 @@ export interface DirectTransportRoute {
 }
 
 /**
- * The actor an internal call runs as. Backends resolve access against this, so a caller that reaches
- * user-owned resources must name one — an anonymous session can only reach unguarded routes.
- */
-export interface DirectTransportPrincipal {
-    id: string;
-    name: string;
-}
-
-/**
  * Transport for internal service-to-service calls that bypasses Gateway OAuth.
  * Authenticates via HMAC-signed session headers instead of an OAuth token.
  *
- * The caller is responsible for computing the HMAC signature (since this requires
- * node:crypto which is not available in browser environments).
+ * It carries the session payload and its signature without interpreting either: the payload's shape
+ * is a contract between Attlaz services, and building it needs `node:crypto` and platform models
+ * this package deliberately does not depend on. **Attlaz services should not construct this
+ * directly** — use `InternalTransportFactory.asSystem()` from `@attlaz/attlaz-core`, which owns that
+ * shape and does the signing.
  *
- * Usage:
+ * Usage (non-Attlaz callers, or anything supplying its own session):
  *   import {createHmac} from 'node:crypto';
- *   const sessionPayload = DirectTransport.createSessionPayload();
  *   const sessionSignature = createHmac('sha256', apiSecret).update(sessionPayload).digest('hex');
  *   const transport = new DirectTransport('http://core-api:5728', sessionPayload, sessionSignature);
  *   const client = Client.withTransport(transport);
@@ -41,25 +34,6 @@ export class DirectTransport implements ITransport {
     private readonly clients: Map<string, OAuthClient> = new Map();
     private readonly sortedRoutes: DirectTransportRoute[];
     private parseErrorHandler: ParseErrorHandler | null = null;
-
-    /**
-     * Creates the session payload for internal service-to-service calls.
-     *
-     * Pass `user` when the call reaches resources an access policy guards (typically the platform
-     * SYSTEM user); omit it only for routes that need no actor. The payload is what the receiving
-     * backend authenticates as, so it must be re-signed whenever it changes.
-     */
-    public static createSessionPayload(user: DirectTransportPrincipal | null = null): string {
-        return JSON.stringify({
-            api_version: 'latest',
-            user: user,
-            client: null,
-            ip: 'internal',
-            roles: [],
-            scopes: [],
-            access_token: null,
-        });
-    }
 
     constructor(defaultBaseUrl: string, sessionPayload: string, sessionSignature: string, routes: DirectTransportRoute[] = []) {
 
