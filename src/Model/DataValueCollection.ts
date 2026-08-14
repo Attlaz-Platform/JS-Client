@@ -29,7 +29,9 @@ export class DataValueCollection extends JsonSerializable implements Iterable<Da
     public set(key: string, value: DataValueValue): void {
         const existingIndex = this._values.findIndex((tag: DataValue) => tag.key === key);
         if (existingIndex !== -1) {
-            this._values.splice(existingIndex);
+            // The delete count is not optional here: `splice(i)` removes everything from `i` to the
+            // end, so overwriting a key used to drop every value stored after it.
+            this._values.splice(existingIndex, 1);
         }
         this._values.push(new DataValue(key, value));
     }
