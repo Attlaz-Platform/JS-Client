@@ -1,3 +1,4 @@
+import {StockStatus, parseStockStatus} from './StockStatus.js';
 import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
@@ -18,7 +19,7 @@ export class VendorProduct {
     public price: number | null = null;
     public originalPrice: number | null = null;
     public shippingCost: number | null = null;
-    public isInStock: boolean | null = null;
+    public stockStatus: StockStatus = 'unknown';
     public properties: Record<string, unknown> | null = null;
     public createdAt: Date | null = null;
     public updatedAt: Date | null = null;
@@ -52,7 +53,7 @@ export class VendorProduct {
         product.price = toNumber(raw.price);
         product.originalPrice = toNumber(raw.original_price);
         product.shippingCost = toNumber(raw.shipping_cost);
-        product.isInStock = typeof raw.is_in_stock === 'boolean' ? raw.is_in_stock : null;
+        product.stockStatus = parseStockStatus(raw.stock_status);
         product.properties = (raw.properties as Record<string, unknown> | undefined) ?? null;
         product.createdAt = raw.created_at ? new Date(raw.created_at as string) : null;
         product.updatedAt = raw.updated_at ? new Date(raw.updated_at as string) : null;

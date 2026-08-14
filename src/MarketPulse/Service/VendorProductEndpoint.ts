@@ -87,7 +87,7 @@ export class VendorProductEndpoint extends Endpoint {
             price: product.price,
             originalPrice: product.originalPrice,
             shippingCost: product.shippingCost,
-            isInStock: product.isInStock,
+            stockStatus: product.stockStatus,
             properties: product.properties,
         };
         const result: ObjectResult<VendorProduct> = await this.requestObject(
@@ -107,7 +107,7 @@ export class VendorProductEndpoint extends Endpoint {
             {op: 'add', path: 'original_price', value: product.originalPrice},
             {op: 'add', path: 'brand', value: product.brand},
             {op: 'add', path: 'shipping_cost', value: product.shippingCost},
-            {op: 'add', path: 'is_in_stock', value: product.isInStock},
+            {op: 'add', path: 'stock_status', value: product.stockStatus},
             {op: 'add', path: 'url', value: product.url},
             {op: 'add', path: 'gtin', value: product.gtin},
             {op: 'add', path: 'image', value: product.image},
