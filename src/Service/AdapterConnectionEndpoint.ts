@@ -97,6 +97,14 @@ export class AdapterConnectionEndpoint extends Endpoint {
         }
     }
 
+    /**
+     * Writes the supplied configurations and leaves the rest of the connection alone — PATCH, since
+     * it is a partial update. A configuration the API does not let a client set (a provider token)
+     * is untouched rather than cleared.
+     *
+     * Needs an API that serves the PATCH route; it is also still registered as POST for clients
+     * released before the verb changed.
+     */
     public async saveConnectionConfiguration(connectionId: string, configuration: AdapterConnectionConfigurationValue[]): Promise<boolean> {
         try {
             const url: string = path('/connections/:connectionId/configuration', {connectionId});
@@ -104,7 +112,7 @@ export class AdapterConnectionEndpoint extends Endpoint {
             const parser = (raw: any): { saved: boolean } => ({saved: raw.saved});
             const result: ObjectResult<{
                 saved: boolean
-            }> = await this.requestObject(url, {configuration: configuration}, parser, 'POST');
+            }> = await this.requestObject(url, {configuration: configuration}, parser, 'PATCH');
             const res: { saved: boolean } | null = result.getData();
             if (res === null) {
                 throw new Error('Unable to save connection configuration: wrong response from API');
