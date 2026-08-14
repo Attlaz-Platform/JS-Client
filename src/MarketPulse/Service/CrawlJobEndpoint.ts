@@ -3,6 +3,7 @@ import {QueryString} from '../../Http/Data/QueryString.js';
 import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {CursorPagination} from '../../Model/Pagination/CursorPagination.js';
 import {CrawlJob, CrawlJobStatus} from '../Model/CrawlJob.js';
+import {CrawlJobPage} from '../Model/CrawlJobPage.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
@@ -94,6 +95,26 @@ export class CrawlJobEndpoint extends Endpoint {
     /** Mark pages as failed (terminal, e.g. blocked/unfetchable). */
     public async markPagesFailed(crawlJobId: string, urls: string[]): Promise<void> {
         await this.postUrls(crawlJobId, '/pages/failed', urls);
+    }
+
+    /**
+     * Atomically take up to `limit` of this crawl's pending pages to work on.
+     *
+     * Concurrent workers get disjoint sets, so a page is never fetched twice. An empty array means
+     * there is nothing left to do — that is how a worker knows to stop, not an error.
+     *
+     * Claiming starts a lease: finish the pages (mark them parsed or failed) or they are handed back
+     * to another worker once the lease expires.
+     */
+    public async claimPages(crawlJobId: string, limit: number): Promise<CrawlJobPage[]> {
+        const result: CollectionResult<CrawlJobPage> = await this.requestCollection<CrawlJobPage>(
+            path('/pulse/crawl-jobs/:crawlJobId', {crawlJobId}) + '/pages/claim',
+            CrawlJobPage.parse,
+            {limit},
+            'POST',
+        );
+
+        return result.getData();
     }
 
     /** @param suffix a literal trailing segment, e.g. `/pages/crawled` — not caller data. */

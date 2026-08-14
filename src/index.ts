@@ -101,6 +101,7 @@ export {VendorProduct} from './MarketPulse/Model/VendorProduct.js';
 export {StockStatus, parseStockStatus, stockStatusFromBoolean} from './MarketPulse/Model/StockStatus.js';
 export {VendorProductEndpoint} from './MarketPulse/Service/VendorProductEndpoint.js';
 export {CrawlJob, CrawlJobStatus} from './MarketPulse/Model/CrawlJob.js';
+export {CrawlJobPage, CrawlJobPageStatus} from './MarketPulse/Model/CrawlJobPage.js';
 export {CrawlJobEndpoint} from './MarketPulse/Service/CrawlJobEndpoint.js';
 export {VendorProductPriceHistoryEntry} from './MarketPulse/Model/VendorProductPriceHistoryEntry.js';
 export {Catalog} from './Catalog/Model/Catalog.js';
