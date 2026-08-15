@@ -102,8 +102,8 @@ export class AdapterConnectionEndpoint extends Endpoint {
      * it is a partial update. A configuration the API does not let a client set (a provider token)
      * is untouched rather than cleared.
      *
-     * Needs an API that serves the PATCH route; it is also still registered as POST for clients
-     * released before the verb changed.
+     * Needs an API that serves the PATCH route. The POST alias this once relied on has since been
+     * removed from Core-Api, so a client older than 1.104.0 can no longer write this at all.
      */
     public async saveConnectionConfiguration(connectionId: string, configuration: AdapterConnectionConfigurationValue[]): Promise<boolean> {
         try {
