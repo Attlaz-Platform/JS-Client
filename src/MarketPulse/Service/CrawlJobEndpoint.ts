@@ -15,11 +15,17 @@ import {Endpoint} from '../../Service/Endpoint.js';
  */
 export class CrawlJobEndpoint extends Endpoint {
 
-    /** Create a new (pending) crawl job for a vendor. */
-    public async create(vendorId: string): Promise<CrawlJob> {
+    /**
+     * Create a new (pending) crawl job for a vendor.
+     *
+     * @param isPartial This crawl will deliberately look at only part of the catalogue. Such a crawl
+     *        is excluded from the delisting window: it never looked for most products, so its
+     *        silence about them is not evidence they are gone.
+     */
+    public async create(vendorId: string, isPartial: boolean = false): Promise<CrawlJob> {
         const result: ObjectResult<CrawlJob> = await this.requestObject(
             '/pulse/crawl-jobs',
-            {vendor: vendorId},
+            {vendor: vendorId, isPartial},
             CrawlJob.parse,
             'POST',
         );

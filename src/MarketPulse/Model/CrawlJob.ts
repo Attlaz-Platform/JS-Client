@@ -14,6 +14,11 @@ export class CrawlJob {
     public requestedAt: Date | null;
     public startedAt: Date | null;
     public finishedAt: Date | null;
+    /**
+     * This crawl looked at only part of the catalogue, so it is excluded from the delisting window:
+     * it never looked for most products, so its silence about them proves nothing.
+     */
+    public isPartial: boolean = false;
     /** Progress (populated by list endpoints): total pages and how many have been processed. */
     public total: number = 0;
     public processed: number = 0;
@@ -33,6 +38,7 @@ export class CrawlJob {
         job.requestedAt = raw.requested_at ? new Date(raw.requested_at as string) : null;
         job.startedAt = raw.started_at ? new Date(raw.started_at as string) : null;
         job.finishedAt = raw.finished_at ? new Date(raw.finished_at as string) : null;
+        job.isPartial = raw.is_partial === true;
         job.total = Number(raw.total ?? 0);
         job.processed = Number(raw.processed ?? 0);
         return job;
