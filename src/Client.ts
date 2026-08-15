@@ -1,7 +1,7 @@
 import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
 import {ITransport, ParseErrorHandler} from './Http/Transport/ITransport.js';
-import {OAuthClient} from './Http/Transport/OAuthClient.js';
+import {OAuthClient, TokenChangeHandler} from './Http/Transport/OAuthClient.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
@@ -205,6 +205,16 @@ export class Client {
 
     public unsetAccessToken(): void {
         this.httpClient.unsetToken();
+    }
+
+    /**
+     * Observe tokens the client acquires or discards on its own — see {@link TokenChangeHandler}.
+     * A consumer that persists the token must use this rather than reading getToken() after a call:
+     * refresh tokens rotate, so a refreshed token that is not written back is replayed later and
+     * rejected. Pass null to stop observing. OAuth-only; a custom transport has no token.
+     */
+    public setTokenChangeHandler(handler: TokenChangeHandler | null): void {
+        this.httpClient.setTokenChangeHandler(handler);
     }
 
     public async getApiInformation(): Promise<{ version: string }> {

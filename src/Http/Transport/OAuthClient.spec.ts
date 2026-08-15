@@ -70,6 +70,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
 
     afterEach(() => {
         vi.restoreAllMocks();
+        vi.unstubAllGlobals();
     });
 
     test('uses a valid token as-is, without acquiring a new one', async () => {
@@ -150,6 +151,78 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
 
         await expect(client.request('/x')).rejects.toThrow('access token not provided');
         expect(authenticate).not.toHaveBeenCalled();
+    });
+
+    test('drops a rejected refresh token and stops calling the token endpoint', async () => {
+        // The bug this guards: keeping the rejected token made every later request replay the same
+        // dead refresh token, and the server's firewall blocks the IP after a handful of those.
+        const tokenEndpoint = vi.fn().mockResolvedValue({
+            ok: false,
+            status: 400,
+            statusText: 'Bad Request',
+            json: async (): Promise<unknown> => ({error: {message: 'invalid_grant'}}),
+        });
+        vi.stubGlobal('fetch', tokenEndpoint);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const client: OAuthClient = new OAuthClient(publicOptions());
+        const observed: (OAuthClientToken | null)[] = [];
+        client.setTokenChangeHandler((token: OAuthClientToken | null): void => {
+            observed.push(token);
+        });
+        client.setToken(expiredToken('revoked-refresh-token'));
+
+        await expect(client.request('/x')).rejects.toThrow('Refresh token rejected');
+        expect(client.getToken()).toBeNull();
+        expect(observed).toEqual([null]);
+
+        // The session is gone: further requests fail without touching the token endpoint again.
+        await expect(client.request('/y')).rejects.toThrow('access token not provided');
+        expect(tokenEndpoint).toHaveBeenCalledTimes(1);
+        expect(httpRequest).not.toHaveBeenCalled();
+    });
+
+    test('keeps the token when a refresh fails transiently (5xx)', async () => {
+        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+            ok: false,
+            status: 503,
+            statusText: 'Service Unavailable',
+            json: async (): Promise<unknown> => ({}),
+        }));
+        const client: OAuthClient = new OAuthClient(publicOptions());
+        const token: OAuthClientToken = expiredToken('refresh-token');
+        client.setToken(token);
+
+        await expect(client.request('/x')).rejects.toThrow();
+        // A hiccup must not end the session — the refresh token is still the caller's only way back.
+        expect(client.getToken()).toBe(token);
+    });
+
+    test('reports a refreshed token so a consumer can persist the rotated one', async () => {
+        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
+            statusText: 'OK',
+            json: async (): Promise<unknown> => ({
+                access_token: 'new-access-token',
+                token_type: 'Bearer',
+                refresh_token: 'rotated-refresh-token',
+                expires_in: 3600,
+                scope: 'all',
+            }),
+        }));
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const client: OAuthClient = new OAuthClient(publicOptions());
+        const observed: (OAuthClientToken | null)[] = [];
+        client.setTokenChangeHandler((token: OAuthClientToken | null): void => {
+            observed.push(token);
+        });
+        client.setToken(expiredToken('old-refresh-token'));
+
+        await client.request('/x');
+
+        expect(observed).toHaveLength(1);
+        expect(observed[0]?.access_token).toBe('new-access-token');
+        expect(observed[0]?.refresh_token).toBe('rotated-refresh-token');
     });
 
     test('single-flights concurrent token acquisition', async () => {

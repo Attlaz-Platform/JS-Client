@@ -11,6 +11,7 @@ export {ITransport} from './Http/Transport/ITransport.js';
 export {DirectTransport} from './Http/Transport/DirectTransport.js';
 export type {DirectTransportRoute} from './Http/Transport/DirectTransport.js';
 export {OAuthClient} from './Http/Transport/OAuthClient.js';
+export type {TokenChangeHandler} from './Http/Transport/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';

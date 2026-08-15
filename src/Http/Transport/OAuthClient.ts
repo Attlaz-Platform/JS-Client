@@ -11,10 +11,21 @@ import {OAuthClientOptions} from '../OAuthClientOptions.js';
 import {OAuthClientToken} from '../OAuthClientToken.js';
 import {ITransport, ParseErrorHandler} from './ITransport.js';
 
+/**
+ * Invoked whenever the client changes the token by itself: after a successful authenticate or
+ * refresh (the server rotates refresh tokens, so the previous one is revoked at that moment), and
+ * with null when a refresh is rejected and the session is gone. A consumer that persists the token
+ * must listen here — reading getToken() after a call is too late, because a rotated token that is
+ * never written back is replayed later and rejected. Not invoked for setToken()/unsetToken(), which
+ * are the caller's own writes.
+ */
+export type TokenChangeHandler = (token: OAuthClientToken | null) => void;
+
 export class OAuthClient implements ITransport {
     private debug: boolean = false;
 
     private oauthClientToken: OAuthClientToken | null = null;
+    private tokenChangeHandler: TokenChangeHandler | null = null;
     // Single-flight guard for token acquisition (initial client-credentials auth or refresh), so
     // concurrent requests share one in-flight acquisition instead of each hitting the token endpoint.
     private tokenAcquisitionPromise: Promise<void> | null = null;
@@ -47,7 +58,7 @@ export class OAuthClient implements ITransport {
                     params.client_secret = this.options.clientSecret;
                 }
                 const rawAuthToken = await this.requestToken(params);
-                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+                this.applyToken(this.tokenToOauthClientToken(rawAuthToken));
 
                 return true;
             }
@@ -60,7 +71,7 @@ export class OAuthClient implements ITransport {
                     client_secret: this.options.clientSecret,
                     scope: this.options.scopes.join(' '),
                 });
-                this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+                this.applyToken(this.tokenToOauthClientToken(rawAuthToken));
             }
             return true;
         } catch (requestError: unknown) {
@@ -93,7 +104,7 @@ export class OAuthClient implements ITransport {
                 params.client_secret = this.options.clientSecret;
             }
             const rawAuthToken = await this.requestToken(params);
-            this.oauthClientToken = this.tokenToOauthClientToken(rawAuthToken);
+            this.applyToken(this.tokenToOauthClientToken(rawAuthToken));
         } catch (e: unknown) {
             if (e instanceof ClientError) {
                 // A refresh grant rejected by the server (4xx — the refresh token is
@@ -103,6 +114,11 @@ export class OAuthClient implements ITransport {
                 // error. Transient failures (network / 5xx) are rethrown unchanged so a
                 // hiccup doesn't force a logout.
                 if (e.httpStatus !== null && e.httpStatus >= 400 && e.httpStatus < 500) {
+                    // Drop the rejected token: keeping it means every later request retries the
+                    // same dead refresh token, and the server's firewall blocks the IP after a
+                    // handful of those. A confidential client re-mints via client_credentials on
+                    // the next request; a public one now fails fast with 401 instead of looping.
+                    this.applyToken(null);
                     throw new ClientError('Refresh token rejected, re-authentication required', HttpStatus.HTTP_UNAUTHORIZED);
                 }
                 throw e;
@@ -292,6 +308,33 @@ export class OAuthClient implements ITransport {
 
     public unsetToken(): void {
         this.oauthClientToken = null;
+    }
+
+    /**
+     * Observe tokens the client acquires or discards on its own. See {@link TokenChangeHandler}.
+     * Pass null to stop observing.
+     */
+    public setTokenChangeHandler(handler: TokenChangeHandler | null): void {
+        this.tokenChangeHandler = handler;
+    }
+
+    /**
+     * The single place the client updates its own token, so no acquisition path can change it
+     * without the handler hearing about it.
+     */
+    private applyToken(token: OAuthClientToken | null): void {
+        this.oauthClientToken = token;
+        if (this.tokenChangeHandler === null) {
+            return;
+        }
+        try {
+            this.tokenChangeHandler(token);
+        } catch (error: unknown) {
+            // A consumer's persistence failure must not fail the authentication that succeeded —
+            // the token in memory is valid either way. Report it: silently dropping it would hide
+            // exactly the stale-token bug this handler exists to prevent.
+            console.error('[OAuthClient] Token change handler threw', {error});
+        }
     }
 
     public enableDebug(): void {
