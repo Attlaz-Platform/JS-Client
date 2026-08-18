@@ -37,6 +37,7 @@ import {ProductMatchEndpoint} from './MarketPulse/Service/ProductMatchEndpoint.j
 import {PulseCatalogProductEndpoint} from './MarketPulse/Service/PulseCatalogProductEndpoint.js';
 import {PriceAlertEndpoint} from './MarketPulse/Service/PriceAlertEndpoint.js';
 import {PricingEndpoint} from './MarketPulse/Service/PricingEndpoint.js';
+import {OpportunityEndpoint} from './MarketPulse/Service/OpportunityEndpoint.js';
 import {ProductGroupEndpoint} from './MarketPulse/Service/ProductGroupEndpoint.js';
 import {CatalogProductEndpoint} from './Catalog/Service/CatalogProductEndpoint.js';
 import {GenerateContentEndpoint} from './DataEnrichment/Service/GenerateContentEndpoint.js';
@@ -108,6 +109,7 @@ export class Client {
         PulseCatalogProductEndpoint,
         PriceAlertEndpoint,
         PricingEndpoint,
+        OpportunityEndpoint,
         ProductGroupEndpoint,
         CatalogProductEndpoint,
         GenerateContentEndpoint,
@@ -410,6 +412,10 @@ export class Client {
 
     public getPricingEndpoint(): PricingEndpoint {
         return this.getEndpoint('pricing', this.Store.PricingEndpoint);
+    }
+
+    public getOpportunityEndpoint(): OpportunityEndpoint {
+        return this.getEndpoint('opportunity', this.Store.OpportunityEndpoint);
     }
 
     public getProductGroupEndpoint(): ProductGroupEndpoint {

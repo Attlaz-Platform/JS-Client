@@ -138,6 +138,8 @@ export {PricingRule} from './MarketPulse/Model/PricingRule.js';
 export {PriceSuggestion, PriceSuggestionStatus} from './MarketPulse/Model/PriceSuggestion.js';
 export {PricingRuleData} from './MarketPulse/Model/PricingRuleData.js';
 export {PricingEndpoint} from './MarketPulse/Service/PricingEndpoint.js';
+export {ProductOpportunity, OpportunityType} from './MarketPulse/Model/ProductOpportunity.js';
+export {OpportunityEndpoint} from './MarketPulse/Service/OpportunityEndpoint.js';
 export {ProductGroup, ProductGroupType} from './MarketPulse/Model/ProductGroup.js';
 export {ProductGroupData} from './MarketPulse/Model/ProductGroupData.js';
 export {ProductGroupEndpoint} from './MarketPulse/Service/ProductGroupEndpoint.js';
