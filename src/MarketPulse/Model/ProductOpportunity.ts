@@ -45,7 +45,14 @@ export class ProductOpportunity {
     public productName: string = '';
     public productImage: string | null = null;
     public productBrand: string | null = null;
+    public productSku: string | null = null;
     public ownPrice: number = 0;
+    /**
+     * What the product costs you. **Null means unknown, not free** — the API resolves a stored zero
+     * to null where the catalog's source uses zero for "never entered". The same unknown is why
+     * `marginPct` can be null.
+     */
+    public costPrice: number | null = null;
     /** The product's own currency. Never assume one — see DECISIONS.md (2026-08-08). */
     public currency: string | null = null;
 
@@ -70,6 +77,8 @@ export class ProductOpportunity {
         opportunity.configVersion = Number(raw.config_version ?? 0);
 
         opportunity.productName = (raw.product_name as string | undefined) ?? '';
+        opportunity.productSku = (raw.product_sku as string | undefined) ?? null;
+        opportunity.costPrice = raw.cost_price === null || raw.cost_price === undefined ? null : Number(raw.cost_price);
         opportunity.productImage = (raw.product_image as string | undefined) ?? null;
         opportunity.productBrand = (raw.product_brand as string | undefined) ?? null;
         opportunity.ownPrice = Number(raw.own_price ?? 0);
