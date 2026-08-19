@@ -14,18 +14,22 @@ import {VendorStatus} from '../Model/VendorStatus.js';
  */
 export class IndexJobEndpoint extends Endpoint {
 
-    /** Index jobs across every competitor of a catalog, newest first. */
-    public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<IndexJob>> {
+    /**
+     * Index jobs across every competitor of a catalog, newest first. Pass `vendorIds` to narrow to one or more
+     * competitors; a vendor outside this catalog is rejected.
+     */
+    public async getByCatalog(
+        catalogId: CatalogId | string,
+        pagination: CursorPagination | null = null,
+        vendorIds: string[] | null = null,
+    ): Promise<CollectionResult<IndexJob>> {
         const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/index-jobs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
-
-        return await this.requestCollection(queryString, IndexJob.parse);
-    }
-
-    /** Index jobs of one competitor. */
-    public async getByVendor(catalogId: CatalogId | string, vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<IndexJob>> {
-        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/vendors/:vendorId/index-jobs', {catalogId: catalogId.toString(), vendorId}));
-        queryString.addPagination(pagination);
+        if (vendorIds !== null && vendorIds.length > 0) {
+            // Repeated param (`vendor=a&vendor=b`) — QueryString expands arrays, and the API reads it
+            // with getOptionalCollection.
+            queryString.set('vendor', vendorIds);
+        }
 
         return await this.requestCollection(queryString, IndexJob.parse);
     }

@@ -51,7 +51,13 @@ export class CrawlJobEndpoint extends Endpoint {
         return job;
     }
 
-    /** A vendor's crawl jobs (newest first), each with progress (`total` / `processed`). */
+    /**
+     * A single vendor's crawl jobs, newest first.
+     *
+     * Kept alongside the catalog list because `crawl_job` records no catalog: the scraping flow asks
+     * "is this vendor already being crawled?" knowing only a vendor. Prefer {@link getByCatalog} for
+     * anything user-facing — it is scoped to a catalog the caller can see.
+     */
     public async getByVendor(vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<CrawlJob>> {
         const queryString: QueryString = new QueryString(path('/pulse/vendors/:vendorId/crawl-jobs', {vendorId}));
         queryString.addPagination(pagination);
@@ -60,14 +66,24 @@ export class CrawlJobEndpoint extends Endpoint {
     }
 
     /**
-     * Crawl jobs across every competitor of a catalog (newest first).
+     * Crawl jobs across every competitor of a catalog (newest first), each with progress
+     * (`total` / `processed`). Pass `vendorIds` to narrow to one or more competitors.
      *
      * A crawl job belongs to a vendor, not to a catalog — the API resolves the catalog's competitors
-     * and returns the jobs of their vendors.
+     * and returns the jobs of their vendors. A vendor outside this catalog is rejected.
      */
-    public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<CrawlJob>> {
+    public async getByCatalog(
+        catalogId: CatalogId | string,
+        pagination: CursorPagination | null = null,
+        vendorIds: string[] | null = null,
+    ): Promise<CollectionResult<CrawlJob>> {
         const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/crawl-jobs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
+        if (vendorIds !== null && vendorIds.length > 0) {
+            // Repeated param (`vendor=a&vendor=b`) — QueryString expands arrays, and the API reads it
+            // with getOptionalCollection.
+            queryString.set('vendor', vendorIds);
+        }
 
         return await this.requestCollection(queryString, CrawlJob.parse);
     }

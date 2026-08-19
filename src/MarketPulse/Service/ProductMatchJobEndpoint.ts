@@ -13,18 +13,22 @@ import {Endpoint} from '../../Service/Endpoint.js';
  */
 export class ProductMatchJobEndpoint extends Endpoint {
 
-    /** Every match job of a catalog, newest first. */
-    public async getByCatalog(catalogId: CatalogId | string, pagination: CursorPagination | null = null): Promise<CollectionResult<ProductMatchJob>> {
+    /**
+     * Every match job of a catalog, newest first. Pass `vendorIds` to narrow to one or more of
+     * its competitors; a vendor outside this catalog is rejected.
+     */
+    public async getByCatalog(
+        catalogId: CatalogId | string,
+        pagination: CursorPagination | null = null,
+        vendorIds: string[] | null = null,
+    ): Promise<CollectionResult<ProductMatchJob>> {
         const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/match-jobs', {catalogId: catalogId.toString()}));
         queryString.addPagination(pagination);
-
-        return await this.requestCollection(queryString, ProductMatchJob.parse);
-    }
-
-    /** The match jobs of one of the catalog's competitors. */
-    public async getByVendor(catalogId: CatalogId | string, vendorId: string, pagination: CursorPagination | null = null): Promise<CollectionResult<ProductMatchJob>> {
-        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/vendors/:vendorId/match-jobs', {catalogId: catalogId.toString(), vendorId}));
-        queryString.addPagination(pagination);
+        if (vendorIds !== null && vendorIds.length > 0) {
+            // Repeated param (`vendor=a&vendor=b`) — QueryString expands arrays, and the API reads it
+            // with getOptionalCollection.
+            queryString.set('vendor', vendorIds);
+        }
 
         return await this.requestCollection(queryString, ProductMatchJob.parse);
     }
