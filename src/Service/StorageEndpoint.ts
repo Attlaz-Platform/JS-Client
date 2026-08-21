@@ -7,6 +7,8 @@ import {ObjectResult} from '../Model/Result/ObjectResult.js';
 import {CollectionResult} from '../Model/Result/CollectionResult.js';
 import {QueryString} from '../Http/Data/QueryString.js';
 import {CursorPagination} from '../Model/Pagination/CursorPagination.js';
+import {ClientError} from '../Http/ClientError.js';
+import {HttpStatus} from '../Http/HttpStatus.js';
 import {Endpoint} from './Endpoint.js';
 
 export class StorageEndpoint extends Endpoint {
@@ -120,6 +122,23 @@ export class StorageEndpoint extends Endpoint {
      * JSON envelope would either inflate it (base64) or destroy it (a UTF-8 decode replaces every
      * invalid sequence, so bytes do not survive the round trip).
      */
+    /**
+     * Whether an item exists, without transferring it. Backed by HEAD, so a content-addressed check
+     * ("do I already have these bytes?") costs headers rather than the whole object.
+     */
+    public async hasItem(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<boolean> {
+        const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
+        try {
+            await this.requestBytes(cmd, null, 'HEAD');
+            return true;
+        } catch (error: unknown) {
+            if (ClientError.statusOf(error) === HttpStatus.HTTP_NOTFOUND) {
+                return false;
+            }
+            throw error;
+        }
+    }
+
     public async getItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<Buffer> {
         const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
         return await this.requestBytes(cmd);

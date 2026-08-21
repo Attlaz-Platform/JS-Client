@@ -27,6 +27,21 @@ describe('binary round trip', () => {
         server = createServer((request: IncomingMessage, response: ServerResponse): void => {
             receivedAccept = request.headers.accept;
 
+            if (request.method === 'HEAD') {
+                if (request.url === '/missing') {
+                    response.writeHead(404, {'content-type': 'application/json'});
+                    response.end();
+                    return;
+                }
+                response.writeHead(200, {
+                    'content-type': 'application/json',
+                    'x-attlaz-bytes': String(PAYLOAD.length),
+                    'x-attlaz-expiration': '2026-09-01T00:00:00.000Z',
+                });
+                response.end();
+                return;
+            }
+
             if (request.method === 'POST') {
                 receivedContentType = request.headers['content-type'];
                 receivedExpiration = request.headers['x-attlaz-expiration'] as string | undefined;
@@ -78,6 +93,18 @@ describe('binary round trip', () => {
     test('carries metadata in a header, since the body is the value', async () => {
         await client().requestBytes('/item', PAYLOAD, 'POST', false, {'X-Attlaz-Expiration': '2026-09-01T00:00:00.000Z'});
         expect(receivedExpiration).toBe('2026-09-01T00:00:00.000Z');
+    });
+
+    describe('HEAD', () => {
+        test('an existing item answers 200 with no body', async () => {
+            const bytes: Buffer = await client().requestBytes('/item', null, 'HEAD', false);
+            expect(bytes.length).toBe(0);
+        });
+
+        test('a missing item raises a 404 the caller can distinguish', async () => {
+            await expect(client().requestBytes('/missing', null, 'HEAD', false))
+                .rejects.toMatchObject({httpStatus: 404});
+        });
     });
 
     test('a JSON response still parses through the normal path', async () => {
