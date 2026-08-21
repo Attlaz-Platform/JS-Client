@@ -10,6 +10,9 @@ export type ParseErrorHandler = (message: string, context: Record<string, unknow
 export interface ITransport {
     request: <T>(action: string, parameters: Parameters, method: string, signWithOauthToken: boolean) => Promise<T>;
 
+    /** The response bytes, undecoded — for resources a JSON round trip would inflate or destroy. */
+    requestBytes: (action: string, parameters: Parameters, method: string, signWithOauthToken: boolean, headers?: Record<string, string>) => Promise<Buffer>;
+
     isDebugEnabled: () => boolean;
 
     reportParseError: (message: string, context: Record<string, unknown>) => void;

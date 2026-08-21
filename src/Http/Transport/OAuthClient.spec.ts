@@ -54,7 +54,13 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     // HttpClient.request is the actual API call, made only after a token is ensured. authenticate()
     // (client_credentials) and refreshToken() are stubbed per test so we assert WHICH acquisition
     // path was taken, without hitting the network.
-    const OK_RESPONSE: HttpClientResponse = {body: {}} as unknown as HttpClientResponse;
+    // A real instance, not a cast literal: `body` is bytes off the wire now, so a double claiming it
+    // holds a parsed object would pass by disagreeing with the code it stands in for.
+    const OK_RESPONSE = (): HttpClientResponse => {
+        const response: HttpClientResponse = new HttpClientResponse(200, 'OK');
+        response.body = Buffer.from('{}', 'utf8');
+        return response;
+    };
 
     const confidentialOptions = (): OAuthClientOptions => new OAuthClientOptions('https://api.attlaz.test', 'client-id', 'client-secret');
     const publicOptions = (): OAuthClientOptions => new OAuthClientOptions('https://api.attlaz.test', 'client-id', null);
@@ -74,7 +80,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('uses a valid token as-is, without acquiring a new one', async () => {
-        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(validToken());
         const authenticate = vi.spyOn(client, 'authenticate');
@@ -88,7 +94,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('mints a token via client_credentials when none is set', async () => {
-        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         const authenticate = vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
             client.setToken(validToken());
@@ -104,7 +110,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('refreshes an expired token that carries a refresh_token', async () => {
-        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(expiredToken('refresh-token'));
         const authenticate = vi.spyOn(client, 'authenticate');
@@ -119,7 +125,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('re-mints via client_credentials when the expired token has no refresh_token', async () => {
-        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         client.setToken(expiredToken(null));
         const authenticate = vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {
@@ -135,7 +141,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('throws 401 when there is no token and no usable credentials', async () => {
-        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(noCredentialsOptions());
         const authenticate = vi.spyOn(client, 'authenticate');
 
@@ -145,7 +151,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('does not attempt client_credentials for a public client (no secret)', async () => {
-        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(publicOptions());
         const authenticate = vi.spyOn(client, 'authenticate');
 
@@ -163,7 +169,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
             json: async (): Promise<unknown> => ({error: {message: 'invalid_grant'}}),
         });
         vi.stubGlobal('fetch', tokenEndpoint);
-        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        const httpRequest = vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(publicOptions());
         const observed: (OAuthClientToken | null)[] = [];
         client.setTokenChangeHandler((token: OAuthClientToken | null): void => {
@@ -210,7 +216,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
                 scope: 'all',
             }),
         }));
-        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(publicOptions());
         const observed: (OAuthClientToken | null)[] = [];
         client.setTokenChangeHandler((token: OAuthClientToken | null): void => {
@@ -226,7 +232,7 @@ describe('ensureAccessToken (token-first, credentials-as-fallback)', () => {
     });
 
     test('single-flights concurrent token acquisition', async () => {
-        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE);
+        vi.spyOn(HttpClient, 'request').mockResolvedValue(OK_RESPONSE());
         const client: OAuthClient = new OAuthClient(confidentialOptions());
         let authCalls: number = 0;
         vi.spyOn(client, 'authenticate').mockImplementation(async (): Promise<boolean> => {

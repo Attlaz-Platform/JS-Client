@@ -40,7 +40,7 @@ export class HttpClient {
                     clientError.response = {
                         status: rawResponse.status,
                         statusText,
-                        data: await rawResponse.json(),
+                        data: JSON.parse(Buffer.from(await rawResponse.arrayBuffer()).toString('utf8')),
                     };
                 } catch {
                     // Response body is not JSON — leave response as-is
@@ -55,12 +55,11 @@ export class HttpClient {
                 httpResponse.headers[header] = value;
             });
 
-            const contentType: string | null = rawResponse.headers.get('content-type');
-            if (contentType !== null && contentType.includes('application/json')) {
-                httpResponse.body = await rawResponse.json();
-            } else {
-                httpResponse.body = await rawResponse.text();
-            }
+            // Bytes, never an interpretation. The caller already knows what it asked for — an
+            // endpoint supplies a parser, a blob read wants the bytes — so sniffing the content type
+            // here would be a second, weaker answer to a question already answered. It was also
+            // lossy: the old `text()` fallback UTF-8-decoded binary, turning 10 bytes into 16.
+            httpResponse.body = Buffer.from(await rawResponse.arrayBuffer());
 
             return httpResponse;
         } catch (error: unknown) {

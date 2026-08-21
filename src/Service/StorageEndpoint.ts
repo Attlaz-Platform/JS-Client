@@ -115,6 +115,35 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
+    /**
+     * The item's bytes, without decoding. Use for anything binary — an image, an archive — where the
+     * JSON envelope would either inflate it (base64) or destroy it (a UTF-8 decode replaces every
+     * invalid sequence, so bytes do not survive the round trip).
+     */
+    public async getItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<Buffer> {
+        const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
+        return await this.requestBytes(cmd);
+    }
+
+    /**
+     * Store raw bytes. Metadata travels as headers, since the body is the value.
+     *
+     * Pass `contentType` for anything that will be served to a browser — the CDN reads it back as the
+     * response `Content-Type`, and without it an image is delivered as `application/octet-stream`,
+     * which downloads rather than renders.
+     */
+    public async setItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string, value: Buffer, expiration: Date | null = null, contentType: string | null = null): Promise<void> {
+        const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
+        const headers: Record<string, string> = {};
+        if (expiration !== null) {
+            headers['X-Attlaz-Expiration'] = expiration.toISOString();
+        }
+        if (contentType !== null) {
+            headers['X-Attlaz-Content-Type'] = contentType;
+        }
+        await this.requestBinary(cmd, value, headers);
+    }
+
     public async setItem(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItem: StorageItem): Promise<StorageItem> {
         const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItem.key});
 

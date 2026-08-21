@@ -260,6 +260,28 @@ export class OAuthClient implements ITransport {
         return OAuthClientToken.isExpired(this.oauthClientToken);
     }
 
+    /**
+     * Like `request`, but asks for and returns the raw bytes. For a resource that has a binary
+     * representation — a stored item — where decoding would destroy it.
+     */
+    public async requestBytes(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true, headers: Record<string, string> = {}): Promise<Buffer> {
+        if (signWithOauthToken) {
+            await this.ensureAccessToken();
+            if (this.oauthClientToken === null) {
+                throw new ClientError('Unable to perform request, access token not provided', HttpStatus.HTTP_UNAUTHORIZED);
+            }
+        }
+
+        const requestData: HttpClientRequest = this.createRequestData(action, parameters, method, signWithOauthToken);
+        requestData.setHeader('Accept', 'application/octet-stream');
+        for (const [name, value] of Object.entries(headers)) {
+            requestData.setHeader(name, value);
+        }
+
+        const response: HttpClientResponse = await HttpClient.request(requestData, this.options.timeoutMs);
+        return response.getBytes();
+    }
+
     public async request<T>(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<T> {
         if (signWithOauthToken) {
             // Token-first, credentials-as-fallback (mirrors the PHP client): use a valid token as-is,
@@ -277,7 +299,7 @@ export class OAuthClient implements ITransport {
         }
         try {
             const response: HttpClientResponse = await HttpClient.request(requestData, this.options.timeoutMs);
-            return response.body;
+            return response.getJson<T>() as T;
         } catch (error: unknown) {
             if (!(error instanceof ClientError)) {
                 const clientError: Error = ClientError.fromError(error as Error);
@@ -438,19 +460,30 @@ export class OAuthClient implements ITransport {
 
         let requestData: HttpClientRequest = new HttpClientRequest(url, method);
         requestData.headers = this.getDefaultHeaders();
+        // Stated explicitly, even though JSON is what the API returns by default today. The server
+        // plans to make bytes the default once no request arrives without an Accept, and a silent
+        // client is indistinguishable from one that did not care — which is what makes that flip
+        // unsafe. An endpoint wanting another representation overrides this afterwards.
+        requestData.setHeader('Accept', 'application/json');
         if (this.version !== null) {
             requestData.setHeader('Attlaz-API-Version', this.version);
         }
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT' || method === 'PATCH') && parameters !== null && parameters !== undefined) {
-            if (typeof parameters === 'object') {
+            // A Buffer is the payload, not something to serialise. Stringifying one yields
+            // {"type":"Buffer","data":[…]} — larger than the bytes and not what any reader expects.
+            if (Buffer.isBuffer(parameters)) {
+                requestData.body = parameters;
+                requestData.setHeader('Content-Type', 'application/octet-stream');
+            } else if (typeof parameters === 'object') {
                 requestData.body = JsonSerializable.stringify(parameters);
+                requestData.setJsonHeader();
             } else if (typeof parameters === 'string') {
                 requestData.body = parameters;
+                requestData.setJsonHeader();
             } else {
                 console.error('Unknown parameter type: ' + typeof parameters);
+                requestData.setJsonHeader();
             }
-
-            requestData.setJsonHeader();
         }
         if (method === 'GET' && parameters !== null && parameters !== undefined) {
             const params = parameters as Record<string, string | number>;

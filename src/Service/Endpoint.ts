@@ -97,6 +97,19 @@ export abstract class Endpoint {
         return formattedKey;
     }
 
+    /** Raw response bytes for this action — see `ITransport.requestBytes`. */
+    public async requestBytes(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true, headers: Record<string, string> = {}): Promise<Buffer> {
+        return await this.httpClient.requestBytes(action, parameters, method, signWithOauthToken, headers);
+    }
+
+    /**
+     * Send raw bytes as the request body. Metadata rides headers because the body IS the value —
+     * there is no envelope left to put it in.
+     */
+    public async requestBinary(action: string, value: Buffer, headers: Record<string, string> = {}): Promise<void> {
+        await this.httpClient.requestBytes(action, value, 'POST', true, headers);
+    }
+
     public async requestCollection<T>(action: string | QueryString, parser: (input: any) => T, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true): Promise<CollectionResult<T>> {
         parameters = this.prepareParameters(parameters);
 

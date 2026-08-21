@@ -57,6 +57,11 @@ export class DirectTransport implements ITransport {
         return await client.request(action, parameters, method, false);
     }
 
+    public async requestBytes(action: string, parameters: Parameters = null, method: string = 'GET', _signWithOauthToken: boolean = true, headers: Record<string, string> = {}): Promise<Buffer> {
+        const client = this.resolveClient(action);
+        return await client.requestBytes(action, parameters, method, false, headers);
+    }
+
     private resolveClient(action: string): OAuthClient {
         for (const route of this.sortedRoutes) {
             if (action.startsWith(route.prefix)) {
