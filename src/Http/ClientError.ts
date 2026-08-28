@@ -4,6 +4,14 @@ export class ClientError extends Error {
     public httpStatus: number | null = null;
     public message: string;
     public response: unknown;
+    /**
+     * The error this one was built from, when it wraps another (see {@link fromError}).
+     *
+     * Declared here rather than relying on the built-in `Error.cause`: that is ES2022 and this
+     * package compiles against es2017 so it still runs in older browsers. Assigning the property
+     * works on any engine, and a modern one treats it as the standard field.
+     */
+    public cause?: unknown;
 
     constructor(message: string, httpErrorCode: number | null = null) {
         super(message);
@@ -43,14 +51,23 @@ export class ClientError extends Error {
         }
 
         // The transport uses fetch, which throws TypeError on network failures (DNS, refused
-        // connection, TLS, etc.). Anything else reaching here is unexpected — surface it as a
-        // generic 500 while keeping the original name/stack for debugging.
+        // connection, TLS, etc.). That case keeps its own wording: "Service not available" says
+        // more to a caller than fetch's own "Failed to fetch".
+        //
+        // Anything else is unexpected, and its message is the only description of what actually
+        // went wrong — so it is carried through rather than replaced. This used to read
+        // 'Unknown error', which cost a production outage: a ReferenceError from a Node-only
+        // global in the browser reached the user as "Unknown error" with nothing naming Buffer,
+        // and the console showed the same for every failed call.
         const clientError: ClientError = error instanceof TypeError
             ? new ClientError('Service not available', HttpStatus.HTTP_UNAVAILABLE)
-            : new ClientError('Unknown error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
+            : new ClientError(error.message === '' ? 'Unknown error' : error.message, HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
 
         clientError.name = error.name;
         clientError.stack = error.stack;
+        // The original survives as `cause`, so a handler can inspect the real error even where the
+        // message has been rewritten — the TypeError branch above being exactly that case.
+        clientError.cause = error;
 
         return clientError;
     }

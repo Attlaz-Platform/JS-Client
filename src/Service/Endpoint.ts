@@ -221,10 +221,20 @@ export abstract class Endpoint {
 
             return apiError;
         }
-        if (this.httpClient.isDebugEnabled()) {
-            console.error('Unrecognised error type (not a ClientError)', {error});
+        // Not a ClientError at all — a bug in this client or in a dependency, rather than anything
+        // the API said. Its message is carried through and the original attached as `cause`:
+        // replacing both with 'Unknown Error' is what made a browser-only ReferenceError
+        // undiagnosable from the console during a production outage.
+        const apiError: ApiError = new ApiError(
+            error instanceof Error && error.message !== '' ? error.message : 'Unknown Error',
+            HttpStatus.HTTP_INTERNAL_SERVER_ERROR,
+        );
+        if (error instanceof Error) {
+            apiError.name = error.name;
+            apiError.stack = error.stack;
         }
-        return new ApiError('Unknown Error', HttpStatus.HTTP_INTERNAL_SERVER_ERROR);
+        apiError.cause = error;
+        return apiError;
     }
 
     public parseCollection<T>(rawData: object[], parser: (input: any) => T): T[] {
