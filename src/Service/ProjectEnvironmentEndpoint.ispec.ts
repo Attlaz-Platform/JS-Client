@@ -4,7 +4,7 @@ import {Helper} from '../../e2e/src/helper.js';
 
 vi.setConfig({testTimeout: 60 * 1000});
 
-const apiEndpoint: string = Helper.getApiEndpoint('beta')
+const apiEndpoint: string = Helper.getApiEndpoint('live')
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
@@ -12,6 +12,8 @@ test('Test get project environment by id', async () => {
     expect.assertions(3);
 
     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+
+    client.setVersion(Helper.getApiVersion());
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 

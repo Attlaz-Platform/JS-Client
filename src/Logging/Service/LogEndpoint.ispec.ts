@@ -10,7 +10,7 @@ import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 
 vi.setConfig({testTimeout: 60 * 1000});
 
-const apiEndpoint: string = Helper.getApiEndpoint('beta');
+const apiEndpoint: string = Helper.getApiEndpoint('live');
 const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
 const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
 
@@ -18,6 +18,8 @@ test('Get log stream entries', async () => {
     // expect.assertions(3);
 
     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+
+    client.setVersion(Helper.getApiVersion());
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -36,6 +38,8 @@ test('Get log paged log stream entries', async () => {
     // expect.assertions(3);
 
     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+
+    client.setVersion(Helper.getApiVersion());
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -62,6 +66,8 @@ test('Write to logstream', async () => {
     // expect.assertions(3);
 
     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+
+    client.setVersion(Helper.getApiVersion());
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 
@@ -81,6 +87,8 @@ test('Get information', async () => {
     // expect.assertions(3);
 
     const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+
+    client.setVersion(Helper.getApiVersion());
     client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
     client.getHttpClient().enableDebug();
 

@@ -23,11 +23,11 @@ describe('Errors', () => {
 
     });
     test('Bad Request', async () => {
-        /**
-         * Start up Ngrok but don't start our API yet
-         */
-        const nonWorkingNgrokEndpoint: string = 'https://champion-pleasant-sunfish.ngrok-free.app/projectenvironments/2RYUhRnUlx7a9hm360g96Upn3Lc';
-        const client: Client = new Client('qsdfqsdfqsdf', {apiEndpoint: nonWorkingNgrokEndpoint});
+        // A host that can never resolve: .invalid is reserved for exactly this (RFC 2606). This
+        // used to be a free-tier ngrok subdomain, which is only unreachable until someone else
+        // claims it — at which point the test would quietly stop testing an unreachable endpoint.
+        const unreachableEndpoint: string = 'https://attlaz-api.invalid/projectenvironments/2RYUhRnUlx7a9hm360g96Upn3Lc';
+        const client: Client = new Client('qsdfqsdfqsdf', {apiEndpoint: unreachableEndpoint});
 
         const method = async (): Promise<void> => {
             const rawProjectEnvironment: ProjectEnvironment | null = await client.getProjectEnvironmentEndpoint().getById('2RYUhRnUlx7a9hm360g96Upn3Lc');
@@ -44,7 +44,7 @@ describe('Errors', () => {
     test('Not found request', async () => {
 
         // expect.assertions(2);
-        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint('beta')});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint('live')});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
 

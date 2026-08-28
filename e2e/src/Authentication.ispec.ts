@@ -1,14 +1,15 @@
 import {Helper} from './helper.js';
 import {Client, ClientError, HttpStatus, OAuthClientToken, User} from '../../src/index.js';
 
-const useApiVersion: string = 'local';
+// Which server these tests run against; the API version travels in a header (see Helper).
+const apiTarget: 'local' | 'live' = 'local';
 describe('Client', () => {
 
 
     test('Test client credentials authentication', async () => {
 
         expect.assertions(2);
-        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(apiTarget)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
         const authenticated: boolean = await client.authenticate();
@@ -25,7 +26,7 @@ describe('Client', () => {
     test('Test token authentication', async () => {
 
         expect.assertions(3);
-        const client: Client = new Client(Helper.getEnvValue('workingAccessTokenForAuthentication'), {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
+        const client: Client = new Client(Helper.getEnvValue('workingAccessTokenForAuthentication'), {apiEndpoint: Helper.getApiEndpoint(apiTarget)});
         client.getHttpClient().enableDebug();
 
         expect(client.getToken()?.refresh_token).toStrictEqual('');
@@ -38,7 +39,7 @@ describe('Client', () => {
     test('Handle request with invalid or expired token', async () => {
 
         expect.assertions(2);
-        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(apiTarget)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
 
@@ -57,7 +58,7 @@ describe('Client', () => {
         expect.assertions(2);
 
 
-        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(apiTarget)});
         client.setClientCredentials(Helper.getEnvValue('clientCredentialClientId'), Helper.getEnvValue('clientCredentialClientSecret'));
         client.getHttpClient().enableDebug();
 
@@ -75,7 +76,7 @@ describe('Client', () => {
     test('Handle multiple refresh tokens at the same time', async () => {
 
         expect.assertions(10);
-        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(useApiVersion)});
+        const client: Client = new Client('', {apiEndpoint: Helper.getApiEndpoint(apiTarget)});
         client.setClientCredentials(Helper.getEnvValue('passwordFlowClientId'), Helper.getEnvValue('passwordFlowClientSecret'));
         client.getHttpClient().enableDebug();
 
