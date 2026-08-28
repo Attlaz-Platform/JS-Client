@@ -1,6 +1,6 @@
 {
   "name": "@attlaz/client",
-  "version": "1.115.0",
+  "version": "1.115.2",
   "description": "Javascript Client to access Attlaz API",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/attlaz/javascript-client.git"
+    "url": "git+https://github.com/Attlaz-Platform/JS-Client.git"
   },
   "homepage": "https://attlaz.com",
   "keywords": [
@@ -49,7 +49,6 @@
   },
   "publishConfig": {
     "access": "public",
-    "cache": "~/.npm",
     "registry": "https://registry.npmjs.org"
   },
   "devDependencies": {
