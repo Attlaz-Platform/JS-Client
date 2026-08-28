@@ -264,7 +264,7 @@ export class OAuthClient implements ITransport {
      * Like `request`, but asks for and returns the raw bytes. For a resource that has a binary
      * representation — a stored item — where decoding would destroy it.
      */
-    public async requestBytes(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true, headers: Record<string, string> = {}): Promise<Buffer> {
+    public async requestBytes(action: string, parameters: Parameters = null, method: string = 'GET', signWithOauthToken: boolean = true, headers: Record<string, string> = {}): Promise<Uint8Array> {
         if (signWithOauthToken) {
             await this.ensureAccessToken();
             if (this.oauthClientToken === null) {
@@ -469,9 +469,12 @@ export class OAuthClient implements ITransport {
             requestData.setHeader('Attlaz-API-Version', this.version);
         }
         if ((method === 'POST' || method === 'DELETE' || method === 'PUT' || method === 'PATCH') && parameters !== null && parameters !== undefined) {
-            // A Buffer is the payload, not something to serialise. Stringifying one yields
+            // Raw bytes are the payload, not something to serialise. Stringifying them yields
             // {"type":"Buffer","data":[…]} — larger than the bytes and not what any reader expects.
-            if (Buffer.isBuffer(parameters)) {
+            // Tested with instanceof rather than Buffer.isBuffer: Buffer is a Node global and this
+            // package runs in the browser, where naming it at all is a ReferenceError. A Buffer is
+            // a Uint8Array, so this still catches one.
+            if (parameters instanceof Uint8Array) {
                 requestData.body = parameters;
                 requestData.setHeader('Content-Type', 'application/octet-stream');
             } else if (typeof parameters === 'object') {

@@ -11,7 +11,7 @@ export interface ITransport {
     request: <T>(action: string, parameters: Parameters, method: string, signWithOauthToken: boolean) => Promise<T>;
 
     /** The response bytes, undecoded — for resources a JSON round trip would inflate or destroy. */
-    requestBytes: (action: string, parameters: Parameters, method: string, signWithOauthToken: boolean, headers?: Record<string, string>) => Promise<Buffer>;
+    requestBytes: (action: string, parameters: Parameters, method: string, signWithOauthToken: boolean, headers?: Record<string, string>) => Promise<Uint8Array>;
 
     isDebugEnabled: () => boolean;
 

@@ -70,10 +70,13 @@ describe('binary round trip', () => {
     const client = (): OAuthClient => new OAuthClient(new OAuthClientOptions(baseUrl));
 
     test('bytes come back identical, not UTF-8 mangled', async () => {
-        const result: Buffer = await client().requestBytes('/item', null, 'GET', false);
+        const result: Uint8Array = await client().requestBytes('/item', null, 'GET', false);
 
         expect(result.length).toBe(PAYLOAD.length);
-        expect(result.equals(PAYLOAD)).toBe(true);
+        // Wrapped only to borrow Buffer.equals for the comparison — this spec runs in Node. The
+        // transport returns a Uint8Array so the package works in the browser, where Buffer is not
+        // a global; wrapping is free, since a Buffer is a view over the same bytes.
+        expect(Buffer.from(result).equals(PAYLOAD)).toBe(true);
     });
 
     test('asks for octet-stream, so the server knows to send bytes', async () => {
@@ -97,7 +100,7 @@ describe('binary round trip', () => {
 
     describe('HEAD', () => {
         test('an existing item answers 200 with no body', async () => {
-            const bytes: Buffer = await client().requestBytes('/item', null, 'HEAD', false);
+            const bytes: Uint8Array = await client().requestBytes('/item', null, 'HEAD', false);
             expect(bytes.length).toBe(0);
         });
 

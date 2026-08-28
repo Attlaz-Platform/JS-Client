@@ -139,7 +139,7 @@ export class StorageEndpoint extends Endpoint {
         }
     }
 
-    public async getItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<Buffer> {
+    public async getItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string): Promise<Uint8Array> {
         const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
         return await this.requestBytes(cmd);
     }
@@ -151,7 +151,7 @@ export class StorageEndpoint extends Endpoint {
      * response `Content-Type`, and without it an image is delivered as `application/octet-stream`,
      * which downloads rather than renders.
      */
-    public async setItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string, value: Buffer, expiration: Date | null = null, contentType: string | null = null): Promise<void> {
+    public async setItemBytes(projectEnvironmentId: string, storageType: StorageType, bucketKey: string, storageItemKey: string, value: Uint8Array, expiration: Date | null = null, contentType: string | null = null): Promise<void> {
         const cmd: string = path('/projectenvironments/:projectEnvironmentId/storage/:storageType/:bucketKey/items/:key', {projectEnvironmentId, storageType, bucketKey, key: storageItemKey});
         const headers: Record<string, string> = {};
         if (expiration !== null) {
