@@ -315,6 +315,17 @@ export class OAuthClient implements ITransport {
         }
     }
 
+    /**
+     * Overall budget for a single request, in milliseconds. Applies to the token request too, so a
+     * raised budget covers authentication as well.
+     *
+     * There is no separate connect timeout, unlike the PHP client: `AbortSignal.timeout` bounds the
+     * whole exchange and fetch exposes no connect phase to bound on its own.
+     */
+    public setTimeout(timeoutMs: number): void {
+        this.options.timeoutMs = timeoutMs;
+    }
+
     public isAuthenticated(): boolean {
         // TODO: other ways to determine if the client is authenticated?
         return this.oauthClientToken !== null && this.oauthClientToken !== undefined;

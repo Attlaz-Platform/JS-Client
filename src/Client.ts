@@ -165,6 +165,19 @@ export class Client {
         this.httpClient.setClientCredentials(clientId, null, ['all']);
     }
 
+    /**
+     * Overall budget for a single request. **Milliseconds** — the PHP client's `setTimeout()` takes
+     * seconds, so do not port a number across without converting.
+     *
+     * Defaults to 80 seconds, matching the PHP client. Raise it for a large upload or download: the
+     * budget covers the whole exchange, so a body big enough to take longer than this to transfer
+     * is aborted by the client itself, before the server has said anything. Pass 0 to disable the
+     * timeout entirely, which risks hanging the process on a stalled connection.
+     */
+    public setTimeout(timeoutMs: number): void {
+        this.httpClient.setTimeout(timeoutMs);
+    }
+
     public setVersion(version: string | null): void {
         this.httpClient.setVersion(version);
     }
