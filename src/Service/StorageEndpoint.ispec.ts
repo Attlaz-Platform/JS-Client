@@ -3,13 +3,22 @@ import {Helper} from '../../e2e/src/helper.js';
 import {StorageType} from '../Model/Storage/StorageType.js';
 import {StorageItem} from '../Model/Storage/StorageItem.js';
 
-vi.setConfig({testTimeout: 5 * 60 * 1000});
+// Must exceed the largest per-request budget set below, so that a slow transfer fails with the
+// client's own timeout — which names the url and the budget — rather than vitest killing the test
+// with no indication of what was slow.
+vi.setConfig({testTimeout: 15 * 60 * 1000});
 
 const apiEndpoint: string = Helper.getApiEndpoint('live');
-const clientCredentialClientId: string = Helper.getEnvValue('clientCredentialClientId');
-const clientCredentialClientSecret: string = Helper.getEnvValue('clientCredentialClientSecret');
+// An access token rather than client credentials: the client-credentials principal has no storage
+// access to the environment below (verified - every storage call returns 403 while the same calls
+// succeed with this token). Which principals hold which grants is tracked in the access-checks work.
+const accessToken: string = Helper.getEnvValue('workingAccessTokenForAuthentication');
 
-const PROJECT_ENVIRONMENT: string = '1bJQR6fjfUeydXt9jpLhMryRjZm';
+// Banglorious / demo / production - the environment the test account is a member of. Storage
+// access resolves to workspace membership (EntityAccessService.hasAccessToEnvironment), so an
+// environment belonging to anyone else answers 403 on every call, which is what the previously
+// hardcoded id did. Change this only together with the credentials below.
+const PROJECT_ENVIRONMENT: string = '2UNYtPsKA0qMMnllVo0e4Oc6WZ5';
 const BUCKET: string = 'default';
 
 const MEGABYTE: number = 1024 * 1024;
@@ -47,19 +56,25 @@ const toLatin1 = (bytes: Uint8Array): string => {
     return out;
 };
 
-const connect = async (): Promise<Client> => {
-    const client: Client = new Client('', {apiEndpoint: apiEndpoint});
+/**
+ * `timeoutMs` of 0 disables the client's own request budget. The default is 80s and covers the
+ * whole exchange, so a payload large enough to take longer than that to transfer is aborted by the
+ * client before the server answers — which is exactly what the 274MB case does on a real network.
+ */
+const connect = (timeoutMs: number | null = null): Client => {
+    const client: Client = new Client(accessToken, {apiEndpoint: apiEndpoint});
     client.setVersion(Helper.getApiVersion());
-    client.setClientCredentials(clientCredentialClientId, clientCredentialClientSecret);
+    if (timeoutMs !== null) {
+        client.setTimeout(timeoutMs);
+    }
     client.getHttpClient().enableDebug();
-    await client.authenticate();
     return client;
 };
 
 const uniqueKey = (): string => 'client-storage-test-' + Math.random();
 
 test('Test Storage Endpoint', async () => {
-    const client: Client = await connect();
+    const client: Client = connect();
 
     const storageItem: StorageItem = new StorageItem();
     storageItem.key = 'Some random key';
@@ -71,64 +86,62 @@ test('Test Storage Endpoint', async () => {
     expect(savedStorageItem.value).toEqual(storageItem.value);
 });
 
-test('Test Storage Endpoint - file', async () => {
-    expect.assertions(5);
+/**
+ * Both ways of storing a large payload, at both sizes, because they are stored differently and fail
+ * differently.
+ *
+ * A string value is stored as `Buffer.from(value, 'utf8')` (`serialisation: 'plain'`), and UTF-8
+ * spends two bytes on every character above U+007F — so binary carried as a latin-1 string is
+ * ~1.5x its own size at rest. A `Uint8Array` is stored untouched (`serialisation: 'octet'`) at 1.0x.
+ * The same source payload therefore reaches any server-side size limit sooner through the string
+ * API, which is exactly what makes running both worthwhile: if one passes and the other fails at
+ * the same source size, the limit is about bytes stored rather than bytes sent.
+ */
+describe('large payloads', () => {
 
-    const client: Client = await connect();
+    // The default 80s request budget is not enough to transfer hundreds of megabytes over a real
+    // network; the client would abort before the server answered.
+    const LARGE_TIMEOUT_MS: number = 10 * 60 * 1000;
 
-    const payload: Uint8Array = makeBytes(49 * MEGABYTE);
-    const value: string = toLatin1(payload);
+    for (const megabytes of [49, 274]) {
 
-    const storageItem: StorageItem = new StorageItem();
-    storageItem.key = uniqueKey();
-    storageItem.value = value;
+        test(megabytes + 'MB survives the string API', async () => {
+            const client: Client = connect(LARGE_TIMEOUT_MS);
+            const payload: Uint8Array = makeBytes(megabytes * MEGABYTE);
+            const value: string = toLatin1(payload);
 
-    const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem);
+            const storageItem: StorageItem = new StorageItem();
+            storageItem.key = uniqueKey();
+            storageItem.value = value;
 
-    expect(savedStorageItem.key).toEqual(storageItem.key);
-    expect(savedStorageItem.value).toEqual(storageItem.value);
+            const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem);
+            expect(savedStorageItem.key).toEqual(storageItem.key);
 
-    const savedValue: StorageItem | null = await client.getStorageEndpoint().getItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem.key);
-    if (savedValue === null) {
-        throw new Error('Saved value not found');
+            const savedValue: StorageItem | null = await client.getStorageEndpoint().getItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem.key);
+            if (savedValue === null) {
+                throw new Error('Saved value not found');
+            }
+            expect(savedValue.value.length).toStrictEqual(value.length);
+            // The assertion that actually proves fidelity. Comparing the two strings only shows they
+            // agree as strings; converting back to bytes shows the payload survived. Latin-1 is safe
+            // here because every character is <= U+00FF, so there are no unpaired surrogates for the
+            // server's utf8 encode to replace with U+FFFD.
+            expect(Buffer.from(String(savedValue.value), 'latin1').equals(Buffer.from(payload))).toBe(true);
+        });
+
+        test(megabytes + 'MB survives the bytes API', async () => {
+            const client: Client = connect(LARGE_TIMEOUT_MS);
+            const key: string = uniqueKey();
+            const payload: Uint8Array = makeBytes(megabytes * MEGABYTE);
+
+            await client.getStorageEndpoint().setItemBytes(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, key, payload, null, 'application/octet-stream');
+
+            const result: Uint8Array = await client.getStorageEndpoint().getItemBytes(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, key);
+
+            expect(result.length).toStrictEqual(payload.length);
+            expect(Buffer.from(result).equals(Buffer.from(payload))).toBe(true);
+        });
     }
-    expect(savedValue.value.toString()).toStrictEqual(storageItem.value.toString());
-    expect(savedValue.value.length).toStrictEqual(value.length);
-    // The assertion that actually proves fidelity. Comparing the two strings only shows they agree
-    // as strings; converting back to bytes shows the payload survived. Latin-1 is safe here because
-    // every character is <= U+00FF, so there are no unpaired surrogates for the server's utf8
-    // encode (`serialisation: 'plain'`) to replace with U+FFFD.
-    expect(Buffer.from(String(savedValue.value), 'latin1').equals(Buffer.from(payload))).toBe(true);
-});
-
-test('Test Storage Endpoint - big file', async () => {
-    expect.assertions(5);
-
-    const client: Client = await connect();
-
-    const payload: Uint8Array = makeBytes(274 * MEGABYTE);
-    const value: string = toLatin1(payload);
-
-    const storageItem: StorageItem = new StorageItem();
-    storageItem.key = uniqueKey();
-    storageItem.value = value;
-
-    const savedStorageItem: StorageItem = await client.getStorageEndpoint().setItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem);
-
-    expect(savedStorageItem.key).toEqual(storageItem.key);
-    expect(savedStorageItem.value).toEqual(storageItem.value);
-
-    const savedValue: StorageItem | null = await client.getStorageEndpoint().getItem(PROJECT_ENVIRONMENT, StorageType.Cache, BUCKET, storageItem.key);
-    if (savedValue === null) {
-        throw new Error('Saved value not found');
-    }
-    expect(savedValue.value.toString()).toStrictEqual(storageItem.value.toString());
-    expect(savedValue.value.length).toStrictEqual(value.length);
-    // The assertion that actually proves fidelity. Comparing the two strings only shows they agree
-    // as strings; converting back to bytes shows the payload survived. Latin-1 is safe here because
-    // every character is <= U+00FF, so there are no unpaired surrogates for the server's utf8
-    // encode (`serialisation: 'plain'`) to replace with U+FFFD.
-    expect(Buffer.from(String(savedValue.value), 'latin1').equals(Buffer.from(payload))).toBe(true);
 });
 
 /**
@@ -143,7 +156,7 @@ test('Test Storage Endpoint - big file', async () => {
 describe('raw bytes', () => {
 
     test('round-trip through storage leaves every byte unchanged', async () => {
-        const client: Client = await connect();
+        const client: Client = connect();
         const key: string = uniqueKey();
         const payload: Uint8Array = makeBytes(4 * MEGABYTE);
 
@@ -158,7 +171,7 @@ describe('raw bytes', () => {
     });
 
     test('a stored item is reported as existing without transferring it', async () => {
-        const client: Client = await connect();
+        const client: Client = connect();
         const key: string = uniqueKey();
 
         expect(await client.getStorageEndpoint().hasItem(PROJECT_ENVIRONMENT, StorageType.Persistent, BUCKET, key)).toBe(false);
