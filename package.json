@@ -37,6 +37,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "npm run setversion",
+    "prepublishOnly": "npm run typecheck && npm test",
     "prepare": "npm run clean && tsc --project tsconfig.build.json && npm run setversion",
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "setversion": "node -p \"'export const VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
