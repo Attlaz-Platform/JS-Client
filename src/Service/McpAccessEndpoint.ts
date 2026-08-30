@@ -60,6 +60,26 @@ export class McpAccessEndpoint extends Endpoint {
         }
     }
 
+    /** Renames only. The target is write-once and the URL is changed by rotating, not here. */
+    public async renameAccess(accessId: string, name: string): Promise<McpAccess> {
+        try {
+            const url: string = path('/mcp-accesses/:accessId', {accessId});
+
+            const result: ObjectResult<McpAccess> = await this.requestObject(url, {name}, McpAccess.parse, 'PATCH');
+
+            const access: McpAccess | null = result.getData();
+            if (access === null) {
+                throw new Error('MCP access not found: ' + accessId);
+            }
+            return access;
+        } catch (error) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to rename the MCP access: ', error);
+            }
+            throw error;
+        }
+    }
+
     /** New URL, old one dead, and every token bound to the old one revoked. */
     public async rotateKey(accessId: string): Promise<McpAccess> {
         return await this.lifecycle(accessId, path('/mcp-accesses/:accessId/rotate-key', {accessId}), 'POST', 'rotate the MCP URL');

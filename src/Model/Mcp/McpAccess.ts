@@ -18,6 +18,14 @@ export class McpAccess implements StateAware {
     public createdAt: Date;
 
     /**
+     * When a client last called this access's URL, or null if it never has.
+     *
+     * ⚠️ Nothing writes this yet — the column and the plumbing exist so the recording can be added
+     * in one place later. Until then it is always null, which reads as "Never".
+     */
+    public lastUsedAt: Date | null = null;
+
+    /**
      * The full URL to hand to a client, or null when the access has no live key — the state an
      * interrupted rotation leaves behind, which the UI has to be able to show rather than assume away.
      */
@@ -53,6 +61,7 @@ export class McpAccess implements StateAware {
         access.revokedAt = (raw.revoked_at === null || raw.revoked_at === undefined) ? null : Utils.parseRawDate(raw.revoked_at as Date);
         access.createdAt = Utils.parseRawDate(raw.created_at as Date);
         access.url = (raw.url === null || raw.url === undefined) ? null : raw.url as string;
+        access.lastUsedAt = (raw.last_used_at === null || raw.last_used_at === undefined) ? null : Utils.parseRawDate(raw.last_used_at as Date);
         return access;
     }
 }
