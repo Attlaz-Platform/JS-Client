@@ -4,6 +4,8 @@ import {ITransport, ParseErrorHandler} from './Http/Transport/ITransport.js';
 import {OAuthClient, TokenChangeHandler} from './Http/Transport/OAuthClient.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
+import {ConnectionBundleEndpoint} from './Service/ConnectionBundleEndpoint.js';
+import {McpAccessEndpoint} from './Service/McpAccessEndpoint.js';
 import {AdapterEndpoint} from './Service/AdapterEndpoint.js';
 import {ChannelEndpoint} from './Service/ChannelEndpoint.js';
 import {CodeDeployEndpoint} from './Service/CodeDeployEndpoint.js';
@@ -67,6 +69,8 @@ export class Client {
         AccessTokenEndpoint,
         AdapterConnectionEndpoint,
         AdapterEndpoint,
+        ConnectionBundleEndpoint,
+        McpAccessEndpoint,
         ChannelEndpoint,
         CodeDeployEndpoint,
         ComponentEndpoint,
@@ -235,7 +239,7 @@ export class Client {
     public async getApiInformation(): Promise<{ version: string }> {
         const result: {
             version: string | undefined
-        } = await this.httpClient.request('/system/health', null, 'GET', false);
+        } = await this.httpClient.request('/system/info', null, 'GET', true);
         if (result.version === undefined) {
             throw new Error('Unable to get API information: invalid response');
         }
@@ -249,6 +253,14 @@ export class Client {
 
     public getAdapterConnectionEndpoint(): AdapterConnectionEndpoint {
         return this.getEndpoint('adapter-connection', this.Store.AdapterConnectionEndpoint);
+    }
+
+    public getConnectionBundleEndpoint(): ConnectionBundleEndpoint {
+        return this.getEndpoint('connection-bundle', this.Store.ConnectionBundleEndpoint);
+    }
+
+    public getMcpAccessEndpoint(): McpAccessEndpoint {
+        return this.getEndpoint('mcp-access', this.Store.McpAccessEndpoint);
     }
 
     public getProjectEndpoint(): ProjectEndpoint {
