@@ -32,6 +32,8 @@ export {UserAccessTokenStatus} from './Model/AccessToken/UserAccessTokenStatus.j
 export {Adapter} from './Model/Adapter/Adapter.js';
 export {AdapterConfiguration} from './Model/Adapter/AdapterConfiguration.js';
 export {AdapterConnection} from './Model/Adapter/AdapterConnection.js';
+export {ConnectionBundle} from './Model/Connection/ConnectionBundle.js';
+export {McpAccess} from './Model/Mcp/McpAccess.js';
 export {AdapterCategory} from './Model/Adapter/AdapterCategory.js';
 export {AdapterConnectionStatus} from './Model/Adapter/AdapterConnectionStatus.js';
 export {AdapterConnectionConfigurationValue} from './Model/Adapter/AdapterConnectionConfigurationValue.js';
