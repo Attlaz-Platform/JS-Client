@@ -2,7 +2,7 @@ import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
 import {ITransport, ParseErrorHandler} from './Http/Transport/ITransport.js';
 import {OAuthClient, TokenChangeHandler} from './Http/Transport/OAuthClient.js';
-import {ApiInfo, ApiInformation} from './Model/ApiInformation.js';
+import {ApiInfo} from './Model/ApiInformation.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 import {ConnectionBundleEndpoint} from './Service/ConnectionBundleEndpoint.js';
@@ -237,18 +237,17 @@ export class Client {
         this.httpClient.setTokenChangeHandler(handler);
     }
 
-    public async getApiInformation(): Promise<ApiInformation> {
+    /** The gateway first, then every API it routes to. A non-administrator is shown the gateway alone. */
+    public async getApiInformation(): Promise<ApiInfo[]> {
         const result: {
             apis: ApiInfo[] | undefined
         } = await this.httpClient.request('/system/info', null, 'GET', true);
 
-        // The gateway is the first entry, and the only one a non-administrator is shown.
-        const gateway: ApiInfo | undefined = result.apis?.[0];
-        if (gateway === undefined || gateway.version === null) {
+        if (result.apis === undefined || result.apis.length === 0) {
             throw new Error('Unable to get API information: invalid response');
         }
 
-        return {version: gateway.version, apis: result.apis ?? []};
+        return result.apis;
     }
 
     /* Endpoints */
