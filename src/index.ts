@@ -15,6 +15,7 @@ export type {TokenChangeHandler} from './Http/Transport/OAuthClient.js';
 export {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 export {OAuthClientToken} from './Http/OAuthClientToken.js';
 export {ClientError} from './Http/ClientError.js';
+export {ApiInfo, ApiInformation} from './Model/ApiInformation.js';
 export {ApiError} from './Model/Error/ApiError.js';
 export type {ParseErrorHandler} from './Http/Transport/ITransport.js';
 export {HttpStatus} from './Http/HttpStatus.js';

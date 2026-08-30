@@ -2,6 +2,7 @@ import {OAuthClientOptions} from './Http/OAuthClientOptions.js';
 import {OAuthClientToken} from './Http/OAuthClientToken.js';
 import {ITransport, ParseErrorHandler} from './Http/Transport/ITransport.js';
 import {OAuthClient, TokenChangeHandler} from './Http/Transport/OAuthClient.js';
+import {ApiInfo, ApiInformation} from './Model/ApiInformation.js';
 import {AccessTokenEndpoint} from './Service/AccessTokenEndpoint.js';
 import {AdapterConnectionEndpoint} from './Service/AdapterConnectionEndpoint.js';
 import {ConnectionBundleEndpoint} from './Service/ConnectionBundleEndpoint.js';
@@ -236,14 +237,18 @@ export class Client {
         this.httpClient.setTokenChangeHandler(handler);
     }
 
-    public async getApiInformation(): Promise<{ version: string }> {
+    public async getApiInformation(): Promise<ApiInformation> {
         const result: {
-            version: string | undefined
+            apis: ApiInfo[] | undefined
         } = await this.httpClient.request('/system/info', null, 'GET', true);
-        if (result.version === undefined) {
+
+        // The gateway is the first entry, and the only one a non-administrator is shown.
+        const gateway: ApiInfo | undefined = result.apis?.[0];
+        if (gateway === undefined || gateway.version === null) {
             throw new Error('Unable to get API information: invalid response');
         }
-        return {version: result.version};
+
+        return {version: gateway.version, apis: result.apis ?? []};
     }
 
     /* Endpoints */
