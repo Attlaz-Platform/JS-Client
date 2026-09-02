@@ -74,8 +74,10 @@ export class VendorProductEndpoint extends Endpoint {
 
     /** Create a new vendor product. */
     public async save(product: VendorProduct): Promise<VendorProduct> {
-        // camelCase keys are snake_cased by the base Endpoint (originalPrice -> original_price, ...).
+        // Sent verbatim: the formatter recurses into `properties` and `variant_axes`, and its
+        // snake_caser treats every capital as a word boundary (`EAN` -> `_e_a_n`).
         const body = {
+            _formatted: true,
             name: product.name,
             image: product.image,
             identifier: product.identifier,
@@ -88,9 +90,9 @@ export class VendorProductEndpoint extends Endpoint {
             url: product.url,
             currency: product.currency,
             price: product.price,
-            originalPrice: product.originalPrice,
-            shippingCost: product.shippingCost,
-            stockStatus: product.stockStatus,
+            original_price: product.originalPrice,
+            shipping_cost: product.shippingCost,
+            stock_status: product.stockStatus,
             properties: product.properties,
         };
         const result: ObjectResult<VendorProduct> = await this.requestObject(
@@ -104,7 +106,7 @@ export class VendorProductEndpoint extends Endpoint {
 
     /** Update the mutable fields of an existing vendor product (JSON-patch style, per the API). */
     public async update(product: VendorProduct): Promise<void> {
-        const operations = [
+        const operations: object[] = [
             {op: 'add', path: 'name', value: product.name},
             {op: 'add', path: 'price', value: product.price},
             {op: 'add', path: 'original_price', value: product.originalPrice},
@@ -121,6 +123,8 @@ export class VendorProductEndpoint extends Endpoint {
             {op: 'add', path: 'currency', value: product.currency},
             {op: 'add', path: 'properties', value: product.properties},
         ];
+        // Already in wire shape; see the note in save().
+        (operations as {_formatted?: boolean})._formatted = true;
         if (product.id === null) {
             throw new Error('Unable to update vendor product: the product has no id. Save it first.');
         }

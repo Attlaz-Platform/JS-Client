@@ -22,9 +22,13 @@ export abstract class Endpoint {
      * id-stripped convention (see {@link formatParameters}). A caller that has already shaped the
      * body — or that carries an opaque payload whose keys must NOT be rewritten, such as a flow
      * run's `arguments` — sets `_formatted: true`; then the body is sent verbatim (minus the marker).
+     * A JSON-patch body is an array, so it carries the marker as a property rather than a key.
      */
     private prepareParameters(parameters: Parameters): Parameters {
         if (parameters !== null && typeof parameters === 'object' && (parameters as { _formatted?: unknown })._formatted === true) {
+            if (Array.isArray(parameters)) {
+                return [...parameters];
+            }
             const {_formatted, ...rest} = parameters as Record<string, unknown>;
             return rest;
         }
