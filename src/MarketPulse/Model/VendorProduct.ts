@@ -3,7 +3,9 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
 
 /**
  * A competitor's product as tracked by Market Pulse — the `/pulse/vendors/:vendorId/products`
- * resource. `identifier` is the product's stable id on the competitor's site (the upsert key).
+ * resource. `identifier` is the product's stable id on the competitor's site (the upsert key);
+ * `variantGroup` is shared by siblings and is not an id of its own. Axis names and values are the
+ * vendor's own words, unnormalised.
  */
 export class VendorProduct {
     public id: string | null = null;
@@ -15,6 +17,9 @@ export class VendorProduct {
     public brand: string | null = null;
     public url: string | null = null;
     public sku: string | null = null;
+    public manufacturerPartNumber: string | null = null;
+    public variantGroup: string | null = null;
+    public variantAxes: {name: string; value: string; code?: string | null; unit?: string | null; numericValue?: number | null}[] | null = null;
     public currency: string | null = null;
     public price: number | null = null;
     public originalPrice: number | null = null;
@@ -49,6 +54,9 @@ export class VendorProduct {
         product.brand = (raw.brand as string | undefined) ?? null;
         product.url = (raw.url as string | undefined) ?? null;
         product.sku = (raw.sku as string | undefined) ?? null;
+        product.manufacturerPartNumber = (raw.manufacturer_part_number as string | undefined) ?? null;
+        product.variantGroup = (raw.variant_group as string | undefined) ?? null;
+        product.variantAxes = (raw.variant_axes as {name: string; value: string; code?: string | null; unit?: string | null; numericValue?: number | null}[] | undefined) ?? null;
         product.currency = (raw.currency as string | undefined) ?? null;
         product.price = toNumber(raw.price);
         product.originalPrice = toNumber(raw.original_price);

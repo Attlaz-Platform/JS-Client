@@ -81,6 +81,9 @@ export class VendorProductEndpoint extends Endpoint {
             identifier: product.identifier,
             gtin: product.gtin,
             sku: product.sku,
+            manufacturer_part_number: product.manufacturerPartNumber,
+            variant_group: product.variantGroup,
+            variant_axes: product.variantAxes,
             brand: product.brand,
             url: product.url,
             currency: product.currency,
@@ -112,6 +115,8 @@ export class VendorProductEndpoint extends Endpoint {
             {op: 'add', path: 'gtin', value: product.gtin},
             {op: 'add', path: 'image', value: product.image},
             {op: 'add', path: 'sku', value: product.sku},
+            {op: 'add', path: 'manufacturer_part_number', value: product.manufacturerPartNumber},
+            {op: 'add', path: 'variant_group', value: product.variantGroup},
             {op: 'add', path: 'currency', value: product.currency},
             {op: 'add', path: 'properties', value: product.properties},
         ];
