@@ -79,6 +79,30 @@ export class SourcesAccountEndpoint extends Endpoint {
         return rawBranches;
     }
 
+    /**
+     * Create an unconnected code source account. Connecting it — attaching a provider token — is a
+     * separate step against the created account.
+     */
+    public async createCodeSourceAccount(workspaceId: string, type: string): Promise<CodeSourceAccount> {
+        try {
+            const result: ObjectResult<CodeSourceAccount> = await this.requestObject('/codesourceaccounts/', {
+                workspace: workspaceId,
+                type: type,
+            }, CodeSourceAccount.parse, 'POST');
+
+            const createdCodeSourceAccount: CodeSourceAccount | null = result.getData();
+            if (createdCodeSourceAccount === null) {
+                throw new Error('Unable to create code source account: wrong response from API');
+            }
+            return createdCodeSourceAccount;
+        } catch (ex) {
+            if (this.httpClient.isDebugEnabled()) {
+                console.error('Failed to create code source account: ', ex);
+            }
+            throw ex;
+        }
+    }
+
     public async saveCodeSource(codeSource: CodeSource): Promise<CodeSource> {
         try {
             const url: string = '/codesources/';
