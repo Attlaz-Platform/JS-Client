@@ -19,9 +19,16 @@ export class CrawlJob {
      * it never looked for most products, so its silence about them proves nothing.
      */
     public isPartial: boolean = false;
-    /** Progress (populated by list endpoints): total pages and how many have been processed. */
+    /**
+     * Progress (populated by list endpoints): total pages and how many reached a terminal state.
+     *
+     * `failed` is part of `processed`, not separate from it — a finished crawl has
+     * `processed === total` whether or not pages failed, so `failed > 0` is the only thing that
+     * distinguishes a crawl that lost pages from a clean one.
+     */
     public total: number = 0;
     public processed: number = 0;
+    public failed: number = 0;
 
     public constructor(id: string, vendorId: string) {
         this.id = id;
@@ -41,6 +48,7 @@ export class CrawlJob {
         job.isPartial = raw.is_partial === true;
         job.total = Number(raw.total ?? 0);
         job.processed = Number(raw.processed ?? 0);
+        job.failed = Number(raw.failed ?? 0);
         return job;
     }
 }
