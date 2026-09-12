@@ -14,12 +14,18 @@ export class CodeDeploy {
     public finished: Date | null = null;
     public status: CodeDeployStatus = CodeDeployStatus.Unknown;
 
-    public archiveChecksum: string | null = null;
-    public archiveType: string | null = null;
-    public archiveSize: number | null = null;
+    /** The deliverable — the archive today, possibly an image later. */
+    public artifactChecksum: string | null = null;
+    public artifactFormat: string | null = null;
+    public artifactSize: number | null = null;
+    /** Null while the artifact is still served; set once it is withdrawn. */
+    public artifactRetiredAt: Date | null = null;
 
-    public checksum: string | null = null;
-    public size: number | null = null;
+    /** The built directory the artifact was made from. */
+    public buildChecksum: string | null = null;
+    public buildSize: number | null = null;
+
+
 
     public storageBucketId: string | null = null;
     public storageItemId: string | null = null;
@@ -42,12 +48,17 @@ export class CodeDeploy {
         projectDeploy.finished = rawCodeDeploy.finished === null ? null : Utils.parseRawDate(rawCodeDeploy.finished as Date);
         projectDeploy.status = CodeDeployStatus.fromString(rawCodeDeploy.status as string);
 
-        projectDeploy.archiveChecksum = rawCodeDeploy.archive_checksum as string | null;
-        projectDeploy.archiveType = rawCodeDeploy.archive_type as string | null;
-        projectDeploy.archiveSize = rawCodeDeploy.archive_size === null ? null : Utils.parseInt(rawCodeDeploy.archive_size as number);
+        projectDeploy.artifactChecksum = rawCodeDeploy.artifact_checksum as string | null;
+        projectDeploy.artifactFormat = rawCodeDeploy.artifact_format as string | null;
+        const rawArtifactSize: unknown = rawCodeDeploy.artifact_size;
+        projectDeploy.artifactSize = rawArtifactSize === null || rawArtifactSize === undefined ? null : Utils.parseInt(rawArtifactSize as number);
+        projectDeploy.artifactRetiredAt = rawCodeDeploy.artifact_retired_at === null || rawCodeDeploy.artifact_retired_at === undefined ? null : new Date(rawCodeDeploy.artifact_retired_at as string);
 
-        projectDeploy.checksum = rawCodeDeploy.checksum as string | null;
-        projectDeploy.size = rawCodeDeploy.size === null ? null : Utils.parseInt(rawCodeDeploy.size as number);
+        projectDeploy.buildChecksum = rawCodeDeploy.build_checksum as string | null;
+        const rawBuildSize: unknown = rawCodeDeploy.build_size;
+        projectDeploy.buildSize = rawBuildSize === null || rawBuildSize === undefined ? null : Utils.parseInt(rawBuildSize as number);
+
+
 
         projectDeploy.storageBucketId = rawCodeDeploy.storage_bucket as string | null;
         projectDeploy.storageItemId = rawCodeDeploy.storage_item as string | null;
