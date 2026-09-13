@@ -218,8 +218,9 @@ export {EntityType} from './Model/EntityType.js';
 export {InboxMessage} from './Model/Inbox/InboxMessage.js';
 
 /** Infrastructure Status **/
-export {QueueStatus} from './Model/InfrastructureStatus/QueueStatus.js';
-export {RunnersStatus} from './Model/InfrastructureStatus/RunnersStatus.js';
+export {ObservedState} from './Model/InfrastructureStatus/ObservedState.js';
+export {QueueCondition, QueueStatus} from './Model/InfrastructureStatus/QueueStatus.js';
+export {RunnerRollout, RunnersStatus} from './Model/InfrastructureStatus/RunnersStatus.js';
 export {StorageStatus} from './Model/InfrastructureStatus/StorageStatus.js';
 
 export {State} from './Model/State.js';

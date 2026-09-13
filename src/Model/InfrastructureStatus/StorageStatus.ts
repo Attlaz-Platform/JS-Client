@@ -1,5 +1,14 @@
-// null = explicitly unlimited at some scope in the chain.
-type StorageTypeStatus = { exists: boolean; used: number; limit: number | null; };
+import {ObservedState} from './ObservedState.js';
+
+type StorageTypeStatus = {
+    /** Never 'missing' — storage is created on first use. Separates empty from unreadable. */
+    state: ObservedState;
+    used_bytes: number;
+    items: number;
+    // null = explicitly unlimited at some scope in the chain. Distinct from a missing
+    // configuration row (which throws upstream in getStorageBytesLimit).
+    limit_bytes: number | null;
+};
 
 export class StorageStatus {
     public persistent: StorageTypeStatus;
@@ -7,7 +16,6 @@ export class StorageStatus {
     public vault: StorageTypeStatus;
     public infrastructure: StorageTypeStatus;
 
-    public updated: Date;
+    /** First-seen once stored — see QueueStatus.observed_at. */
+    public observed_at: Date;
 }
-
-
