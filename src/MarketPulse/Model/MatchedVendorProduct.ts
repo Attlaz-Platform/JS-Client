@@ -15,6 +15,8 @@ export class MatchedVendorProduct {
     /** Id of the match record joining it to your product; null for an unreviewed direct hit. */
     public matchId: string | null = null;
     public matchJobId: string | null = null;
+    /** `accepted` counts in every comparison; `pending` is an unconfirmed suggestion. Null from an API that does not send it. */
+    public matchStatus: string | null = null;
 
     public vendor: Vendor | null = null;
     public name: string = '';
@@ -37,10 +39,16 @@ export class MatchedVendorProduct {
         this.id = id;
     }
 
+    /** A suggestion nobody has confirmed: shown on request, never part of a comparison. */
+    public get isUnconfirmed(): boolean {
+        return this.matchStatus === 'pending';
+    }
+
     public static parse(raw: ApiRecord): MatchedVendorProduct {
         const product: MatchedVendorProduct = new MatchedVendorProduct(raw.id as string);
         product.matchId = (raw.match as string | undefined) ?? null;
         product.matchJobId = (raw.match_job as string | undefined) ?? null;
+        product.matchStatus = (raw.match_status as string | undefined) ?? null;
 
         const vendor: unknown = raw.vendor;
         if (vendor !== null && typeof vendor === 'object') {

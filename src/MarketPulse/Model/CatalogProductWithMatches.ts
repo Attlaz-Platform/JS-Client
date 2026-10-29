@@ -31,14 +31,20 @@ export class CatalogProductWithMatches {
         this.id = id;
     }
 
-    /** Mean price of the matched competitor products; null when nothing matched. */
+    /** The matches a comparison rests on — every match except the unconfirmed suggestions. */
+    public get countedMatches(): MatchedVendorProduct[] {
+        return this.matches.filter((match: MatchedVendorProduct) => !match.isUnconfirmed);
+    }
+
+    /** Mean price of the counted competitor products; null when none is counted. */
     public get matchesAveragePrice(): number | null {
-        if (this.matches.length === 0) {
+        const counted: MatchedVendorProduct[] = this.countedMatches;
+        if (counted.length === 0) {
             return null;
         }
-        const total: number = this.matches.reduce((sum: number, match: MatchedVendorProduct) => sum + match.price, 0);
+        const total: number = counted.reduce((sum: number, match: MatchedVendorProduct) => sum + match.price, 0);
 
-        return total / this.matches.length;
+        return total / counted.length;
     }
 
     public static parse(raw: ApiRecord): CatalogProductWithMatches {
