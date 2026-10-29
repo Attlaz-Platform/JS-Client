@@ -132,6 +132,7 @@ export {ReviewMatchFilters} from './MarketPulse/Model/ReviewMatchFilters.js';
 export {ProductMatchEndpoint} from './MarketPulse/Service/ProductMatchEndpoint.js';
 export {PulseCatalogProductFilterOptions} from './MarketPulse/Model/PulseCatalogProductFilterOptions.js';
 export {PulseCatalogProductFilters} from './MarketPulse/Model/PulseCatalogProductFilters.js';
+export {POSITION_BUCKETS, PositionBucket} from './MarketPulse/Model/PositionBucket.js';
 export {PulseCatalogProductEndpoint} from './MarketPulse/Service/PulseCatalogProductEndpoint.js';
 export {PriceAlertConfig} from './MarketPulse/Model/PriceAlertConfig.js';
 export {PriceAlertEvent} from './MarketPulse/Model/PriceAlertEvent.js';

@@ -47,6 +47,12 @@ export class PulseCatalogProductEndpoint extends Endpoint {
                 queryString.set('tag[' + key + ']', value);
             }
         }
+        if (filters.positionBucket) {
+            queryString.set('position_bucket', filters.positionBucket);
+        }
+        if (filters.includePending) {
+            queryString.set('include_pending', 'true');
+        }
         if (filter !== null) {
             queryString.set('filter', JSON.stringify(filter));
         }
