@@ -3,6 +3,8 @@ import {CatalogId} from '../../Catalog/Model/CatalogId.js';
 import {QueryString} from '../../Http/Data/QueryString.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
+import {ObjectResult} from '../../Model/Result/ObjectResult.js';
+import {MarketPositionSummary} from '../Model/MarketPositionSummary.js';
 import {MarketSummaryEntry} from '../Model/MarketSummaryEntry.js';
 import {PriceIndexSnapshotEntry} from '../Model/PriceIndexSnapshotEntry.js';
 import {ProductSegmentType} from '../Model/ProductSegmentType.js';
@@ -14,6 +16,18 @@ import {TopCompetitor} from '../Model/TopCompetitor.js';
  * These are precomputed server-side; `CatalogProductEndpoint.recomputeStatistics` refreshes them.
  */
 export class PulseStatisticsEndpoint extends Endpoint {
+
+    /** The catalog against the market: coverage, where the compared products stand, and the price date. */
+    public async getMarketPositionSummary(catalogId: CatalogId | string): Promise<MarketPositionSummary> {
+        const result: ObjectResult<MarketPositionSummary> = await this.requestObject(
+            path('/pulse/catalogs/:catalogId/market-positions/summary', {catalogId: catalogId.toString()}),
+            null,
+            MarketPositionSummary.parse,
+            'GET',
+        );
+
+        return result.getData() ?? new MarketPositionSummary();
+    }
 
     /** Headline figures (products tracked, matches, competitors …) against the previous period. */
     public async getAccountSummary(catalogId: CatalogId | string): Promise<CollectionResult<MarketSummaryEntry>> {

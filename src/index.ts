@@ -133,6 +133,7 @@ export {ProductMatchEndpoint} from './MarketPulse/Service/ProductMatchEndpoint.j
 export {PulseCatalogProductFilterOptions} from './MarketPulse/Model/PulseCatalogProductFilterOptions.js';
 export {PulseCatalogProductFilters} from './MarketPulse/Model/PulseCatalogProductFilters.js';
 export {POSITION_BUCKETS, PositionBucket} from './MarketPulse/Model/PositionBucket.js';
+export {MarketPositionSummary} from './MarketPulse/Model/MarketPositionSummary.js';
 export {PulseCatalogProductEndpoint} from './MarketPulse/Service/PulseCatalogProductEndpoint.js';
 export {PriceAlertConfig} from './MarketPulse/Model/PriceAlertConfig.js';
 export {PriceAlertEvent} from './MarketPulse/Model/PriceAlertEvent.js';
