@@ -21,7 +21,7 @@ export class PriceIndexSnapshotEntry {
     public static parse(raw: ApiRecord): PriceIndexSnapshotEntry {
         const entry: PriceIndexSnapshotEntry = new PriceIndexSnapshotEntry(
             raw.date as string,
-            raw.competitor_id as string,
+            raw.competitor as string,
         );
         entry.priceIndex = Number(raw.price_index ?? 0);
         entry.matchCount = Number(raw.match_count ?? 0);
