@@ -18,6 +18,8 @@ export class Competitor {
     public type: string | null = null;
     /** ISO 4217 code this storefront quotes prices in. */
     public currency: string | null = null;
+    /** Lowercase `#rrggbb` for this competitor's avatar and chart line; null = none chosen. */
+    public color: string | null = null;
     public matchCount: number = 0;
     public productCount: number = 0;
     public priceIndex: number = 0;
@@ -41,6 +43,7 @@ export class Competitor {
         competitor.icon = (raw.icon as string | undefined) ?? null;
         competitor.type = (raw.type as string | undefined) ?? null;
         competitor.currency = (raw.currency as string | undefined) ?? null;
+        competitor.color = (raw.color as string | undefined) ?? null;
         competitor.matchCount = Number(raw.match_count ?? 0);
         competitor.productCount = Number(raw.product_count ?? 0);
         competitor.priceIndex = Number(raw.price_index ?? 0);

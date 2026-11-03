@@ -13,6 +13,8 @@ export class TopCompetitor {
     public vendorName: string = '';
     public vendorUrl: string = '';
     public vendorIcon: string | null = null;
+    /** Lowercase `#rrggbb` for this competitor's avatar and chart line; null = none chosen. */
+    public color: string | null = null;
     public matchCount: number = 0;
     public productCount: number = 0;
     public priceIndex: number | null = null;
@@ -33,6 +35,7 @@ export class TopCompetitor {
         competitor.vendorName = (raw.vendor_name as string | undefined) ?? '';
         competitor.vendorUrl = (raw.vendor_url as string | undefined) ?? '';
         competitor.vendorIcon = (raw.vendor_icon as string | undefined) ?? null;
+        competitor.color = (raw.color as string | undefined) ?? null;
         competitor.matchCount = Number(raw.match_count ?? 0);
         competitor.productCount = Number(raw.product_count ?? 0);
         competitor.priceIndex = (raw.price_index as number | undefined) ?? null;
