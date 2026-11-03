@@ -1,4 +1,5 @@
 import {ApiRecord} from '../../Model/ApiRecord.js';
+import {MatchDecisionSource} from './MatchDecisionSource.js';
 import {ProductMatchStatus} from './ProductMatch.js';
 
 /** One side of a match, reduced to what a reviewer needs to judge it. */
@@ -39,6 +40,9 @@ export class ReviewMatch {
     public status: ProductMatchStatus = 'pending';
     public confidence: number | null = null;
     public createdAt: Date | null = null;
+    /** Who made the current decision; null only on rows that predate recording it. */
+    public decisionSource: MatchDecisionSource | null = null;
+    public decidedAt: Date | null = null;
     public own: ReviewProduct;
     public competitor: ReviewCompetitorProduct;
 
@@ -73,6 +77,8 @@ export class ReviewMatch {
         match.status = (raw.status as ProductMatchStatus | undefined) ?? 'pending';
         match.confidence = (raw.confidence as number | undefined) ?? null;
         match.createdAt = raw.created_at ? new Date(raw.created_at as string) : null;
+        match.decisionSource = (raw.decision_source as MatchDecisionSource | undefined) ?? null;
+        match.decidedAt = raw.decided_at ? new Date(raw.decided_at as string) : null;
 
         return match;
     }

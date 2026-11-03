@@ -31,6 +31,15 @@ export class ProductMatchEndpoint extends Endpoint {
         if (filters.search) {
             queryString.set('search', filters.search);
         }
+        if (filters.ownSearch) {
+            queryString.set('own_search', filters.ownSearch);
+        }
+        if (filters.decisionSources && filters.decisionSources.length > 0) {
+            queryString.set('decision_source', filters.decisionSources.join(','));
+        }
+        if (filters.order) {
+            queryString.set('order', filters.order);
+        }
         queryString.addPagination(pagination);
 
         return await this.requestCollection(queryString, ReviewMatch.parse);

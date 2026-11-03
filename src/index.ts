@@ -128,7 +128,8 @@ export {PriceIndexSnapshotEntry} from './MarketPulse/Model/PriceIndexSnapshotEnt
 export {MatchHistory} from './MarketPulse/Model/MatchHistory.js';
 export {MatchHistoryBucket} from './MarketPulse/Model/MatchHistoryBucket.js';
 export {MatchHistoryInterval} from './MarketPulse/Model/MatchHistoryInterval.js';
-export {ReviewMatchFilters} from './MarketPulse/Model/ReviewMatchFilters.js';
+export {ReviewMatchFilters, ReviewMatchOrder} from './MarketPulse/Model/ReviewMatchFilters.js';
+export {MatchDecisionSource} from './MarketPulse/Model/MatchDecisionSource.js';
 export {ProductMatchEndpoint} from './MarketPulse/Service/ProductMatchEndpoint.js';
 export {PulseCatalogProductFilterOptions} from './MarketPulse/Model/PulseCatalogProductFilterOptions.js';
 export {PulseCatalogProductFilters} from './MarketPulse/Model/PulseCatalogProductFilters.js';
