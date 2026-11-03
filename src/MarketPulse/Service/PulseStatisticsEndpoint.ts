@@ -4,6 +4,7 @@ import {QueryString} from '../../Http/Data/QueryString.js';
 import {CollectionResult} from '../../Model/Result/CollectionResult.js';
 import {Endpoint} from '../../Service/Endpoint.js';
 import {ObjectResult} from '../../Model/Result/ObjectResult.js';
+import {MarketPositionGroup} from '../Model/MarketPositionGroup.js';
 import {MarketPositionSummary} from '../Model/MarketPositionSummary.js';
 import {MarketSummaryEntry} from '../Model/MarketSummaryEntry.js';
 import {PriceIndexSnapshotEntry} from '../Model/PriceIndexSnapshotEntry.js';
@@ -17,8 +18,11 @@ import {TopCompetitor} from '../Model/TopCompetitor.js';
  */
 export class PulseStatisticsEndpoint extends Endpoint {
 
-    /** The catalog against the market: coverage, where the compared products stand, and the price date. */
-    public async getMarketPositionSummary(catalogId: CatalogId | string): Promise<MarketPositionSummary> {
+    /**
+     * The catalog against the market: coverage, where the compared products stand, and the price date.
+     * Null when the API returns none, so a caller can tell "unavailable" from "nothing compared".
+     */
+    public async getMarketPositionSummary(catalogId: CatalogId | string): Promise<MarketPositionSummary | null> {
         const result: ObjectResult<MarketPositionSummary> = await this.requestObject(
             path('/pulse/catalogs/:catalogId/market-positions/summary', {catalogId: catalogId.toString()}),
             null,
@@ -26,7 +30,15 @@ export class PulseStatisticsEndpoint extends Endpoint {
             'GET',
         );
 
-        return result.getData() ?? new MarketPositionSummary();
+        return result.getData();
+    }
+
+    /** The catalog against the market per brand or per category, largest group first. */
+    public async getMarketPositionsBy(catalogId: CatalogId | string, groupBy: 'brand' | 'category'): Promise<CollectionResult<MarketPositionGroup>> {
+        const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/market-positions/aggregate', {catalogId: catalogId.toString()}));
+        queryString.set('group_by', groupBy);
+
+        return await this.requestCollection(queryString, MarketPositionGroup.parse);
     }
 
     /** Headline figures (products tracked, matches, competitors …) against the previous period. */
@@ -82,7 +94,7 @@ export class PulseStatisticsEndpoint extends Endpoint {
     public async getPriceIndexHistory(
         catalogId: CatalogId | string,
         competitorIds: string[] = [],
-        options: {group?: string; from?: string; to?: string} = {},
+        options: {group?: string; from?: string; to?: string; includeMarket?: boolean} = {},
     ): Promise<CollectionResult<PriceIndexSnapshotEntry>> {
         const queryString: QueryString = new QueryString(path('/pulse/catalogs/:catalogId/statistics/price-index-history', {catalogId: catalogId.toString()}));
         if (competitorIds.length > 0) {
@@ -96,6 +108,9 @@ export class PulseStatisticsEndpoint extends Endpoint {
         }
         if (options.to) {
             queryString.set('to', options.to);
+        }
+        if (options.includeMarket) {
+            queryString.set('include_market', 'true');
         }
 
         return await this.requestCollection(queryString, PriceIndexSnapshotEntry.parse);

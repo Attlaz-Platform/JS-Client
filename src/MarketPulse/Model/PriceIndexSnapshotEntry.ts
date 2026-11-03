@@ -9,11 +9,12 @@ import {ApiRecord} from '../../Model/ApiRecord.js';
  */
 export class PriceIndexSnapshotEntry {
     public date: string;
-    public competitorId: string;
+    // Null for the market line: every competitor together.
+    public competitorId: string | null;
     public priceIndex: number = 0;
     public matchCount: number = 0;
 
-    public constructor(date: string, competitorId: string) {
+    public constructor(date: string, competitorId: string | null) {
         this.date = date;
         this.competitorId = competitorId;
     }
@@ -21,7 +22,7 @@ export class PriceIndexSnapshotEntry {
     public static parse(raw: ApiRecord): PriceIndexSnapshotEntry {
         const entry: PriceIndexSnapshotEntry = new PriceIndexSnapshotEntry(
             raw.date as string,
-            raw.competitor as string,
+            (raw.competitor as string | null | undefined) ?? null,
         );
         entry.priceIndex = Number(raw.price_index ?? 0);
         entry.matchCount = Number(raw.match_count ?? 0);

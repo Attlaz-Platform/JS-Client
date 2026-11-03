@@ -135,6 +135,7 @@ export {PulseCatalogProductFilterOptions} from './MarketPulse/Model/PulseCatalog
 export {PulseCatalogProductFilters} from './MarketPulse/Model/PulseCatalogProductFilters.js';
 export {POSITION_BUCKETS, PositionBucket} from './MarketPulse/Model/PositionBucket.js';
 export {MarketPositionSummary} from './MarketPulse/Model/MarketPositionSummary.js';
+export {MarketPositionGroup} from './MarketPulse/Model/MarketPositionGroup.js';
 export {PulseCatalogProductEndpoint} from './MarketPulse/Service/PulseCatalogProductEndpoint.js';
 export {PriceAlertConfig} from './MarketPulse/Model/PriceAlertConfig.js';
 export {PriceAlertEvent} from './MarketPulse/Model/PriceAlertEvent.js';
